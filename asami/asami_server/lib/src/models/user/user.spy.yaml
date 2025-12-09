@@ -1,0 +1,47 @@
+class: User
+table: users
+fields:
+  id: UuidValue, defaultModel=random
+  userType: UserType
+  status: UserStatus, default=active
+  
+  # Basic Info
+  email: String?
+  phoneNumber: String
+  countryCode: String
+  isPhoneVerified: bool, default=false
+  isEmailVerified: bool, default=false
+  
+  # Messaging Platform IDs
+  whatsappId: String?
+  telegramId: String?
+  
+  # Profile
+  firstName: String?
+  lastName: String?
+  profileImageUrl: String?
+  language: String, default='en'
+  timezone: String, default='UTC'
+  
+  # Location
+  city: String?
+  state: String?
+  country: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  lastActiveAt: DateTime?
+  
+  # Soft Delete
+  deletedAt: DateTime?
+
+indexes:
+  user_type_status_idx:
+    fields: userType, status
+  phone_idx:
+    fields: phoneNumber, countryCode
+  whatsapp_idx:
+    fields: whatsappId
+  telegram_idx:
+    fields: telegramId

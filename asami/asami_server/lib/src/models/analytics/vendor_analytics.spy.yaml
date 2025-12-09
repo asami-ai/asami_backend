@@ -1,0 +1,60 @@
+class: VendorAnalytics
+table: vendor_analytics
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Time Period
+  date: DateTime
+  period: String
+  
+  # Sales Metrics
+  totalOrders: int, default=0
+  completedOrders: int, default=0
+  cancelledOrders: int, default=0
+  totalRevenue: double, default=0.0
+  averageOrderValue: double, default=0.0
+  
+  # Product Metrics
+  totalProducts: int, default=0
+  activeProducts: int, default=0
+  outOfStockProducts: int, default=0
+  newProductsAdded: int, default=0
+  
+  # Customer Metrics
+  totalCustomers: int, default=0
+  newCustomers: int, default=0
+  returningCustomers: int, default=0
+  
+  # Engagement Metrics
+  productViews: int, default=0
+  wishlistAdds: int, default=0
+  cartAdds: int, default=0
+  conversionRate: double, default=0.0
+  
+  # AI Usage
+  aiDescriptionsGenerated: int, default=0
+  aiQueriesProcessed: int, default=0
+  aiCostsIncurred: double, default=0.0
+  
+  # Payment Breakdown
+  fiatPayments: double, default=0.0
+  cryptoPayments: double, default=0.0
+  platformFeesCollected: double, default=0.0
+  
+  # Reviews
+  newReviews: int, default=0
+  averageRatingPeriod: double, default=0.0
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  vendor_date_idx:
+    fields: vendorId, date
+  vendor_period_idx:
+    fields: vendorId, period
+  date_idx:
+    fields: date

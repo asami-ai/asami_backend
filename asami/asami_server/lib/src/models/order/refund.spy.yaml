@@ -1,0 +1,39 @@
+class: Refund
+table: refunds
+fields:
+  id: UuidValue, defaultModel=random
+  orderId: UuidValue
+  order: Order?, relation(field=orderId)
+  orderItemId: UuidValue?
+  orderItem: OrderItem?, relation(field=orderItemId)
+  
+  # Refund Details
+  amount: double
+  currency: String, default='USD'
+  reason: String
+  customerComment: String?
+  
+  # Status
+  status: String, default='requested'
+  isApproved: bool, default=false
+  approvedBy: String?
+  approvedAt: DateTime?
+  
+  # Processing
+  refundMethod: PaymentMethod
+  refundTransactionId: String?
+  processedAt: DateTime?
+  
+  # Vendor Response
+  vendorComment: String?
+  rejectionReason: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  orders_idx:
+    fields: orderId
+  status_idx:
+    fields: status

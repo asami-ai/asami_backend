@@ -1,0 +1,10 @@
+enum: PaymentStatus
+values:
+  - pending
+  - processing
+  - completed
+  - failed
+  - refunded
+  - partially_refunded
+  - in_escrow
+  - released

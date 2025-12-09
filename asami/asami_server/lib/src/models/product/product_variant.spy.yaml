@@ -1,0 +1,43 @@
+class: ProductVariant
+table: product_variants
+fields:
+  id: UuidValue, defaultModel=random
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  
+  # Variant Details
+  name: String
+  sku: String?
+  barcode: String?
+  
+  # Variant Attributes
+  color: String?
+  size: String?
+  material: String?
+  style: String?
+  customAttributes: String?
+  
+  # Pricing
+  price: double
+  discountPrice: double?
+  
+  # Inventory
+  quantity: int, default=0
+  
+  # Media
+  imageUrl: String?
+  images: List<String>?
+  
+  # Status
+  isActive: bool, default=true
+  isDefault: bool, default=false
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  product_active_idx:
+    fields: productId, isActive
+  sku_idx:
+    fields: sku

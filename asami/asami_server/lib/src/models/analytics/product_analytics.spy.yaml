@@ -1,0 +1,52 @@
+class: ProductAnalytics
+table: product_analytics
+fields:
+  id: UuidValue, defaultModel=random
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  vendorId: UuidValue
+  
+  # Time Period
+  date: DateTime
+  period: String
+  
+  # Engagement
+  views: int, default=0
+  uniqueViews: int, default=0
+  wishlistAdds: int, default=0
+  cartAdds: int, default=0
+  
+  # Sales
+  orderCount: int, default=0
+  quantitySold: int, default=0
+  revenue: double, default=0.0
+  
+  # Performance
+  conversionRate: double, default=0.0
+  bounceRate: double, default=0.0
+  averageTimeOnPage: double, default=0.0
+  
+  # Reviews
+  newReviews: int, default=0
+  averageRating: double, default=0.0
+  
+  # Search
+  searchImpressions: int, default=0
+  searchClicks: int, default=0
+  searchRanking: double, default=0.0
+  
+  # Inventory
+  stockLevelStart: int, default=0
+  stockLevelEnd: int, default=0
+  stockOuts: int, default=0
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+
+indexes:
+  product_date_idx:
+    fields: productId, date
+  vendors_date_idx:
+    fields: vendorId, date
+  date_periodic_idx:
+    fields: date, period

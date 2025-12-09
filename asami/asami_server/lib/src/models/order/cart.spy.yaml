@@ -1,0 +1,28 @@
+class: Cart
+table: carts
+fields:
+  id: UuidValue, defaultModel=random
+  customerId: UuidValue
+  customer: User?, relation(field=customerId)
+  
+  # Session
+  sessionId: String?
+  isActive: bool, default=true
+  
+  # Totals
+  itemCount: int, default=0
+  subtotal: double, default=0.0
+  
+  # Conversion Tracking
+  convertedToOrderId: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  expiresAt: DateTime?
+
+indexes:
+  customer_active_idx:
+    fields: customerId, isActive
+  session_idx:
+    fields: sessionId

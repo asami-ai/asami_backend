@@ -1,0 +1,50 @@
+class: OrderItem
+table: order_items
+fields:
+  id: UuidValue, defaultModel=random
+  orderId: UuidValue
+  order: Order?, relation(field=orderId)
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  variantId: UuidValue?
+  variant: ProductVariant?, relation(field=variantId)
+  
+  # Product Snapshot (at time of order)
+  productName: String
+  productDescription: String?
+  productImageUrl: String?
+  sku: String?
+  
+  # Variant Details
+  variantName: String?
+  color: String?
+  size: String?
+  
+  # Pricing
+  unitPrice: double
+  discountPrice: double?
+  quantity: int
+  subtotal: double
+  taxAmount: double, default=0.0
+  totalAmount: double
+  
+  # Status
+  status: OrderStatus, default=pending
+  
+  # Fulfillment
+  isFulfilled: bool, default=false
+  fulfilledAt: DateTime?
+  
+  # Return/Refund
+  isReturnable: bool, default=true
+  returnBy: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  order_idx:
+    fields: orderId
+  product_idx:
+    fields: productId

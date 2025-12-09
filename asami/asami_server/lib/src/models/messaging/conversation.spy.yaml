@@ -1,0 +1,58 @@
+class: Conversation
+table: conversations
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Platform Details
+  platform: PlatformType
+  platformUserId: String
+  platformUsername: String?
+  
+  # Context
+  userType: UserType
+  status: ConversationStatus, default=active
+  
+  # Session Data
+  sessionData: String?
+  contextData: String?
+  
+  # Cart & Shopping Context (for customers)
+  activeCartId: String?
+  currentProductId: String?
+  currentVendorId: String?
+  
+  # AI Agent State
+  lastIntent: String?
+  lastEntities: String?
+  agentState: String?
+  conversationSummary: String?
+  
+  # Escalation
+  isEscalated: bool, default=false
+  escalatedTo: String?
+  escalatedAt: DateTime?
+  escalationReason: String?
+  
+  # Metrics
+  messageCount: int, default=0
+  botResponseCount: int, default=0
+  averageResponseTime: double?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  lastMessageAt: DateTime?
+  resolvedAt: DateTime?
+  archivedAt: DateTime?
+
+indexes:
+  user_platform_idx:
+    fields: userId, platform
+  platform_user_idx:
+    fields: platform, platformUserId
+  conversation_status_idx:
+    fields: status
+  escalated_idx:
+    fields: isEscalated

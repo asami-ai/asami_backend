@@ -1,0 +1,14 @@
+enum: PaymentMethod
+values:
+  - credit_card
+  - debit_card
+  - bank_transfer
+  - mobile_money
+  - paypal
+  - apple_pay
+  - google_pay
+  - bitcoin
+  - ethereum
+  - usdt
+  - usdc
+  - other_crypto

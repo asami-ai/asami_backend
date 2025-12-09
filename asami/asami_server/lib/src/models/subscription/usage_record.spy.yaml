@@ -1,0 +1,43 @@
+class: UsageRecord
+table: usage_records
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  subscriptionId: String?
+  
+  # Usage Type
+  usageType: String
+  quantity: int, default=1
+  
+  # Billing
+  unitPrice: double
+  totalAmount: double
+  currency: String, default='USD'
+  
+  # Context
+  resourceId: String?
+  metadata: String?
+  
+  # Billing Period
+  billingPeriodStart: DateTime
+  billingPeriodEnd: DateTime
+  
+  # Invoice
+  invoiceId: UuidValue?
+  invoice: SubscriptionInvoice?, relation(field=invoiceId)
+  isBilled: bool, default=false
+  billedAt: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+
+indexes:
+  vendors_period_idx:
+    fields: vendorId, billingPeriodStart, billingPeriodEnd
+  usage_type_idx:
+    fields: usageType
+  invoice_idx:
+    fields: invoiceId
+  billed_idx:
+    fields: isBilled

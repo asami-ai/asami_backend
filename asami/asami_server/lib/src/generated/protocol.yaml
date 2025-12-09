@@ -1,0 +1,67 @@
+analytics:
+  - getVendorAnalytics:
+  - getVendorAnalyticsRange:
+  - getVendorDashboard:
+  - getProductAnalytics:
+  - getTopSellingProducts:
+  - getPaymentMethodBreakdown:
+  - recordDailyAnalytics:
+auth:
+  - register:
+  - verifyPhone:
+  - getUser:
+  - getUserByPhone:
+  - getOrCreateUserByWhatsApp:
+  - getOrCreateUserByTelegram:
+  - updateLastActive:
+bot:
+  - processMessage:
+  - sendFormattedMessage:
+  - sendProductList:
+  - sendOrderConfirmation:
+cart:
+  - getOrCreateCart:
+  - addToCart:
+  - updateCartItemQuantity:
+  - removeFromCart:
+  - getCartWithItems:
+  - clearCart:
+order:
+  - createOrder:
+  - getOrder:
+  - getOrderWithItems:
+  - getCustomerOrders:
+  - getVendorOrders:
+  - updateOrderStatus:
+  - cancelOrder:
+product:
+  - createProduct:
+  - updateProduct:
+  - publishProduct:
+  - getProduct:
+  - getVendorProducts:
+  - searchProducts:
+  - updateInventory:
+  - decrementInventory:
+  - getFeaturedProducts:
+  - getProductsByCategory:
+subscription:
+  - getVendorSubscription:
+  - changeTier:
+  - getUsageRecords:
+  - generateInvoice:
+  - checkTierLimits:
+telegramWebhook:
+  - processWebhook:
+user:
+  - updateProfile:
+  - getCustomerProfile:
+  - updateCustomerProfile:
+  - getVendorProfile:
+  - updateVendorProfile:
+  - addAddress:
+  - getUserAddresses:
+  - setDefaultAddress:
+whatsAppWebhook:
+  - verifyWebhook:
+  - processWebhook:

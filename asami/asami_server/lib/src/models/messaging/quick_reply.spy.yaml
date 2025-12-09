@@ -1,0 +1,31 @@
+class: QuickReply
+table: quick_replies
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Context
+  intent: String
+  userType: UserType
+  platform: PlatformType
+  
+  # Reply Details
+  title: String
+  payload: String
+  description: String?
+  
+  # Display
+  iconUrl: String?
+  displayOrder: int, default=0
+  
+  # Status
+  isActive: bool, default=true
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  intent_type_idx:
+    fields: intent, userType
+  platform_active_idx:
+    fields: platform, isActive

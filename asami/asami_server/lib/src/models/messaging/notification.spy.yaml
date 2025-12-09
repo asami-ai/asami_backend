@@ -1,0 +1,45 @@
+class: Notification
+table: notifications
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Notification Details
+  title: String
+  message: String
+  type: String
+  
+  # Target
+  platform: PlatformType?
+  
+  # Link/Action
+  actionUrl: String?
+  actionData: String?
+  
+  # Status
+  isSent: bool, default=false
+  isDelivered: bool, default=false
+  isRead: bool, default=false
+  isFailed: bool, default=false
+  errorMessage: String?
+  
+  # Priority
+  priority: int, default=0
+  
+  # Scheduling
+  scheduledFor: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  sentAt: DateTime?
+  deliveredAt: DateTime?
+  readAt: DateTime?
+
+indexes:
+  user_read_idx:
+    fields: userId, isRead
+  type_idx:
+    fields: type
+  scheduled_idx:
+    fields: scheduledFor, isSent

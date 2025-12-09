@@ -1,0 +1,58 @@
+class: PlatformAnalytics
+table: platform_analytics
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Time Period
+  date: DateTime
+  period: String
+  
+  # User Metrics
+  totalUsers: int, default=0
+  activeUsers: int, default=0
+  newUsers: int, default=0
+  totalCustomers: int, default=0
+  totalVendors: int, default=0
+  
+  # Transaction Metrics
+  totalOrders: int, default=0
+  totalRevenue: double, default=0.0
+  averageOrderValue: double, default=0.0
+  platformFeesCollected: double, default=0.0
+  
+  # Product Metrics
+  totalProducts: int, default=0
+  activeProducts: int, default=0
+  newProducts: int, default=0
+  
+  # AI Metrics
+  totalAiInteractions: int, default=0
+  successfulAiResponses: int, default=0
+  aiResponseTime: double, default=0.0
+  aiCostsIncurred: double, default=0.0
+  
+  # Bot Metrics
+  whatsappMessages: int, default=0
+  telegramMessages: int, default=0
+  totalConversations: int, default=0
+  activeConversations: int, default=0
+  
+  # Payment Breakdown
+  fiatTransactions: int, default=0
+  cryptoTransactions: int, default=0
+  fiatVolume: double, default=0.0
+  cryptoVolume: double, default=0.0
+  
+  # Subscription Metrics
+  freemiumVendors: int, default=0
+  proVendors: int, default=0
+  proMaxVendors: int, default=0
+  subscriptionRevenue: double, default=0.0
+  churnRate: double, default=0.0
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+
+indexes:
+  date_period_idx:
+    fields: date, period

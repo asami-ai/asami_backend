@@ -1,0 +1,63 @@
+class: VendorProfile
+table: vendor_profiles
+fields:
+  id: UuidValue, defaultModel=random 
+  userId: UuidValue
+  user: User?, relation(field = userId)
+  
+  # Business Info
+  businessName: String
+  businessDescription: String?
+  businessCategory: String
+  businessLogoUrl: String?
+  businessBannerUrl: String?
+  
+  # Legal
+  businessRegistrationNumber: String?
+  taxId: String?
+  isVerified: bool, default=false
+  verifiedAt: DateTime?
+  
+  # Subscription
+  subscriptionTier: SubscriptionTier, default=freemium
+  subscriptionStartDate: DateTime?
+  subscriptionEndDate: DateTime?
+  autoRenew: bool, default=true
+  
+  # Usage Limits & Tracking (for tier enforcement)
+  productLimit: int, default=20
+  currentProductCount: int, default=0
+  aiDescriptionsLimit: int, default=50
+  aiDescriptionsUsed: int, default=0
+  monthlyResetDate: DateTime?
+  
+  # Business Metrics
+  totalProducts: int, default=0
+  activeProducts: int, default=0
+  totalOrders: int, default=0
+  totalRevenue: double, default=0.0
+  averageRating: double, default=0.0
+  totalReviews: int, default=0
+  
+  # Financial
+  platformTransactionFee: double, default=0.05
+  totalPlatformFees: double, default=0.0
+  pendingPayouts: double, default=0.0
+  totalPayouts: double, default=0.0
+  
+  # Contact & Support
+  supportEmail: String?
+  supportPhone: String?
+  responseTime: int?, default=24
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  business_name_idx:
+    fields: businessName
+  subscription_tier_idx:
+    fields: subscriptionTier
+  verified_idx:
+    fields: isVerified

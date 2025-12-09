@@ -1,0 +1,92 @@
+class: Product
+table: products
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Basic Info
+  name: String
+  description: String
+  shortDescription: String?
+  category: String
+  subCategory: String?
+  tags: List<String>?
+  
+  # AI Generated Content
+  isAiGenerated: bool, default=false
+  aiGeneratedAt: DateTime?
+  aiConfidenceScore: double?
+  
+  # Pricing
+  basePrice: double
+  discountPrice: double?
+  discountPercentage: double?
+  discountStartDate: DateTime?
+  discountEndDate: DateTime?
+  currency: String, default='NGN'
+  
+  # Inventory
+  sku: String?
+  barcode: String?
+  quantity: int, default=0
+  lowStockThreshold: int, default=5
+  trackInventory: bool, default=true
+  
+  # Physical Attributes
+  weight: double?
+  weightUnit: String?
+  dimensions: String?
+  color: List<String>?
+  size: List<String>?
+  material: String?
+  brand: String?
+  
+  # Status & Visibility
+  status: ProductStatus, default=draft
+  isActive: bool, default=true
+  isFeatured: bool, default=false
+  condition: ProductCondition, default=newItem
+  
+  # Media
+  images: List<String>
+  thumbnailUrl: String?
+  videoUrl: String?
+  
+  # Delivery
+  shippingRequired: bool, default=true
+  estimatedDeliveryDays: int?
+  freeShipping: bool, default=false
+  shippingCost: double, default=0.0
+  
+  # Performance Metrics
+  viewCount: int, default=0
+  orderCount: int, default=0
+  wishlistCount: int, default=0
+  averageRating: double, default=0.0
+  totalReviews: int, default=0
+  conversionRate: double, default=0.0
+  
+  # SEO & Search
+  searchKeywords: List<String>?
+  metaTitle: String?
+  metaDescription: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  publishedAt: DateTime?
+  deletedAt: DateTime?
+
+indexes:
+  vendor_status_idx:
+    fields: vendorId, status
+  prod_category_idx:
+    fields: category, subCategory
+  price_idx:
+    fields: basePrice
+  featured_idx:
+    fields: isFeatured, isActive
+  search_idx:
+    fields: name, category
+    

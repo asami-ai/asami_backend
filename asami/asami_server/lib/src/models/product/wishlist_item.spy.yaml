@@ -1,0 +1,26 @@
+class: WishlistItem
+table: wishlist_items
+fields:
+  wishlistId: UuidValue
+  wishlist: Wishlist?, relation(field=wishlistId)
+  customerId: UuidValue
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  variantId: UuidValue?
+  
+  notes: String?
+  priority: int, default=0
+  
+  # Price Tracking
+  priceWhenAdded: double
+  notifyOnPriceDrop: bool, default=false
+  targetPrice: double?
+  
+  # Timestamps
+  addedAt: DateTime, default=now
+
+indexes:
+  wishlist_product_idx:
+    fields: wishlistId, productId
+  customer_product_idx:
+    fields: customerId, productId

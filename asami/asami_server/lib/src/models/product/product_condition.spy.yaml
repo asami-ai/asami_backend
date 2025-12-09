@@ -1,0 +1,7 @@
+enum: ProductCondition
+values:
+  - newItem
+  - refurbished
+  - used_like_new
+  - used_good
+  - used_acceptable

@@ -1,0 +1,50 @@
+class: BotInteraction
+table: bot_interactions
+fields:
+  id: UuidValue, defaultModel=random
+  conversationId: UuidValue
+  conversation: Conversation?, relation(field=conversationId)
+  userId: UuidValue
+  messageId: UuidValue?
+  message: Message?, relation(field=messageId)
+  
+  # Intent Classification
+  intent: String
+  confidence: double
+  entities: String?
+  
+  # Context
+  userQuery: String?
+  botResponse: String?
+  
+  # Function Execution (Agentic)
+  functionName: String?
+  functionInput: String?
+  functionOutput: String?
+  executionTime: int?
+  isSuccess: bool, default=true
+  errorMessage: String?
+  
+  # User Satisfaction
+  wasHelpful: bool?
+  userFeedback: String?
+  feedbackAt: DateTime?
+  
+  # AI Model Info
+  modelUsed: String?
+  promptTokens: int?
+  completionTokens: int?
+  totalTokens: int?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+
+indexes:
+  conversation_idx:
+    fields: conversationId
+  intent_idx:
+    fields: intent
+  user_idx:
+    fields: userId
+  created_idx:
+    fields: createdAt

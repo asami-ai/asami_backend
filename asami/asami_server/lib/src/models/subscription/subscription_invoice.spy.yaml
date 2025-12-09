@@ -1,0 +1,48 @@
+class: SubscriptionInvoice
+table: subscription_invoices
+fields:
+  id: UuidValue, defaultModel=random
+  subscriptionId: UuidValue
+  subscription: Subscription?, relation(field=subscriptionId)
+  vendorId: UuidValue
+  
+  # Invoice Details
+  invoiceNumber: String
+  amount: double
+  currency: String, default='USD'
+  
+  # Breakdown
+  subscriptionAmount: double, default=0.0
+  usageCharges: double, default=0.0
+  taxAmount: double, default=0.0
+  discountAmount: double, default=0.0
+  
+  # Status
+  status: String, default='pending'
+  isPaid: bool, default=false
+  
+  # Payment
+  paymentMethod: PaymentMethod?
+  paymentTransactionId: String?
+  paidAt: DateTime?
+  
+  # Period
+  periodStart: DateTime
+  periodEnd: DateTime
+  
+  # Due Date
+  dueDate: DateTime
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  subscription_idx:
+    fields: subscriptionId
+  the_vendor_status_idx:
+    fields: vendorId, status
+  invoice_number_idx:
+    fields: invoiceNumber
+  due_date_idx:
+    fields: dueDate

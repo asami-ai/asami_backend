@@ -1,0 +1,49 @@
+class: Subscription
+table: subscriptions
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Plan Details
+  tier: SubscriptionTier
+  status: String, default='active'
+  
+  # Billing
+  billingCycle: String, default='monthly'
+  amount: double
+  currency: String, default='USD'
+  
+  # Period
+  currentPeriodStart: DateTime
+  currentPeriodEnd: DateTime
+  
+  # Features & Limits
+  productLimit: int
+  aiDescriptionsLimit: int
+  platformTransactionFee: double
+  
+  # Auto-renewal
+  autoRenew: bool, default=true
+  cancelAtPeriodEnd: bool, default=false
+  
+  # Trial
+  isTrialing: bool, default=false
+  trialStart: DateTime?
+  trialEnd: DateTime?
+  
+  # Cancellation
+  cancelledAt: DateTime?
+  cancellationReason: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  vendor_statuses_idx:
+    fields: vendorId, status
+  tier_idx:
+    fields: tier
+  period_end_idx:
+    fields: currentPeriodEnd

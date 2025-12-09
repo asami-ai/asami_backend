@@ -1,0 +1,54 @@
+class: PaymentTransaction
+table: payment_transactions
+fields:
+  id: UuidValue, defaultModel=random
+  orderId: UuidValue
+  order: Order?, relation(field=orderId)
+  
+  # Transaction Details
+  amount: double
+  currency: String, default='USD'
+  paymentMethod: PaymentMethod
+  paymentStatus: PaymentStatus
+  
+  # Payment Gateway
+  gatewayName: String
+  gatewayTransactionId: String?
+  gatewayResponse: String?
+  
+  # Crypto Specific
+  cryptoType: String?
+  cryptoAmount: double?
+  walletAddress: String?
+  transactionHash: String?
+  blockchainNetwork: String?
+  conversionRate: double?
+  
+  # Fees
+  platformFee: double, default=0.0
+  gatewayFee: double, default=0.0
+  
+  # Status Tracking
+  isPending: bool, default=true
+  isCompleted: bool, default=false
+  isFailed: bool, default=false
+  
+  # Metadata
+  metadata: String?
+  failureReason: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  completedAt: DateTime?
+  failedAt: DateTime?
+
+indexes:
+  the_order_idx:
+    fields: orderId
+  gateway_transaction_idx:
+    fields: gatewayTransactionId
+  transaction_hash_idx:
+    fields: transactionHash
+  payment_status_idx:
+    fields: paymentStatus

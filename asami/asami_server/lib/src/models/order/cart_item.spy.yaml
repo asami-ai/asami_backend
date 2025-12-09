@@ -1,0 +1,26 @@
+class: CartItem
+table: cart_items
+fields:
+  cartId: UuidValue
+  cart: Cart?, relation(field=cartId)
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  variantId: UuidValue?
+  variant: ProductVariant?, relation(field=variantId)
+  
+  quantity: int, default=1
+  unitPrice: double
+  subtotal: double
+  
+  # Notes
+  customerNotes: String?
+  
+  # Timestamps
+  addedAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  cart_product_idx:
+    fields: cartId, productId
+  cart_idx:
+    fields: cartId

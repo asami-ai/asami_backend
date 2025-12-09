@@ -1,0 +1,61 @@
+class: Message
+table: messages
+fields:
+  id: UuidValue, defaultModel=random
+  conversationId: UuidValue
+  conversation: Conversation?, relation(field=conversationId)
+  
+  # Message Details
+  platform: PlatformType
+  platformMessageId: String?
+  messageType: MessageType
+  
+  # Content
+  content: String
+  mediaUrl: String?
+  mediaType: String?
+  thumbnailUrl: String?
+  
+  # Sender
+  isFromBot: bool, default=false
+  isFromUser: bool, default=true
+  senderId: UuidValue?
+  
+  # AI Processing
+  isProcessedByAi: bool, default=false
+  aiIntent: String?
+  aiEntities: String?
+  aiConfidence: double?
+  aiResponse: String?
+  processingTime: int?
+  
+  # Function Calls (Agentic)
+  functionCalled: String?
+  functionParams: String?
+  functionResult: String?
+  
+  # Status
+  isDelivered: bool, default=false
+  isRead: bool, default=false
+  isFailed: bool, default=false
+  errorMessage: String?
+  
+  # Reply Context
+  replyToMessageId: UuidValue?
+  replyToMessage: Message?, relation(field=replyToMessageId)
+  
+  # Metadata
+  metadata: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  deliveredAt: DateTime?
+  readAt: DateTime?
+
+indexes:
+  conversation_created_idx:
+    fields: conversationId, createdAt
+  platform_message_idx:
+    fields: platform, platformMessageId
+  ai_processed_idx:
+    fields: isProcessedByAi

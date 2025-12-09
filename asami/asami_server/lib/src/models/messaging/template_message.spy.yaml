@@ -1,0 +1,42 @@
+class: TemplateMessage
+table: template_messages
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Template Details
+  name: String
+  category: String
+  language: String, default='en'
+  
+  # Content
+  header: String?
+  body: String
+  footer: String?
+  
+  # Variables
+  variables: List<String>?
+  sampleValues: String?
+  
+  # Platform
+  platform: PlatformType
+  platformTemplateId: String?
+  
+  # Status
+  isApproved: bool, default=false
+  isActive: bool, default=true
+  
+  # Usage
+  usageCount: int, default=0
+  lastUsedAt: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  name_platform_idx:
+    fields: name, platform
+  temp_category_idx:
+    fields: category
+  approved_active_idx:
+    fields: isApproved, isActive

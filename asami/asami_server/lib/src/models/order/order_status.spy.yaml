@@ -1,0 +1,12 @@
+enum: OrderStatus
+values:
+  - pending
+  - confirmed
+  - processing
+  - packed
+  - shipped
+  - out_for_delivery
+  - delivered
+  - cancelled
+  - refunded
+  - failed

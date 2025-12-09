@@ -1,0 +1,6 @@
+enum: UserType
+values:
+  - customer
+  - vendor
+
+

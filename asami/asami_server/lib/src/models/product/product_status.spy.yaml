@@ -1,0 +1,7 @@
+enum: ProductStatus
+values:
+  - draft
+  - active
+  - out_of_stock
+  - discontinued
+  - under_review

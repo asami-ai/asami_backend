@@ -1,0 +1,6 @@
+enum: UserStatus
+values:
+  - active
+  - suspended
+  - deactivated
+  - pending_verification

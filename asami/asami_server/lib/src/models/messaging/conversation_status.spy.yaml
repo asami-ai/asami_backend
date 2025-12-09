@@ -1,0 +1,8 @@
+enum: ConversationStatus
+values:
+  - active
+  - waiting_user
+  - waiting_bot
+  - escalated_to_vendor
+  - resolved
+  - archived

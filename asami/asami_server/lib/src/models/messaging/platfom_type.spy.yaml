@@ -1,0 +1,6 @@
+enum: PlatformType
+values:
+  - whatsapp
+  - telegram
+  - web
+  - mobile

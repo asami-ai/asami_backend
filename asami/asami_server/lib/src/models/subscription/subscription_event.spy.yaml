@@ -1,0 +1,16 @@
+class: SubscriptionEvent
+table: subscription_events
+fields:
+  eventId: UuidValue
+  subscriptionId: UuidValue
+  subscription: Subscription?, relation(field=subscriptionId)
+  vendorId: UuidValue
+  
+  # Event Details
+  eventType: String
+  eventData: String?
+  createdAt: DateTime
+  
+  # Metadata
+  tier: SubscriptionTier?
+  previousTier: SubscriptionTier?

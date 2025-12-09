@@ -1,0 +1,44 @@
+class: ProductReview
+table: product_reviews
+fields:
+  id: UuidValue, defaultModel=random
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  customerId: UuidValue
+  customer: User?, relation(field=customerId)
+  orderId: UuidValue?
+  
+  # Review Content
+  rating: int
+  title: String?
+  comment: String
+  images: List<String>?
+  
+  # Verification
+  isVerifiedPurchase: bool, default=false
+  
+  # Moderation
+  isApproved: bool, default=false
+  isFlagged: bool, default=false
+  moderatedBy: String?
+  moderatedAt: DateTime?
+  
+  # Engagement
+  helpfulCount: int, default=0
+  reportCount: int, default=0
+  
+  # Vendor Response
+  vendorResponse: String?
+  vendorRespondedAt: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  product_approved_idx:
+    fields: productId, isApproved
+  customer_idx:
+    fields: customerId
+  rating_idx:
+    fields: rating

@@ -1,0 +1,11 @@
+enum: MessageType
+values:
+  - text
+  - image
+  - video
+  - audio
+  - document
+  - location
+  - contact
+  - interactive
+  - template

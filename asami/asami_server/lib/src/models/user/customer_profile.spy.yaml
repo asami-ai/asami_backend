@@ -1,0 +1,31 @@
+class: CustomerProfile
+table: customer_profiles
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Preferences
+  preferredPaymentMethod: String?
+  savedAddresses: List<String>?
+  favoriteVendors: List<String>?
+  
+  # Shopping Behavior
+  totalOrders: int, default=0
+  totalSpent: double, default=0.0
+  averageOrderValue: double, default=0.0
+  lastOrderAt: DateTime?
+  
+  # Engagement
+  wishlistCount: int, default=0
+  reviewsGiven: int, default=0
+  averageRating: double?, default=0.0
+  
+  # AI Personalization Data
+  searchHistory: List<String>?
+  viewedProducts: List<String>?
+  preferredCategories: List<String>?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now

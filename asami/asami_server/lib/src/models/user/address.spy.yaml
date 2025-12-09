@@ -1,0 +1,37 @@
+class: Address
+table: addresses
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Address Details
+  label: String
+  recipientName: String
+  phoneNumber: String
+  addressLine1: String
+  addressLine2: String?
+  city: String
+  state: String
+  country: String
+  postalCode: String
+  landmark: String?
+  
+  # Flags
+  isDefault: bool, default=false
+  isActive: bool, default=true
+  
+  # Geolocation (optional for delivery optimization)
+  latitude: double?
+  longitude: double?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  user_default_idx:
+    fields: userId, isDefault
+    unique: true
+  user_active_idx:
+    fields: userId, isActive

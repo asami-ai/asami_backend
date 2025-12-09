@@ -1,0 +1,74 @@
+class: Order
+table: orders
+fields:
+  id: UuidValue, defaultModel=random
+  customerId: UuidValue
+  customer: User?, relation(field=customerId)
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Order Details
+  orderNumber: String
+  status: OrderStatus, default=pending
+  
+  # Pricing
+  subtotal: double
+  taxAmount: double, default=0.0
+  shippingCost: double, default=0.0
+  discountAmount: double, default=0.0
+  platformFee: double, default=0.0
+  totalAmount: double
+  currency: String, default='USD'
+  
+  # Delivery
+  shippingAddressId: UuidValue
+  shippingAddress: Address?, relation(field=shippingAddressId)
+  deliveryInstructions: String?
+  estimatedDeliveryDate: DateTime?
+  actualDeliveryDate: DateTime?
+  trackingNumber: String?
+  shippingProvider: String?
+  
+  # Customer Info
+  customerName: String
+  customerPhone: String
+  customerEmail: String?
+  
+  # Payment
+  paymentMethod: PaymentMethod
+  paymentStatus: PaymentStatus, default=pending
+  paidAt: DateTime?
+  
+  # Notes & Communication
+  customerNotes: String?
+  vendorNotes: String?
+  cancellationReason: String?
+  
+  # Messaging Context
+  orderSource: String, default='whatsapp'
+  conversationId: UuidValue?
+  
+  # Flags
+  isGift: bool, default=false
+  requiresSignature: bool, default=false
+  isPriority: bool, default=false
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  confirmedAt: DateTime?
+  shippedAt: DateTime?
+  deliveredAt: DateTime?
+  cancelledAt: DateTime?
+
+indexes:
+  customer_status_idx:
+    fields: customerId, status
+  vendors_status_idx:
+    fields: vendorId, status
+  order_number_idx:
+    fields: orderNumber
+  payments_status_idx:
+    fields: paymentStatus
+  created_at_idx:
+    fields: createdAt
