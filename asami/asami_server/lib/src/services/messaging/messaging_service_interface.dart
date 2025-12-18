@@ -37,6 +37,7 @@ abstract class IMessagingService {
     required List<MessageButton> buttons,
     String? headerText,
     String? footerText,
+    Map<String, dynamic>? headerInteractive
   });
 
   /// Send interactive list

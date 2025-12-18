@@ -11,58 +11,84 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
-import 'order/cart_item.dart' as _i3;
-import 'analytics/product_analytics.dart' as _i4;
-import 'analytics/vendor_analytics.dart' as _i5;
-import 'messaging/bot_interaction.dart' as _i6;
-import 'messaging/conversation.dart' as _i7;
-import 'messaging/conversation_status.dart' as _i8;
-import 'messaging/message.dart' as _i9;
-import 'messaging/message_type.dart' as _i10;
-import 'messaging/notification.dart' as _i11;
-import 'messaging/platfom_type.dart' as _i12;
-import 'messaging/quick_reply.dart' as _i13;
-import 'messaging/template_message.dart' as _i14;
-import 'order/cart.dart' as _i15;
-import 'analytics/platform_analytics.dart' as _i16;
-import 'order/order.dart' as _i17;
-import 'order/order_item.dart' as _i18;
-import 'order/order_status.dart' as _i19;
-import 'order/payment_method.dart' as _i20;
-import 'order/payment_status.dart' as _i21;
-import 'order/payment_transaction.dart' as _i22;
-import 'order/refund.dart' as _i23;
-import 'product/category.dart' as _i24;
-import 'product/product.dart' as _i25;
-import 'product/product_condition.dart' as _i26;
-import 'product/product_review.dart' as _i27;
-import 'user/vendor_profile.dart' as _i28;
-import 'product/product_variant.dart' as _i29;
-import 'product/wishlist.dart' as _i30;
-import 'product/wishlist_item.dart' as _i31;
-import 'subscription/subscription.dart' as _i32;
-import 'subscription/subscription_event.dart' as _i33;
-import 'subscription/subscription_invoice.dart' as _i34;
-import 'subscription/usage_record.dart' as _i35;
-import 'user/address.dart' as _i36;
-import 'user/customer_profile.dart' as _i37;
-import 'user/subscription_tier.dart' as _i38;
-import 'user/user.dart' as _i39;
-import 'user/user_status.dart' as _i40;
-import 'user/user_type.dart' as _i41;
-import 'product/product_status.dart' as _i42;
+import 'messaging/template_message.dart' as _i3;
+import 'analytics/breach_severity.dart' as _i4;
+import 'analytics/customer_usage_pattern.dart' as _i5;
+import 'analytics/empty.dart' as _i6;
+import 'analytics/limit_breach.dart' as _i7;
+import 'analytics/platform_analytics.dart' as _i8;
+import 'analytics/product_analytics.dart' as _i9;
+import 'analytics/product_view_tracking.dart' as _i10;
+import 'analytics/tool_usage_log.dart' as _i11;
+import 'analytics/user_analytics.dart' as _i12;
+import 'analytics/vendor_analytics.dart' as _i13;
+import 'messaging/bot_interaction.dart' as _i14;
+import 'messaging/conversation.dart' as _i15;
+import 'messaging/conversation_status.dart' as _i16;
+import 'messaging/message.dart' as _i17;
+import 'messaging/message_type.dart' as _i18;
+import 'messaging/notification.dart' as _i19;
+import 'messaging/platfom_type.dart' as _i20;
+import 'messaging/quick_reply.dart' as _i21;
+import 'analytics/ai_conversation_usage.dart' as _i22;
+import 'order/cart.dart' as _i23;
+import 'order/cart_item.dart' as _i24;
+import 'order/order.dart' as _i25;
+import 'order/order_item.dart' as _i26;
+import 'order/order_status.dart' as _i27;
+import 'order/payment_method.dart' as _i28;
+import 'order/payment_status.dart' as _i29;
+import 'order/payment_transaction.dart' as _i30;
+import 'order/refund.dart' as _i31;
+import 'product/category.dart' as _i32;
+import 'product/product.dart' as _i33;
+import 'product/product_condition.dart' as _i34;
+import 'product/product_review.dart' as _i35;
+import 'product/product_status.dart' as _i36;
+import 'product/product_variant.dart' as _i37;
+import 'product/wishlist.dart' as _i38;
+import 'product/wishlist_item.dart' as _i39;
+import 'user/vendor_profile.dart' as _i40;
+import 'subscription/billing_cycle_summary.dart' as _i41;
+import 'subscription/daily_usage_tracker.dart' as _i42;
+import 'subscription/limit_type.dart' as _i43;
+import 'subscription/subscription.dart' as _i44;
+import 'subscription/subscription_event.dart' as _i45;
+import 'subscription/subscription_invoice.dart' as _i46;
+import 'subscription/tier_featur.dart' as _i47;
+import 'subscription/tool_usage_limit.dart' as _i48;
+import 'subscription/usage_alert.dart' as _i49;
+import 'subscription/usage_class.dart' as _i50;
+import 'subscription/usage_record.dart' as _i51;
+import 'user/address.dart' as _i52;
+import 'user/auth_session.dart' as _i53;
+import 'user/customer_policy.dart' as _i54;
+import 'user/customer_profile.dart' as _i55;
+import 'user/subscription_tier.dart' as _i56;
+import 'user/user.dart' as _i57;
+import 'user/user_status.dart' as _i58;
+import 'user/user_type.dart' as _i59;
+import 'subscription/alert_type.dart' as _i60;
 import 'package:asami_server/src/generated/analytics/vendor_analytics.dart'
-    as _i43;
+    as _i61;
 import 'package:asami_server/src/generated/analytics/product_analytics.dart'
-    as _i44;
-import 'package:asami_server/src/generated/product/product.dart' as _i45;
-import 'package:asami_server/src/generated/order/order_item.dart' as _i46;
-import 'package:asami_server/src/generated/order/order.dart' as _i47;
+    as _i62;
+import 'package:asami_server/src/generated/product/product.dart' as _i63;
+import 'package:asami_server/src/generated/order/order_item.dart' as _i64;
+import 'package:asami_server/src/generated/order/order.dart' as _i65;
 import 'package:asami_server/src/generated/subscription/usage_record.dart'
-    as _i48;
-import 'package:asami_server/src/generated/user/address.dart' as _i49;
+    as _i66;
+import 'package:asami_server/src/generated/user/address.dart' as _i67;
+export 'analytics/ai_conversation_usage.dart';
+export 'analytics/breach_severity.dart';
+export 'analytics/customer_usage_pattern.dart';
+export 'analytics/empty.dart';
+export 'analytics/limit_breach.dart';
 export 'analytics/platform_analytics.dart';
 export 'analytics/product_analytics.dart';
+export 'analytics/product_view_tracking.dart';
+export 'analytics/tool_usage_log.dart';
+export 'analytics/user_analytics.dart';
 export 'analytics/vendor_analytics.dart';
 export 'messaging/bot_interaction.dart';
 export 'messaging/conversation.dart';
@@ -90,11 +116,21 @@ export 'product/product_status.dart';
 export 'product/product_variant.dart';
 export 'product/wishlist.dart';
 export 'product/wishlist_item.dart';
+export 'subscription/alert_type.dart';
+export 'subscription/billing_cycle_summary.dart';
+export 'subscription/daily_usage_tracker.dart';
+export 'subscription/limit_type.dart';
 export 'subscription/subscription.dart';
 export 'subscription/subscription_event.dart';
 export 'subscription/subscription_invoice.dart';
+export 'subscription/tier_featur.dart';
+export 'subscription/tool_usage_limit.dart';
+export 'subscription/usage_alert.dart';
+export 'subscription/usage_class.dart';
 export 'subscription/usage_record.dart';
 export 'user/address.dart';
+export 'user/auth_session.dart';
+export 'user/customer_policy.dart';
 export 'user/customer_profile.dart';
 export 'user/subscription_tier.dart';
 export 'user/user.dart';
@@ -285,6 +321,644 @@ class Protocol extends _i1.SerializationManagerServer {
               type: _i2.IndexElementDefinitionType.column,
               definition: 'isActive',
             ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'ai_conversation_usage',
+      dartName: 'AIConversationUsage',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conversationId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'messageCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalTokens',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'inputTokens',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'outputTokens',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsInConversation',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'uniqueToolsUsed',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'estimatedCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'averageResponseTime',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userSatisfactionRating',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'date',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'ai_conversation_usage_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_ai_date_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'date',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'conversation_ai_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'conversationId',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'date_ai_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'date',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'auth_sessions',
+      dartName: 'AuthSession',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platform',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:PlatformType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platformUserId',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'loginAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'logoutAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'expiresAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deviceInfo',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ipAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userAgent',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastActivityAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'auth_sessions_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        )
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'auth_sessions_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_platform_idxx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'platform',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'platform_user_idxx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'platform',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'platformUserId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'active_sessions_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'lastActivityAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'billing_cycle_summaries',
+      dartName: 'BillingCycleSummary',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'periodStart',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'periodEnd',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'billingCycle',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'subscriptionTier',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:SubscriptionTier',
+        ),
+        _i2.ColumnDefinition(
+          name: 'baseSubscriptionAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalToolCalls',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsIncluded',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsOverage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsOverageCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalAIMessages',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiMessagesIncluded',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiMessagesOverage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiMessagesOverageCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalProducts',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productsIncluded',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productsOverage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productsOverageCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalAIDescriptions',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionsIncluded',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionsOverage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionsOverageCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalTransactionFees',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalUsageCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'draft\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'invoiceId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'billing_cycle_summaries_fk_0',
+          columns: ['vendorId'],
+          referenceTable: 'vendor_profiles',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'billing_cycle_summaries_fk_1',
+          columns: ['invoiceId'],
+          referenceTable: 'subscription_invoices',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'billing_cycle_summaries_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'vendor_billing_period_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'vendorId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'periodStart',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'periodEnd',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'status_billing_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'invoice_billing_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'invoiceId',
+            )
           ],
           type: 'btree',
           isUnique: false,
@@ -987,8 +1661,8 @@ class Protocol extends _i1.SerializationManagerServer {
         _i2.ColumnDefinition(
           name: 'userId',
           columnType: _i2.ColumnType.uuid,
-          isNullable: false,
-          dartType: 'UuidValue',
+          isNullable: true,
+          dartType: 'UuidValue?',
         ),
         _i2.ColumnDefinition(
           name: 'platform',
@@ -1243,6 +1917,173 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'customer_ai_policies',
+      dartName: 'CustomerAIPolicy',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'policyName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dailyMessageLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '100',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dailyToolCallLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '20',
+        ),
+        _i2.ColumnDefinition(
+          name: 'requireExplicitIntent',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'minimumConfidenceScore',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.8',
+        ),
+        _i2.ColumnDefinition(
+          name: 'throttleAfterCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '50',
+        ),
+        _i2.ColumnDefinition(
+          name: 'throttleDelaySeconds',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '2',
+        ),
+        _i2.ColumnDefinition(
+          name: 'enableProgressiveRestrictions',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'restrictionThresholds',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'maxDailyCost',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '1.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'warnAtCostPercentage',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.8',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isDefault',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'customer_ai_policies_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'policy_name_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'policyName',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'active_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'customer_profiles',
       dartName: 'CustomerProfile',
       schema: 'public',
@@ -1386,6 +2227,566 @@ class Protocol extends _i1.SerializationManagerServer {
           isUnique: true,
           isPrimary: true,
         )
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'customer_usage_patterns',
+      dartName: 'CustomerUsagePattern',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'averageDailyMessages',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'averageDailyToolCalls',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'peakUsageHour',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'usageClass',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:UsageClass',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isAbuser',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'abuseScore',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolSuccessRate',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '1.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'averageToolExecutionTime',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'averageConversationLength',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'repetitiveQueryScore',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'shouldThrottle',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'throttleReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currentThrottleDelay',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastAnalyzedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'analysisCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'customer_usage_patterns_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_c_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'usage_class_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'usageClass',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'abuse_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isAbuser',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'daily_usage_trackers',
+      dartName: 'DailyUsageTracker',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:UserType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'date',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'resetAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCallsLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiMessagesCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiMessagesLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productsCreatedCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productsCreatedLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionsCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionsLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'analyticsQueriesCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'analyticsQueriesLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isInGracePeriod',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'gracePeriodUsed',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'gracePeriodLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '5',
+        ),
+        _i2.ColumnDefinition(
+          name: 'subscriptionTier',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'protocol:SubscriptionTier?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'softLimitWarned',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'hardLimitReached',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'daily_usage_trackers_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_daily_date_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'date',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'date_daily_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'date',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'reset_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'resetAt',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'limit_breach_logs',
+      dartName: 'LimitBreachLog',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:UserType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'limitType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:LimitType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'attemptedAction',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currentUsage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'limitValue',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'subscriptionTier',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'protocol:SubscriptionTier?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conversationId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'actionTaken',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userNotified',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'severity',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:BreachSeverity',
+        ),
+        _i2.ColumnDefinition(
+          name: 'breachedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'limit_breach_logs_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_breach_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'breachedAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'limit_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'limitType',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'severity_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'severity',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
       ],
       managed: true,
     ),
@@ -3651,6 +5052,161 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'product_views',
+      dartName: 'ProductView',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platform',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:PlatformType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'source',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'viewDurationSeconds',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'addedToCart',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'purchased',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'product_views_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'product_views_fk_1',
+          columns: ['productId'],
+          referenceTable: 'products',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'product_views_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_product_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'productId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'product_date_idxx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'productId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_recent_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'products',
       dartName: 'Product',
       schema: 'public',
@@ -5137,6 +6693,753 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'tier_features',
+      dartName: 'TierFeature',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'tier',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:SubscriptionTier',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dailyToolCallLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'monthlyToolCallLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dailyAIMessageLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'monthlyAIMessageLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiDescriptionLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowBulkOperations',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowAdvancedAnalytics',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowAPIAccess',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowWhiteLabel',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'supportPriority',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'standard\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'supportResponseTime',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '24',
+        ),
+        _i2.ColumnDefinition(
+          name: 'monthlyPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'yearlyPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platformTransactionFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'overageToolCallPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.01',
+        ),
+        _i2.ColumnDefinition(
+          name: 'overageAIMessagePrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.001',
+        ),
+        _i2.ColumnDefinition(
+          name: 'overageProductPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '1.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'overageAIDescriptionPrice',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.1',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'tier_features_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'tier_sub_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'tier',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'active_tier_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'tool_usage_limits',
+      dartName: 'ToolUsageLimit',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'tier',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:SubscriptionTier',
+        ),
+        _i2.ColumnDefinition(
+          name: 'limitType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:LimitType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'dailyLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'monthlyLimit',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowGracePeriod',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'gracePeriodActions',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '5',
+        ),
+        _i2.ColumnDefinition(
+          name: 'restrictedTools',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'allowedToolsAfterLimit',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'costPerUsage',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'tool_usage_limits_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'tier_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'tier',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'limitType',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'tool_usage_logs',
+      dartName: 'ToolUsageLog',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:UserType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conversationId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'toolCategory',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'arguments',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'success',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'executionTimeMs',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'errorMessage',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'costIncurred',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isBillable',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'billingPeriodStart',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'billingPeriodEnd',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'wasWithinLimit',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'usedGracePeriod',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deniedDueToLimit',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platform',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ipAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userAgent',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'tool_usage_logs_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_created_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'tool_name_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'toolName',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'conversation_tool_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'conversationId',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'billing_period_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'billingPeriodStart',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'billingPeriodEnd',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'success_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'success',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'usage_alerts',
+      dartName: 'UsageAlert',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:UserType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'alertType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:AlertType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'limitType',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:LimitType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'thresholdPercentage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currentUsage',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'limitValue',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'title',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'message',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'actionRequired',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'actionUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isRead',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isDismissed',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deliveryMethod',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'sentAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'usage_alerts_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'alertType',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'read_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isRead',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'usage_created_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'usage_records',
       dartName: 'UsageRecord',
       schema: 'public',
@@ -5344,6 +7647,267 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'user_activity',
+      dartName: 'UserActivity',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'activityType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'categoryName',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'searchQuery',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platform',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'protocol:PlatformType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conversationId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'latitude',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'longitude',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'city',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'state',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'country',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'sessionId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'metadata',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'durationSeconds',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_activity_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_activity_fk_1',
+          columns: ['productId'],
+          referenceTable: 'products',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_activity_fk_2',
+          columns: ['vendorId'],
+          referenceTable: 'vendor_profiles',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'user_activity_fk_3',
+          columns: ['conversationId'],
+          referenceTable: 'conversations',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'user_activity_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            )
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_activity_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'activityType',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_date_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'location_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'city',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'state',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'product_activity_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'productId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'activityType',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'activity_type_date_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'activityType',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'users',
       dartName: 'User',
       schema: 'public',
@@ -5389,13 +7953,6 @@ class Protocol extends _i1.SerializationManagerServer {
         ),
         _i2.ColumnDefinition(
           name: 'isPhoneVerified',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
-        ),
-        _i2.ColumnDefinition(
-          name: 'isEmailVerified',
           columnType: _i2.ColumnType.boolean,
           isNullable: false,
           dartType: 'bool',
@@ -5462,6 +8019,77 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'emailVerified',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'emailVerifiedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'whatsappAuthenticated',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'telegramAuthenticated',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'webAuthenticated',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastWhatsappLogin',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastTelegramLogin',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastWebLogin',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verificationCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verificationCodeExpiry',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verificationAttempts',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
         ),
         _i2.ColumnDefinition(
           name: 'createdAt',
@@ -5560,6 +8188,53 @@ class Protocol extends _i1.SerializationManagerServer {
               type: _i2.IndexElementDefinitionType.column,
               definition: 'telegramId',
             )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'email_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'email',
+            )
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'whatsapp_auth_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'whatsappId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'whatsappAuthenticated',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'telegram_auth_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'telegramId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'telegramAuthenticated',
+            ),
           ],
           type: 'btree',
           isUnique: false,
@@ -6406,247 +9081,359 @@ class Protocol extends _i1.SerializationManagerServer {
     Type? t,
   ]) {
     t ??= T;
-    if (t == _i3.CartItem) {
-      return _i3.CartItem.fromJson(data) as T;
+    if (t == _i3.TemplateMessage) {
+      return _i3.TemplateMessage.fromJson(data) as T;
     }
-    if (t == _i4.ProductAnalytics) {
-      return _i4.ProductAnalytics.fromJson(data) as T;
+    if (t == _i4.BreachSeverity) {
+      return _i4.BreachSeverity.fromJson(data) as T;
     }
-    if (t == _i5.VendorAnalytics) {
-      return _i5.VendorAnalytics.fromJson(data) as T;
+    if (t == _i5.CustomerUsagePattern) {
+      return _i5.CustomerUsagePattern.fromJson(data) as T;
     }
-    if (t == _i6.BotInteraction) {
-      return _i6.BotInteraction.fromJson(data) as T;
+    if (t == _i6.EmptyModel) {
+      return _i6.EmptyModel.fromJson(data) as T;
     }
-    if (t == _i7.Conversation) {
-      return _i7.Conversation.fromJson(data) as T;
+    if (t == _i7.LimitBreachLog) {
+      return _i7.LimitBreachLog.fromJson(data) as T;
     }
-    if (t == _i8.ConversationStatus) {
-      return _i8.ConversationStatus.fromJson(data) as T;
+    if (t == _i8.PlatformAnalytics) {
+      return _i8.PlatformAnalytics.fromJson(data) as T;
     }
-    if (t == _i9.Message) {
-      return _i9.Message.fromJson(data) as T;
+    if (t == _i9.ProductAnalytics) {
+      return _i9.ProductAnalytics.fromJson(data) as T;
     }
-    if (t == _i10.MessageType) {
-      return _i10.MessageType.fromJson(data) as T;
+    if (t == _i10.ProductView) {
+      return _i10.ProductView.fromJson(data) as T;
     }
-    if (t == _i11.Notification) {
-      return _i11.Notification.fromJson(data) as T;
+    if (t == _i11.ToolUsageLog) {
+      return _i11.ToolUsageLog.fromJson(data) as T;
     }
-    if (t == _i12.PlatformType) {
-      return _i12.PlatformType.fromJson(data) as T;
+    if (t == _i12.UserActivity) {
+      return _i12.UserActivity.fromJson(data) as T;
     }
-    if (t == _i13.QuickReply) {
-      return _i13.QuickReply.fromJson(data) as T;
+    if (t == _i13.VendorAnalytics) {
+      return _i13.VendorAnalytics.fromJson(data) as T;
     }
-    if (t == _i14.TemplateMessage) {
-      return _i14.TemplateMessage.fromJson(data) as T;
+    if (t == _i14.BotInteraction) {
+      return _i14.BotInteraction.fromJson(data) as T;
     }
-    if (t == _i15.Cart) {
-      return _i15.Cart.fromJson(data) as T;
+    if (t == _i15.Conversation) {
+      return _i15.Conversation.fromJson(data) as T;
     }
-    if (t == _i16.PlatformAnalytics) {
-      return _i16.PlatformAnalytics.fromJson(data) as T;
+    if (t == _i16.ConversationStatus) {
+      return _i16.ConversationStatus.fromJson(data) as T;
     }
-    if (t == _i17.Order) {
-      return _i17.Order.fromJson(data) as T;
+    if (t == _i17.Message) {
+      return _i17.Message.fromJson(data) as T;
     }
-    if (t == _i18.OrderItem) {
-      return _i18.OrderItem.fromJson(data) as T;
+    if (t == _i18.MessageType) {
+      return _i18.MessageType.fromJson(data) as T;
     }
-    if (t == _i19.OrderStatus) {
-      return _i19.OrderStatus.fromJson(data) as T;
+    if (t == _i19.Notification) {
+      return _i19.Notification.fromJson(data) as T;
     }
-    if (t == _i20.PaymentMethod) {
-      return _i20.PaymentMethod.fromJson(data) as T;
+    if (t == _i20.PlatformType) {
+      return _i20.PlatformType.fromJson(data) as T;
     }
-    if (t == _i21.PaymentStatus) {
-      return _i21.PaymentStatus.fromJson(data) as T;
+    if (t == _i21.QuickReply) {
+      return _i21.QuickReply.fromJson(data) as T;
     }
-    if (t == _i22.PaymentTransaction) {
-      return _i22.PaymentTransaction.fromJson(data) as T;
+    if (t == _i22.AIConversationUsage) {
+      return _i22.AIConversationUsage.fromJson(data) as T;
     }
-    if (t == _i23.Refund) {
-      return _i23.Refund.fromJson(data) as T;
+    if (t == _i23.Cart) {
+      return _i23.Cart.fromJson(data) as T;
     }
-    if (t == _i24.Category) {
-      return _i24.Category.fromJson(data) as T;
+    if (t == _i24.CartItem) {
+      return _i24.CartItem.fromJson(data) as T;
     }
-    if (t == _i25.Product) {
-      return _i25.Product.fromJson(data) as T;
+    if (t == _i25.Order) {
+      return _i25.Order.fromJson(data) as T;
     }
-    if (t == _i26.ProductCondition) {
-      return _i26.ProductCondition.fromJson(data) as T;
+    if (t == _i26.OrderItem) {
+      return _i26.OrderItem.fromJson(data) as T;
     }
-    if (t == _i27.ProductReview) {
-      return _i27.ProductReview.fromJson(data) as T;
+    if (t == _i27.OrderStatus) {
+      return _i27.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i28.VendorProfile) {
-      return _i28.VendorProfile.fromJson(data) as T;
+    if (t == _i28.PaymentMethod) {
+      return _i28.PaymentMethod.fromJson(data) as T;
     }
-    if (t == _i29.ProductVariant) {
-      return _i29.ProductVariant.fromJson(data) as T;
+    if (t == _i29.PaymentStatus) {
+      return _i29.PaymentStatus.fromJson(data) as T;
     }
-    if (t == _i30.Wishlist) {
-      return _i30.Wishlist.fromJson(data) as T;
+    if (t == _i30.PaymentTransaction) {
+      return _i30.PaymentTransaction.fromJson(data) as T;
     }
-    if (t == _i31.WishlistItem) {
-      return _i31.WishlistItem.fromJson(data) as T;
+    if (t == _i31.Refund) {
+      return _i31.Refund.fromJson(data) as T;
     }
-    if (t == _i32.Subscription) {
-      return _i32.Subscription.fromJson(data) as T;
+    if (t == _i32.Category) {
+      return _i32.Category.fromJson(data) as T;
     }
-    if (t == _i33.SubscriptionEvent) {
-      return _i33.SubscriptionEvent.fromJson(data) as T;
+    if (t == _i33.Product) {
+      return _i33.Product.fromJson(data) as T;
     }
-    if (t == _i34.SubscriptionInvoice) {
-      return _i34.SubscriptionInvoice.fromJson(data) as T;
+    if (t == _i34.ProductCondition) {
+      return _i34.ProductCondition.fromJson(data) as T;
     }
-    if (t == _i35.UsageRecord) {
-      return _i35.UsageRecord.fromJson(data) as T;
+    if (t == _i35.ProductReview) {
+      return _i35.ProductReview.fromJson(data) as T;
     }
-    if (t == _i36.Address) {
-      return _i36.Address.fromJson(data) as T;
+    if (t == _i36.ProductStatus) {
+      return _i36.ProductStatus.fromJson(data) as T;
     }
-    if (t == _i37.CustomerProfile) {
-      return _i37.CustomerProfile.fromJson(data) as T;
+    if (t == _i37.ProductVariant) {
+      return _i37.ProductVariant.fromJson(data) as T;
     }
-    if (t == _i38.SubscriptionTier) {
-      return _i38.SubscriptionTier.fromJson(data) as T;
+    if (t == _i38.Wishlist) {
+      return _i38.Wishlist.fromJson(data) as T;
     }
-    if (t == _i39.User) {
-      return _i39.User.fromJson(data) as T;
+    if (t == _i39.WishlistItem) {
+      return _i39.WishlistItem.fromJson(data) as T;
     }
-    if (t == _i40.UserStatus) {
-      return _i40.UserStatus.fromJson(data) as T;
+    if (t == _i40.VendorProfile) {
+      return _i40.VendorProfile.fromJson(data) as T;
     }
-    if (t == _i41.UserType) {
-      return _i41.UserType.fromJson(data) as T;
+    if (t == _i41.BillingCycleSummary) {
+      return _i41.BillingCycleSummary.fromJson(data) as T;
     }
-    if (t == _i42.ProductStatus) {
-      return _i42.ProductStatus.fromJson(data) as T;
+    if (t == _i42.DailyUsageTracker) {
+      return _i42.DailyUsageTracker.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i3.CartItem?>()) {
-      return (data != null ? _i3.CartItem.fromJson(data) : null) as T;
+    if (t == _i43.LimitType) {
+      return _i43.LimitType.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i4.ProductAnalytics?>()) {
-      return (data != null ? _i4.ProductAnalytics.fromJson(data) : null) as T;
+    if (t == _i44.Subscription) {
+      return _i44.Subscription.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i5.VendorAnalytics?>()) {
-      return (data != null ? _i5.VendorAnalytics.fromJson(data) : null) as T;
+    if (t == _i45.SubscriptionEvent) {
+      return _i45.SubscriptionEvent.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i6.BotInteraction?>()) {
-      return (data != null ? _i6.BotInteraction.fromJson(data) : null) as T;
+    if (t == _i46.SubscriptionInvoice) {
+      return _i46.SubscriptionInvoice.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i7.Conversation?>()) {
-      return (data != null ? _i7.Conversation.fromJson(data) : null) as T;
+    if (t == _i47.TierFeature) {
+      return _i47.TierFeature.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i8.ConversationStatus?>()) {
-      return (data != null ? _i8.ConversationStatus.fromJson(data) : null) as T;
+    if (t == _i48.ToolUsageLimit) {
+      return _i48.ToolUsageLimit.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i9.Message?>()) {
-      return (data != null ? _i9.Message.fromJson(data) : null) as T;
+    if (t == _i49.UsageAlert) {
+      return _i49.UsageAlert.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i10.MessageType?>()) {
-      return (data != null ? _i10.MessageType.fromJson(data) : null) as T;
+    if (t == _i50.UsageClass) {
+      return _i50.UsageClass.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i11.Notification?>()) {
-      return (data != null ? _i11.Notification.fromJson(data) : null) as T;
+    if (t == _i51.UsageRecord) {
+      return _i51.UsageRecord.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i12.PlatformType?>()) {
-      return (data != null ? _i12.PlatformType.fromJson(data) : null) as T;
+    if (t == _i52.Address) {
+      return _i52.Address.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i13.QuickReply?>()) {
-      return (data != null ? _i13.QuickReply.fromJson(data) : null) as T;
+    if (t == _i53.AuthSession) {
+      return _i53.AuthSession.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i14.TemplateMessage?>()) {
-      return (data != null ? _i14.TemplateMessage.fromJson(data) : null) as T;
+    if (t == _i54.CustomerAIPolicy) {
+      return _i54.CustomerAIPolicy.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i15.Cart?>()) {
-      return (data != null ? _i15.Cart.fromJson(data) : null) as T;
+    if (t == _i55.CustomerProfile) {
+      return _i55.CustomerProfile.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i16.PlatformAnalytics?>()) {
-      return (data != null ? _i16.PlatformAnalytics.fromJson(data) : null) as T;
+    if (t == _i56.SubscriptionTier) {
+      return _i56.SubscriptionTier.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i17.Order?>()) {
-      return (data != null ? _i17.Order.fromJson(data) : null) as T;
+    if (t == _i57.User) {
+      return _i57.User.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i18.OrderItem?>()) {
-      return (data != null ? _i18.OrderItem.fromJson(data) : null) as T;
+    if (t == _i58.UserStatus) {
+      return _i58.UserStatus.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i19.OrderStatus?>()) {
-      return (data != null ? _i19.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i59.UserType) {
+      return _i59.UserType.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i20.PaymentMethod?>()) {
-      return (data != null ? _i20.PaymentMethod.fromJson(data) : null) as T;
+    if (t == _i60.AlertType) {
+      return _i60.AlertType.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i21.PaymentStatus?>()) {
-      return (data != null ? _i21.PaymentStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i3.TemplateMessage?>()) {
+      return (data != null ? _i3.TemplateMessage.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i22.PaymentTransaction?>()) {
-      return (data != null ? _i22.PaymentTransaction.fromJson(data) : null)
+    if (t == _i1.getType<_i4.BreachSeverity?>()) {
+      return (data != null ? _i4.BreachSeverity.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i5.CustomerUsagePattern?>()) {
+      return (data != null ? _i5.CustomerUsagePattern.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i23.Refund?>()) {
-      return (data != null ? _i23.Refund.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i6.EmptyModel?>()) {
+      return (data != null ? _i6.EmptyModel.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i24.Category?>()) {
-      return (data != null ? _i24.Category.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.LimitBreachLog?>()) {
+      return (data != null ? _i7.LimitBreachLog.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.Product?>()) {
-      return (data != null ? _i25.Product.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.PlatformAnalytics?>()) {
+      return (data != null ? _i8.PlatformAnalytics.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.ProductCondition?>()) {
-      return (data != null ? _i26.ProductCondition.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.ProductAnalytics?>()) {
+      return (data != null ? _i9.ProductAnalytics.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i27.ProductReview?>()) {
-      return (data != null ? _i27.ProductReview.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i10.ProductView?>()) {
+      return (data != null ? _i10.ProductView.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i28.VendorProfile?>()) {
-      return (data != null ? _i28.VendorProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i11.ToolUsageLog?>()) {
+      return (data != null ? _i11.ToolUsageLog.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.ProductVariant?>()) {
-      return (data != null ? _i29.ProductVariant.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i12.UserActivity?>()) {
+      return (data != null ? _i12.UserActivity.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.Wishlist?>()) {
-      return (data != null ? _i30.Wishlist.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i13.VendorAnalytics?>()) {
+      return (data != null ? _i13.VendorAnalytics.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i31.WishlistItem?>()) {
-      return (data != null ? _i31.WishlistItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i14.BotInteraction?>()) {
+      return (data != null ? _i14.BotInteraction.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i32.Subscription?>()) {
-      return (data != null ? _i32.Subscription.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i15.Conversation?>()) {
+      return (data != null ? _i15.Conversation.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.SubscriptionEvent?>()) {
-      return (data != null ? _i33.SubscriptionEvent.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i34.SubscriptionInvoice?>()) {
-      return (data != null ? _i34.SubscriptionInvoice.fromJson(data) : null)
+    if (t == _i1.getType<_i16.ConversationStatus?>()) {
+      return (data != null ? _i16.ConversationStatus.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i35.UsageRecord?>()) {
-      return (data != null ? _i35.UsageRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i17.Message?>()) {
+      return (data != null ? _i17.Message.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i36.Address?>()) {
-      return (data != null ? _i36.Address.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i18.MessageType?>()) {
+      return (data != null ? _i18.MessageType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i37.CustomerProfile?>()) {
-      return (data != null ? _i37.CustomerProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i19.Notification?>()) {
+      return (data != null ? _i19.Notification.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i38.SubscriptionTier?>()) {
-      return (data != null ? _i38.SubscriptionTier.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.PlatformType?>()) {
+      return (data != null ? _i20.PlatformType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i39.User?>()) {
-      return (data != null ? _i39.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.QuickReply?>()) {
+      return (data != null ? _i21.QuickReply.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i40.UserStatus?>()) {
-      return (data != null ? _i40.UserStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.AIConversationUsage?>()) {
+      return (data != null ? _i22.AIConversationUsage.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i41.UserType?>()) {
-      return (data != null ? _i41.UserType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.Cart?>()) {
+      return (data != null ? _i23.Cart.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i42.ProductStatus?>()) {
-      return (data != null ? _i42.ProductStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i24.CartItem?>()) {
+      return (data != null ? _i24.CartItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i25.Order?>()) {
+      return (data != null ? _i25.Order.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i26.OrderItem?>()) {
+      return (data != null ? _i26.OrderItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i27.OrderStatus?>()) {
+      return (data != null ? _i27.OrderStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i28.PaymentMethod?>()) {
+      return (data != null ? _i28.PaymentMethod.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i29.PaymentStatus?>()) {
+      return (data != null ? _i29.PaymentStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i30.PaymentTransaction?>()) {
+      return (data != null ? _i30.PaymentTransaction.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i31.Refund?>()) {
+      return (data != null ? _i31.Refund.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i32.Category?>()) {
+      return (data != null ? _i32.Category.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i33.Product?>()) {
+      return (data != null ? _i33.Product.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i34.ProductCondition?>()) {
+      return (data != null ? _i34.ProductCondition.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i35.ProductReview?>()) {
+      return (data != null ? _i35.ProductReview.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i36.ProductStatus?>()) {
+      return (data != null ? _i36.ProductStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i37.ProductVariant?>()) {
+      return (data != null ? _i37.ProductVariant.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i38.Wishlist?>()) {
+      return (data != null ? _i38.Wishlist.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i39.WishlistItem?>()) {
+      return (data != null ? _i39.WishlistItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i40.VendorProfile?>()) {
+      return (data != null ? _i40.VendorProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i41.BillingCycleSummary?>()) {
+      return (data != null ? _i41.BillingCycleSummary.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i42.DailyUsageTracker?>()) {
+      return (data != null ? _i42.DailyUsageTracker.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i43.LimitType?>()) {
+      return (data != null ? _i43.LimitType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i44.Subscription?>()) {
+      return (data != null ? _i44.Subscription.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i45.SubscriptionEvent?>()) {
+      return (data != null ? _i45.SubscriptionEvent.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i46.SubscriptionInvoice?>()) {
+      return (data != null ? _i46.SubscriptionInvoice.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i47.TierFeature?>()) {
+      return (data != null ? _i47.TierFeature.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i48.ToolUsageLimit?>()) {
+      return (data != null ? _i48.ToolUsageLimit.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i49.UsageAlert?>()) {
+      return (data != null ? _i49.UsageAlert.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i50.UsageClass?>()) {
+      return (data != null ? _i50.UsageClass.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i51.UsageRecord?>()) {
+      return (data != null ? _i51.UsageRecord.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i52.Address?>()) {
+      return (data != null ? _i52.Address.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i53.AuthSession?>()) {
+      return (data != null ? _i53.AuthSession.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i54.CustomerAIPolicy?>()) {
+      return (data != null ? _i54.CustomerAIPolicy.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i55.CustomerProfile?>()) {
+      return (data != null ? _i55.CustomerProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i56.SubscriptionTier?>()) {
+      return (data != null ? _i56.SubscriptionTier.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i57.User?>()) {
+      return (data != null ? _i57.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i58.UserStatus?>()) {
+      return (data != null ? _i58.UserStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i59.UserType?>()) {
+      return (data != null ? _i59.UserType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i60.AlertType?>()) {
+      return (data != null ? _i60.AlertType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
@@ -6711,22 +9498,22 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<String>(e)).toList()
           : null) as T;
     }
-    if (t == List<_i43.VendorAnalytics>) {
+    if (t == List<_i61.VendorAnalytics>) {
       return (data as List)
-          .map((e) => deserialize<_i43.VendorAnalytics>(e))
+          .map((e) => deserialize<_i61.VendorAnalytics>(e))
           .toList() as T;
     }
     if (t == Map<String, dynamic>) {
       return (data as Map).map((k, v) =>
           MapEntry(deserialize<String>(k), deserialize<dynamic>(v))) as T;
     }
-    if (t == List<_i44.ProductAnalytics>) {
+    if (t == List<_i62.ProductAnalytics>) {
       return (data as List)
-          .map((e) => deserialize<_i44.ProductAnalytics>(e))
+          .map((e) => deserialize<_i62.ProductAnalytics>(e))
           .toList() as T;
     }
-    if (t == List<_i45.Product>) {
-      return (data as List).map((e) => deserialize<_i45.Product>(e)).toList()
+    if (t == List<_i63.Product>) {
+      return (data as List).map((e) => deserialize<_i63.Product>(e)).toList()
           as T;
     }
     if (t == Map<String, double>) {
@@ -6739,12 +9526,12 @@ class Protocol extends _i1.SerializationManagerServer {
               MapEntry(deserialize<String>(k), deserialize<dynamic>(v)))
           : null) as T;
     }
-    if (t == List<_i46.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i46.OrderItem>(e)).toList()
+    if (t == List<_i64.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i64.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<_i47.Order>) {
-      return (data as List).map((e) => deserialize<_i47.Order>(e)).toList()
+    if (t == List<_i65.Order>) {
+      return (data as List).map((e) => deserialize<_i65.Order>(e)).toList()
           as T;
     }
     if (t == _i1.getType<List<String>?>()) {
@@ -6752,13 +9539,13 @@ class Protocol extends _i1.SerializationManagerServer {
           ? (data as List).map((e) => deserialize<String>(e)).toList()
           : null) as T;
     }
-    if (t == List<_i48.UsageRecord>) {
+    if (t == List<_i66.UsageRecord>) {
       return (data as List)
-          .map((e) => deserialize<_i48.UsageRecord>(e))
+          .map((e) => deserialize<_i66.UsageRecord>(e))
           .toList() as T;
     }
-    if (t == List<_i49.Address>) {
-      return (data as List).map((e) => deserialize<_i49.Address>(e)).toList()
+    if (t == List<_i67.Address>) {
+      return (data as List).map((e) => deserialize<_i67.Address>(e)).toList()
           as T;
     }
     try {
@@ -6771,125 +9558,179 @@ class Protocol extends _i1.SerializationManagerServer {
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i3.CartItem) {
-      return 'CartItem';
-    }
-    if (data is _i4.ProductAnalytics) {
-      return 'ProductAnalytics';
-    }
-    if (data is _i5.VendorAnalytics) {
-      return 'VendorAnalytics';
-    }
-    if (data is _i6.BotInteraction) {
-      return 'BotInteraction';
-    }
-    if (data is _i7.Conversation) {
-      return 'Conversation';
-    }
-    if (data is _i8.ConversationStatus) {
-      return 'ConversationStatus';
-    }
-    if (data is _i9.Message) {
-      return 'Message';
-    }
-    if (data is _i10.MessageType) {
-      return 'MessageType';
-    }
-    if (data is _i11.Notification) {
-      return 'Notification';
-    }
-    if (data is _i12.PlatformType) {
-      return 'PlatformType';
-    }
-    if (data is _i13.QuickReply) {
-      return 'QuickReply';
-    }
-    if (data is _i14.TemplateMessage) {
+    if (data is _i3.TemplateMessage) {
       return 'TemplateMessage';
     }
-    if (data is _i15.Cart) {
-      return 'Cart';
+    if (data is _i4.BreachSeverity) {
+      return 'BreachSeverity';
     }
-    if (data is _i16.PlatformAnalytics) {
+    if (data is _i5.CustomerUsagePattern) {
+      return 'CustomerUsagePattern';
+    }
+    if (data is _i6.EmptyModel) {
+      return 'EmptyModel';
+    }
+    if (data is _i7.LimitBreachLog) {
+      return 'LimitBreachLog';
+    }
+    if (data is _i8.PlatformAnalytics) {
       return 'PlatformAnalytics';
     }
-    if (data is _i17.Order) {
+    if (data is _i9.ProductAnalytics) {
+      return 'ProductAnalytics';
+    }
+    if (data is _i10.ProductView) {
+      return 'ProductView';
+    }
+    if (data is _i11.ToolUsageLog) {
+      return 'ToolUsageLog';
+    }
+    if (data is _i12.UserActivity) {
+      return 'UserActivity';
+    }
+    if (data is _i13.VendorAnalytics) {
+      return 'VendorAnalytics';
+    }
+    if (data is _i14.BotInteraction) {
+      return 'BotInteraction';
+    }
+    if (data is _i15.Conversation) {
+      return 'Conversation';
+    }
+    if (data is _i16.ConversationStatus) {
+      return 'ConversationStatus';
+    }
+    if (data is _i17.Message) {
+      return 'Message';
+    }
+    if (data is _i18.MessageType) {
+      return 'MessageType';
+    }
+    if (data is _i19.Notification) {
+      return 'Notification';
+    }
+    if (data is _i20.PlatformType) {
+      return 'PlatformType';
+    }
+    if (data is _i21.QuickReply) {
+      return 'QuickReply';
+    }
+    if (data is _i22.AIConversationUsage) {
+      return 'AIConversationUsage';
+    }
+    if (data is _i23.Cart) {
+      return 'Cart';
+    }
+    if (data is _i24.CartItem) {
+      return 'CartItem';
+    }
+    if (data is _i25.Order) {
       return 'Order';
     }
-    if (data is _i18.OrderItem) {
+    if (data is _i26.OrderItem) {
       return 'OrderItem';
     }
-    if (data is _i19.OrderStatus) {
+    if (data is _i27.OrderStatus) {
       return 'OrderStatus';
     }
-    if (data is _i20.PaymentMethod) {
+    if (data is _i28.PaymentMethod) {
       return 'PaymentMethod';
     }
-    if (data is _i21.PaymentStatus) {
+    if (data is _i29.PaymentStatus) {
       return 'PaymentStatus';
     }
-    if (data is _i22.PaymentTransaction) {
+    if (data is _i30.PaymentTransaction) {
       return 'PaymentTransaction';
     }
-    if (data is _i23.Refund) {
+    if (data is _i31.Refund) {
       return 'Refund';
     }
-    if (data is _i24.Category) {
+    if (data is _i32.Category) {
       return 'Category';
     }
-    if (data is _i25.Product) {
+    if (data is _i33.Product) {
       return 'Product';
     }
-    if (data is _i26.ProductCondition) {
+    if (data is _i34.ProductCondition) {
       return 'ProductCondition';
     }
-    if (data is _i27.ProductReview) {
+    if (data is _i35.ProductReview) {
       return 'ProductReview';
     }
-    if (data is _i28.VendorProfile) {
-      return 'VendorProfile';
+    if (data is _i36.ProductStatus) {
+      return 'ProductStatus';
     }
-    if (data is _i29.ProductVariant) {
+    if (data is _i37.ProductVariant) {
       return 'ProductVariant';
     }
-    if (data is _i30.Wishlist) {
+    if (data is _i38.Wishlist) {
       return 'Wishlist';
     }
-    if (data is _i31.WishlistItem) {
+    if (data is _i39.WishlistItem) {
       return 'WishlistItem';
     }
-    if (data is _i32.Subscription) {
+    if (data is _i40.VendorProfile) {
+      return 'VendorProfile';
+    }
+    if (data is _i41.BillingCycleSummary) {
+      return 'BillingCycleSummary';
+    }
+    if (data is _i42.DailyUsageTracker) {
+      return 'DailyUsageTracker';
+    }
+    if (data is _i43.LimitType) {
+      return 'LimitType';
+    }
+    if (data is _i44.Subscription) {
       return 'Subscription';
     }
-    if (data is _i33.SubscriptionEvent) {
+    if (data is _i45.SubscriptionEvent) {
       return 'SubscriptionEvent';
     }
-    if (data is _i34.SubscriptionInvoice) {
+    if (data is _i46.SubscriptionInvoice) {
       return 'SubscriptionInvoice';
     }
-    if (data is _i35.UsageRecord) {
+    if (data is _i47.TierFeature) {
+      return 'TierFeature';
+    }
+    if (data is _i48.ToolUsageLimit) {
+      return 'ToolUsageLimit';
+    }
+    if (data is _i49.UsageAlert) {
+      return 'UsageAlert';
+    }
+    if (data is _i50.UsageClass) {
+      return 'UsageClass';
+    }
+    if (data is _i51.UsageRecord) {
       return 'UsageRecord';
     }
-    if (data is _i36.Address) {
+    if (data is _i52.Address) {
       return 'Address';
     }
-    if (data is _i37.CustomerProfile) {
+    if (data is _i53.AuthSession) {
+      return 'AuthSession';
+    }
+    if (data is _i54.CustomerAIPolicy) {
+      return 'CustomerAIPolicy';
+    }
+    if (data is _i55.CustomerProfile) {
       return 'CustomerProfile';
     }
-    if (data is _i38.SubscriptionTier) {
+    if (data is _i56.SubscriptionTier) {
       return 'SubscriptionTier';
     }
-    if (data is _i39.User) {
+    if (data is _i57.User) {
       return 'User';
     }
-    if (data is _i40.UserStatus) {
+    if (data is _i58.UserStatus) {
       return 'UserStatus';
     }
-    if (data is _i41.UserType) {
+    if (data is _i59.UserType) {
       return 'UserType';
     }
-    if (data is _i42.ProductStatus) {
-      return 'ProductStatus';
+    if (data is _i60.AlertType) {
+      return 'AlertType';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -6904,125 +9745,179 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
-    if (dataClassName == 'CartItem') {
-      return deserialize<_i3.CartItem>(data['data']);
-    }
-    if (dataClassName == 'ProductAnalytics') {
-      return deserialize<_i4.ProductAnalytics>(data['data']);
-    }
-    if (dataClassName == 'VendorAnalytics') {
-      return deserialize<_i5.VendorAnalytics>(data['data']);
-    }
-    if (dataClassName == 'BotInteraction') {
-      return deserialize<_i6.BotInteraction>(data['data']);
-    }
-    if (dataClassName == 'Conversation') {
-      return deserialize<_i7.Conversation>(data['data']);
-    }
-    if (dataClassName == 'ConversationStatus') {
-      return deserialize<_i8.ConversationStatus>(data['data']);
-    }
-    if (dataClassName == 'Message') {
-      return deserialize<_i9.Message>(data['data']);
-    }
-    if (dataClassName == 'MessageType') {
-      return deserialize<_i10.MessageType>(data['data']);
-    }
-    if (dataClassName == 'Notification') {
-      return deserialize<_i11.Notification>(data['data']);
-    }
-    if (dataClassName == 'PlatformType') {
-      return deserialize<_i12.PlatformType>(data['data']);
-    }
-    if (dataClassName == 'QuickReply') {
-      return deserialize<_i13.QuickReply>(data['data']);
-    }
     if (dataClassName == 'TemplateMessage') {
-      return deserialize<_i14.TemplateMessage>(data['data']);
+      return deserialize<_i3.TemplateMessage>(data['data']);
     }
-    if (dataClassName == 'Cart') {
-      return deserialize<_i15.Cart>(data['data']);
+    if (dataClassName == 'BreachSeverity') {
+      return deserialize<_i4.BreachSeverity>(data['data']);
+    }
+    if (dataClassName == 'CustomerUsagePattern') {
+      return deserialize<_i5.CustomerUsagePattern>(data['data']);
+    }
+    if (dataClassName == 'EmptyModel') {
+      return deserialize<_i6.EmptyModel>(data['data']);
+    }
+    if (dataClassName == 'LimitBreachLog') {
+      return deserialize<_i7.LimitBreachLog>(data['data']);
     }
     if (dataClassName == 'PlatformAnalytics') {
-      return deserialize<_i16.PlatformAnalytics>(data['data']);
+      return deserialize<_i8.PlatformAnalytics>(data['data']);
+    }
+    if (dataClassName == 'ProductAnalytics') {
+      return deserialize<_i9.ProductAnalytics>(data['data']);
+    }
+    if (dataClassName == 'ProductView') {
+      return deserialize<_i10.ProductView>(data['data']);
+    }
+    if (dataClassName == 'ToolUsageLog') {
+      return deserialize<_i11.ToolUsageLog>(data['data']);
+    }
+    if (dataClassName == 'UserActivity') {
+      return deserialize<_i12.UserActivity>(data['data']);
+    }
+    if (dataClassName == 'VendorAnalytics') {
+      return deserialize<_i13.VendorAnalytics>(data['data']);
+    }
+    if (dataClassName == 'BotInteraction') {
+      return deserialize<_i14.BotInteraction>(data['data']);
+    }
+    if (dataClassName == 'Conversation') {
+      return deserialize<_i15.Conversation>(data['data']);
+    }
+    if (dataClassName == 'ConversationStatus') {
+      return deserialize<_i16.ConversationStatus>(data['data']);
+    }
+    if (dataClassName == 'Message') {
+      return deserialize<_i17.Message>(data['data']);
+    }
+    if (dataClassName == 'MessageType') {
+      return deserialize<_i18.MessageType>(data['data']);
+    }
+    if (dataClassName == 'Notification') {
+      return deserialize<_i19.Notification>(data['data']);
+    }
+    if (dataClassName == 'PlatformType') {
+      return deserialize<_i20.PlatformType>(data['data']);
+    }
+    if (dataClassName == 'QuickReply') {
+      return deserialize<_i21.QuickReply>(data['data']);
+    }
+    if (dataClassName == 'AIConversationUsage') {
+      return deserialize<_i22.AIConversationUsage>(data['data']);
+    }
+    if (dataClassName == 'Cart') {
+      return deserialize<_i23.Cart>(data['data']);
+    }
+    if (dataClassName == 'CartItem') {
+      return deserialize<_i24.CartItem>(data['data']);
     }
     if (dataClassName == 'Order') {
-      return deserialize<_i17.Order>(data['data']);
+      return deserialize<_i25.Order>(data['data']);
     }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i18.OrderItem>(data['data']);
+      return deserialize<_i26.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i19.OrderStatus>(data['data']);
+      return deserialize<_i27.OrderStatus>(data['data']);
     }
     if (dataClassName == 'PaymentMethod') {
-      return deserialize<_i20.PaymentMethod>(data['data']);
+      return deserialize<_i28.PaymentMethod>(data['data']);
     }
     if (dataClassName == 'PaymentStatus') {
-      return deserialize<_i21.PaymentStatus>(data['data']);
+      return deserialize<_i29.PaymentStatus>(data['data']);
     }
     if (dataClassName == 'PaymentTransaction') {
-      return deserialize<_i22.PaymentTransaction>(data['data']);
+      return deserialize<_i30.PaymentTransaction>(data['data']);
     }
     if (dataClassName == 'Refund') {
-      return deserialize<_i23.Refund>(data['data']);
+      return deserialize<_i31.Refund>(data['data']);
     }
     if (dataClassName == 'Category') {
-      return deserialize<_i24.Category>(data['data']);
+      return deserialize<_i32.Category>(data['data']);
     }
     if (dataClassName == 'Product') {
-      return deserialize<_i25.Product>(data['data']);
+      return deserialize<_i33.Product>(data['data']);
     }
     if (dataClassName == 'ProductCondition') {
-      return deserialize<_i26.ProductCondition>(data['data']);
+      return deserialize<_i34.ProductCondition>(data['data']);
     }
     if (dataClassName == 'ProductReview') {
-      return deserialize<_i27.ProductReview>(data['data']);
-    }
-    if (dataClassName == 'VendorProfile') {
-      return deserialize<_i28.VendorProfile>(data['data']);
-    }
-    if (dataClassName == 'ProductVariant') {
-      return deserialize<_i29.ProductVariant>(data['data']);
-    }
-    if (dataClassName == 'Wishlist') {
-      return deserialize<_i30.Wishlist>(data['data']);
-    }
-    if (dataClassName == 'WishlistItem') {
-      return deserialize<_i31.WishlistItem>(data['data']);
-    }
-    if (dataClassName == 'Subscription') {
-      return deserialize<_i32.Subscription>(data['data']);
-    }
-    if (dataClassName == 'SubscriptionEvent') {
-      return deserialize<_i33.SubscriptionEvent>(data['data']);
-    }
-    if (dataClassName == 'SubscriptionInvoice') {
-      return deserialize<_i34.SubscriptionInvoice>(data['data']);
-    }
-    if (dataClassName == 'UsageRecord') {
-      return deserialize<_i35.UsageRecord>(data['data']);
-    }
-    if (dataClassName == 'Address') {
-      return deserialize<_i36.Address>(data['data']);
-    }
-    if (dataClassName == 'CustomerProfile') {
-      return deserialize<_i37.CustomerProfile>(data['data']);
-    }
-    if (dataClassName == 'SubscriptionTier') {
-      return deserialize<_i38.SubscriptionTier>(data['data']);
-    }
-    if (dataClassName == 'User') {
-      return deserialize<_i39.User>(data['data']);
-    }
-    if (dataClassName == 'UserStatus') {
-      return deserialize<_i40.UserStatus>(data['data']);
-    }
-    if (dataClassName == 'UserType') {
-      return deserialize<_i41.UserType>(data['data']);
+      return deserialize<_i35.ProductReview>(data['data']);
     }
     if (dataClassName == 'ProductStatus') {
-      return deserialize<_i42.ProductStatus>(data['data']);
+      return deserialize<_i36.ProductStatus>(data['data']);
+    }
+    if (dataClassName == 'ProductVariant') {
+      return deserialize<_i37.ProductVariant>(data['data']);
+    }
+    if (dataClassName == 'Wishlist') {
+      return deserialize<_i38.Wishlist>(data['data']);
+    }
+    if (dataClassName == 'WishlistItem') {
+      return deserialize<_i39.WishlistItem>(data['data']);
+    }
+    if (dataClassName == 'VendorProfile') {
+      return deserialize<_i40.VendorProfile>(data['data']);
+    }
+    if (dataClassName == 'BillingCycleSummary') {
+      return deserialize<_i41.BillingCycleSummary>(data['data']);
+    }
+    if (dataClassName == 'DailyUsageTracker') {
+      return deserialize<_i42.DailyUsageTracker>(data['data']);
+    }
+    if (dataClassName == 'LimitType') {
+      return deserialize<_i43.LimitType>(data['data']);
+    }
+    if (dataClassName == 'Subscription') {
+      return deserialize<_i44.Subscription>(data['data']);
+    }
+    if (dataClassName == 'SubscriptionEvent') {
+      return deserialize<_i45.SubscriptionEvent>(data['data']);
+    }
+    if (dataClassName == 'SubscriptionInvoice') {
+      return deserialize<_i46.SubscriptionInvoice>(data['data']);
+    }
+    if (dataClassName == 'TierFeature') {
+      return deserialize<_i47.TierFeature>(data['data']);
+    }
+    if (dataClassName == 'ToolUsageLimit') {
+      return deserialize<_i48.ToolUsageLimit>(data['data']);
+    }
+    if (dataClassName == 'UsageAlert') {
+      return deserialize<_i49.UsageAlert>(data['data']);
+    }
+    if (dataClassName == 'UsageClass') {
+      return deserialize<_i50.UsageClass>(data['data']);
+    }
+    if (dataClassName == 'UsageRecord') {
+      return deserialize<_i51.UsageRecord>(data['data']);
+    }
+    if (dataClassName == 'Address') {
+      return deserialize<_i52.Address>(data['data']);
+    }
+    if (dataClassName == 'AuthSession') {
+      return deserialize<_i53.AuthSession>(data['data']);
+    }
+    if (dataClassName == 'CustomerAIPolicy') {
+      return deserialize<_i54.CustomerAIPolicy>(data['data']);
+    }
+    if (dataClassName == 'CustomerProfile') {
+      return deserialize<_i55.CustomerProfile>(data['data']);
+    }
+    if (dataClassName == 'SubscriptionTier') {
+      return deserialize<_i56.SubscriptionTier>(data['data']);
+    }
+    if (dataClassName == 'User') {
+      return deserialize<_i57.User>(data['data']);
+    }
+    if (dataClassName == 'UserStatus') {
+      return deserialize<_i58.UserStatus>(data['data']);
+    }
+    if (dataClassName == 'UserType') {
+      return deserialize<_i59.UserType>(data['data']);
+    }
+    if (dataClassName == 'AlertType') {
+      return deserialize<_i60.AlertType>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -7040,64 +9935,90 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i16.PlatformAnalytics:
-        return _i16.PlatformAnalytics.t;
-      case _i4.ProductAnalytics:
-        return _i4.ProductAnalytics.t;
-      case _i5.VendorAnalytics:
-        return _i5.VendorAnalytics.t;
-      case _i6.BotInteraction:
-        return _i6.BotInteraction.t;
-      case _i7.Conversation:
-        return _i7.Conversation.t;
-      case _i9.Message:
-        return _i9.Message.t;
-      case _i11.Notification:
-        return _i11.Notification.t;
-      case _i13.QuickReply:
-        return _i13.QuickReply.t;
-      case _i14.TemplateMessage:
-        return _i14.TemplateMessage.t;
-      case _i15.Cart:
-        return _i15.Cart.t;
-      case _i3.CartItem:
-        return _i3.CartItem.t;
-      case _i17.Order:
-        return _i17.Order.t;
-      case _i18.OrderItem:
-        return _i18.OrderItem.t;
-      case _i22.PaymentTransaction:
-        return _i22.PaymentTransaction.t;
-      case _i23.Refund:
-        return _i23.Refund.t;
-      case _i24.Category:
-        return _i24.Category.t;
-      case _i25.Product:
-        return _i25.Product.t;
-      case _i27.ProductReview:
-        return _i27.ProductReview.t;
-      case _i29.ProductVariant:
-        return _i29.ProductVariant.t;
-      case _i30.Wishlist:
-        return _i30.Wishlist.t;
-      case _i31.WishlistItem:
-        return _i31.WishlistItem.t;
-      case _i32.Subscription:
-        return _i32.Subscription.t;
-      case _i33.SubscriptionEvent:
-        return _i33.SubscriptionEvent.t;
-      case _i34.SubscriptionInvoice:
-        return _i34.SubscriptionInvoice.t;
-      case _i35.UsageRecord:
-        return _i35.UsageRecord.t;
-      case _i36.Address:
-        return _i36.Address.t;
-      case _i37.CustomerProfile:
-        return _i37.CustomerProfile.t;
-      case _i39.User:
-        return _i39.User.t;
-      case _i28.VendorProfile:
-        return _i28.VendorProfile.t;
+      case _i22.AIConversationUsage:
+        return _i22.AIConversationUsage.t;
+      case _i5.CustomerUsagePattern:
+        return _i5.CustomerUsagePattern.t;
+      case _i7.LimitBreachLog:
+        return _i7.LimitBreachLog.t;
+      case _i8.PlatformAnalytics:
+        return _i8.PlatformAnalytics.t;
+      case _i9.ProductAnalytics:
+        return _i9.ProductAnalytics.t;
+      case _i10.ProductView:
+        return _i10.ProductView.t;
+      case _i11.ToolUsageLog:
+        return _i11.ToolUsageLog.t;
+      case _i12.UserActivity:
+        return _i12.UserActivity.t;
+      case _i13.VendorAnalytics:
+        return _i13.VendorAnalytics.t;
+      case _i14.BotInteraction:
+        return _i14.BotInteraction.t;
+      case _i15.Conversation:
+        return _i15.Conversation.t;
+      case _i17.Message:
+        return _i17.Message.t;
+      case _i19.Notification:
+        return _i19.Notification.t;
+      case _i21.QuickReply:
+        return _i21.QuickReply.t;
+      case _i3.TemplateMessage:
+        return _i3.TemplateMessage.t;
+      case _i23.Cart:
+        return _i23.Cart.t;
+      case _i24.CartItem:
+        return _i24.CartItem.t;
+      case _i25.Order:
+        return _i25.Order.t;
+      case _i26.OrderItem:
+        return _i26.OrderItem.t;
+      case _i30.PaymentTransaction:
+        return _i30.PaymentTransaction.t;
+      case _i31.Refund:
+        return _i31.Refund.t;
+      case _i32.Category:
+        return _i32.Category.t;
+      case _i33.Product:
+        return _i33.Product.t;
+      case _i35.ProductReview:
+        return _i35.ProductReview.t;
+      case _i37.ProductVariant:
+        return _i37.ProductVariant.t;
+      case _i38.Wishlist:
+        return _i38.Wishlist.t;
+      case _i39.WishlistItem:
+        return _i39.WishlistItem.t;
+      case _i41.BillingCycleSummary:
+        return _i41.BillingCycleSummary.t;
+      case _i42.DailyUsageTracker:
+        return _i42.DailyUsageTracker.t;
+      case _i44.Subscription:
+        return _i44.Subscription.t;
+      case _i45.SubscriptionEvent:
+        return _i45.SubscriptionEvent.t;
+      case _i46.SubscriptionInvoice:
+        return _i46.SubscriptionInvoice.t;
+      case _i47.TierFeature:
+        return _i47.TierFeature.t;
+      case _i48.ToolUsageLimit:
+        return _i48.ToolUsageLimit.t;
+      case _i49.UsageAlert:
+        return _i49.UsageAlert.t;
+      case _i51.UsageRecord:
+        return _i51.UsageRecord.t;
+      case _i52.Address:
+        return _i52.Address.t;
+      case _i53.AuthSession:
+        return _i53.AuthSession.t;
+      case _i54.CustomerAIPolicy:
+        return _i54.CustomerAIPolicy.t;
+      case _i55.CustomerProfile:
+        return _i55.CustomerProfile.t;
+      case _i57.User:
+        return _i57.User.t;
+      case _i40.VendorProfile:
+        return _i40.VendorProfile.t;
     }
     return null;
   }

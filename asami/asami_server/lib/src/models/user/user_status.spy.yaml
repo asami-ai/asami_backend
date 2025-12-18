@@ -3,4 +3,4 @@ values:
   - active
   - suspended
   - deactivated
-  - pending_verification
+  - pending_verification    

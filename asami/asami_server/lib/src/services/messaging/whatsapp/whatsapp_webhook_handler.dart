@@ -4,11 +4,16 @@ import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/bot_endpoint.dart';
 import '../../../generated/protocol.dart';
+import '../../auth/auth_state_manager.dart';
+import '../../../services/dependency_injection.dart';
+import 'whatsapp_callback_handler.dart';
+import 'whatsapp_service.dart';
 
 /// Handles incoming WhatsApp webhooks (Singleton)
 class WhatsAppWebhookHandler {
   WhatsAppWebhookHandler._({
     required this.botEndpoint,
+    required this.whatsappService,
     this.verifyToken,
   }) {
     _instance = this;
@@ -20,6 +25,7 @@ class WhatsAppWebhookHandler {
 
   factory WhatsAppWebhookHandler({
     required BotEndpoint botEndpoint,
+    required WhatsAppService whatsappService,
     String? verifyToken,
   }) {
     if (_instance != null) {
@@ -28,11 +34,13 @@ class WhatsAppWebhookHandler {
     
     return WhatsAppWebhookHandler._(
       botEndpoint: botEndpoint,
+      whatsappService: whatsappService,
       verifyToken: verifyToken,
     );
   }
 
   final BotEndpoint botEndpoint;
+  final WhatsAppService whatsappService;
   final String? verifyToken;
 
   /// Verify webhook (GET request from WhatsApp)
@@ -130,7 +138,7 @@ class WhatsAppWebhookHandler {
       };
     } catch (e, stackTrace) {
       Log.info('❌ Error processing WhatsApp webhook: $e');
-      Log.error( 'Stacktrace',stackTrace:  stackTrace);
+      Log.error('Stacktrace', stackTrace: stackTrace);
       session.log('WhatsApp webhook error: $e', stackTrace: stackTrace);
       return {
         'success': false,
@@ -216,25 +224,32 @@ class WhatsAppWebhookHandler {
           content = buttonText ?? buttonPayload ?? '[Button Response]';
           messageType = MessageType.interactive;
           Log.info('   Button: $content');
-          break;
+          
+          // Handle button callback
+          await _handleButtonCallback(session, from, message['button']);
+          return; // Don't process further as callback handler takes over
         
         case 'interactive':
           final interactive = message['interactive'];
           if (interactive != null) {
-            final type = interactive['type'];
+            final interactiveType = interactive['type'];
             
-            if (type == 'list_reply') {
+            if (interactiveType == 'list_reply') {
               final listReply = interactive['list_reply'];
               content = listReply?['title'] ?? listReply?['id'] ?? '[List Selection]';
               Log.info('   List selection: $content');
-            } else if (type == 'button_reply') {
+            } else if (interactiveType == 'button_reply') {
               final buttonReply = interactive['button_reply'];
               content = buttonReply?['title'] ?? buttonReply?['id'] ?? '[Button Click]';
               Log.info('   Button reply: $content');
             } else {
-              content = '[Interactive: $type]';
-              Log.info('   Interactive type: $type');
+              content = '[Interactive: $interactiveType]';
+              Log.info('   Interactive type: $interactiveType');
             }
+            
+            // Handle interactive callback
+            await _handleInteractiveCallback(session, from, interactive);
+            return; // Don't process further as callback handler takes over
           }
           messageType = MessageType.interactive;
           break;
@@ -288,8 +303,55 @@ class WhatsAppWebhookHandler {
       }
     } catch (e, stackTrace) {
       Log.info('❌ Error processing message: $e');
-    Log.error( 'Stacktrace',stackTrace:  stackTrace);
+      Log.error('Stacktrace', stackTrace: stackTrace);
       session.log('WhatsApp message processing error: $e', stackTrace: stackTrace);
+    }
+  }
+
+  /// Handle button callback
+  Future<void> _handleButtonCallback(
+    Session session,
+    String from,
+    Map<String, dynamic> button,
+  ) async {
+    try {
+      final authStateManager = getIt<AuthStateManager>();
+      final callbackHandler = WhatsAppCallbackHandler(
+        whatsappService: whatsappService,
+        session: session,
+        authStateManager: authStateManager,
+      );
+
+      // Process button as interactive message
+      await callbackHandler.processInteractiveMessage(from, {
+        'type': 'button_reply',
+        'button_reply': {
+          'id': button['payload'] ?? button['text'],
+          'title': button['text'],
+        }
+      });
+    } catch (e, stackTrace) {
+      Log.error('Error handling button callback: $e', stackTrace: stackTrace);
+    }
+  }
+
+  /// Handle interactive callback (buttons, lists)
+  Future<void> _handleInteractiveCallback(
+    Session session,
+    String from,
+    Map<String, dynamic> interactive,
+  ) async {
+    try {
+      final authStateManager = getIt<AuthStateManager>();
+      final callbackHandler = WhatsAppCallbackHandler(
+        whatsappService: whatsappService,
+        session: session,
+        authStateManager: authStateManager,
+      );
+
+      await callbackHandler.processInteractiveMessage(from, interactive);
+    } catch (e, stackTrace) {
+      Log.error('Error handling interactive callback: $e', stackTrace: stackTrace);
     }
   }
 
@@ -323,7 +385,6 @@ class WhatsAppWebhookHandler {
         switch (statusValue) {
           case 'sent':
             Log.info('   ✉️ Message sent');
-            // Message was sent from our server
             break;
             
           case 'delivered':
@@ -336,7 +397,7 @@ class WhatsAppWebhookHandler {
           case 'read':
             message.isRead = true;
             message.readAt = DateTime.now();
-            message.isDelivered = true; // If read, it was also delivered
+            message.isDelivered = true;
             message.deliveredAt ??= DateTime.now();
             updated = true;
             Log.info('   👁️ Message read');
@@ -368,7 +429,7 @@ class WhatsAppWebhookHandler {
       }
     } catch (e, stackTrace) {
       Log.info('⚠️ Error processing status: $e');
-    Log.error( 'Stacktrace',stackTrace:  stackTrace);
+      Log.error('Stacktrace', stackTrace: stackTrace);
       session.log('WhatsApp status processing error: $e', stackTrace: stackTrace);
     }
   }

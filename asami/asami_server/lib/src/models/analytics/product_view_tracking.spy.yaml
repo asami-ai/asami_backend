@@ -1,0 +1,28 @@
+# ProductView tracking (for recommendation engine)
+class: ProductView
+table: product_views
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  productId: UuidValue
+  product: Product?, relation(field=productId)
+  
+  # View Context
+  platform: PlatformType
+  source: String? # 'search', 'category', 'recommendation', 'direct'
+  
+  # Engagement Metrics
+  viewDurationSeconds: int?
+  addedToCart: bool, default=false
+  purchased: bool, default=false
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  user_product_idx:
+    fields: userId, productId
+  product_date_idxx:
+    fields: productId, createdAt
+  user_recent_idx:
+    fields: userId, createdAt

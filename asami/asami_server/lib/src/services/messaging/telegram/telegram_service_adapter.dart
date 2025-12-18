@@ -117,20 +117,36 @@ class TelegramServiceAdapter implements IMessagingService {
     required List<MessageButton> buttons,
     String? headerText,
     String? footerText,
+    Map<String, dynamic>? headerInteractive
   }) async {
     try {
       final fullText = _combineText(headerText, bodyText, footerText);
 
       // Convert to Telegram inline keyboard
-      final keyboard = InlineKeyboard();
+      List<List<InlineKeyboardButton>> keyboard = [];
 
       for (var btn in buttons) {
         if (btn.url != null) {
-          keyboard.url(btn.text, btn.url!);
+          keyboard.add([InlineKeyboardButton(text: btn.text, url: btn.url!)]);
         } else {
-          keyboard.add(InlineKeyboardButton(
-              text: btn.text, callbackData: btn.callbackData ?? btn.id));
+          keyboard.add([
+            InlineKeyboardButton(
+              text: btn.text,
+              callbackData: btn.callbackData ?? btn.id,
+            )
+          ]);
         }
+
+        // Reorganize keyboard into rows of 2
+        // List<List<InlineKeyboardButton>> reorganizedKeyboard = [];
+        // for (int i = 0; i < keyboard.length; i += 2) {
+        // if (i + 1 < keyboard.length) {
+        //   reorganizedKeyboard.add([keyboard[i][0], keyboard[i + 1][0]]);
+        // } else {
+        //   reorganizedKeyboard.add([keyboard[i][0]]);
+        // }
+        // }
+        // keyboard = reorganizedKeyboard;
       }
 
       final message = await _telegramService.sendInlineKeyboard(
@@ -164,26 +180,27 @@ class TelegramServiceAdapter implements IMessagingService {
   }) async {
     try {
       // Telegram doesn't have native lists, convert to inline keyboard
-      final keyboard = InlineKeyboard();
+      // Convert to Telegram inline keyboard
+      List<List<InlineKeyboardButton>> keyboard = [];
       final fullText = _combineText(headerText, bodyText, footerText);
 
       for (var section in sections) {
         // Add section title as a label (non-clickable)
-        keyboard.add(
+        keyboard.add([
           InlineKeyboardButton(
             text: '📂 ${section.title}',
             callbackData: 'section_${section.title}',
           ),
-        );
+        ]);
 
         // Add items
         for (var item in section.rows) {
-          keyboard.add(
+          keyboard.add([
             InlineKeyboardButton(
               text: item.title,
               callbackData: item.id,
             ),
-          );
+          ]);
         }
       }
 

@@ -1,0 +1,54 @@
+
+# New UserActivity table for analytics
+class: UserActivity
+table: user_activity
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Activity Type
+  activityType: String
+  # Types: 'product_view', 'search', 'cart_add', 'purchase', 
+  #        'category_browse', 'vendor_view', 'login', 'signup'
+  
+  # Activity Data
+  productId: UuidValue?
+  product: Product?, relation(field=productId)
+  vendorId: UuidValue?
+  vendor: VendorProfile?, relation(field=vendorId)
+  categoryName: String?
+  searchQuery: String?
+  
+  # Context
+  platform: PlatformType
+  conversationId: UuidValue?
+  conversation: Conversation?, relation(field=conversationId)
+  
+  # Location Data
+  latitude: double?
+  longitude: double?
+  city: String?
+  state: String?
+  country: String?
+  
+  # Metadata
+  sessionId: String?
+  metadata: String? # JSON
+  
+  # Duration (for time-based activities)
+  durationSeconds: int?
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  user_activity_type_idx:
+    fields: userId, activityType
+  user_date_idx:
+    fields: userId, createdAt
+  location_idx:
+    fields: city, state
+  product_activity_idx:
+    fields: productId, activityType
+  activity_type_date_idx:
+    fields: activityType, createdAt

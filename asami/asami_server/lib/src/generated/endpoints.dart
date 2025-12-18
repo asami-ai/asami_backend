@@ -18,19 +18,20 @@ import '../endpoints/order_endpoint.dart' as _i6;
 import '../endpoints/product_endpoint.dart' as _i7;
 import '../endpoints/subscription_endpoint.dart' as _i8;
 import '../endpoints/telegram_webhook_endpoint.dart' as _i9;
-import '../endpoints/user_endpoint.dart' as _i10;
-import '../endpoints/whatsapp_webhook_endpoint.dart' as _i11;
-import 'package:uuid/uuid_value.dart' as _i12;
-import 'package:asami_server/src/generated/user/user_type.dart' as _i13;
-import 'package:asami_server/src/generated/messaging/platfom_type.dart' as _i14;
-import 'package:asami_server/src/generated/messaging/message_type.dart' as _i15;
-import 'package:asami_server/src/generated/product/product.dart' as _i16;
-import 'package:asami_server/src/generated/order/order.dart' as _i17;
-import 'package:asami_server/src/generated/order/order_item.dart' as _i18;
-import 'package:asami_server/src/generated/order/payment_method.dart' as _i19;
-import 'package:asami_server/src/generated/order/order_status.dart' as _i20;
-import 'package:asami_server/src/generated/product/product_status.dart' as _i21;
-import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i22;
+import '../endpoints/usage_endpoint.dart' as _i10;
+import '../endpoints/user_endpoint.dart' as _i11;
+import '../endpoints/whatsapp_webhook_endpoint.dart' as _i12;
+import 'package:uuid/uuid_value.dart' as _i13;
+import 'package:asami_server/src/generated/user/user_type.dart' as _i14;
+import 'package:asami_server/src/generated/messaging/platfom_type.dart' as _i15;
+import 'package:asami_server/src/generated/messaging/message_type.dart' as _i16;
+import 'package:asami_server/src/generated/product/product.dart' as _i17;
+import 'package:asami_server/src/generated/order/order.dart' as _i18;
+import 'package:asami_server/src/generated/order/order_item.dart' as _i19;
+import 'package:asami_server/src/generated/order/payment_method.dart' as _i20;
+import 'package:asami_server/src/generated/order/order_status.dart' as _i21;
+import 'package:asami_server/src/generated/product/product_status.dart' as _i22;
+import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i23;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -84,13 +85,19 @@ class Endpoints extends _i1.EndpointDispatch {
           'telegramWebhook',
           null,
         ),
-      'user': _i10.UserEndpoint()
+      'usage': _i10.UsageEndpoint()
+        ..initialize(
+          server,
+          'usage',
+          null,
+        ),
+      'user': _i11.UserEndpoint()
         ..initialize(
           server,
           'user',
           null,
         ),
-      'whatsAppWebhook': _i11.WhatsAppWebhookEndpoint()
+      'whatsAppWebhook': _i12.WhatsAppWebhookEndpoint()
         ..initialize(
           server,
           'whatsAppWebhook',
@@ -106,7 +113,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'date': _i1.ParameterDescription(
@@ -137,7 +144,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -174,7 +181,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -193,7 +200,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -224,7 +231,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'limit': _i1.ParameterDescription(
@@ -249,7 +256,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -300,26 +307,21 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'auth',
       endpoint: endpoints['auth']!,
       methodConnectors: {
-        'register': _i1.MethodConnector(
-          name: 'register',
+        'initiateSignup': _i1.MethodConnector(
+          name: 'initiateSignup',
           params: {
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'countryCode': _i1.ParameterDescription(
-              name: 'countryCode',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'userType': _i1.ParameterDescription(
-              name: 'userType',
-              type: _i1.getType<_i13.UserType>(),
-              nullable: false,
-            ),
             'email': _i1.ParameterDescription(
               name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'userType': _i1.ParameterDescription(
+              name: 'userType',
+              type: _i1.getType<_i14.UserType>(),
+              nullable: false,
+            ),
+            'phoneNumber': _i1.ParameterDescription(
+              name: 'phoneNumber',
               type: _i1.getType<String?>(),
               nullable: true,
             ),
@@ -333,43 +335,13 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
-            'whatsappId': _i1.ParameterDescription(
-              name: 'whatsappId',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'telegramId': _i1.ParameterDescription(
-              name: 'telegramId',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).register(
-            session,
-            phoneNumber: params['phoneNumber'],
-            countryCode: params['countryCode'],
-            userType: params['userType'],
-            email: params['email'],
-            firstName: params['firstName'],
-            lastName: params['lastName'],
-            whatsappId: params['whatsappId'],
-            telegramId: params['telegramId'],
-          ),
-        ),
-        'verifyPhone': _i1.MethodConnector(
-          name: 'verifyPhone',
-          params: {
-            'userId': _i1.ParameterDescription(
-              name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+            'platform': _i1.ParameterDescription(
+              name: 'platform',
+              type: _i1.getType<_i15.PlatformType>(),
               nullable: false,
             ),
-            'verificationCode': _i1.ParameterDescription(
-              name: 'verificationCode',
+            'platformUserId': _i1.ParameterDescription(
+              name: 'platformUserId',
               type: _i1.getType<String>(),
               nullable: false,
             ),
@@ -378,18 +350,161 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).verifyPhone(
+              (endpoints['auth'] as _i3.AuthEndpoint).initiateSignup(
+            session,
+            email: params['email'],
+            userType: params['userType'],
+            phoneNumber: params['phoneNumber'],
+            firstName: params['firstName'],
+            lastName: params['lastName'],
+            platform: params['platform'],
+            platformUserId: params['platformUserId'],
+          ),
+        ),
+        'verifySignupCode': _i1.MethodConnector(
+          name: 'verifySignupCode',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'code': _i1.ParameterDescription(
+              name: 'code',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'platform': _i1.ParameterDescription(
+              name: 'platform',
+              type: _i1.getType<_i15.PlatformType>(),
+              nullable: false,
+            ),
+            'platformUserId': _i1.ParameterDescription(
+              name: 'platformUserId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).verifySignupCode(
+            session,
+            email: params['email'],
+            code: params['code'],
+            platform: params['platform'],
+            platformUserId: params['platformUserId'],
+          ),
+        ),
+        'initiateLogin': _i1.MethodConnector(
+          name: 'initiateLogin',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).initiateLogin(
+            session,
+            email: params['email'],
+          ),
+        ),
+        'verifyLoginCode': _i1.MethodConnector(
+          name: 'verifyLoginCode',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'code': _i1.ParameterDescription(
+              name: 'code',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'platform': _i1.ParameterDescription(
+              name: 'platform',
+              type: _i1.getType<_i15.PlatformType>(),
+              nullable: false,
+            ),
+            'platformUserId': _i1.ParameterDescription(
+              name: 'platformUserId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).verifyLoginCode(
+            session,
+            email: params['email'],
+            code: params['code'],
+            platform: params['platform'],
+            platformUserId: params['platformUserId'],
+          ),
+        ),
+        'checkAuth': _i1.MethodConnector(
+          name: 'checkAuth',
+          params: {
+            'platform': _i1.ParameterDescription(
+              name: 'platform',
+              type: _i1.getType<_i15.PlatformType>(),
+              nullable: false,
+            ),
+            'platformUserId': _i1.ParameterDescription(
+              name: 'platformUserId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).checkAuth(
+            session,
+            platform: params['platform'],
+            platformUserId: params['platformUserId'],
+          ),
+        ),
+        'logout': _i1.MethodConnector(
+          name: 'logout',
+          params: {
+            'userId': _i1.ParameterDescription(
+              name: 'userId',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'platform': _i1.ParameterDescription(
+              name: 'platform',
+              type: _i1.getType<_i15.PlatformType>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).logout(
             session,
             userId: params['userId'],
-            verificationCode: params['verificationCode'],
+            platform: params['platform'],
           ),
         ),
-        'getUser': _i1.MethodConnector(
-          name: 'getUser',
+        'resendCode': _i1.MethodConnector(
+          name: 'resendCode',
           params: {
-            'userId': _i1.ParameterDescription(
-              name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
               nullable: false,
             )
           },
@@ -397,119 +512,47 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).getUser(
+              (endpoints['auth'] as _i3.AuthEndpoint).resendCode(
             session,
-            params['userId'],
+            email: params['email'],
           ),
         ),
-        'getUserByPhone': _i1.MethodConnector(
-          name: 'getUserByPhone',
-          params: {
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'countryCode': _i1.ParameterDescription(
-              name: 'countryCode',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).getUserByPhone(
-            session,
-            params['phoneNumber'],
-            params['countryCode'],
-          ),
-        ),
-        'getOrCreateUserByWhatsApp': _i1.MethodConnector(
-          name: 'getOrCreateUserByWhatsApp',
-          params: {
-            'whatsappId': _i1.ParameterDescription(
-              name: 'whatsappId',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'phoneNumber': _i1.ParameterDescription(
-              name: 'phoneNumber',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'name': _i1.ParameterDescription(
-              name: 'name',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'userType': _i1.ParameterDescription(
-              name: 'userType',
-              type: _i1.getType<_i13.UserType>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).getOrCreateUserByWhatsApp(
-            session,
-            whatsappId: params['whatsappId'],
-            phoneNumber: params['phoneNumber'],
-            name: params['name'],
-            userType: params['userType'],
-          ),
-        ),
-        'getOrCreateUserByTelegram': _i1.MethodConnector(
-          name: 'getOrCreateUserByTelegram',
-          params: {
-            'telegramId': _i1.ParameterDescription(
-              name: 'telegramId',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'username': _i1.ParameterDescription(
-              name: 'username',
-              type: _i1.getType<String>(),
-              nullable: false,
-            ),
-            'firstName': _i1.ParameterDescription(
-              name: 'firstName',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'lastName': _i1.ParameterDescription(
-              name: 'lastName',
-              type: _i1.getType<String?>(),
-              nullable: true,
-            ),
-            'userType': _i1.ParameterDescription(
-              name: 'userType',
-              type: _i1.getType<_i13.UserType>(),
-              nullable: false,
-            ),
-          },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).getOrCreateUserByTelegram(
-            session,
-            telegramId: params['telegramId'],
-            username: params['username'],
-            firstName: params['firstName'],
-            lastName: params['lastName'],
-            userType: params['userType'],
-          ),
-        ),
-        'updateLastActive': _i1.MethodConnector(
-          name: 'updateLastActive',
+        'upgradeToVendor': _i1.MethodConnector(
+          name: 'upgradeToVendor',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'businessName': _i1.ParameterDescription(
+              name: 'businessName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'businessCategory': _i1.ParameterDescription(
+              name: 'businessCategory',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['auth'] as _i3.AuthEndpoint).upgradeToVendor(
+            session,
+            userId: params['userId'],
+            businessName: params['businessName'],
+            businessCategory: params['businessCategory'],
+          ),
+        ),
+        'deleteTempUser': _i1.MethodConnector(
+          name: 'deleteTempUser',
+          params: {
+            'email': _i1.ParameterDescription(
+              name: 'email',
+              type: _i1.getType<String>(),
               nullable: false,
             )
           },
@@ -517,9 +560,9 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).updateLastActive(
+              (endpoints['auth'] as _i3.AuthEndpoint).deleteTempUser(
             session,
-            params['userId'],
+            email: params['email'],
           ),
         ),
       },
@@ -538,7 +581,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i14.PlatformType>(),
+              type: _i1.getType<_i15.PlatformType>(),
               nullable: false,
             ),
             'messageContent': _i1.ParameterDescription(
@@ -548,7 +591,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'messageType': _i1.ParameterDescription(
               name: 'messageType',
-              type: _i1.getType<_i15.MessageType>(),
+              type: _i1.getType<_i16.MessageType>(),
               nullable: false,
             ),
             'mediaUrl': _i1.ParameterDescription(
@@ -586,7 +629,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i14.PlatformType>(),
+              type: _i1.getType<_i15.PlatformType>(),
               nullable: false,
             ),
             'message': _i1.ParameterDescription(
@@ -622,12 +665,12 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i14.PlatformType>(),
+              type: _i1.getType<_i15.PlatformType>(),
               nullable: false,
             ),
             'products': _i1.ParameterDescription(
               name: 'products',
-              type: _i1.getType<List<_i16.Product>>(),
+              type: _i1.getType<List<_i17.Product>>(),
               nullable: false,
             ),
           },
@@ -652,17 +695,17 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i14.PlatformType>(),
+              type: _i1.getType<_i15.PlatformType>(),
               nullable: false,
             ),
             'order': _i1.ParameterDescription(
               name: 'order',
-              type: _i1.getType<_i17.Order>(),
+              type: _i1.getType<_i18.Order>(),
               nullable: false,
             ),
             'items': _i1.ParameterDescription(
               name: 'items',
-              type: _i1.getType<List<_i18.OrderItem>>(),
+              type: _i1.getType<List<_i19.OrderItem>>(),
               nullable: false,
             ),
           },
@@ -689,7 +732,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -707,17 +750,17 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'variantId': _i1.ParameterDescription(
               name: 'variantId',
-              type: _i1.getType<_i12.UuidValue?>(),
+              type: _i1.getType<_i13.UuidValue?>(),
               nullable: true,
             ),
             'quantity': _i1.ParameterDescription(
@@ -791,7 +834,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -809,7 +852,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -833,17 +876,17 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'shippingAddressId': _i1.ParameterDescription(
               name: 'shippingAddressId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'paymentMethod': _i1.ParameterDescription(
               name: 'paymentMethod',
-              type: _i1.getType<_i19.PaymentMethod>(),
+              type: _i1.getType<_i20.PaymentMethod>(),
               nullable: false,
             ),
             'customerNotes': _i1.ParameterDescription(
@@ -853,7 +896,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'conversationId': _i1.ParameterDescription(
               name: 'conversationId',
-              type: _i1.getType<_i12.UuidValue?>(),
+              type: _i1.getType<_i13.UuidValue?>(),
               nullable: true,
             ),
             'orderSource': _i1.ParameterDescription(
@@ -881,7 +924,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -899,7 +942,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -917,12 +960,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i20.OrderStatus?>(),
+              type: _i1.getType<_i21.OrderStatus?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -953,12 +996,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i20.OrderStatus?>(),
+              type: _i1.getType<_i21.OrderStatus?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -989,12 +1032,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i20.OrderStatus>(),
+              type: _i1.getType<_i21.OrderStatus>(),
               nullable: false,
             ),
             'trackingNumber': _i1.ParameterDescription(
@@ -1025,7 +1068,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'cancellationReason': _i1.ParameterDescription(
@@ -1061,7 +1104,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'name': _i1.ParameterDescription(
@@ -1193,7 +1236,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'name': _i1.ParameterDescription(
@@ -1243,7 +1286,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.ProductStatus?>(),
+              type: _i1.getType<_i22.ProductStatus?>(),
               nullable: true,
             ),
             'images': _i1.ParameterDescription(
@@ -1289,7 +1332,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1307,7 +1350,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1325,12 +1368,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.ProductStatus?>(),
+              type: _i1.getType<_i22.ProductStatus?>(),
               nullable: true,
             ),
             'isActive': _i1.ParameterDescription(
@@ -1433,7 +1476,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'quantity': _i1.ParameterDescription(
@@ -1457,7 +1500,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'quantity': _i1.ParameterDescription(
@@ -1542,7 +1585,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1561,12 +1604,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'newTier': _i1.ParameterDescription(
               name: 'newTier',
-              type: _i1.getType<_i22.SubscriptionTier>(),
+              type: _i1.getType<_i23.SubscriptionTier>(),
               nullable: false,
             ),
           },
@@ -1586,7 +1629,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'periodStart': _i1.ParameterDescription(
@@ -1617,7 +1660,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'subscriptionId': _i1.ParameterDescription(
               name: 'subscriptionId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'periodStart': _i1.ParameterDescription(
@@ -1648,7 +1691,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1689,6 +1732,22 @@ class Endpoints extends _i1.EndpointDispatch {
         )
       },
     );
+    connectors['usage'] = _i1.EndpointConnector(
+      name: 'usage',
+      endpoint: endpoints['usage']!,
+      methodConnectors: {
+        'resetDailyLimits': _i1.MethodConnector(
+          name: 'resetDailyLimits',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['usage'] as _i10.UsageEndpoint)
+                  .resetDailyLimits(session),
+        )
+      },
+    );
     connectors['user'] = _i1.EndpointConnector(
       name: 'user',
       endpoint: endpoints['user']!,
@@ -1698,7 +1757,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'firstName': _i1.ParameterDescription(
@@ -1751,7 +1810,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).updateProfile(
+              (endpoints['user'] as _i11.UserEndpoint).updateProfile(
             session,
             userId: params['userId'],
             firstName: params['firstName'],
@@ -1770,7 +1829,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1778,7 +1837,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).getCustomerProfile(
+              (endpoints['user'] as _i11.UserEndpoint).getCustomerProfile(
             session,
             params['userId'],
           ),
@@ -1788,7 +1847,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'preferredPaymentMethod': _i1.ParameterDescription(
@@ -1806,7 +1865,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).updateCustomerProfile(
+              (endpoints['user'] as _i11.UserEndpoint).updateCustomerProfile(
             session,
             userId: params['userId'],
             preferredPaymentMethod: params['preferredPaymentMethod'],
@@ -1818,7 +1877,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -1826,7 +1885,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).getVendorProfile(
+              (endpoints['user'] as _i11.UserEndpoint).getVendorProfile(
             session,
             params['userId'],
           ),
@@ -1836,7 +1895,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'businessName': _i1.ParameterDescription(
@@ -1879,7 +1938,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).updateVendorProfile(
+              (endpoints['user'] as _i11.UserEndpoint).updateVendorProfile(
             session,
             userId: params['userId'],
             businessName: params['businessName'],
@@ -1896,7 +1955,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'label': _i1.ParameterDescription(
@@ -1969,7 +2028,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).addAddress(
+              (endpoints['user'] as _i11.UserEndpoint).addAddress(
             session,
             userId: params['userId'],
             label: params['label'],
@@ -1992,7 +2051,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             )
           },
@@ -2000,7 +2059,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).getUserAddresses(
+              (endpoints['user'] as _i11.UserEndpoint).getUserAddresses(
             session,
             params['userId'],
           ),
@@ -2010,12 +2069,12 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
             'addressId': _i1.ParameterDescription(
               name: 'addressId',
-              type: _i1.getType<_i12.UuidValue>(),
+              type: _i1.getType<_i13.UuidValue>(),
               nullable: false,
             ),
           },
@@ -2023,7 +2082,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['user'] as _i10.UserEndpoint).setDefaultAddress(
+              (endpoints['user'] as _i11.UserEndpoint).setDefaultAddress(
             session,
             userId: params['userId'],
             addressId: params['addressId'],
@@ -2058,7 +2117,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['whatsAppWebhook'] as _i11.WhatsAppWebhookEndpoint)
+              (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
                   .verifyWebhook(
             session,
             mode: params['mode'],
@@ -2079,7 +2138,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['whatsAppWebhook'] as _i11.WhatsAppWebhookEndpoint)
+              (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
                   .processWebhook(
             session,
             params['payload'],

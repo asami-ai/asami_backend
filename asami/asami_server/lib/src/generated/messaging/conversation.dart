@@ -21,7 +21,7 @@ abstract class Conversation
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   Conversation._({
     _i1.UuidValue? id,
-    required this.userId,
+    this.userId,
     this.user,
     required this.platform,
     required this.platformUserId,
@@ -59,7 +59,7 @@ abstract class Conversation
 
   factory Conversation({
     _i1.UuidValue? id,
-    required _i1.UuidValue userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
     required _i4.PlatformType platform,
     required String platformUserId,
@@ -92,7 +92,9 @@ abstract class Conversation
   factory Conversation.fromJson(Map<String, dynamic> jsonSerialization) {
     return Conversation(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      userId: jsonSerialization['userId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.User.fromJson(
@@ -148,7 +150,7 @@ abstract class Conversation
   @override
   _i1.UuidValue id;
 
-  _i1.UuidValue userId;
+  _i1.UuidValue? userId;
 
   _i3.User? user;
 
@@ -245,7 +247,7 @@ abstract class Conversation
   Map<String, dynamic> toJson() {
     return {
       'id': id.toJson(),
-      'userId': userId.toJson(),
+      if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJson(),
       'platform': platform.toJson(),
       'platformUserId': platformUserId,
@@ -282,7 +284,7 @@ abstract class Conversation
   Map<String, dynamic> toJsonForProtocol() {
     return {
       'id': id.toJson(),
-      'userId': userId.toJson(),
+      if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
       'platform': platform.toJson(),
       'platformUserId': platformUserId,
@@ -350,7 +352,7 @@ class _Undefined {}
 class _ConversationImpl extends Conversation {
   _ConversationImpl({
     _i1.UuidValue? id,
-    required _i1.UuidValue userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
     required _i4.PlatformType platform,
     required String platformUserId,
@@ -416,7 +418,7 @@ class _ConversationImpl extends Conversation {
   @override
   Conversation copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? userId,
+    Object? userId = _Undefined,
     Object? user = _Undefined,
     _i4.PlatformType? platform,
     String? platformUserId,
@@ -447,7 +449,7 @@ class _ConversationImpl extends Conversation {
   }) {
     return Conversation(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
+      userId: userId is _i1.UuidValue? ? userId : this.userId,
       user: user is _i3.User? ? user : this.user?.copyWith(),
       platform: platform ?? this.platform,
       platformUserId: platformUserId ?? this.platformUserId,
@@ -761,6 +763,8 @@ class ConversationRepository {
 
   final attachRow = const ConversationAttachRowRepository._();
 
+  final detachRow = const ConversationDetachRowRepository._();
+
   /// Returns a list of [Conversation]s matching the given query parameters.
   ///
   /// Use [where] to specify which items to include in the return value.
@@ -996,6 +1000,32 @@ class ConversationAttachRowRepository {
     }
 
     var $conversation = conversation.copyWith(userId: user.id);
+    await session.db.updateRow<Conversation>(
+      $conversation,
+      columns: [Conversation.t.userId],
+      transaction: transaction,
+    );
+  }
+}
+
+class ConversationDetachRowRepository {
+  const ConversationDetachRowRepository._();
+
+  /// Detaches the relation between this [Conversation] and the [User] set in `user`
+  /// by setting the [Conversation]'s foreign key `userId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> user(
+    _i1.Session session,
+    Conversation conversation, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (conversation.id == null) {
+      throw ArgumentError.notNull('conversation.id');
+    }
+
+    var $conversation = conversation.copyWith(userId: null);
     await session.db.updateRow<Conversation>(
       $conversation,
       columns: [Conversation.t.userId],

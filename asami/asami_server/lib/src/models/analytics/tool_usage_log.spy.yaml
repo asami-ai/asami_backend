@@ -1,0 +1,48 @@
+
+class: ToolUsageLog
+table: tool_usage_logs
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  userType: UserType
+  conversationId: UuidValue?
+  
+  # Tool Details
+  toolName: String
+  toolCategory: String?
+  arguments: String?
+  
+  # Execution Details
+  success: bool, default=true
+  executionTimeMs: int
+  errorMessage: String?
+  
+  # Cost & Billing
+  costIncurred: double, default=0.0
+  isBillable: bool, default=false
+  billingPeriodStart: DateTime?
+  billingPeriodEnd: DateTime?
+  
+  # Limit Tracking
+  wasWithinLimit: bool, default=true
+  usedGracePeriod: bool, default=false
+  deniedDueToLimit: bool, default=false
+  
+  # Context
+  platform: String?
+  ipAddress: String?
+  userAgent: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+indexes:
+  user_created_idx:
+    fields: userId, createdAt
+  tool_name_idx:
+    fields: toolName
+  conversation_tool_idx:
+    fields: conversationId
+  billing_period_idx:
+    fields: userId, billingPeriodStart, billingPeriodEnd
+  success_idx:
+    fields: success

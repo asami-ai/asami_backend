@@ -1,0 +1,1943 @@
+{
+  "actions": [
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "ai_conversation_usage",
+        "dartName": "AIConversationUsage",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "conversationId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "messageCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "totalTokens",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "inputTokens",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "outputTokens",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "toolCallsInConversation",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "uniqueToolsUsed",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "estimatedCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "averageResponseTime",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "userSatisfactionRating",
+            "columnType": 3,
+            "isNullable": true,
+            "dartType": "double?"
+          },
+          {
+            "name": "date",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "ai_conversation_usage_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_ai_date_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "date"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "conversation_ai_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "conversationId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "date_ai_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "date"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "billing_cycle_summaries",
+        "dartName": "BillingCycleSummary",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "vendorId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "periodStart",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "periodEnd",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "billingCycle",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "subscriptionTier",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:SubscriptionTier"
+          },
+          {
+            "name": "baseSubscriptionAmount",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalToolCalls",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "toolCallsIncluded",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "toolCallsOverage",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "toolCallsOverageCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalAIMessages",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiMessagesIncluded",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiMessagesOverage",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiMessagesOverageCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalProducts",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "productsIncluded",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "productsOverage",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "productsOverageCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalAIDescriptions",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionsIncluded",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionsOverage",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionsOverageCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalTransactionFees",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalUsageCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "totalAmount",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "status",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'draft'::text",
+            "dartType": "String"
+          },
+          {
+            "name": "invoiceId",
+            "columnType": 7,
+            "isNullable": true,
+            "dartType": "UuidValue?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "billing_cycle_summaries_fk_0",
+            "columns": [
+              "vendorId"
+            ],
+            "referenceTable": "vendor_profiles",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          },
+          {
+            "constraintName": "billing_cycle_summaries_fk_1",
+            "columns": [
+              "invoiceId"
+            ],
+            "referenceTable": "subscription_invoices",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "billing_cycle_summaries_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "vendor_billing_period_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "vendorId"
+              },
+              {
+                "type": 0,
+                "definition": "periodStart"
+              },
+              {
+                "type": 0,
+                "definition": "periodEnd"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "status_billing_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "status"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "invoice_billing_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "invoiceId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "customer_ai_policies",
+        "dartName": "CustomerAIPolicy",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "policyName",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "description",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "dailyMessageLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "100",
+            "dartType": "int"
+          },
+          {
+            "name": "dailyToolCallLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "20",
+            "dartType": "int"
+          },
+          {
+            "name": "requireExplicitIntent",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "minimumConfidenceScore",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.8",
+            "dartType": "double"
+          },
+          {
+            "name": "throttleAfterCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "50",
+            "dartType": "int"
+          },
+          {
+            "name": "throttleDelaySeconds",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "2",
+            "dartType": "int"
+          },
+          {
+            "name": "enableProgressiveRestrictions",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "restrictionThresholds",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "maxDailyCost",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "1.0",
+            "dartType": "double"
+          },
+          {
+            "name": "warnAtCostPercentage",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.8",
+            "dartType": "double"
+          },
+          {
+            "name": "isActive",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "isDefault",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "customer_ai_policies_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "policy_name_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "policyName"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "active_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "isActive"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "customer_usage_patterns",
+        "dartName": "CustomerUsagePattern",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "averageDailyMessages",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "averageDailyToolCalls",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "peakUsageHour",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "int?"
+          },
+          {
+            "name": "usageClass",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:UsageClass"
+          },
+          {
+            "name": "isAbuser",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "abuseScore",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "toolSuccessRate",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "1.0",
+            "dartType": "double"
+          },
+          {
+            "name": "averageToolExecutionTime",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "averageConversationLength",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "repetitiveQueryScore",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "shouldThrottle",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "throttleReason",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "currentThrottleDelay",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "lastAnalyzedAt",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "analysisCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "customer_usage_patterns_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_c_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          },
+          {
+            "indexName": "usage_class_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "usageClass"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "abuse_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "isAbuser"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "daily_usage_trackers",
+        "dartName": "DailyUsageTracker",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:UserType"
+          },
+          {
+            "name": "date",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "resetAt",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "toolCallsCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "toolCallsLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "aiMessagesCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiMessagesLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "productsCreatedCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "productsCreatedLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionsCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionsLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "analyticsQueriesCount",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "analyticsQueriesLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "isInGracePeriod",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "gracePeriodUsed",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "0",
+            "dartType": "int"
+          },
+          {
+            "name": "gracePeriodLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "5",
+            "dartType": "int"
+          },
+          {
+            "name": "subscriptionTier",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "protocol:SubscriptionTier?"
+          },
+          {
+            "name": "softLimitWarned",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "hardLimitReached",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "daily_usage_trackers_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_daily_date_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "date"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          },
+          {
+            "indexName": "date_daily_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "date"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "reset_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "resetAt"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "limit_breach_logs",
+        "dartName": "LimitBreachLog",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:UserType"
+          },
+          {
+            "name": "limitType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:LimitType"
+          },
+          {
+            "name": "attemptedAction",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "currentUsage",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "limitValue",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "subscriptionTier",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "protocol:SubscriptionTier?"
+          },
+          {
+            "name": "conversationId",
+            "columnType": 7,
+            "isNullable": true,
+            "dartType": "UuidValue?"
+          },
+          {
+            "name": "actionTaken",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "userNotified",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "severity",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:BreachSeverity"
+          },
+          {
+            "name": "breachedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "limit_breach_logs_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_breach_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "breachedAt"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "limit_type_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "limitType"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "severity_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "severity"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "tier_features",
+        "dartName": "TierFeature",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "tier",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:SubscriptionTier"
+          },
+          {
+            "name": "dailyToolCallLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "monthlyToolCallLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "dailyAIMessageLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "monthlyAIMessageLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "productLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "aiDescriptionLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "allowBulkOperations",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "allowAdvancedAnalytics",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "allowAPIAccess",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "allowWhiteLabel",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "supportPriority",
+            "columnType": 0,
+            "isNullable": false,
+            "columnDefault": "'standard'::text",
+            "dartType": "String"
+          },
+          {
+            "name": "supportResponseTime",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "24",
+            "dartType": "int"
+          },
+          {
+            "name": "monthlyPrice",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "yearlyPrice",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "platformTransactionFee",
+            "columnType": 3,
+            "isNullable": false,
+            "dartType": "double"
+          },
+          {
+            "name": "overageToolCallPrice",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.01",
+            "dartType": "double"
+          },
+          {
+            "name": "overageAIMessagePrice",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.001",
+            "dartType": "double"
+          },
+          {
+            "name": "overageProductPrice",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "1.0",
+            "dartType": "double"
+          },
+          {
+            "name": "overageAIDescriptionPrice",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.1",
+            "dartType": "double"
+          },
+          {
+            "name": "isActive",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "tier_features_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "tier_sub_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "tier"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": false
+          },
+          {
+            "indexName": "active_tier_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "isActive"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "tool_usage_limits",
+        "dartName": "ToolUsageLimit",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "tier",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:SubscriptionTier"
+          },
+          {
+            "name": "limitType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:LimitType"
+          },
+          {
+            "name": "dailyLimit",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "monthlyLimit",
+            "columnType": 6,
+            "isNullable": true,
+            "dartType": "int?"
+          },
+          {
+            "name": "allowGracePeriod",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "gracePeriodActions",
+            "columnType": 6,
+            "isNullable": false,
+            "columnDefault": "5",
+            "dartType": "int"
+          },
+          {
+            "name": "restrictedTools",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "allowedToolsAfterLimit",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "costPerUsage",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "isActive",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          },
+          {
+            "name": "updatedAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "tool_usage_limits_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "tier_type_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "tier"
+              },
+              {
+                "type": 0,
+                "definition": "limitType"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "tool_usage_logs",
+        "dartName": "ToolUsageLog",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:UserType"
+          },
+          {
+            "name": "conversationId",
+            "columnType": 7,
+            "isNullable": true,
+            "dartType": "UuidValue?"
+          },
+          {
+            "name": "toolName",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "toolCategory",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "arguments",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "success",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "executionTimeMs",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "errorMessage",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "costIncurred",
+            "columnType": 3,
+            "isNullable": false,
+            "columnDefault": "0.0",
+            "dartType": "double"
+          },
+          {
+            "name": "isBillable",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "billingPeriodStart",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "billingPeriodEnd",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "wasWithinLimit",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "true",
+            "dartType": "bool"
+          },
+          {
+            "name": "usedGracePeriod",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "deniedDueToLimit",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "platform",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "ipAddress",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "userAgent",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "tool_usage_logs_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_created_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "createdAt"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "tool_name_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "toolName"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "conversation_tool_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "conversationId"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "billing_period_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "billingPeriodStart"
+              },
+              {
+                "type": 0,
+                "definition": "billingPeriodEnd"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "success_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "success"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "usage_alerts",
+        "dartName": "UsageAlert",
+        "module": "asami",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 7,
+            "isNullable": false,
+            "columnDefault": "gen_random_uuid()",
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userId",
+            "columnType": 7,
+            "isNullable": false,
+            "dartType": "UuidValue"
+          },
+          {
+            "name": "userType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:UserType"
+          },
+          {
+            "name": "alertType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:AlertType"
+          },
+          {
+            "name": "limitType",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "protocol:LimitType"
+          },
+          {
+            "name": "thresholdPercentage",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "currentUsage",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "limitValue",
+            "columnType": 6,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "title",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "message",
+            "columnType": 0,
+            "isNullable": false,
+            "dartType": "String"
+          },
+          {
+            "name": "actionRequired",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "actionUrl",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "isRead",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "isDismissed",
+            "columnType": 1,
+            "isNullable": false,
+            "columnDefault": "false",
+            "dartType": "bool"
+          },
+          {
+            "name": "deliveryMethod",
+            "columnType": 0,
+            "isNullable": true,
+            "dartType": "String?"
+          },
+          {
+            "name": "sentAt",
+            "columnType": 4,
+            "isNullable": true,
+            "dartType": "DateTime?"
+          },
+          {
+            "name": "createdAt",
+            "columnType": 4,
+            "isNullable": false,
+            "columnDefault": "CURRENT_TIMESTAMP",
+            "dartType": "DateTime"
+          }
+        ],
+        "foreignKeys": [],
+        "indexes": [
+          {
+            "indexName": "usage_alerts_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          },
+          {
+            "indexName": "user_type_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "userId"
+              },
+              {
+                "type": 0,
+                "definition": "alertType"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "read_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "isRead"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          },
+          {
+            "indexName": "usage_created_idx",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "createdAt"
+              }
+            ],
+            "type": "btree",
+            "isUnique": false,
+            "isPrimary": false
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [],
+  "migrationApiVersion": 1
+}

@@ -1,4 +1,3 @@
-
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/analytics_endpoint.dart';
 import '../../../endpoints/order_endpoint.dart';
@@ -88,7 +87,7 @@ class VendorTools {
       allowedRoles: ['vendor'],
     );
 
-    // 12. Get Top Selling Products (continued from previous)
+    // 12. Get Top Selling Products
     registry.register(
       definition: _getTopSellingProductsTool(),
       handler: _handleGetTopSellingProducts,
@@ -340,8 +339,11 @@ class VendorTools {
       final description = arguments['description'] as String;
       final shortDescription = arguments['short_description'] as String?;
       final category = arguments['category'] as String;
+      
+      // FIX: Use num first, then convert to double/int
       final basePrice = (arguments['base_price'] as num).toDouble();
       final quantity = (arguments['quantity'] as num?)?.toInt() ?? 0;
+      
       final color = (arguments['color'] as List?)?.cast<String>();
       final size = (arguments['size'] as List?)?.cast<String>();
       final useAi = arguments['use_ai_description'] as bool? ?? false;

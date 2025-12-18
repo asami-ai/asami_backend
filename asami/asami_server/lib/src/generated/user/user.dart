@@ -23,7 +23,6 @@ abstract class User
     required this.phoneNumber,
     required this.countryCode,
     bool? isPhoneVerified,
-    bool? isEmailVerified,
     this.whatsappId,
     this.telegramId,
     this.firstName,
@@ -34,6 +33,17 @@ abstract class User
     this.city,
     this.state,
     this.country,
+    bool? emailVerified,
+    this.emailVerifiedAt,
+    bool? whatsappAuthenticated,
+    bool? telegramAuthenticated,
+    bool? webAuthenticated,
+    this.lastWhatsappLogin,
+    this.lastTelegramLogin,
+    this.lastWebLogin,
+    this.verificationCode,
+    this.verificationCodeExpiry,
+    int? verificationAttempts,
     DateTime? createdAt,
     DateTime? updatedAt,
     this.lastActiveAt,
@@ -41,9 +51,13 @@ abstract class User
   })  : id = id ?? _i1.Uuid().v4obj(),
         status = status ?? _i2.UserStatus.active,
         isPhoneVerified = isPhoneVerified ?? false,
-        isEmailVerified = isEmailVerified ?? false,
         language = language ?? 'en',
         timezone = timezone ?? 'UTC',
+        emailVerified = emailVerified ?? false,
+        whatsappAuthenticated = whatsappAuthenticated ?? false,
+        telegramAuthenticated = telegramAuthenticated ?? false,
+        webAuthenticated = webAuthenticated ?? false,
+        verificationAttempts = verificationAttempts ?? 0,
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
@@ -55,7 +69,6 @@ abstract class User
     required String phoneNumber,
     required String countryCode,
     bool? isPhoneVerified,
-    bool? isEmailVerified,
     String? whatsappId,
     String? telegramId,
     String? firstName,
@@ -66,6 +79,17 @@ abstract class User
     String? city,
     String? state,
     String? country,
+    bool? emailVerified,
+    DateTime? emailVerifiedAt,
+    bool? whatsappAuthenticated,
+    bool? telegramAuthenticated,
+    bool? webAuthenticated,
+    DateTime? lastWhatsappLogin,
+    DateTime? lastTelegramLogin,
+    DateTime? lastWebLogin,
+    String? verificationCode,
+    DateTime? verificationCodeExpiry,
+    int? verificationAttempts,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? lastActiveAt,
@@ -81,7 +105,6 @@ abstract class User
       phoneNumber: jsonSerialization['phoneNumber'] as String,
       countryCode: jsonSerialization['countryCode'] as String,
       isPhoneVerified: jsonSerialization['isPhoneVerified'] as bool,
-      isEmailVerified: jsonSerialization['isEmailVerified'] as bool,
       whatsappId: jsonSerialization['whatsappId'] as String?,
       telegramId: jsonSerialization['telegramId'] as String?,
       firstName: jsonSerialization['firstName'] as String?,
@@ -92,6 +115,33 @@ abstract class User
       city: jsonSerialization['city'] as String?,
       state: jsonSerialization['state'] as String?,
       country: jsonSerialization['country'] as String?,
+      emailVerified: jsonSerialization['emailVerified'] as bool,
+      emailVerifiedAt: jsonSerialization['emailVerifiedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['emailVerifiedAt']),
+      whatsappAuthenticated: jsonSerialization['whatsappAuthenticated'] as bool,
+      telegramAuthenticated: jsonSerialization['telegramAuthenticated'] as bool,
+      webAuthenticated: jsonSerialization['webAuthenticated'] as bool,
+      lastWhatsappLogin: jsonSerialization['lastWhatsappLogin'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['lastWhatsappLogin']),
+      lastTelegramLogin: jsonSerialization['lastTelegramLogin'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['lastTelegramLogin']),
+      lastWebLogin: jsonSerialization['lastWebLogin'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['lastWebLogin']),
+      verificationCode: jsonSerialization['verificationCode'] as String?,
+      verificationCodeExpiry:
+          jsonSerialization['verificationCodeExpiry'] == null
+              ? null
+              : _i1.DateTimeJsonExtension.fromJson(
+                  jsonSerialization['verificationCodeExpiry']),
+      verificationAttempts: jsonSerialization['verificationAttempts'] as int,
       createdAt:
           _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt:
@@ -125,8 +175,6 @@ abstract class User
 
   bool isPhoneVerified;
 
-  bool isEmailVerified;
-
   String? whatsappId;
 
   String? telegramId;
@@ -146,6 +194,28 @@ abstract class User
   String? state;
 
   String? country;
+
+  bool emailVerified;
+
+  DateTime? emailVerifiedAt;
+
+  bool whatsappAuthenticated;
+
+  bool telegramAuthenticated;
+
+  bool webAuthenticated;
+
+  DateTime? lastWhatsappLogin;
+
+  DateTime? lastTelegramLogin;
+
+  DateTime? lastWebLogin;
+
+  String? verificationCode;
+
+  DateTime? verificationCodeExpiry;
+
+  int verificationAttempts;
 
   DateTime createdAt;
 
@@ -169,7 +239,6 @@ abstract class User
     String? phoneNumber,
     String? countryCode,
     bool? isPhoneVerified,
-    bool? isEmailVerified,
     String? whatsappId,
     String? telegramId,
     String? firstName,
@@ -180,6 +249,17 @@ abstract class User
     String? city,
     String? state,
     String? country,
+    bool? emailVerified,
+    DateTime? emailVerifiedAt,
+    bool? whatsappAuthenticated,
+    bool? telegramAuthenticated,
+    bool? webAuthenticated,
+    DateTime? lastWhatsappLogin,
+    DateTime? lastTelegramLogin,
+    DateTime? lastWebLogin,
+    String? verificationCode,
+    DateTime? verificationCodeExpiry,
+    int? verificationAttempts,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? lastActiveAt,
@@ -195,7 +275,6 @@ abstract class User
       'phoneNumber': phoneNumber,
       'countryCode': countryCode,
       'isPhoneVerified': isPhoneVerified,
-      'isEmailVerified': isEmailVerified,
       if (whatsappId != null) 'whatsappId': whatsappId,
       if (telegramId != null) 'telegramId': telegramId,
       if (firstName != null) 'firstName': firstName,
@@ -206,6 +285,20 @@ abstract class User
       if (city != null) 'city': city,
       if (state != null) 'state': state,
       if (country != null) 'country': country,
+      'emailVerified': emailVerified,
+      if (emailVerifiedAt != null) 'emailVerifiedAt': emailVerifiedAt?.toJson(),
+      'whatsappAuthenticated': whatsappAuthenticated,
+      'telegramAuthenticated': telegramAuthenticated,
+      'webAuthenticated': webAuthenticated,
+      if (lastWhatsappLogin != null)
+        'lastWhatsappLogin': lastWhatsappLogin?.toJson(),
+      if (lastTelegramLogin != null)
+        'lastTelegramLogin': lastTelegramLogin?.toJson(),
+      if (lastWebLogin != null) 'lastWebLogin': lastWebLogin?.toJson(),
+      if (verificationCode != null) 'verificationCode': verificationCode,
+      if (verificationCodeExpiry != null)
+        'verificationCodeExpiry': verificationCodeExpiry?.toJson(),
+      'verificationAttempts': verificationAttempts,
       'createdAt': createdAt.toJson(),
       'updatedAt': updatedAt.toJson(),
       if (lastActiveAt != null) 'lastActiveAt': lastActiveAt?.toJson(),
@@ -223,7 +316,6 @@ abstract class User
       'phoneNumber': phoneNumber,
       'countryCode': countryCode,
       'isPhoneVerified': isPhoneVerified,
-      'isEmailVerified': isEmailVerified,
       if (whatsappId != null) 'whatsappId': whatsappId,
       if (telegramId != null) 'telegramId': telegramId,
       if (firstName != null) 'firstName': firstName,
@@ -234,6 +326,20 @@ abstract class User
       if (city != null) 'city': city,
       if (state != null) 'state': state,
       if (country != null) 'country': country,
+      'emailVerified': emailVerified,
+      if (emailVerifiedAt != null) 'emailVerifiedAt': emailVerifiedAt?.toJson(),
+      'whatsappAuthenticated': whatsappAuthenticated,
+      'telegramAuthenticated': telegramAuthenticated,
+      'webAuthenticated': webAuthenticated,
+      if (lastWhatsappLogin != null)
+        'lastWhatsappLogin': lastWhatsappLogin?.toJson(),
+      if (lastTelegramLogin != null)
+        'lastTelegramLogin': lastTelegramLogin?.toJson(),
+      if (lastWebLogin != null) 'lastWebLogin': lastWebLogin?.toJson(),
+      if (verificationCode != null) 'verificationCode': verificationCode,
+      if (verificationCodeExpiry != null)
+        'verificationCodeExpiry': verificationCodeExpiry?.toJson(),
+      'verificationAttempts': verificationAttempts,
       'createdAt': createdAt.toJson(),
       'updatedAt': updatedAt.toJson(),
       if (lastActiveAt != null) 'lastActiveAt': lastActiveAt?.toJson(),
@@ -282,7 +388,6 @@ class _UserImpl extends User {
     required String phoneNumber,
     required String countryCode,
     bool? isPhoneVerified,
-    bool? isEmailVerified,
     String? whatsappId,
     String? telegramId,
     String? firstName,
@@ -293,6 +398,17 @@ class _UserImpl extends User {
     String? city,
     String? state,
     String? country,
+    bool? emailVerified,
+    DateTime? emailVerifiedAt,
+    bool? whatsappAuthenticated,
+    bool? telegramAuthenticated,
+    bool? webAuthenticated,
+    DateTime? lastWhatsappLogin,
+    DateTime? lastTelegramLogin,
+    DateTime? lastWebLogin,
+    String? verificationCode,
+    DateTime? verificationCodeExpiry,
+    int? verificationAttempts,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? lastActiveAt,
@@ -305,7 +421,6 @@ class _UserImpl extends User {
           phoneNumber: phoneNumber,
           countryCode: countryCode,
           isPhoneVerified: isPhoneVerified,
-          isEmailVerified: isEmailVerified,
           whatsappId: whatsappId,
           telegramId: telegramId,
           firstName: firstName,
@@ -316,6 +431,17 @@ class _UserImpl extends User {
           city: city,
           state: state,
           country: country,
+          emailVerified: emailVerified,
+          emailVerifiedAt: emailVerifiedAt,
+          whatsappAuthenticated: whatsappAuthenticated,
+          telegramAuthenticated: telegramAuthenticated,
+          webAuthenticated: webAuthenticated,
+          lastWhatsappLogin: lastWhatsappLogin,
+          lastTelegramLogin: lastTelegramLogin,
+          lastWebLogin: lastWebLogin,
+          verificationCode: verificationCode,
+          verificationCodeExpiry: verificationCodeExpiry,
+          verificationAttempts: verificationAttempts,
           createdAt: createdAt,
           updatedAt: updatedAt,
           lastActiveAt: lastActiveAt,
@@ -334,7 +460,6 @@ class _UserImpl extends User {
     String? phoneNumber,
     String? countryCode,
     bool? isPhoneVerified,
-    bool? isEmailVerified,
     Object? whatsappId = _Undefined,
     Object? telegramId = _Undefined,
     Object? firstName = _Undefined,
@@ -345,6 +470,17 @@ class _UserImpl extends User {
     Object? city = _Undefined,
     Object? state = _Undefined,
     Object? country = _Undefined,
+    bool? emailVerified,
+    Object? emailVerifiedAt = _Undefined,
+    bool? whatsappAuthenticated,
+    bool? telegramAuthenticated,
+    bool? webAuthenticated,
+    Object? lastWhatsappLogin = _Undefined,
+    Object? lastTelegramLogin = _Undefined,
+    Object? lastWebLogin = _Undefined,
+    Object? verificationCode = _Undefined,
+    Object? verificationCodeExpiry = _Undefined,
+    int? verificationAttempts,
     DateTime? createdAt,
     DateTime? updatedAt,
     Object? lastActiveAt = _Undefined,
@@ -358,7 +494,6 @@ class _UserImpl extends User {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       countryCode: countryCode ?? this.countryCode,
       isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
-      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
       whatsappId: whatsappId is String? ? whatsappId : this.whatsappId,
       telegramId: telegramId is String? ? telegramId : this.telegramId,
       firstName: firstName is String? ? firstName : this.firstName,
@@ -370,6 +505,29 @@ class _UserImpl extends User {
       city: city is String? ? city : this.city,
       state: state is String? ? state : this.state,
       country: country is String? ? country : this.country,
+      emailVerified: emailVerified ?? this.emailVerified,
+      emailVerifiedAt:
+          emailVerifiedAt is DateTime? ? emailVerifiedAt : this.emailVerifiedAt,
+      whatsappAuthenticated:
+          whatsappAuthenticated ?? this.whatsappAuthenticated,
+      telegramAuthenticated:
+          telegramAuthenticated ?? this.telegramAuthenticated,
+      webAuthenticated: webAuthenticated ?? this.webAuthenticated,
+      lastWhatsappLogin: lastWhatsappLogin is DateTime?
+          ? lastWhatsappLogin
+          : this.lastWhatsappLogin,
+      lastTelegramLogin: lastTelegramLogin is DateTime?
+          ? lastTelegramLogin
+          : this.lastTelegramLogin,
+      lastWebLogin:
+          lastWebLogin is DateTime? ? lastWebLogin : this.lastWebLogin,
+      verificationCode: verificationCode is String?
+          ? verificationCode
+          : this.verificationCode,
+      verificationCodeExpiry: verificationCodeExpiry is DateTime?
+          ? verificationCodeExpiry
+          : this.verificationCodeExpiry,
+      verificationAttempts: verificationAttempts ?? this.verificationAttempts,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       lastActiveAt:
@@ -406,11 +564,6 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
     );
     isPhoneVerified = _i1.ColumnBool(
       'isPhoneVerified',
-      this,
-      hasDefault: true,
-    );
-    isEmailVerified = _i1.ColumnBool(
-      'isEmailVerified',
       this,
       hasDefault: true,
     );
@@ -456,6 +609,55 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
       'country',
       this,
     );
+    emailVerified = _i1.ColumnBool(
+      'emailVerified',
+      this,
+      hasDefault: true,
+    );
+    emailVerifiedAt = _i1.ColumnDateTime(
+      'emailVerifiedAt',
+      this,
+    );
+    whatsappAuthenticated = _i1.ColumnBool(
+      'whatsappAuthenticated',
+      this,
+      hasDefault: true,
+    );
+    telegramAuthenticated = _i1.ColumnBool(
+      'telegramAuthenticated',
+      this,
+      hasDefault: true,
+    );
+    webAuthenticated = _i1.ColumnBool(
+      'webAuthenticated',
+      this,
+      hasDefault: true,
+    );
+    lastWhatsappLogin = _i1.ColumnDateTime(
+      'lastWhatsappLogin',
+      this,
+    );
+    lastTelegramLogin = _i1.ColumnDateTime(
+      'lastTelegramLogin',
+      this,
+    );
+    lastWebLogin = _i1.ColumnDateTime(
+      'lastWebLogin',
+      this,
+    );
+    verificationCode = _i1.ColumnString(
+      'verificationCode',
+      this,
+    );
+    verificationCodeExpiry = _i1.ColumnDateTime(
+      'verificationCodeExpiry',
+      this,
+    );
+    verificationAttempts = _i1.ColumnInt(
+      'verificationAttempts',
+      this,
+      hasDefault: true,
+    );
     createdAt = _i1.ColumnDateTime(
       'createdAt',
       this,
@@ -488,8 +690,6 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnBool isPhoneVerified;
 
-  late final _i1.ColumnBool isEmailVerified;
-
   late final _i1.ColumnString whatsappId;
 
   late final _i1.ColumnString telegramId;
@@ -510,6 +710,28 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnString country;
 
+  late final _i1.ColumnBool emailVerified;
+
+  late final _i1.ColumnDateTime emailVerifiedAt;
+
+  late final _i1.ColumnBool whatsappAuthenticated;
+
+  late final _i1.ColumnBool telegramAuthenticated;
+
+  late final _i1.ColumnBool webAuthenticated;
+
+  late final _i1.ColumnDateTime lastWhatsappLogin;
+
+  late final _i1.ColumnDateTime lastTelegramLogin;
+
+  late final _i1.ColumnDateTime lastWebLogin;
+
+  late final _i1.ColumnString verificationCode;
+
+  late final _i1.ColumnDateTime verificationCodeExpiry;
+
+  late final _i1.ColumnInt verificationAttempts;
+
   late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnDateTime updatedAt;
@@ -527,7 +749,6 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
         phoneNumber,
         countryCode,
         isPhoneVerified,
-        isEmailVerified,
         whatsappId,
         telegramId,
         firstName,
@@ -538,6 +759,17 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
         city,
         state,
         country,
+        emailVerified,
+        emailVerifiedAt,
+        whatsappAuthenticated,
+        telegramAuthenticated,
+        webAuthenticated,
+        lastWhatsappLogin,
+        lastTelegramLogin,
+        lastWebLogin,
+        verificationCode,
+        verificationCodeExpiry,
+        verificationAttempts,
         createdAt,
         updatedAt,
         lastActiveAt,

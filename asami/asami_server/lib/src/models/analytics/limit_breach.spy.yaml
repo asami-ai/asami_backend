@@ -1,0 +1,34 @@
+
+class: LimitBreachLog
+table: limit_breach_logs
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  userType: UserType
+  
+  # Breach Details
+  limitType: LimitType
+  attemptedAction: String
+  currentUsage: int
+  limitValue: int
+  
+  # Context
+  subscriptionTier: SubscriptionTier?
+  conversationId: UuidValue?
+  
+  # Response
+  actionTaken: String
+  userNotified: bool, default=false
+  
+  # Severity
+  severity: BreachSeverity
+  
+  # Timestamps
+  breachedAt: DateTime, default=now
+indexes:
+  user_breach_idx:
+    fields: userId, breachedAt
+  limit_type_idx:
+    fields: limitType
+  severity_idx:
+    fields: severity

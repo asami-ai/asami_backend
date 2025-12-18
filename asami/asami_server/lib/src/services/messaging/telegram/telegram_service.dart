@@ -1,31 +1,9 @@
 // File: server/lib/src/services/messaging/telegram_service.dart
 
 import 'dart:io';
+import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:televerse/telegram.dart'
-    show
-        Message,
-        ParseMode,
-        ChatAction,
-        ReplyParameters,
-        BotCommand,
-        BotCommandScope,
-        ChatMember,
-        ReplyMarkup,
-        MessageEntity,
-        InputPollOption,
-        PollType,
-        DiceEmoji,
-        InlineKeyboardMarkup,
-        LinkPreviewOptions,
-        MessageId,
-        InputMedia,
-        InlineQueryResult,
-        InlineQueryResultsButton,
-        ChatFullInfo,
-        User,
-        BotName,
-        BotDescription,
-        Update;
+    show Message, ParseMode, ChatAction, ReplyParameters, BotCommand, BotCommandScope, ChatMember, ReplyMarkup, MessageEntity, InputPollOption, PollType, DiceEmoji, InlineKeyboardMarkup, LinkPreviewOptions, MessageId, InputMedia, InlineQueryResult, InlineQueryResultsButton, ChatFullInfo, User, BotName, BotDescription, Update, InlineKeyboardButton;
 import 'package:televerse/televerse.dart';
 
 /// Enhanced Telegram Bot service with full feature support
@@ -63,35 +41,35 @@ class TelegramService {
     if (_isStarted) return;
 
     try {
-      print('🔄 Initializing Telegram bot...');
+      Log.info('🔄 Initializing Telegram bot...');
 
       // Test connection
       final me = await api.getMe();
-      print('✅ Bot authenticated: @${me.username}');
+      Log.info('✅ Bot authenticated: @${me.username}');
 
       // Set webhook if URL provided
       if (webhookUrl != null && webhookUrl!.isNotEmpty) {
         await _configureWebhook();
       } else {
-        print('⚠️ No webhook URL provided - using polling mode');
+        Log.info('⚠️ No webhook URL provided - using polling mode');
         // Start polling (for development)
         await _bot.start();
-        print('🤖 Telegram bot started in polling mode');
+        Log.info('🤖 Telegram bot started in polling mode');
       }
 
       _isStarted = true;
-      print('✅ Telegram service fully initialized');
+      Log.info('✅ Telegram service fully initialized');
     } catch (e, stackTrace) {
-      print('❌ Failed to start Telegram bot: $e');
-      print('Stack trace: $stackTrace');
+      Log.info('❌ Failed to start Telegram bot: $e');
+      Log.info('Stack trace: $stackTrace');
 
       if (e.toString().contains('Network') || e.toString().contains('Dio')) {
-        print('');
-        print('🔧 NETWORK ERROR - Possible solutions:');
-        print('1. Check internet connection');
-        print('2. Use VPN if Telegram is blocked');
-        print('3. Verify bot token is correct');
-        print('');
+        Log.info('');
+        Log.info('🔧 NETWORK ERROR - Possible solutions:');
+        Log.info('1. Check internet connection');
+        Log.info('2. Use VPN if Telegram is blocked');
+        Log.info('3. Verify bot token is correct');
+        Log.info('');
       }
 
       rethrow; // Throw for factory to handle
@@ -101,7 +79,7 @@ class TelegramService {
   /// Configure webhook (called by start if webhookUrl is provided)
   Future<void> _configureWebhook() async {
     try {
-      print('🔗 Setting webhook URL: $webhookUrl');
+      Log.info('🔗 Setting webhook URL: $webhookUrl');
 
       // Delete any existing webhook first
       await api.deleteWebhook(dropPendingUpdates: true);
@@ -121,21 +99,21 @@ class TelegramService {
       );
 
       if (success) {
-        print('✅ Webhook configured successfully');
+        Log.info('✅ Webhook configured successfully');
 
         // Verify webhook
         final info = await api.getWebhookInfo();
-        print('📡 Webhook info:');
-        print('   URL: ${info.url}');
-        print('   Pending updates: ${info.pendingUpdateCount}');
+        Log.info('📡 Webhook info:');
+        Log.info('   URL: ${info.url}');
+        Log.info('   Pending updates: ${info.pendingUpdateCount}');
         if (info.lastErrorMessage != null) {
-          print('   ⚠️ Last error: ${info.lastErrorMessage}');
+          Log.info('   ⚠️ Last error: ${info.lastErrorMessage}');
         }
       } else {
-        print('❌ Failed to set webhook');
+        Log.info('❌ Failed to set webhook');
       }
     } catch (e) {
-      print('❌ Error configuring webhook: $e');
+      Log.info('❌ Error configuring webhook: $e');
       rethrow;
     }
   }
@@ -143,7 +121,7 @@ class TelegramService {
   /// Handle incoming update (called by webhook handler)
   Future<void> handleUpdate(Update update) async {
     if (!_isStarted) {
-      print('⚠️ Bot not started, ignoring update');
+      Log.info('⚠️ Bot not started, ignoring update');
       return;
     }
 
@@ -151,8 +129,8 @@ class TelegramService {
       // Let televerse handle the update through its normal flow
       await _bot.handleUpdate(update);
     } catch (e, stackTrace) {
-      print('❌ Error handling update: $e');
-      print(stackTrace);
+      Log.info('❌ Error handling update: $e');
+      Log.error('Stacktrace',stackTrace:  stackTrace);
     }
   }
 
@@ -164,7 +142,7 @@ class TelegramService {
       await api.getMe().timeout(Duration(seconds: 5));
       return true;
     } catch (e) {
-      print('⚠️ Connection check failed: $e');
+      Log.info('⚠️ Connection check failed: $e');
       return false;
     }
   }
@@ -176,19 +154,19 @@ class TelegramService {
       // Delete webhook when stopping
       if (webhookUrl != null) {
         await api.deleteWebhook();
-        print('🔗 Webhook deleted');
+        Log.info('🔗 Webhook deleted');
       }
     } catch (e) {
-      print('⚠️ Error deleting webhook: $e');
+      Log.info('⚠️ Error deleting webhook: $e');
     }
 
     _isStarted = false;
-    print('🛑 Telegram bot stopped');
+    Log.info('🛑 Telegram bot stopped');
   }
 
   void dispose() {
     stop();
-    print('🧹 TelegramService disposed');
+    Log.info('🧹 TelegramService disposed');
   }
 
   // ==================== HELPER ====================
@@ -430,7 +408,7 @@ class TelegramService {
   Future<Message> sendInlineKeyboard({
     required dynamic chatId,
     required String text,
-    required InlineKeyboard keyboard,
+    required List<List<InlineKeyboardButton>> keyboard,
     ParseMode? parseMode,
   }) async {
     _ensureConnected();
@@ -438,8 +416,11 @@ class TelegramService {
       ChatID(chatId),
       text,
       parseMode: parseMode,
-      replyMarkup: keyboard,
-    );
+      replyMarkup: ReplyMarkup.inlineKeyboard(
+        inlineKeyboard: keyboard
+      ),
+      
+    );  
   }
 
   /// Send reply keyboard

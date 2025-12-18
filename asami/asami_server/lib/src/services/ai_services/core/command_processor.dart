@@ -41,7 +41,7 @@ class CommandProcessor {
         'command': command,
       };
     }
-    
+
     return await handler(args, context);
   }
 
@@ -51,13 +51,20 @@ class CommandProcessor {
   }
 
   static final Map<String, List<String>> _commandPermissions = {
-    'products': ['vendor'],
+    'products': ['vendor','customer'],
+    'myproducts': ['vendor'],
+    'sales': ['vendor'],
+    'inventory': ['vendor'],
+    'subscription': ['vendor'],
+    'account':['vendor', 'customer'],
     'analytics': ['vendor'],
     'orders': ['vendor', 'customer'],
-    'cart': ['customer'],
+    'cart': [ 'vendor','customer'],
+    'track':['vendor,customer'],
     'help': ['vendor', 'customer'],
     'start': ['vendor', 'customer'],
     'capabilities': ['vendor', 'customer'],
+    'logout':['vendor','customer']
   };
 }
 

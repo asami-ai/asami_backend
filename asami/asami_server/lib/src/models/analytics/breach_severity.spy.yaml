@@ -1,0 +1,6 @@
+enum: BreachSeverity
+values:
+  - info      # Just tracking
+  - warning   # Approaching limit
+  - soft      # Exceeded but grace allowed
+  - hard      # Completely blocked

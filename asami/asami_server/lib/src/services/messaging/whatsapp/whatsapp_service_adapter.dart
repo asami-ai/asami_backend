@@ -1,5 +1,6 @@
 
 import 'package:asami_server/src/services/messaging/messaging_result.dart';
+import 'package:asami_server/utils/logger/asami_logger.dart';
 
 import '../../../generated/protocol.dart';
 import '../messaging_service_interface.dart';
@@ -104,7 +105,7 @@ class WhatsAppServiceAdapter implements IMessagingService {
     required List<MessageButton> buttons,
     String? headerText,
     String? footerText,
-    Map<String, String>? headerInteractive
+    Map<String, dynamic>? headerInteractive
   }) async {
     try {
       // Check if it's a CTA button (has URL)
@@ -139,13 +140,14 @@ class WhatsAppServiceAdapter implements IMessagingService {
       final response = await _whatsappService.sendInteractiveReplyButton(
         phoneNumber: recipient,
         bodyText: bodyText,
-        footerText: footerText ?? '',
+        footerText: footerText ?? headerText ?? '',
         interactiveReplyButtons: interactiveButtons,
         headerInteractive: headerInteractive!
       );
-
+      Log.info(response.getErrorMessage().toString());
       return _toMessagingResult(response, recipient);
     } catch (e) {
+      Log.error(e.toString(),);
       return MessagingResult.error(
         message: e.toString(),
         platform: platformType,

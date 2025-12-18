@@ -1,44 +1,48 @@
+// File: server/lib/src/endpoints/auth_endpoint.dart
+
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
+import '../services/auth/auth_service.dart';
 
 class AuthEndpoint extends Endpoint {
-  /// Register new user (customer or vendor)
-  Future<User?> register(
+  /// Initiate signup process
+  Future<Map<String, dynamic>> initiateSignup(
     Session session, {
-    required String phoneNumber,
-    required String countryCode,
+    required String email,
     required UserType userType,
-    String? email,
+    String? phoneNumber,
     String? firstName,
     String? lastName,
-    String? whatsappId,
-    String? telegramId,
+    required PlatformType platform,
+    required String platformUserId,
   }) async {
     try {
-      // Check if user exists
-      final existing = await User.db.findFirstRow(
-        session,
-        where: (t) => t.phoneNumber.equals(phoneNumber) & t.countryCode.equals(countryCode),
-      );
+      final authService = AuthService(session);
 
-      if (existing != null) {
-        throw Exception('User already exists with this phone number');
+      // Check if email already exists
+      if (await authService.emailExists(email)) {
+        return {
+          'success': false,
+          'error': 'email_exists',
+          'message':
+              'This email is already registered. Did you mean to log in?',
+        };
       }
 
-      // Generate unique userId
+      // Create user (unverified)
       final userId = Uuid().v4obj();
-
       final user = User(
         id: userId,
         userType: userType,
-        phoneNumber: phoneNumber,
-        countryCode: countryCode,
         email: email,
+        phoneNumber: phoneNumber ?? '',
+        countryCode: '+0',
         firstName: firstName,
         lastName: lastName,
-        whatsappId: whatsappId,
-        telegramId: telegramId,
-        status: UserStatus.active,
+        status: UserStatus.pending_verification,
+        emailVerified: false,
+        whatsappId: platform == PlatformType.whatsapp ? platformUserId : null,
+        telegramId: platform == PlatformType.telegram ? platformUserId : null,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -47,190 +51,370 @@ class AuthEndpoint extends Endpoint {
 
       // Create profile based on user type
       if (userType == UserType.customer) {
-        await _createCustomerProfile(session, createdUser.id);
-      } else if (userType == UserType.vendor) {
-        await _createVendorProfile(session, createdUser.id);
+        final profile = CustomerProfile(
+          id: createdUser.id,
+          userId: createdUser.id,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        await CustomerProfile.db.insertRow(session, profile);
+      } else {
+        final profile = VendorProfile(
+          id: createdUser.id,
+          userId: createdUser.id,
+          businessName: 'My Business',
+          businessCategory: 'General',
+          subscriptionTier: SubscriptionTier.freemium,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        await VendorProfile.db.insertRow(session, profile);
       }
 
-      return createdUser;
-    } catch (e) {
-      session.log('Registration error: $e');
-      return null;
-    }
-  }
+      // Generate and send verification code
+      final code = authService.generateVerificationCode();
+      await authService.createVerificationCode(email: email, code: code);
 
-  /// Verify phone number
-  Future<bool> verifyPhone(
-    Session session, {
-    required UuidValue userId,
-    required String verificationCode,
-  }) async {
-    try {
-      // TODO: Implement actual verification logic with SMS service
-      // For now, accept any code for development
-      
-      final user = await User.db.findFirstRow(
-        session,
-        where: (t) => t.id.equals(userId),
+      final sent = await authService.sendVerificationEmail(
+        email: email,
+        code: code,
+        userName: firstName ?? '',
       );
 
-      if (user == null) return false;
+      if (!sent) {
+        return {
+          'success': false,
+          'error': 'email_send_failed',
+          'message': 'Failed to send verification email',
+        };
+      }
 
-      user.isPhoneVerified = true;
-      user.updatedAt = DateTime.now();
-
-      await User.db.updateRow(session, user);
-      return true;
+      return {
+        'success': true,
+        'user_id': createdUser.id.uuid,
+        'message': 'Verification code sent to $email',
+        'requires_verification': true,
+      };
     } catch (e) {
-      session.log('Phone verification error: $e');
-      return false;
+      session.log('Signup initiation error: $e');
+      return {
+        'success': false,
+        'error': 'signup_failed',
+        'message': 'Signup failed. Please try again.',
+      };
     }
   }
 
-  /// Get user by userId
-  Future<User?> getUser(Session session, UuidValue userId) async {
-    return await User.db.findFirstRow(
-      session,
-      where: (t) => t.id.equals(userId),
-    );
-  }
-
-  /// Get user by phone number
-  Future<User?> getUserByPhone(
-    Session session,
-    String phoneNumber,
-    String countryCode,
-  ) async {
-    return await User.db.findFirstRow(
-      session,
-      where: (t) => t.phoneNumber.equals(phoneNumber) & t.countryCode.equals(countryCode),
-    );
-  }
-
-  /// Get or create user by WhatsApp ID
-  Future<User?> getOrCreateUserByWhatsApp(
+  /// Verify signup code
+  Future<Map<String, dynamic>> verifySignupCode(
     Session session, {
-    required String whatsappId,
-    required String phoneNumber,
-    String? name,
-    UserType userType = UserType.customer,
+    required String email,
+    required String code,
+    required PlatformType platform,
+    required String platformUserId,
   }) async {
-    // Try to find existing user
-    var user = await User.db.findFirstRow(
-      session,
-      where: (t) => t.whatsappId.equals(whatsappId),
-    );
+    try {
+      final authService = AuthService(session);
 
-    if (user != null) return user;
+      // Verify code
+      final verifyResult = await authService.verifyCode(
+        email: email,
+        code: code,
+      );
 
-    // Create new user
-    final userId =  Uuid().v4obj();
-    
-    user = User(
-      id: userId,
-      userType: userType,
-      phoneNumber: phoneNumber,
-      countryCode: '+1', // Default, should be extracted from phone
-      whatsappId: whatsappId,
-      firstName: name,
-      status: UserStatus.active,
-      isPhoneVerified: true, // Auto-verify for WhatsApp users
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      lastActiveAt: DateTime.now(),
-    );
+      if (!verifyResult['success']) {
+        return verifyResult;
+      }
 
-    final createdUser = await User.db.insertRow(session, user);
+      // Authenticate platform
+      final authResult = await authService.authenticatePlatform(
+        userId: verifyResult['user_id'],
+        platform: platform,
+        platformUserId: platformUserId,
+      );
 
-    // Create profile
-    if (userType == UserType.customer) {
-      await _createCustomerProfile(session, createdUser.id);
-    } else {
-      await _createVendorProfile(session, createdUser.id);
+      if (!authResult['success']) {
+        return authResult;
+      }
+
+      return {
+        'success': true,
+        'user': authResult['user'],
+        'session_id': authResult['session_id'],
+        'message': 'Account created and verified successfully!',
+      };
+    } catch (e) {
+      session.log('Signup verification error: $e');
+      return {
+        'success': false,
+        'error': 'verification_failed',
+        'message': 'Verification failed',
+      };
     }
-
-    return createdUser;
   }
 
-  /// Get or create user by Telegram ID
-  Future<User?> getOrCreateUserByTelegram(
+  /// Initiate login
+  Future<Map<String, dynamic>> initiateLogin(
     Session session, {
-    required String telegramId,
-    required String username,
-    String? firstName,
-    String? lastName,
-    UserType userType = UserType.customer,
+    required String email,
   }) async {
-    // Try to find existing user
-    var user = await User.db.findFirstRow(
-      session,
-      where: (t) => t.telegramId.equals(telegramId),
-    );
+    try {
+      final authService = AuthService(session);
 
-    if (user != null) return user;
+      // Check if user exists
+      if (!await authService.emailExists(email)) {
+        return {
+          'success': false,
+          'error': 'user_not_found',
+          'message': 'No account found with this email',
+        };
+      }
 
-    // Create new user
-    final userId = Uuid().v4obj();
-    
-    user = User(
-      id: userId,
-      userType: userType,
-      phoneNumber: username, // Using username as phone placeholder
-      countryCode: '+0',
-      telegramId: telegramId,
-      firstName: firstName,
-      lastName: lastName,
-      status: UserStatus.active,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      lastActiveAt: DateTime.now(),
-    );
+      // Generate and send verification code
+      final code = authService.generateVerificationCode();
+      await authService.createVerificationCode(email: email, code: code);
 
-    final createdUser = await User.db.insertRow(session, user);
+      final user = await User.db.findFirstRow(
+        session,
+        where: (t) => t.email.equals(email),
+      );
 
-    // Create profile
-    if (userType == UserType.customer) {
-      await _createCustomerProfile(session, createdUser.id);
-    } else {
-      await _createVendorProfile(session, createdUser.id);
+      final sent = await authService.sendVerificationEmail(
+        email: email,
+        code: code,
+        userName: user?.firstName ?? '',
+      );
+
+      if (!sent) {
+        return {
+          'success': false,
+          'error': 'email_send_failed',
+          'message': 'Failed to send verification code',
+        };
+      }
+
+      return {
+        'success': true,
+        'message': 'Verification code sent to $email',
+        'requires_verification': true,
+      };
+    } catch (e) {
+      session.log('Login initiation error: $e');
+      return {
+        'success': false,
+        'error': 'login_failed',
+        'message': 'Login failed. Please try again.',
+      };
     }
-
-    return createdUser;
   }
 
-  /// Update user last active timestamp
-  Future<void> updateLastActive(Session session, UuidValue userId) async {
+  /// Verify login code
+  Future<Map<String, dynamic>> verifyLoginCode(
+    Session session, {
+    required String email,
+    required String code,
+    required PlatformType platform,
+    required String platformUserId,
+  }) async {
+    try {
+      final authService = AuthService(session);
+
+      // Verify code
+      final verifyResult = await authService.verifyCode(
+        email: email,
+        code: code,
+      );
+
+      if (!verifyResult['success']) {
+        return verifyResult;
+      }
+
+      // Authenticate platform
+      final authResult = await authService.authenticatePlatform(
+        userId: verifyResult['user_id'],
+        platform: platform,
+        platformUserId: platformUserId,
+      );
+
+      if (!authResult['success']) {
+        return authResult;
+      }
+
+      return {
+        'success': true,
+        'user': authResult['user'],
+        'session_id': authResult['session_id'],
+        'message': 'Logged in successfully!',
+      };
+    } catch (e) {
+      session.log('Login verification error: $e');
+      return {
+        'success': false,
+        'error': 'verification_failed',
+        'message': 'Login verification failed',
+      };
+    }
+  }
+
+  /// Check authentication status
+  Future<Map<String, dynamic>> checkAuth(
+    Session session, {
+    required PlatformType platform,
+    required String platformUserId,
+  }) async {
+    try {
+      final authService = AuthService(session);
+
+      return await authService.checkAuthentication(
+        platform: platform,
+        platformUserId: platformUserId,
+      );
+    } catch (e) {
+      session.log('Check auth error: $e');
+      return {
+        'authenticated': false,
+        'error': 'check_failed',
+      };
+    }
+  }
+
+  /// Logout
+  Future<Map<String, dynamic>> logout(
+    Session session, {
+    required String userId,
+    required PlatformType platform,
+  }) async {
+    try {
+      final authService = AuthService(session);
+
+      final success = await authService.logout(
+        userId: userId,
+        platform: platform,
+      );
+
+      if (success) {
+        return {
+          'success': true,
+          'message': 'Logged out successfully',
+        };
+      }
+
+      return {
+        'success': false,
+        'error': 'logout_failed',
+        'message': 'Logout failed',
+      };
+    } catch (e) {
+      session.log('Logout error: $e');
+      return {
+        'success': false,
+        'error': 'logout_failed',
+        'message': 'Logout failed',
+      };
+    }
+  }
+
+  /// Resend verification code
+  Future<Map<String, dynamic>> resendCode(
+    Session session, {
+    required String email,
+  }) async {
+    try {
+      final authService = AuthService(session);
+
+      return await authService.resendVerificationCode(email: email);
+    } catch (e) {
+      session.log('Resend code error: $e');
+      return {
+        'success': false,
+        'error': 'resend_failed',
+        'message': 'Failed to resend code',
+      };
+    }
+  }
+
+  /// Upgrade customer to vendor
+  Future<Map<String, dynamic>> upgradeToVendor(
+    Session session, {
+    required String userId,
+    required String businessName,
+    required String businessCategory,
+  }) async {
+    try {
+      final user =
+          await User.db.findById(session, UuidValue.fromString(userId));
+
+      if (user == null) {
+        return {
+          'success': false,
+          'error': 'user_not_found',
+          'message': 'User not found',
+        };
+      }
+
+      if (user.userType == UserType.vendor) {
+        return {
+          'success': false,
+          'error': 'already_vendor',
+          'message': 'User is already a vendor',
+        };
+      }
+
+      // Update user type
+      user.userType = UserType.vendor;
+      await User.db.updateRow(session, user);
+
+      // Create vendor profile
+      final profile = VendorProfile(
+        id: user.id,
+        userId: user.id,
+        businessName: businessName,
+        businessCategory: businessCategory,
+        subscriptionTier: SubscriptionTier.freemium,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await VendorProfile.db.insertRow(session, profile);
+
+      return {
+        'success': true,
+        'message': 'Successfully upgraded to vendor account!',
+        'user': user,
+      };
+    } catch (e) {
+      session.log('Upgrade to vendor error: $e');
+      return {
+        'success': false,
+        'error': 'upgrade_failed',
+        'message': 'Upgrade failed',
+      };
+    }
+  }
+
+  Future<bool> deleteTempUser(Session session, {required String email}) async {
     final user = await User.db.findFirstRow(
       session,
-      where: (t) => t.id.equals(userId),
+      where: (t) => t.email.equals(email),
     );
 
-    if (user != null) {
-      user.lastActiveAt = DateTime.now();
-      user.updatedAt = DateTime.now();
-      await User.db.updateRow(session, user);
-    }
-  }
-
-  // Private helper methods
-  Future<void> _createCustomerProfile(Session session, UuidValue userId) async {
-    final profile = CustomerProfile(
-      userId: userId,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-    await CustomerProfile.db.insertRow(session, profile);
-  }
-
-  Future<void> _createVendorProfile(Session session, UuidValue userId) async {
-    final profile = VendorProfile(
-      userId: userId,
-      businessName: 'My Business', // Placeholder
-      businessCategory: 'General',
-      subscriptionTier: SubscriptionTier.freemium,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-    await VendorProfile.db.insertRow(session, profile);
+    if (user == null) return false;
+    await User.db.deleteRow(session, user);
+    return true;
   }
 }
+
+
+/// Update user last active timestamp
+  // Future<void> updateLastActive(Session session, UuidValue userId) async {
+  //   final user = await User.db.findFirstRow(
+  //     session,
+  //     where: (t) => t.id.equals(userId),
+  //   );
+
+  //   if (user != null) {
+  //     user.lastActiveAt = DateTime.now();
+  //     user.updatedAt = DateTime.now();
+  //     await User.db.updateRow(session, user);
+  //   }
+  // }

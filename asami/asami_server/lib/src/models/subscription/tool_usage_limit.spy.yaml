@@ -1,0 +1,36 @@
+# ============================================================================
+# TOOL USAGE TRACKING MODELS
+# ============================================================================
+
+class: ToolUsageLimit
+table: tool_usage_limits
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Limit Configuration
+  tier: SubscriptionTier
+  limitType: LimitType
+  dailyLimit: int
+  monthlyLimit: int?
+  
+  # Grace Period (after hitting limit)
+  allowGracePeriod: bool, default=true
+  gracePeriodActions: int, default=5
+  
+  # Specific Tool Limits (JSON array of tool names)
+  restrictedTools: String?
+  allowedToolsAfterLimit: String?
+  
+  # Cost per usage (for billing)
+  costPerUsage: double, default=0.0
+  
+  # Active/Inactive
+  isActive: bool, default=true
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  tier_type_idx:
+    fields: tier, limitType
+

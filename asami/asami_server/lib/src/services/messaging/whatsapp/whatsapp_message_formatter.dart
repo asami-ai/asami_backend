@@ -43,6 +43,36 @@ class WhatsAppMessageFormatter {
     return buffer.toString();
   }
 
+  static String formatProductDetails(Product product) {
+    final buffer = StringBuffer();
+    
+    buffer.writeln('💎 *${product.name}*');
+    buffer.writeln('₦${product.basePrice.toStringAsFixed(2)}${product.discountPrice != null ? ' ~~₦${product.discountPrice!.toStringAsFixed(2)}~~' : ''}');
+    buffer.writeln('⭐ ${product.averageRating.toStringAsFixed(1)} (${product.totalReviews} reviews)');
+    buffer.writeln('━━━━━━━━━━━━━━━━');
+    buffer.writeln('');
+    buffer.writeln(product.description);
+    buffer.writeln('');
+    buffer.writeln('📦 Stock: ${product.quantity} available');
+    buffer.writeln('🚚 Delivery: ${product.estimatedDeliveryDays ?? 3} days');
+    
+    if (product.color?.isNotEmpty == true) {
+      buffer.writeln('🎨 Colors: ${product.color!.join(', ')}');
+    }
+    
+    if (product.size?.isNotEmpty == true) {
+      buffer.writeln('📏 Sizes: ${product.size!.join(', ')}');
+    }
+    
+    if (product.freeShipping) {
+      buffer.writeln('✅ Free Shipping');
+    } else {
+      buffer.writeln('💰 Shipping: ₦${product.shippingCost.toStringAsFixed(2)}');
+    }
+    
+    return buffer.toString();
+  }
+
   /// Format order confirmation
   static String formatOrderConfirmation(Order order, List<OrderItem> items) {
     final buffer = StringBuffer();

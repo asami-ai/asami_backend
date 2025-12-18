@@ -1,0 +1,7 @@
+enum: UsageClass
+values:
+  - light        # < 20 messages/day
+  - moderate     # 20-50 messages/day
+  - heavy        # 50-100 messages/day
+  - power_user   # 100-200 messages/day
+  - excessive    # > 200 messages/day

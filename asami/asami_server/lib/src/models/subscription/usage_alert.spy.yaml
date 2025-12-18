@@ -1,0 +1,40 @@
+
+class: UsageAlert
+table: usage_alerts
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  userType: UserType
+  
+  # Alert Details
+  alertType: AlertType
+  limitType: LimitType
+  
+  # Threshold
+  thresholdPercentage: int
+  currentUsage: int
+  limitValue: int
+  
+  # Message
+  title: String
+  message: String
+  actionRequired: bool, default=false
+  actionUrl: String?
+  
+  # Status
+  isRead: bool, default=false
+  isDismissed: bool, default=false
+  
+  # Delivery
+  deliveryMethod: String?
+  sentAt: DateTime?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+indexes:
+  user_type_idx:
+    fields: userId, alertType
+  read_idx:
+    fields: isRead
+  usage_created_idx:
+    fields: createdAt

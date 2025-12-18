@@ -1,0 +1,56 @@
+
+class: DailyUsageTracker
+table: daily_usage_trackers
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  userType: UserType
+  
+  # Date tracking
+  date: DateTime
+  resetAt: DateTime
+  
+  # Tool Usage Counts
+  toolCallsCount: int, default=0
+  toolCallsLimit: int
+  
+  # AI Conversations
+  aiMessagesCount: int, default=0
+  aiMessagesLimit: int
+  
+  # Product Operations
+  productsCreatedCount: int, default=0
+  productsCreatedLimit: int
+  
+  # AI Descriptions
+  aiDescriptionsCount: int, default=0
+  aiDescriptionsLimit: int
+  
+  # Analytics Queries
+  analyticsQueriesCount: int, default=0
+  analyticsQueriesLimit: int
+  
+  # Grace Period Tracking
+  isInGracePeriod: bool, default=false
+  gracePeriodUsed: int, default=0
+  gracePeriodLimit: int, default=5
+  
+  # Tier Info (denormalized for quick access)
+  subscriptionTier: SubscriptionTier?
+  
+  # Soft Limit Warning (80% threshold reached)
+  softLimitWarned: bool, default=false
+  hardLimitReached: bool, default=false
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  user_daily_date_idx:
+    fields: userId, date
+    unique: true
+  date_daily_idx:
+    fields: date
+  reset_idx:
+    fields: resetAt
+

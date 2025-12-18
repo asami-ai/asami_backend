@@ -1,0 +1,62 @@
+class: BillingCycleSummary
+table: billing_cycle_summaries
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Period
+  periodStart: DateTime
+  periodEnd: DateTime
+  billingCycle: String
+  
+  # Subscription
+  subscriptionTier: SubscriptionTier
+  baseSubscriptionAmount: double, default=0.0
+  
+  # Usage Breakdown
+  totalToolCalls: int, default=0
+  toolCallsIncluded: int, default=0
+  toolCallsOverage: int, default=0
+  toolCallsOverageCost: double, default=0.0
+  
+  # AI Usage
+  totalAIMessages: int, default=0
+  aiMessagesIncluded: int, default=0
+  aiMessagesOverage: int, default=0
+  aiMessagesOverageCost: double, default=0.0
+  
+  # Products
+  totalProducts: int, default=0
+  productsIncluded: int, default=0
+  productsOverage: int, default=0
+  productsOverageCost: double, default=0.0
+  
+  # AI Descriptions
+  totalAIDescriptions: int, default=0
+  aiDescriptionsIncluded: int, default=0
+  aiDescriptionsOverage: int, default=0
+  aiDescriptionsOverageCost: double, default=0.0
+  
+  # Transaction Fees
+  totalTransactionFees: double, default=0.0
+  
+  # Total Costs
+  totalUsageCost: double, default=0.0
+  totalAmount: double, default=0.0
+  
+  # Status
+  status: String, default='draft'
+  invoiceId: UuidValue?
+  invoice: SubscriptionInvoice?, relation(field=invoiceId)
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  vendor_billing_period_idx:
+    fields: vendorId, periodStart, periodEnd
+  status_billing_idx:
+    fields: status
+  invoice_billing_idx:
+    fields: invoiceId

@@ -1,3 +1,5 @@
+import 'package:asami_server/src/services/dependency_injection.dart';
+import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_service.dart';
 import 'package:serverpod/serverpod.dart';
 import '../services/messaging/whatsapp/whatsapp_webhook_handler.dart';
 import 'bot_endpoint.dart';
@@ -13,6 +15,7 @@ class WhatsAppWebhookEndpoint extends Endpoint {
       _handler = WhatsAppWebhookHandler(
         botEndpoint: BotEndpoint(),
         verifyToken: verifyToken,
+        whatsappService: _getWhatsappService()
       );
     }
     return _handler!;
@@ -44,8 +47,5 @@ class WhatsAppWebhookEndpoint extends Endpoint {
     return await handler.processWebhook(session, payload);
   }
 
-  String? _getVerifyToken() {
-    // Get from environment or config
-    return null; // Set this from your config
-  }
+  WhatsAppService _getWhatsappService() =>getIt<WhatsAppService>();
 }

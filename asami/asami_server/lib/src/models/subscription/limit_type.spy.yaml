@@ -1,0 +1,8 @@
+enum: LimitType
+values:
+  - tool_calls          # AI tool calling
+  - ai_conversations    # AI chat messages
+  - product_creation    # Creating products
+  - ai_descriptions     # AI-generated descriptions
+  - analytics_queries   # Analytics/reports
+  - bulk_operations     # Batch operations

@@ -6,7 +6,10 @@ import 'package:televerse/telegram.dart';
 import 'package:televerse/televerse.dart';
 import '../../../endpoints/bot_endpoint.dart';
 import '../../../generated/protocol.dart' hide Message;
+import '../../auth/auth_state_manager.dart';
+import '../../../services/dependency_injection.dart';
 import 'telegram_service.dart';
+import 'telegram_callback_handler.dart';
 
 /// Handles incoming Telegram webhooks
 class TelegramWebhookHandler {
@@ -15,7 +18,7 @@ class TelegramWebhookHandler {
     required this.botEndpoint,
   }) {
     _instance = this;
-    print('✅ TelegramWebhookHandler initialized');
+    Log.info('✅ TelegramWebhookHandler initialized');
   }
 
   static TelegramWebhookHandler? _instance;
@@ -28,7 +31,7 @@ class TelegramWebhookHandler {
     if (_instance != null) {
       return _instance!;
     }
-    
+
     return TelegramWebhookHandler._(
       telegramService: telegramService,
       botEndpoint: botEndpoint,
@@ -44,11 +47,11 @@ class TelegramWebhookHandler {
     Map<String, dynamic> payload,
   ) async {
     try {
-      print('📨 Processing Telegram webhook...');
+      Log.info('📨 Processing Telegram webhook...');
 
       // Parse update using televerse
       final update = Update.fromJson(payload);
-      print('📦 Update ID: ${update.updateId}');
+      Log.info('📦 Update ID: ${update.updateId}');
 
       // Let televerse handle the update (this triggers bot.command, bot.on, etc.)
       await telegramService.handleUpdate(update);
@@ -64,13 +67,14 @@ class TelegramWebhookHandler {
         Log.info('✏️ Processing edited message...');
         await _processMessage(session, update.editedMessage!);
       } else {
-        Log.info('ℹ️ Update type: ${update.updateId} (not handling this type yet)');
+        Log.info(
+            'ℹ️ Update type: ${update.updateId} (not handling this type yet)');
       }
 
       return {'success': true};
     } catch (e, stackTrace) {
-      print('❌ Error processing Telegram webhook: $e');
-      print(stackTrace);
+      Log.info('❌ Error processing Telegram webhook: $e');
+      Log.error('Stacktrac: ', stackTrace: stackTrace);
       session.log('Telegram webhook error: $e', stackTrace: stackTrace);
       return {
         'success': false,
@@ -86,7 +90,8 @@ class TelegramWebhookHandler {
       final messageId = message.messageId.toString();
       final from = message.from;
 
-      print('📩 Message from: ${from?.username ?? from?.firstName ?? chatId} with message id $messageId');
+      Log.info(
+          '📩 Message from: ${from?.username ?? from?.firstName ?? chatId} with message id $messageId');
 
       // Extract message content
       String content = '';
@@ -118,7 +123,8 @@ class TelegramWebhookHandler {
         mediaUrl = message.document!.fileId;
         Log.info('   Document: ${message.document!.fileName}');
       } else if (message.location != null) {
-        content = '[Location: ${message.location!.latitude}, ${message.location!.longitude}]';
+        content =
+            '[Location: ${message.location!.latitude}, ${message.location!.longitude}]';
         messageType = MessageType.location;
         Log.info('   Location');
       } else if (message.sticker != null) {
@@ -127,12 +133,12 @@ class TelegramWebhookHandler {
         Log.info('   Sticker');
       } else {
         content = '[Unsupported message type]';
-        print('   ⚠️ Unsupported message type');
+        Log.info('   ⚠️ Unsupported message type');
         return; // Don't process unsupported types
       }
 
       // Process with bot endpoint
-      print('🤖 Sending to bot endpoint...');
+      Log.info('🤖 Sending to bot endpoint...');
       final response = await botEndpoint.processMessage(
         session,
         platformUserId: chatId,
@@ -156,6 +162,7 @@ class TelegramWebhookHandler {
   }
 
   /// Process callback query (button click)
+  /// This now routes to TelegramCallbackHandler
   Future<void> _processCallbackQuery(
     Session session,
     CallbackQuery callbackQuery,
@@ -165,29 +172,28 @@ class TelegramWebhookHandler {
       final data = callbackQuery.data ?? '';
       final messageId = callbackQuery.message?.messageId.toString();
 
-      print('📩 Callback query from: ${callbackQuery.from.username ?? chatId}');
-      print('   Data: $data');
+      Log.info(
+          '📩 Callback query from: ${callbackQuery.from.username ?? chatId}');
+      Log.info('   Data: $data');
 
-      // Process as interactive message
-      await botEndpoint.processMessage(
-        session,
-        platformUserId: chatId,
-        platform: PlatformType.telegram,
-        messageContent: data,
-        messageType: MessageType.interactive,
-        platformMessageId: messageId,
+      // Get auth state manager from DI
+      final authStateManager = getIt<AuthStateManager>();
+
+      // Create callback handler instance
+      final callbackHandler = TelegramCallbackHandler(
+        telegramService: telegramService,
+        session: session,
+        authStateManager: authStateManager,
       );
 
-      // Answer the callback query to remove loading state
-      await telegramService.answerCallbackQuery(
-        callbackQueryId: callbackQuery.id,
-        text: '✅ Processing...',
-      );
+      // Process callback through dedicated handler
+      await callbackHandler.processCallbackQuery(callbackQuery);
 
-      print('✅ Callback query processed');
+      Log.info('✅ Callback query processed');
     } catch (e, stackTrace) {
-      print('❌ Error processing callback query: $e');
-      print(stackTrace);
+      Log.info('❌ Error processing callback query: $e');
+      Log.error('Stacktrac: ', stackTrace: stackTrace);
+
       session.log('Callback query error: $e', stackTrace: stackTrace);
     }
   }

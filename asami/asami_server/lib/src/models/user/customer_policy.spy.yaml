@@ -1,0 +1,42 @@
+
+class: CustomerAIPolicy
+table: customer_ai_policies
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Policy Configuration
+  policyName: String
+  description: String?
+  
+  # Daily Limits
+  dailyMessageLimit: int, default=100
+  dailyToolCallLimit: int, default=20
+  
+  # Tool Call Optimization
+  requireExplicitIntent: bool, default=true
+  minimumConfidenceScore: double, default=0.8
+  
+  # Intelligent Throttling
+  throttleAfterCount: int, default=50
+  throttleDelaySeconds: int, default=2
+  
+  # Progressive Restrictions
+  enableProgressiveRestrictions: bool, default=true
+  restrictionThresholds: String?
+  
+  # Cost Control
+  maxDailyCost: double, default=1.0
+  warnAtCostPercentage: double, default=0.8
+  
+  # Active
+  isActive: bool, default=true
+  isDefault: bool, default=false
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  policy_name_idx:
+    fields: policyName
+  active_idx:
+    fields: isActive

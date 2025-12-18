@@ -1,0 +1,45 @@
+
+class: CustomerUsagePattern
+table: customer_usage_patterns
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  
+  # Pattern Analysis (Last 7 days)
+  averageDailyMessages: double, default=0.0
+  averageDailyToolCalls: double, default=0.0
+  peakUsageHour: int?
+  
+  # Behavior Classification
+  usageClass: UsageClass
+  isAbuser: bool, default=false
+  abuseScore: double, default=0.0
+  
+  # Tool Efficiency
+  toolSuccessRate: double, default=1.0
+  averageToolExecutionTime: double, default=0.0
+  
+  # Conversation Quality
+  averageConversationLength: double, default=0.0
+  repetitiveQueryScore: double, default=0.0
+  
+  # Smart Throttling
+  shouldThrottle: bool, default=false
+  throttleReason: String?
+  currentThrottleDelay: int, default=0
+  
+  # Learning
+  lastAnalyzedAt: DateTime?
+  analysisCount: int, default=0
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  user_c_idx:
+    fields: userId
+    unique: true
+  usage_class_idx:
+    fields: usageClass
+  abuse_idx:
+    fields: isAbuser

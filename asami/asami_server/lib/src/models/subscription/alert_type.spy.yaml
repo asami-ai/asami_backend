@@ -1,0 +1,10 @@
+
+enum: AlertType
+values:
+  - soft_limit_approaching   # 80% of limit
+  - soft_limit_reached       # 100% of limit
+  - hard_limit_reached       # Completely blocked
+  - grace_period_activated   # Using grace allowance
+  - limit_reset              # Daily/monthly reset
+  - upgrade_recommended      # Suggest tier upgrade
+  - cost_threshold           # Cost warning

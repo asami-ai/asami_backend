@@ -18,7 +18,7 @@ import '../user/user_type.dart' as _i5;
 abstract class Conversation implements _i1.SerializableModel {
   Conversation._({
     _i1.UuidValue? id,
-    required this.userId,
+    this.userId,
     this.user,
     required this.platform,
     required this.platformUserId,
@@ -56,7 +56,7 @@ abstract class Conversation implements _i1.SerializableModel {
 
   factory Conversation({
     _i1.UuidValue? id,
-    required _i1.UuidValue userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
     required _i4.PlatformType platform,
     required String platformUserId,
@@ -89,7 +89,9 @@ abstract class Conversation implements _i1.SerializableModel {
   factory Conversation.fromJson(Map<String, dynamic> jsonSerialization) {
     return Conversation(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      userId: jsonSerialization['userId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
           : _i3.User.fromJson(
@@ -143,7 +145,7 @@ abstract class Conversation implements _i1.SerializableModel {
   /// the id will be null.
   _i1.UuidValue id;
 
-  _i1.UuidValue userId;
+  _i1.UuidValue? userId;
 
   _i3.User? user;
 
@@ -237,7 +239,7 @@ abstract class Conversation implements _i1.SerializableModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id.toJson(),
-      'userId': userId.toJson(),
+      if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJson(),
       'platform': platform.toJson(),
       'platformUserId': platformUserId,
@@ -281,7 +283,7 @@ class _Undefined {}
 class _ConversationImpl extends Conversation {
   _ConversationImpl({
     _i1.UuidValue? id,
-    required _i1.UuidValue userId,
+    _i1.UuidValue? userId,
     _i3.User? user,
     required _i4.PlatformType platform,
     required String platformUserId,
@@ -347,7 +349,7 @@ class _ConversationImpl extends Conversation {
   @override
   Conversation copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? userId,
+    Object? userId = _Undefined,
     Object? user = _Undefined,
     _i4.PlatformType? platform,
     String? platformUserId,
@@ -378,7 +380,7 @@ class _ConversationImpl extends Conversation {
   }) {
     return Conversation(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
+      userId: userId is _i1.UuidValue? ? userId : this.userId,
       user: user is _i3.User? ? user : this.user?.copyWith(),
       platform: platform ?? this.platform,
       platformUserId: platformUserId ?? this.platformUserId,

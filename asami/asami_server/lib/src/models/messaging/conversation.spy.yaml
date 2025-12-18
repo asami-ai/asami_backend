@@ -1,8 +1,10 @@
+
+# Updated Conversation table with session data
 class: Conversation
 table: conversations
 fields:
   id: UuidValue, defaultModel=random
-  userId: UuidValue
+  userId: UuidValue?
   user: User?, relation(field=userId)
   
   # Platform Details
@@ -14,7 +16,7 @@ fields:
   userType: UserType
   status: ConversationStatus, default=active
   
-  # Session Data
+  # Session Data (UPDATED - now stores auth state)
   sessionData: String?
   contextData: String?
   

@@ -1,0 +1,36 @@
+
+# New AuthSession table
+class: AuthSession
+table: auth_sessions
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Platform Details
+  platform: PlatformType
+  platformUserId: String
+  
+  # Session Status
+  isActive: bool, default=true
+  loginAt: DateTime, default=now
+  logoutAt: DateTime?
+  expiresAt: DateTime?
+  
+  # Device/Session Info
+  deviceInfo: String?
+  ipAddress: String?
+  userAgent: String?
+  
+  # Security
+  lastActivityAt: DateTime?
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  user_platform_idxx:
+    fields: userId, platform, isActive
+  platform_user_idxx:
+    fields: platform, platformUserId
+  active_sessions_idx:
+    fields: isActive, lastActivityAt

@@ -1,0 +1,50 @@
+
+class: TierFeature
+table: tier_features
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Tier Configuration
+  tier: SubscriptionTier
+  
+  # Core Limits
+  dailyToolCallLimit: int
+  monthlyToolCallLimit: int
+  dailyAIMessageLimit: int
+  monthlyAIMessageLimit: int
+  productLimit: int
+  aiDescriptionLimit: int
+  
+  # Advanced Features
+  allowBulkOperations: bool, default=false
+  allowAdvancedAnalytics: bool, default=false
+  allowAPIAccess: bool, default=false
+  allowWhiteLabel: bool, default=false
+  
+  # Support
+  supportPriority: String, default='standard'
+  supportResponseTime: int, default=24
+  
+  # Costs & Fees
+  monthlyPrice: double
+  yearlyPrice: double
+  platformTransactionFee: double
+  
+  # Overage Pricing
+  overageToolCallPrice: double, default=0.01
+  overageAIMessagePrice: double, default=0.001
+  overageProductPrice: double, default=1.0
+  overageAIDescriptionPrice: double, default=0.1
+  
+  # Active
+  isActive: bool, default=true
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  tier_sub_idx:
+    fields: tier
+    unique: true
+  active_tier_idx:
+    fields: isActive

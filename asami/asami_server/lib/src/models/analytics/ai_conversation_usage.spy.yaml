@@ -1,0 +1,38 @@
+
+class: AIConversationUsage
+table: ai_conversation_usage
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  conversationId: UuidValue
+  
+  # Message Details
+  messageCount: int, default=0
+  totalTokens: int, default=0
+  inputTokens: int, default=0
+  outputTokens: int, default=0
+  
+  # Tool Usage in Conversation
+  toolCallsInConversation: int, default=0
+  uniqueToolsUsed: String?
+  
+  # Cost Tracking
+  estimatedCost: double, default=0.0
+  
+  # Quality Metrics
+  averageResponseTime: double, default=0.0
+  userSatisfactionRating: double?
+  
+  # Date
+  date: DateTime
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+indexes:
+  user_ai_date_idx:
+    fields: userId, date
+  conversation_ai_idx:
+    fields: conversationId
+  date_ai_idx:
+    fields: date

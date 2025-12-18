@@ -1,3 +1,4 @@
+# Updated User table with authentication fields
 class: User
 table: users
 fields:
@@ -10,7 +11,6 @@ fields:
   phoneNumber: String
   countryCode: String
   isPhoneVerified: bool, default=false
-  isEmailVerified: bool, default=false
   
   # Messaging Platform IDs
   whatsappId: String?
@@ -27,6 +27,25 @@ fields:
   city: String?
   state: String?
   country: String?
+  
+  # Authentication Fields (NEW)
+  emailVerified: bool, default=false
+  emailVerifiedAt: DateTime?
+  
+  # Platform Authentication Status (NEW)
+  whatsappAuthenticated: bool, default=false
+  telegramAuthenticated: bool, default=false
+  webAuthenticated: bool, default=false
+  
+  # Session Management (NEW)
+  lastWhatsappLogin: DateTime?
+  lastTelegramLogin: DateTime?
+  lastWebLogin: DateTime?
+  
+  # Verification (NEW)
+  verificationCode: String?
+  verificationCodeExpiry: DateTime?
+  verificationAttempts: int, default=0
   
   # Timestamps
   createdAt: DateTime, default=now
@@ -45,3 +64,9 @@ indexes:
     fields: whatsappId
   telegram_idx:
     fields: telegramId
+  email_idx:
+    fields: email
+  whatsapp_auth_idx:
+    fields: whatsappId, whatsappAuthenticated
+  telegram_auth_idx:
+    fields: telegramId, telegramAuthenticated

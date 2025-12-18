@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:asami_server/src/web/routes/health_route.dart';
 import 'package:asami_server/src/web/routes/telegram_routes.dart';
+import 'package:asami_server/src/web/routes/whatsapp_flow_route.dart';
 import 'package:asami_server/src/web/routes/whatsapp_routes.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart';
@@ -14,12 +15,13 @@ import 'package:asami_server/src/web/routes/root.dart';
 import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
 import 'src/services/dependency_injection.dart';
+import 'src/services/usage_calls/register_usage.dart';
 
 void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
 
   _logServerConfiguration(pod);
-  
+
   final config = _loadConfiguration(pod);
   _validateConfiguration(config);
 
@@ -27,6 +29,7 @@ void run(List<String> args) async {
   _logWebhookUrls(webhookUrls, config.ngrokUrl);
 
   await _setupDependencies(config, webhookUrls);
+
   _configureRoutes(pod);
 
   await _startServer(pod, webhookUrls, config.webPort);
@@ -111,7 +114,8 @@ _WebhookUrls _buildWebhookUrls(ServerConfig? webServer) {
   final scheme = webServer?.publicScheme ?? 'http';
 
   String buildUrl(String path) {
-    if ((port == 80 && scheme == 'http') || (port == 443 && scheme == 'https')) {
+    if ((port == 80 && scheme == 'http') ||
+        (port == 443 && scheme == 'https')) {
       return '$scheme://$host$path';
     }
     return '$scheme://$host:$port$path';
@@ -127,9 +131,12 @@ _WebhookUrls _buildWebhookUrls(ServerConfig? webServer) {
 
 void _logServerConfiguration(Serverpod pod) {
   Log.startup('Server configuration:');
-  Log.startupInfo('API Server: ${pod.config.apiServer.publicHost}:${pod.config.apiServer.port}');
-  Log.startupInfo('Web Server: ${pod.config.webServer?.publicHost}:${pod.config.webServer?.port}');
-  Log.startupInfo('Insights: ${pod.config.insightsServer?.publicHost}:${pod.config.insightsServer?.port}');
+  Log.startupInfo(
+      'API Server: ${pod.config.apiServer.publicHost}:${pod.config.apiServer.port}');
+  Log.startupInfo(
+      'Web Server: ${pod.config.webServer?.publicHost}:${pod.config.webServer?.port}');
+  Log.startupInfo(
+      'Insights: ${pod.config.insightsServer?.publicHost}:${pod.config.insightsServer?.port}');
 }
 
 void _logWebhookUrls(_WebhookUrls urls, String? ngrokUrl) {
@@ -141,7 +148,8 @@ void _logWebhookUrls(_WebhookUrls urls, String? ngrokUrl) {
 
 // ==================== DEPENDENCY INJECTION ====================
 
-Future<void> _setupDependencies(_ServerConfig config, _WebhookUrls webhookUrls) async {
+Future<void> _setupDependencies(
+    _ServerConfig config, _WebhookUrls webhookUrls) async {
   try {
     await setupDependencyInjection(
       whatsappAccessToken: config.whatsappToken,
@@ -181,6 +189,10 @@ void _configureRoutes(Serverpod pod) {
   pod.webServer.addRoute(TelegramWebhookRoute(), '/webhooks/telegram');
   Log.startupInfo('✅ /webhooks/telegram (GET, POST)');
 
+  // whatsapp flow route
+  pod.webServer.addRoute(WhatsAppFlowRoute(), '/webhooks/whatsapp/flow');
+  Log.startupInfo('✅ /webhooks/whatsapp/flow (POST)');
+
   // Root routes (OPTIONAL - comment out to restrict access)
   pod.webServer.addRoute(RouteRoot(), '/');
   pod.webServer.addRoute(RouteRoot(), '/index.html');
@@ -202,10 +214,13 @@ void _configureRoutes(Serverpod pod) {
 
 // ==================== SERVER STARTUP ====================
 
-Future<void> _startServer(Serverpod pod, _WebhookUrls webhookUrls, int webPort) async {
+Future<void> _startServer(
+    Serverpod pod, _WebhookUrls webhookUrls, int webPort) async {
   try {
-    await pod.start();
-
+    await pod.start().then((p) async {
+      await initializeTierFeatures();
+    });
+    await registerUsageFutureCalls(pod);
     _logServerStartup(webhookUrls, webPort);
   } catch (e, stackTrace) {
     Log.startupError('');
@@ -220,13 +235,13 @@ void _logServerStartup(_WebhookUrls webhookUrls, int webPort) {
   Log.info('');
   Log.startupSuccess('Asami Server started successfully! 🚀');
   Log.info('');
-  
+
   Log.startup('📡 Endpoints Ready:');
   Log.startupInfo('Health:    http://localhost:$webPort/health');
   Log.startupInfo('WhatsApp:  ${webhookUrls.whatsapp}');
   Log.startupInfo('Telegram:  ${webhookUrls.telegram}');
   Log.info('');
-  
+
   Log.startup('🧪 Test Locally:');
   Log.startupInfo('curl http://localhost:$webPort/health');
   Log.startupInfo('curl http://localhost:$webPort/webhooks/telegram');
@@ -244,7 +259,8 @@ class _NotFoundRoute extends Route {
     request.response.headers.contentType = ContentType.json;
     request.response.write(jsonEncode({
       'error': 'Not Found',
-      'message': 'This endpoint does not exist. Only /webhooks/telegram and /webhooks/whatsapp are available.',
+      'message':
+          'This endpoint does not exist. Only /webhooks/telegram and /webhooks/whatsapp are available.',
     }));
     await request.response.close();
     return true;

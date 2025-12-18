@@ -10,6 +10,8 @@ dependencies:
   get_it: ^9.2.0
   http: ^1.6.0
   logger: ^2.6.2
+  mailer: ^6.6.0
+  path_provider: ^2.1.5
   serverpod: 2.9.2
   televerse: ^3.0.1
   whatsapp: ^4.0.0

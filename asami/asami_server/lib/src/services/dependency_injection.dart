@@ -1,8 +1,10 @@
+import 'package:asami_server/src/endpoints/usage_endpoint.dart';
 import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_webhook_handler.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:serverpod/serverpod.dart';
 import '../endpoints/bot_endpoint.dart';
+import '../generated/protocol.dart';
 import 'ai_services/config/commands.dart';
 import 'ai_services/providers/ai_provider_interface.dart';
 import 'ai_services/providers/claude_provider.dart';
@@ -18,7 +20,9 @@ import 'ai_services/core/ai_cache_manager.dart';
 import 'ai_services/tools/tool_registry.dart';
 import 'ai_services/tools/customer_tools.dart';
 import 'ai_services/tools/vendor_tools.dart';
+import 'auth/auth_state_manager.dart';
 import 'messaging/messaging_service_factory.dart';
+import 'messaging/telegram/telegram_callback_handler.dart';
 import 'messaging/telegram/telegram_webhook_handler.dart';
 import 'messaging/whatsapp/whatsapp_service.dart';
 import 'messaging/whatsapp/whatsapp_service_adapter.dart';
@@ -54,7 +58,7 @@ Future<void> setupDependencyInjection({
   await _setupCommandProcessor();
   await _setupAgentComponents();
   await _setupAgentSystem();
-  
+
   await _setupMessagingServices(
     whatsappAccessToken: whatsappAccessToken,
     whatsappFromNumberId: whatsappFromNumberId,
@@ -99,9 +103,9 @@ Future<void> _setupAIProvider({
 
   // Health check
   final isHealthy = await provider.healthCheck();
-  Log.info(isHealthy 
-    ? '   ✅ Provider health check passed' 
-    : '   ⚠️ Warning: Provider health check failed');
+  Log.info(isHealthy
+      ? '   ✅ Provider health check passed'
+      : '   ⚠️ Warning: Provider health check failed');
 
   getIt.registerSingleton<AIProvider>(provider);
   Log.info('   ✅ ${provider.providerName} initialized');
@@ -178,7 +182,7 @@ Future<void> _setupCommandProcessor() async {
 
   final commandProcessor = CommandProcessor();
   registerAllCommands(commandProcessor);
-  
+
   getIt.registerSingleton<CommandProcessor>(commandProcessor);
   Log.info('   ✅ All commands registered');
 }
@@ -192,16 +196,19 @@ Future<void> _setupAgentComponents() async {
   final intentAnalyzer = IntentAnalyzer();
   final responseFormatter = ResponseFormatter();
   final cacheManager = AICacheManager();
+  final authStateManager = AuthStateManager();
 
   getIt.registerSingleton<SecurityFilter>(securityFilter);
   getIt.registerSingleton<IntentAnalyzer>(intentAnalyzer);
   getIt.registerSingleton<ResponseFormatter>(responseFormatter);
   getIt.registerSingleton<AICacheManager>(cacheManager);
+  getIt.registerSingleton(authStateManager);
 
   Log.info('   ✅ Security filter ready');
   Log.info('   ✅ Intent analyzer ready');
   Log.info('   ✅ Response formatter ready');
   Log.info('   ✅ Cache manager ready');
+  Log.info('   ✅ Auth state manager ready');
 }
 
 // ==================== AGENT SYSTEM SETUP ====================
@@ -210,14 +217,14 @@ Future<void> _setupAgentSystem() async {
   Log.info('\n🧠 Initializing Agent System...');
 
   final agentSystem = AgentSystem(
-    provider: getIt<AIProvider>(),
-    toolRegistry: getIt<ToolRegistry>(),
-    responseFormatter: getIt<ResponseFormatter>(),
-    securityFilter: getIt<SecurityFilter>(),
-    commandProcessor: getIt<CommandProcessor>(),
-    intentAnalyzer: getIt<IntentAnalyzer>(),
-    cacheManager: getIt<AICacheManager>(),
-  );
+      provider: getIt<AIProvider>(),
+      toolRegistry: getIt<ToolRegistry>(),
+      responseFormatter: getIt<ResponseFormatter>(),
+      securityFilter: getIt<SecurityFilter>(),
+      commandProcessor: getIt<CommandProcessor>(),
+      intentAnalyzer: getIt<IntentAnalyzer>(),
+      cacheManager: getIt<AICacheManager>(),
+      usageEndpoint: UsageEndpoint());
 
   getIt.registerSingleton<AgentSystem>(agentSystem);
   Log.info('   ✅ Agent System ready');
@@ -261,7 +268,7 @@ Future<void> _setupWhatsApp({
     fromNumberId: fromNumberId,
     webhookVerifyToken: verifyToken,
   );
-  
+
   final whatsappAdapter = WhatsAppServiceAdapter(whatsappService);
 
   getIt.registerSingleton<WhatsAppService>(whatsappService);
@@ -271,9 +278,9 @@ Future<void> _setupWhatsApp({
   if (accessToken.isNotEmpty) {
     try {
       WhatsAppWebhookHandler(
-        botEndpoint: BotEndpoint(),
-        verifyToken: verifyToken,
-      );
+          botEndpoint: BotEndpoint(),
+          verifyToken: verifyToken,
+          whatsappService: getIt());
       Log.info('   ✅ WhatsApp service configured');
     } catch (e) {
       Log.info('   ⚠️ Failed to initialize WhatsApp webhook handler: $e');
@@ -295,7 +302,7 @@ Future<void> _setupTelegram({
       botToken: botToken,
       webhookUrl: webhookUrl,
     );
-    
+
     final telegramAdapter = TelegramServiceAdapter(telegramService);
 
     getIt.registerSingleton<TelegramService>(telegramService);
@@ -325,12 +332,107 @@ void _initializeMessagingFactory() {
     telegramService: getIt<TelegramService>(),
   );
 
-  final platforms = MessagingServiceFactory.registeredPlatforms
-      .map((p) => p.name)
-      .join(', ');
+  final platforms =
+      MessagingServiceFactory.registeredPlatforms.map((p) => p.name).join(', ');
 
   Log.info('   ✅ Messaging Service Factory initialized');
   Log.info('   📱 Registered platforms: $platforms');
+}
+
+// In a setup endpoint or initialization script
+Future<void> initializeTierFeatures() async {
+  final tiers = [
+    TierFeature(
+      id: Uuid().v4obj(),
+      tier: SubscriptionTier.freemium,
+      dailyToolCallLimit: 15,
+      monthlyToolCallLimit: 300,
+      dailyAIMessageLimit: 100,
+      monthlyAIMessageLimit: 2000,
+      productLimit: 20,
+      aiDescriptionLimit: 50,
+      allowBulkOperations: false,
+      allowAdvancedAnalytics: false,
+      allowAPIAccess: false,
+      allowWhiteLabel: false,
+      supportPriority: 'standard',
+      supportResponseTime: 24,
+      monthlyPrice: 0.0,
+      yearlyPrice: 0.0,
+      platformTransactionFee: 0.05,
+      overageToolCallPrice: 0.01,
+      overageAIMessagePrice: 0.001,
+      overageProductPrice: 1.0,
+      overageAIDescriptionPrice: 0.1,
+      isActive: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    TierFeature(
+      id: Uuid().v4obj(),
+      tier: SubscriptionTier.pro,
+      dailyToolCallLimit: 50,
+      monthlyToolCallLimit: 1200,
+      dailyAIMessageLimit: 200,
+      monthlyAIMessageLimit: 5000,
+      productLimit: 100,
+      aiDescriptionLimit: 200,
+      allowBulkOperations: true,
+      allowAdvancedAnalytics: true,
+      allowAPIAccess: false,
+      allowWhiteLabel: false,
+      supportPriority: 'priority',
+      supportResponseTime: 12,
+      monthlyPrice: 29.99,
+      yearlyPrice: 299.99,
+      platformTransactionFee: 0.03,
+      overageToolCallPrice: 0.008,
+      overageAIMessagePrice: 0.0008,
+      overageProductPrice: 0.5,
+      overageAIDescriptionPrice: 0.08,
+      isActive: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    TierFeature(
+      id: Uuid().v4obj(),
+      tier: SubscriptionTier.pro_max,
+      dailyToolCallLimit: 100,
+      monthlyToolCallLimit: 2500,
+      dailyAIMessageLimit: 500,
+      monthlyAIMessageLimit: 12000,
+      productLimit: -1, // Unlimited
+      aiDescriptionLimit: 500,
+      allowBulkOperations: true,
+      allowAdvancedAnalytics: true,
+      allowAPIAccess: true,
+      allowWhiteLabel: true,
+      supportPriority: 'premium',
+      supportResponseTime: 4,
+      monthlyPrice: 99.99,
+      yearlyPrice: 999.99,
+      platformTransactionFee: 0.02,
+      overageToolCallPrice: 0.005,
+      overageAIMessagePrice: 0.0005,
+      overageProductPrice: 0.0,
+      overageAIDescriptionPrice: 0.05,
+      isActive: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  ];
+  var session = await Serverpod.instance.createSession();
+
+  try {
+    for (var tier in tiers) {
+      await TierFeature.db.insertRow(session, tier);
+    }
+  } catch (e) {
+    print(e);
+  } finally {
+    await session.close(); // Must close manually!
+    print('✅ Tier features initialized');
+  }
 }
 
 // ==================== CLEANUP ====================
@@ -340,7 +442,7 @@ void disposeDependencies() {
   if (getIt.isRegistered<WhatsAppService>()) {
     getIt<WhatsAppService>().dispose();
   }
-  
+
   if (getIt.isRegistered<TelegramService>()) {
     getIt<TelegramService>().dispose();
   }

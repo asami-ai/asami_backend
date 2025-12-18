@@ -7,13 +7,15 @@ analytics:
   - getPaymentMethodBreakdown:
   - recordDailyAnalytics:
 auth:
-  - register:
-  - verifyPhone:
-  - getUser:
-  - getUserByPhone:
-  - getOrCreateUserByWhatsApp:
-  - getOrCreateUserByTelegram:
-  - updateLastActive:
+  - initiateSignup:
+  - verifySignupCode:
+  - initiateLogin:
+  - verifyLoginCode:
+  - checkAuth:
+  - logout:
+  - resendCode:
+  - upgradeToVendor:
+  - deleteTempUser:
 bot:
   - processMessage:
   - sendFormattedMessage:
@@ -53,6 +55,8 @@ subscription:
   - checkTierLimits:
 telegramWebhook:
   - processWebhook:
+usage:
+  - resetDailyLimits:
 user:
   - updateProfile:
   - getCustomerProfile:

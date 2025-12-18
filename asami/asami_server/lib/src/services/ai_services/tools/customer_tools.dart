@@ -1,5 +1,5 @@
 // ============================================================================
-// FILE 1: server/lib/src/ai/tools/customer_tools.dart
+// FILE: server/lib/src/ai/tools/customer_tools.dart
 // ============================================================================
 
 import 'package:serverpod/serverpod.dart' hide Order;
@@ -330,8 +330,11 @@ class CustomerTools {
       final session = context.session!;
       final query = arguments['query'] as String?;
       final category = arguments['category'] as String?;
-      final minPrice = arguments['min_price'] as double?;
-      final maxPrice = arguments['max_price'] as double?;
+      
+      // FIX: Use num first, then convert to double
+      final minPrice = (arguments['min_price'] as num?)?.toDouble();
+      final maxPrice = (arguments['max_price'] as num?)?.toDouble();
+      
       final color = arguments['color'] as String?;
       final size = arguments['size'] as String?;
       final limit = (arguments['limit'] as num?)?.toInt() ?? 10;
