@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -31,20 +32,20 @@ abstract class CustomerAIPolicy
     bool? isDefault,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        dailyMessageLimit = dailyMessageLimit ?? 100,
-        dailyToolCallLimit = dailyToolCallLimit ?? 20,
-        requireExplicitIntent = requireExplicitIntent ?? true,
-        minimumConfidenceScore = minimumConfidenceScore ?? 0.8,
-        throttleAfterCount = throttleAfterCount ?? 50,
-        throttleDelaySeconds = throttleDelaySeconds ?? 2,
-        enableProgressiveRestrictions = enableProgressiveRestrictions ?? true,
-        maxDailyCost = maxDailyCost ?? 1.0,
-        warnAtCostPercentage = warnAtCostPercentage ?? 0.8,
-        isActive = isActive ?? true,
-        isDefault = isDefault ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       dailyMessageLimit = dailyMessageLimit ?? 100,
+       dailyToolCallLimit = dailyToolCallLimit ?? 20,
+       requireExplicitIntent = requireExplicitIntent ?? true,
+       minimumConfidenceScore = minimumConfidenceScore ?? 0.8,
+       throttleAfterCount = throttleAfterCount ?? 50,
+       throttleDelaySeconds = throttleDelaySeconds ?? 2,
+       enableProgressiveRestrictions = enableProgressiveRestrictions ?? true,
+       maxDailyCost = maxDailyCost ?? 1.0,
+       warnAtCostPercentage = warnAtCostPercentage ?? 0.8,
+       isActive = isActive ?? true,
+       isDefault = isDefault ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CustomerAIPolicy({
     _i1.UuidValue? id,
@@ -83,14 +84,16 @@ abstract class CustomerAIPolicy
       restrictionThresholds:
           jsonSerialization['restrictionThresholds'] as String?,
       maxDailyCost: (jsonSerialization['maxDailyCost'] as num).toDouble(),
-      warnAtCostPercentage:
-          (jsonSerialization['warnAtCostPercentage'] as num).toDouble(),
+      warnAtCostPercentage: (jsonSerialization['warnAtCostPercentage'] as num)
+          .toDouble(),
       isActive: jsonSerialization['isActive'] as bool,
       isDefault: jsonSerialization['isDefault'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -161,6 +164,7 @@ abstract class CustomerAIPolicy
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CustomerAIPolicy',
       'id': id.toJson(),
       'policyName': policyName,
       if (description != null) 'description': description,
@@ -185,6 +189,7 @@ abstract class CustomerAIPolicy
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'CustomerAIPolicy',
       'id': id.toJson(),
       'policyName': policyName,
       if (description != null) 'description': description,
@@ -258,24 +263,24 @@ class _CustomerAIPolicyImpl extends CustomerAIPolicy {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          policyName: policyName,
-          description: description,
-          dailyMessageLimit: dailyMessageLimit,
-          dailyToolCallLimit: dailyToolCallLimit,
-          requireExplicitIntent: requireExplicitIntent,
-          minimumConfidenceScore: minimumConfidenceScore,
-          throttleAfterCount: throttleAfterCount,
-          throttleDelaySeconds: throttleDelaySeconds,
-          enableProgressiveRestrictions: enableProgressiveRestrictions,
-          restrictionThresholds: restrictionThresholds,
-          maxDailyCost: maxDailyCost,
-          warnAtCostPercentage: warnAtCostPercentage,
-          isActive: isActive,
-          isDefault: isDefault,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         policyName: policyName,
+         description: description,
+         dailyMessageLimit: dailyMessageLimit,
+         dailyToolCallLimit: dailyToolCallLimit,
+         requireExplicitIntent: requireExplicitIntent,
+         minimumConfidenceScore: minimumConfidenceScore,
+         throttleAfterCount: throttleAfterCount,
+         throttleDelaySeconds: throttleDelaySeconds,
+         enableProgressiveRestrictions: enableProgressiveRestrictions,
+         restrictionThresholds: restrictionThresholds,
+         maxDailyCost: maxDailyCost,
+         warnAtCostPercentage: warnAtCostPercentage,
+         isActive: isActive,
+         isDefault: isDefault,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CustomerAIPolicy]
   /// with some or all fields replaced by the given arguments.
@@ -327,9 +332,102 @@ class _CustomerAIPolicyImpl extends CustomerAIPolicy {
   }
 }
 
+class CustomerAIPolicyUpdateTable
+    extends _i1.UpdateTable<CustomerAIPolicyTable> {
+  CustomerAIPolicyUpdateTable(super.table);
+
+  _i1.ColumnValue<String, String> policyName(String value) => _i1.ColumnValue(
+    table.policyName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> description(String? value) => _i1.ColumnValue(
+    table.description,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> dailyMessageLimit(int value) => _i1.ColumnValue(
+    table.dailyMessageLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> dailyToolCallLimit(int value) => _i1.ColumnValue(
+    table.dailyToolCallLimit,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> requireExplicitIntent(bool value) =>
+      _i1.ColumnValue(
+        table.requireExplicitIntent,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> minimumConfidenceScore(double value) =>
+      _i1.ColumnValue(
+        table.minimumConfidenceScore,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> throttleAfterCount(int value) => _i1.ColumnValue(
+    table.throttleAfterCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> throttleDelaySeconds(int value) => _i1.ColumnValue(
+    table.throttleDelaySeconds,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> enableProgressiveRestrictions(bool value) =>
+      _i1.ColumnValue(
+        table.enableProgressiveRestrictions,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> restrictionThresholds(String? value) =>
+      _i1.ColumnValue(
+        table.restrictionThresholds,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> maxDailyCost(double value) => _i1.ColumnValue(
+    table.maxDailyCost,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> warnAtCostPercentage(double value) =>
+      _i1.ColumnValue(
+        table.warnAtCostPercentage,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isDefault(bool value) => _i1.ColumnValue(
+    table.isDefault,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class CustomerAIPolicyTable extends _i1.Table<_i1.UuidValue> {
   CustomerAIPolicyTable({super.tableRelation})
-      : super(tableName: 'customer_ai_policies') {
+    : super(tableName: 'customer_ai_policies') {
+    updateTable = CustomerAIPolicyUpdateTable(this);
     policyName = _i1.ColumnString(
       'policyName',
       this,
@@ -409,6 +507,8 @@ class CustomerAIPolicyTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final CustomerAIPolicyUpdateTable updateTable;
+
   late final _i1.ColumnString policyName;
 
   late final _i1.ColumnString description;
@@ -443,24 +543,24 @@ class CustomerAIPolicyTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        policyName,
-        description,
-        dailyMessageLimit,
-        dailyToolCallLimit,
-        requireExplicitIntent,
-        minimumConfidenceScore,
-        throttleAfterCount,
-        throttleDelaySeconds,
-        enableProgressiveRestrictions,
-        restrictionThresholds,
-        maxDailyCost,
-        warnAtCostPercentage,
-        isActive,
-        isDefault,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    policyName,
+    description,
+    dailyMessageLimit,
+    dailyToolCallLimit,
+    requireExplicitIntent,
+    minimumConfidenceScore,
+    throttleAfterCount,
+    throttleDelaySeconds,
+    enableProgressiveRestrictions,
+    restrictionThresholds,
+    maxDailyCost,
+    warnAtCostPercentage,
+    isActive,
+    isDefault,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class CustomerAIPolicyInclude extends _i1.IncludeObject {
@@ -648,6 +748,48 @@ class CustomerAIPolicyRepository {
     return session.db.updateRow<CustomerAIPolicy>(
       row,
       columns: columns?.call(CustomerAIPolicy.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [CustomerAIPolicy] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<CustomerAIPolicy?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<CustomerAIPolicyUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<CustomerAIPolicy>(
+      id,
+      columnValues: columnValues(CustomerAIPolicy.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [CustomerAIPolicy]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<CustomerAIPolicy>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<CustomerAIPolicyUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<CustomerAIPolicyTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<CustomerAIPolicyTable>? orderBy,
+    _i1.OrderByListBuilder<CustomerAIPolicyTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<CustomerAIPolicy>(
+      columnValues: columnValues(CustomerAIPolicy.t.updateTable),
+      where: where(CustomerAIPolicy.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(CustomerAIPolicy.t),
+      orderByList: orderByList?.call(CustomerAIPolicy.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

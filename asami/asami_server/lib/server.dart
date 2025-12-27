@@ -4,18 +4,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:asami_server/src/web/routes/health_route.dart';
+import 'package:asami_server/src/web/routes/root.dart';
 import 'package:asami_server/src/web/routes/telegram_routes.dart';
 import 'package:asami_server/src/web/routes/whatsapp_flow_route.dart';
 import 'package:asami_server/src/web/routes/whatsapp_routes.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart';
 
-import 'package:asami_server/src/web/routes/root.dart';
-
-import 'src/generated/protocol.dart';
 import 'src/generated/endpoints.dart';
+import 'src/generated/protocol.dart';
 import 'src/services/dependency_injection.dart';
-import 'src/services/usage_calls/register_usage.dart';
+import 'src/services/jobs/register_usage.dart';
 
 void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
@@ -48,6 +47,8 @@ class _ServerConfig {
   final String? openaiKey;
   final String? geminiKey;
   final String? grokKey;
+  final String? metaAccessToken;
+  final String? metaCatalogId;
   final int webPort;
 
   _ServerConfig({
@@ -61,6 +62,8 @@ class _ServerConfig {
     this.openaiKey,
     this.geminiKey,
     this.grokKey,
+    this.metaAccessToken,
+    this.metaCatalogId,
     required this.webPort,
   });
 }
@@ -84,6 +87,8 @@ _ServerConfig _loadConfiguration(Serverpod pod) {
     openaiKey: pod.getPassword('openaiApiKey'),
     geminiKey: pod.getPassword('geminiApiKey'),
     grokKey: pod.getPassword('grokApiKey'),
+    metaAccessToken: pod.getPassword('metaAccessToken'),
+    metaCatalogId: pod.getPassword('metaCatalogId'),
     webPort: pod.config.webServer?.publicPort ?? 8082,
   );
 }
@@ -162,6 +167,7 @@ Future<void> _setupDependencies(
       openaiApiKey: config.openaiKey,
       geminiApiKey: config.geminiKey,
       grokApiKey: config.grokKey,
+
     );
     Log.startupSuccess('✅ Dependency injection configured');
     Log.info(''); // Empty line for readability
@@ -188,10 +194,10 @@ void _configureRoutes(Serverpod pod) {
   // Telegram webhook
   pod.webServer.addRoute(TelegramWebhookRoute(), '/webhooks/telegram');
   Log.startupInfo('✅ /webhooks/telegram (GET, POST)');
-
+  pod.webServer.fallbackRoute = _NotFoundRoute();
   // whatsapp flow route
-  pod.webServer.addRoute(WhatsAppFlowRoute(), '/webhooks/whatsapp/flow');
-  Log.startupInfo('✅ /webhooks/whatsapp/flow (POST)');
+  // pod.webServer.addRoute(WhatsAppFlowRoute(), '/webhooks/whatsapp/flow');
+  // Log.startupInfo('✅ /webhooks/whatsapp/flow (POST)');
 
   // Root routes (OPTIONAL - comment out to restrict access)
   pod.webServer.addRoute(RouteRoot(), '/');
@@ -199,11 +205,11 @@ void _configureRoutes(Serverpod pod) {
   Log.startupInfo('✅ / and /index.html');
 
   // Static files (OPTIONAL - comment out to restrict access)
-  pod.webServer.addRoute(
-    RouteStaticDirectory(serverDirectory: 'static', basePath: '/'),
-    '/*',
-  );
-  Log.startupInfo('✅ Static files: /*');
+  // pod.webServer.addRoute(
+  //   StaticRoute.directory(Directory('static')),
+  //   '/*',
+  // );
+  // Log.startupInfo('✅ Static files: /*');
 
   // ALTERNATIVE: Uncomment to block all other routes
   // pod.webServer.addRoute(_NotFoundRoute(), '/*');
@@ -254,16 +260,10 @@ void _logServerStartup(_WebhookUrls webhookUrls, int webPort) {
 /// Route that returns 404 for all requests (use to block unwanted routes)
 class _NotFoundRoute extends Route {
   @override
-  Future<bool> handleCall(Session session, HttpRequest request) async {
-    request.response.statusCode = 404;
-    request.response.headers.contentType = ContentType.json;
-    request.response.write(jsonEncode({
-      'error': 'Not Found',
-      'message':
-          'This endpoint does not exist. Only /webhooks/telegram and /webhooks/whatsapp are available.',
-    }));
-    await request.response.close();
-    return true;
+  Future<Response> handleCall(Session session, Request request) async {
+    return Response.notFound(
+        body: Body.fromString(
+            '{"message": "This endpoint does not exist. Only /webhooks/telegram and /webhooks/whatsapp are available."}'));
   }
 }
 

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -33,11 +34,11 @@ abstract class UsageAlert implements _i1.SerializableModel {
     this.deliveryMethod,
     this.sentAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        actionRequired = actionRequired ?? false,
-        isRead = isRead ?? false,
-        isDismissed = isDismissed ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       actionRequired = actionRequired ?? false,
+       isRead = isRead ?? false,
+       isDismissed = isDismissed ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory UsageAlert({
     _i1.UuidValue? id,
@@ -63,11 +64,15 @@ abstract class UsageAlert implements _i1.SerializableModel {
     return UsageAlert(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      alertType:
-          _i3.AlertType.fromJson((jsonSerialization['alertType'] as int)),
-      limitType:
-          _i4.LimitType.fromJson((jsonSerialization['limitType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      alertType: _i3.AlertType.fromJson(
+        (jsonSerialization['alertType'] as String),
+      ),
+      limitType: _i4.LimitType.fromJson(
+        (jsonSerialization['limitType'] as String),
+      ),
       thresholdPercentage: jsonSerialization['thresholdPercentage'] as int,
       currentUsage: jsonSerialization['currentUsage'] as int,
       limitValue: jsonSerialization['limitValue'] as int,
@@ -81,14 +86,13 @@ abstract class UsageAlert implements _i1.SerializableModel {
       sentAt: jsonSerialization['sentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['sentAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -148,6 +152,7 @@ abstract class UsageAlert implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UsageAlert',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -196,24 +201,24 @@ class _UsageAlertImpl extends UsageAlert {
     DateTime? sentAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          alertType: alertType,
-          limitType: limitType,
-          thresholdPercentage: thresholdPercentage,
-          currentUsage: currentUsage,
-          limitValue: limitValue,
-          title: title,
-          message: message,
-          actionRequired: actionRequired,
-          actionUrl: actionUrl,
-          isRead: isRead,
-          isDismissed: isDismissed,
-          deliveryMethod: deliveryMethod,
-          sentAt: sentAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         alertType: alertType,
+         limitType: limitType,
+         thresholdPercentage: thresholdPercentage,
+         currentUsage: currentUsage,
+         limitValue: limitValue,
+         title: title,
+         message: message,
+         actionRequired: actionRequired,
+         actionUrl: actionUrl,
+         isRead: isRead,
+         isDismissed: isDismissed,
+         deliveryMethod: deliveryMethod,
+         sentAt: sentAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UsageAlert]
   /// with some or all fields replaced by the given arguments.
@@ -253,8 +258,9 @@ class _UsageAlertImpl extends UsageAlert {
       actionUrl: actionUrl is String? ? actionUrl : this.actionUrl,
       isRead: isRead ?? this.isRead,
       isDismissed: isDismissed ?? this.isDismissed,
-      deliveryMethod:
-          deliveryMethod is String? ? deliveryMethod : this.deliveryMethod,
+      deliveryMethod: deliveryMethod is String?
+          ? deliveryMethod
+          : this.deliveryMethod,
       sentAt: sentAt is DateTime? ? sentAt : this.sentAt,
       createdAt: createdAt ?? this.createdAt,
     );

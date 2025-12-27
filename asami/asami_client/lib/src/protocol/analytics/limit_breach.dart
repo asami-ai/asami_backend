@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -30,9 +31,9 @@ abstract class LimitBreachLog implements _i1.SerializableModel {
     bool? userNotified,
     required this.severity,
     DateTime? breachedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        userNotified = userNotified ?? false,
-        breachedAt = breachedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       userNotified = userNotified ?? false,
+       breachedAt = breachedAt ?? DateTime.now();
 
   factory LimitBreachLog({
     _i1.UuidValue? id,
@@ -54,32 +55,37 @@ abstract class LimitBreachLog implements _i1.SerializableModel {
     return LimitBreachLog(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      limitType:
-          _i3.LimitType.fromJson((jsonSerialization['limitType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      limitType: _i3.LimitType.fromJson(
+        (jsonSerialization['limitType'] as String),
+      ),
       attemptedAction: jsonSerialization['attemptedAction'] as String,
       currentUsage: jsonSerialization['currentUsage'] as int,
       limitValue: jsonSerialization['limitValue'] as int,
       subscriptionTier: jsonSerialization['subscriptionTier'] == null
           ? null
           : _i4.SubscriptionTier.fromJson(
-              (jsonSerialization['subscriptionTier'] as int)),
+              (jsonSerialization['subscriptionTier'] as String),
+            ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       actionTaken: jsonSerialization['actionTaken'] as String,
       userNotified: jsonSerialization['userNotified'] as bool,
-      severity:
-          _i5.BreachSeverity.fromJson((jsonSerialization['severity'] as int)),
-      breachedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['breachedAt']),
+      severity: _i5.BreachSeverity.fromJson(
+        (jsonSerialization['severity'] as String),
+      ),
+      breachedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['breachedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -127,6 +133,7 @@ abstract class LimitBreachLog implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'LimitBreachLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -168,20 +175,20 @@ class _LimitBreachLogImpl extends LimitBreachLog {
     required _i5.BreachSeverity severity,
     DateTime? breachedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          limitType: limitType,
-          attemptedAction: attemptedAction,
-          currentUsage: currentUsage,
-          limitValue: limitValue,
-          subscriptionTier: subscriptionTier,
-          conversationId: conversationId,
-          actionTaken: actionTaken,
-          userNotified: userNotified,
-          severity: severity,
-          breachedAt: breachedAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         limitType: limitType,
+         attemptedAction: attemptedAction,
+         currentUsage: currentUsage,
+         limitValue: limitValue,
+         subscriptionTier: subscriptionTier,
+         conversationId: conversationId,
+         actionTaken: actionTaken,
+         userNotified: userNotified,
+         severity: severity,
+         breachedAt: breachedAt,
+       );
 
   /// Returns a shallow copy of this [LimitBreachLog]
   /// with some or all fields replaced by the given arguments.

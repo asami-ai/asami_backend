@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -16,6 +17,7 @@ import '../user/user.dart' as _i4;
 import '../user/vendor_profile.dart' as _i5;
 import '../user/address.dart' as _i6;
 import '../order/payment_method.dart' as _i7;
+import 'package:asami_client/src/protocol/protocol.dart' as _i8;
 
 abstract class Order implements _i1.SerializableModel {
   Order._({
@@ -60,20 +62,20 @@ abstract class Order implements _i1.SerializableModel {
     this.shippedAt,
     this.deliveredAt,
     this.cancelledAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.OrderStatus.pending,
-        taxAmount = taxAmount ?? 0.0,
-        shippingCost = shippingCost ?? 0.0,
-        discountAmount = discountAmount ?? 0.0,
-        platformFee = platformFee ?? 0.0,
-        currency = currency ?? 'USD',
-        paymentStatus = paymentStatus ?? _i3.PaymentStatus.pending,
-        orderSource = orderSource ?? 'whatsapp',
-        isGift = isGift ?? false,
-        requiresSignature = requiresSignature ?? false,
-        isPriority = isPriority ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.OrderStatus.pending,
+       taxAmount = taxAmount ?? 0.0,
+       shippingCost = shippingCost ?? 0.0,
+       discountAmount = discountAmount ?? 0.0,
+       platformFee = platformFee ?? 0.0,
+       currency = currency ?? 'USD',
+       paymentStatus = paymentStatus ?? _i3.PaymentStatus.pending,
+       orderSource = orderSource ?? 'whatsapp',
+       isGift = isGift ?? false,
+       requiresSignature = requiresSignature ?? false,
+       isPriority = isPriority ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Order({
     _i1.UuidValue? id,
@@ -122,20 +124,22 @@ abstract class Order implements _i1.SerializableModel {
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i4.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i8.Protocol().deserialize<_i4.User>(jsonSerialization['customer']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i5.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i8.Protocol().deserialize<_i5.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       orderNumber: jsonSerialization['orderNumber'] as String,
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as int)),
+      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       shippingCost: (jsonSerialization['shippingCost'] as num).toDouble(),
@@ -144,30 +148,36 @@ abstract class Order implements _i1.SerializableModel {
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       shippingAddressId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['shippingAddressId']),
+        jsonSerialization['shippingAddressId'],
+      ),
       shippingAddress: jsonSerialization['shippingAddress'] == null
           ? null
-          : _i6.Address.fromJson(
-              (jsonSerialization['shippingAddress'] as Map<String, dynamic>)),
+          : _i8.Protocol().deserialize<_i6.Address>(
+              jsonSerialization['shippingAddress'],
+            ),
       deliveryInstructions:
           jsonSerialization['deliveryInstructions'] as String?,
       estimatedDeliveryDate: jsonSerialization['estimatedDeliveryDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['estimatedDeliveryDate']),
+              jsonSerialization['estimatedDeliveryDate'],
+            ),
       actualDeliveryDate: jsonSerialization['actualDeliveryDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['actualDeliveryDate']),
+              jsonSerialization['actualDeliveryDate'],
+            ),
       trackingNumber: jsonSerialization['trackingNumber'] as String?,
       shippingProvider: jsonSerialization['shippingProvider'] as String?,
       customerName: jsonSerialization['customerName'] as String,
       customerPhone: jsonSerialization['customerPhone'] as String,
       customerEmail: jsonSerialization['customerEmail'] as String?,
       paymentMethod: _i7.PaymentMethod.fromJson(
-          (jsonSerialization['paymentMethod'] as int)),
+        (jsonSerialization['paymentMethod'] as String),
+      ),
       paymentStatus: _i3.PaymentStatus.fromJson(
-          (jsonSerialization['paymentStatus'] as int)),
+        (jsonSerialization['paymentStatus'] as String),
+      ),
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
@@ -178,35 +188,39 @@ abstract class Order implements _i1.SerializableModel {
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       isGift: jsonSerialization['isGift'] as bool,
       requiresSignature: jsonSerialization['requiresSignature'] as bool,
       isPriority: jsonSerialization['isPriority'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       confirmedAt: jsonSerialization['confirmedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['confirmedAt']),
+              jsonSerialization['confirmedAt'],
+            ),
       shippedAt: jsonSerialization['shippedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['shippedAt']),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['deliveredAt']),
+              jsonSerialization['deliveredAt'],
+            ),
       cancelledAt: jsonSerialization['cancelledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['cancelledAt']),
+              jsonSerialization['cancelledAt'],
+            ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue customerId;
@@ -338,6 +352,7 @@ abstract class Order implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Order',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJson(),
@@ -437,48 +452,48 @@ class _OrderImpl extends Order {
     DateTime? deliveredAt,
     DateTime? cancelledAt,
   }) : super._(
-          id: id,
-          customerId: customerId,
-          customer: customer,
-          vendorId: vendorId,
-          vendor: vendor,
-          orderNumber: orderNumber,
-          status: status,
-          subtotal: subtotal,
-          taxAmount: taxAmount,
-          shippingCost: shippingCost,
-          discountAmount: discountAmount,
-          platformFee: platformFee,
-          totalAmount: totalAmount,
-          currency: currency,
-          shippingAddressId: shippingAddressId,
-          shippingAddress: shippingAddress,
-          deliveryInstructions: deliveryInstructions,
-          estimatedDeliveryDate: estimatedDeliveryDate,
-          actualDeliveryDate: actualDeliveryDate,
-          trackingNumber: trackingNumber,
-          shippingProvider: shippingProvider,
-          customerName: customerName,
-          customerPhone: customerPhone,
-          customerEmail: customerEmail,
-          paymentMethod: paymentMethod,
-          paymentStatus: paymentStatus,
-          paidAt: paidAt,
-          customerNotes: customerNotes,
-          vendorNotes: vendorNotes,
-          cancellationReason: cancellationReason,
-          orderSource: orderSource,
-          conversationId: conversationId,
-          isGift: isGift,
-          requiresSignature: requiresSignature,
-          isPriority: isPriority,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          confirmedAt: confirmedAt,
-          shippedAt: shippedAt,
-          deliveredAt: deliveredAt,
-          cancelledAt: cancelledAt,
-        );
+         id: id,
+         customerId: customerId,
+         customer: customer,
+         vendorId: vendorId,
+         vendor: vendor,
+         orderNumber: orderNumber,
+         status: status,
+         subtotal: subtotal,
+         taxAmount: taxAmount,
+         shippingCost: shippingCost,
+         discountAmount: discountAmount,
+         platformFee: platformFee,
+         totalAmount: totalAmount,
+         currency: currency,
+         shippingAddressId: shippingAddressId,
+         shippingAddress: shippingAddress,
+         deliveryInstructions: deliveryInstructions,
+         estimatedDeliveryDate: estimatedDeliveryDate,
+         actualDeliveryDate: actualDeliveryDate,
+         trackingNumber: trackingNumber,
+         shippingProvider: shippingProvider,
+         customerName: customerName,
+         customerPhone: customerPhone,
+         customerEmail: customerEmail,
+         paymentMethod: paymentMethod,
+         paymentStatus: paymentStatus,
+         paidAt: paidAt,
+         customerNotes: customerNotes,
+         vendorNotes: vendorNotes,
+         cancellationReason: cancellationReason,
+         orderSource: orderSource,
+         conversationId: conversationId,
+         isGift: isGift,
+         requiresSignature: requiresSignature,
+         isPriority: isPriority,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         confirmedAt: confirmedAt,
+         shippedAt: shippedAt,
+         deliveredAt: deliveredAt,
+         cancelledAt: cancelledAt,
+       );
 
   /// Returns a shallow copy of this [Order]
   /// with some or all fields replaced by the given arguments.
@@ -555,20 +570,23 @@ class _OrderImpl extends Order {
       actualDeliveryDate: actualDeliveryDate is DateTime?
           ? actualDeliveryDate
           : this.actualDeliveryDate,
-      trackingNumber:
-          trackingNumber is String? ? trackingNumber : this.trackingNumber,
+      trackingNumber: trackingNumber is String?
+          ? trackingNumber
+          : this.trackingNumber,
       shippingProvider: shippingProvider is String?
           ? shippingProvider
           : this.shippingProvider,
       customerName: customerName ?? this.customerName,
       customerPhone: customerPhone ?? this.customerPhone,
-      customerEmail:
-          customerEmail is String? ? customerEmail : this.customerEmail,
+      customerEmail: customerEmail is String?
+          ? customerEmail
+          : this.customerEmail,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       paidAt: paidAt is DateTime? ? paidAt : this.paidAt,
-      customerNotes:
-          customerNotes is String? ? customerNotes : this.customerNotes,
+      customerNotes: customerNotes is String?
+          ? customerNotes
+          : this.customerNotes,
       vendorNotes: vendorNotes is String? ? vendorNotes : this.vendorNotes,
       cancellationReason: cancellationReason is String?
           ? cancellationReason

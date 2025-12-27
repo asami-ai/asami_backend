@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
 import '../user/subscription_tier.dart' as _i3;
 import '../subscription/subscription_invoice.dart' as _i4;
+import 'package:asami_client/src/protocol/protocol.dart' as _i5;
 
 abstract class BillingCycleSummary implements _i1.SerializableModel {
   BillingCycleSummary._({
@@ -48,30 +50,30 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
     this.invoice,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        baseSubscriptionAmount = baseSubscriptionAmount ?? 0.0,
-        totalToolCalls = totalToolCalls ?? 0,
-        toolCallsIncluded = toolCallsIncluded ?? 0,
-        toolCallsOverage = toolCallsOverage ?? 0,
-        toolCallsOverageCost = toolCallsOverageCost ?? 0.0,
-        totalAIMessages = totalAIMessages ?? 0,
-        aiMessagesIncluded = aiMessagesIncluded ?? 0,
-        aiMessagesOverage = aiMessagesOverage ?? 0,
-        aiMessagesOverageCost = aiMessagesOverageCost ?? 0.0,
-        totalProducts = totalProducts ?? 0,
-        productsIncluded = productsIncluded ?? 0,
-        productsOverage = productsOverage ?? 0,
-        productsOverageCost = productsOverageCost ?? 0.0,
-        totalAIDescriptions = totalAIDescriptions ?? 0,
-        aiDescriptionsIncluded = aiDescriptionsIncluded ?? 0,
-        aiDescriptionsOverage = aiDescriptionsOverage ?? 0,
-        aiDescriptionsOverageCost = aiDescriptionsOverageCost ?? 0.0,
-        totalTransactionFees = totalTransactionFees ?? 0.0,
-        totalUsageCost = totalUsageCost ?? 0.0,
-        totalAmount = totalAmount ?? 0.0,
-        status = status ?? 'draft',
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       baseSubscriptionAmount = baseSubscriptionAmount ?? 0.0,
+       totalToolCalls = totalToolCalls ?? 0,
+       toolCallsIncluded = toolCallsIncluded ?? 0,
+       toolCallsOverage = toolCallsOverage ?? 0,
+       toolCallsOverageCost = toolCallsOverageCost ?? 0.0,
+       totalAIMessages = totalAIMessages ?? 0,
+       aiMessagesIncluded = aiMessagesIncluded ?? 0,
+       aiMessagesOverage = aiMessagesOverage ?? 0,
+       aiMessagesOverageCost = aiMessagesOverageCost ?? 0.0,
+       totalProducts = totalProducts ?? 0,
+       productsIncluded = productsIncluded ?? 0,
+       productsOverage = productsOverage ?? 0,
+       productsOverageCost = productsOverageCost ?? 0.0,
+       totalAIDescriptions = totalAIDescriptions ?? 0,
+       aiDescriptionsIncluded = aiDescriptionsIncluded ?? 0,
+       aiDescriptionsOverage = aiDescriptionsOverage ?? 0,
+       aiDescriptionsOverageCost = aiDescriptionsOverageCost ?? 0.0,
+       totalTransactionFees = totalTransactionFees ?? 0.0,
+       totalUsageCost = totalUsageCost ?? 0.0,
+       totalAmount = totalAmount ?? 0.0,
+       status = status ?? 'draft',
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory BillingCycleSummary({
     _i1.UuidValue? id,
@@ -111,44 +113,49 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
   factory BillingCycleSummary.fromJson(Map<String, dynamic> jsonSerialization) {
     return BillingCycleSummary(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
-      periodStart:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodStart']),
-      periodEnd:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodEnd']),
+          : _i5.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
+      periodStart: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodStart'],
+      ),
+      periodEnd: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodEnd'],
+      ),
       billingCycle: jsonSerialization['billingCycle'] as String,
       subscriptionTier: _i3.SubscriptionTier.fromJson(
-          (jsonSerialization['subscriptionTier'] as int)),
+        (jsonSerialization['subscriptionTier'] as String),
+      ),
       baseSubscriptionAmount:
           (jsonSerialization['baseSubscriptionAmount'] as num).toDouble(),
       totalToolCalls: jsonSerialization['totalToolCalls'] as int,
       toolCallsIncluded: jsonSerialization['toolCallsIncluded'] as int,
       toolCallsOverage: jsonSerialization['toolCallsOverage'] as int,
-      toolCallsOverageCost:
-          (jsonSerialization['toolCallsOverageCost'] as num).toDouble(),
+      toolCallsOverageCost: (jsonSerialization['toolCallsOverageCost'] as num)
+          .toDouble(),
       totalAIMessages: jsonSerialization['totalAIMessages'] as int,
       aiMessagesIncluded: jsonSerialization['aiMessagesIncluded'] as int,
       aiMessagesOverage: jsonSerialization['aiMessagesOverage'] as int,
-      aiMessagesOverageCost:
-          (jsonSerialization['aiMessagesOverageCost'] as num).toDouble(),
+      aiMessagesOverageCost: (jsonSerialization['aiMessagesOverageCost'] as num)
+          .toDouble(),
       totalProducts: jsonSerialization['totalProducts'] as int,
       productsIncluded: jsonSerialization['productsIncluded'] as int,
       productsOverage: jsonSerialization['productsOverage'] as int,
-      productsOverageCost:
-          (jsonSerialization['productsOverageCost'] as num).toDouble(),
+      productsOverageCost: (jsonSerialization['productsOverageCost'] as num)
+          .toDouble(),
       totalAIDescriptions: jsonSerialization['totalAIDescriptions'] as int,
       aiDescriptionsIncluded:
           jsonSerialization['aiDescriptionsIncluded'] as int,
       aiDescriptionsOverage: jsonSerialization['aiDescriptionsOverage'] as int,
       aiDescriptionsOverageCost:
           (jsonSerialization['aiDescriptionsOverageCost'] as num).toDouble(),
-      totalTransactionFees:
-          (jsonSerialization['totalTransactionFees'] as num).toDouble(),
+      totalTransactionFees: (jsonSerialization['totalTransactionFees'] as num)
+          .toDouble(),
       totalUsageCost: (jsonSerialization['totalUsageCost'] as num).toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
       status: jsonSerialization['status'] as String,
@@ -157,18 +164,19 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['invoiceId']),
       invoice: jsonSerialization['invoice'] == null
           ? null
-          : _i4.SubscriptionInvoice.fromJson(
-              (jsonSerialization['invoice'] as Map<String, dynamic>)),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+          : _i5.Protocol().deserialize<_i4.SubscriptionInvoice>(
+              jsonSerialization['invoice'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue vendorId;
@@ -273,6 +281,7 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'BillingCycleSummary',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -351,39 +360,39 @@ class _BillingCycleSummaryImpl extends BillingCycleSummary {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          periodStart: periodStart,
-          periodEnd: periodEnd,
-          billingCycle: billingCycle,
-          subscriptionTier: subscriptionTier,
-          baseSubscriptionAmount: baseSubscriptionAmount,
-          totalToolCalls: totalToolCalls,
-          toolCallsIncluded: toolCallsIncluded,
-          toolCallsOverage: toolCallsOverage,
-          toolCallsOverageCost: toolCallsOverageCost,
-          totalAIMessages: totalAIMessages,
-          aiMessagesIncluded: aiMessagesIncluded,
-          aiMessagesOverage: aiMessagesOverage,
-          aiMessagesOverageCost: aiMessagesOverageCost,
-          totalProducts: totalProducts,
-          productsIncluded: productsIncluded,
-          productsOverage: productsOverage,
-          productsOverageCost: productsOverageCost,
-          totalAIDescriptions: totalAIDescriptions,
-          aiDescriptionsIncluded: aiDescriptionsIncluded,
-          aiDescriptionsOverage: aiDescriptionsOverage,
-          aiDescriptionsOverageCost: aiDescriptionsOverageCost,
-          totalTransactionFees: totalTransactionFees,
-          totalUsageCost: totalUsageCost,
-          totalAmount: totalAmount,
-          status: status,
-          invoiceId: invoiceId,
-          invoice: invoice,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         periodStart: periodStart,
+         periodEnd: periodEnd,
+         billingCycle: billingCycle,
+         subscriptionTier: subscriptionTier,
+         baseSubscriptionAmount: baseSubscriptionAmount,
+         totalToolCalls: totalToolCalls,
+         toolCallsIncluded: toolCallsIncluded,
+         toolCallsOverage: toolCallsOverage,
+         toolCallsOverageCost: toolCallsOverageCost,
+         totalAIMessages: totalAIMessages,
+         aiMessagesIncluded: aiMessagesIncluded,
+         aiMessagesOverage: aiMessagesOverage,
+         aiMessagesOverageCost: aiMessagesOverageCost,
+         totalProducts: totalProducts,
+         productsIncluded: productsIncluded,
+         productsOverage: productsOverage,
+         productsOverageCost: productsOverageCost,
+         totalAIDescriptions: totalAIDescriptions,
+         aiDescriptionsIncluded: aiDescriptionsIncluded,
+         aiDescriptionsOverage: aiDescriptionsOverage,
+         aiDescriptionsOverageCost: aiDescriptionsOverageCost,
+         totalTransactionFees: totalTransactionFees,
+         totalUsageCost: totalUsageCost,
+         totalAmount: totalAmount,
+         status: status,
+         invoiceId: invoiceId,
+         invoice: invoice,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [BillingCycleSummary]
   /// with some or all fields replaced by the given arguments.

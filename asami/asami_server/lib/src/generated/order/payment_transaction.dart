@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -15,6 +16,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../order/order.dart' as _i2;
 import '../order/payment_method.dart' as _i3;
 import '../order/payment_status.dart' as _i4;
+import 'package:asami_server/src/generated/protocol.dart' as _i5;
 
 abstract class PaymentTransaction
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -46,15 +48,15 @@ abstract class PaymentTransaction
     DateTime? updatedAt,
     this.completedAt,
     this.failedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        currency = currency ?? 'USD',
-        platformFee = platformFee ?? 0.0,
-        gatewayFee = gatewayFee ?? 0.0,
-        isPending = isPending ?? true,
-        isCompleted = isCompleted ?? false,
-        isFailed = isFailed ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       currency = currency ?? 'USD',
+       platformFee = platformFee ?? 0.0,
+       gatewayFee = gatewayFee ?? 0.0,
+       isPending = isPending ?? true,
+       isCompleted = isCompleted ?? false,
+       isFailed = isFailed ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory PaymentTransaction({
     _i1.UuidValue? id,
@@ -89,18 +91,20 @@ abstract class PaymentTransaction
   factory PaymentTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return PaymentTransaction(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
+      orderId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['orderId'],
+      ),
       order: jsonSerialization['order'] == null
           ? null
-          : _i2.Order.fromJson(
-              (jsonSerialization['order'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i2.Order>(jsonSerialization['order']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       paymentMethod: _i3.PaymentMethod.fromJson(
-          (jsonSerialization['paymentMethod'] as int)),
+        (jsonSerialization['paymentMethod'] as String),
+      ),
       paymentStatus: _i4.PaymentStatus.fromJson(
-          (jsonSerialization['paymentStatus'] as int)),
+        (jsonSerialization['paymentStatus'] as String),
+      ),
       gatewayName: jsonSerialization['gatewayName'] as String,
       gatewayTransactionId:
           jsonSerialization['gatewayTransactionId'] as String?,
@@ -118,14 +122,17 @@ abstract class PaymentTransaction
       isFailed: jsonSerialization['isFailed'] as bool,
       metadata: jsonSerialization['metadata'] as String?,
       failureReason: jsonSerialization['failureReason'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       completedAt: jsonSerialization['completedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['completedAt']),
+              jsonSerialization['completedAt'],
+            ),
       failedAt: jsonSerialization['failedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['failedAt']),
@@ -229,6 +236,7 @@ abstract class PaymentTransaction
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'PaymentTransaction',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJson(),
@@ -263,6 +271,7 @@ abstract class PaymentTransaction
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'PaymentTransaction',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJsonForProtocol(),
@@ -356,34 +365,34 @@ class _PaymentTransactionImpl extends PaymentTransaction {
     DateTime? completedAt,
     DateTime? failedAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          order: order,
-          amount: amount,
-          currency: currency,
-          paymentMethod: paymentMethod,
-          paymentStatus: paymentStatus,
-          gatewayName: gatewayName,
-          gatewayTransactionId: gatewayTransactionId,
-          gatewayResponse: gatewayResponse,
-          cryptoType: cryptoType,
-          cryptoAmount: cryptoAmount,
-          walletAddress: walletAddress,
-          transactionHash: transactionHash,
-          blockchainNetwork: blockchainNetwork,
-          conversionRate: conversionRate,
-          platformFee: platformFee,
-          gatewayFee: gatewayFee,
-          isPending: isPending,
-          isCompleted: isCompleted,
-          isFailed: isFailed,
-          metadata: metadata,
-          failureReason: failureReason,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          completedAt: completedAt,
-          failedAt: failedAt,
-        );
+         id: id,
+         orderId: orderId,
+         order: order,
+         amount: amount,
+         currency: currency,
+         paymentMethod: paymentMethod,
+         paymentStatus: paymentStatus,
+         gatewayName: gatewayName,
+         gatewayTransactionId: gatewayTransactionId,
+         gatewayResponse: gatewayResponse,
+         cryptoType: cryptoType,
+         cryptoAmount: cryptoAmount,
+         walletAddress: walletAddress,
+         transactionHash: transactionHash,
+         blockchainNetwork: blockchainNetwork,
+         conversionRate: conversionRate,
+         platformFee: platformFee,
+         gatewayFee: gatewayFee,
+         isPending: isPending,
+         isCompleted: isCompleted,
+         isFailed: isFailed,
+         metadata: metadata,
+         failureReason: failureReason,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         completedAt: completedAt,
+         failedAt: failedAt,
+       );
 
   /// Returns a shallow copy of this [PaymentTransaction]
   /// with some or all fields replaced by the given arguments.
@@ -430,27 +439,32 @@ class _PaymentTransactionImpl extends PaymentTransaction {
       gatewayTransactionId: gatewayTransactionId is String?
           ? gatewayTransactionId
           : this.gatewayTransactionId,
-      gatewayResponse:
-          gatewayResponse is String? ? gatewayResponse : this.gatewayResponse,
+      gatewayResponse: gatewayResponse is String?
+          ? gatewayResponse
+          : this.gatewayResponse,
       cryptoType: cryptoType is String? ? cryptoType : this.cryptoType,
       cryptoAmount: cryptoAmount is double? ? cryptoAmount : this.cryptoAmount,
-      walletAddress:
-          walletAddress is String? ? walletAddress : this.walletAddress,
-      transactionHash:
-          transactionHash is String? ? transactionHash : this.transactionHash,
+      walletAddress: walletAddress is String?
+          ? walletAddress
+          : this.walletAddress,
+      transactionHash: transactionHash is String?
+          ? transactionHash
+          : this.transactionHash,
       blockchainNetwork: blockchainNetwork is String?
           ? blockchainNetwork
           : this.blockchainNetwork,
-      conversionRate:
-          conversionRate is double? ? conversionRate : this.conversionRate,
+      conversionRate: conversionRate is double?
+          ? conversionRate
+          : this.conversionRate,
       platformFee: platformFee ?? this.platformFee,
       gatewayFee: gatewayFee ?? this.gatewayFee,
       isPending: isPending ?? this.isPending,
       isCompleted: isCompleted ?? this.isCompleted,
       isFailed: isFailed ?? this.isFailed,
       metadata: metadata is String? ? metadata : this.metadata,
-      failureReason:
-          failureReason is String? ? failureReason : this.failureReason,
+      failureReason: failureReason is String?
+          ? failureReason
+          : this.failureReason,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       completedAt: completedAt is DateTime? ? completedAt : this.completedAt,
@@ -459,9 +473,157 @@ class _PaymentTransactionImpl extends PaymentTransaction {
   }
 }
 
+class PaymentTransactionUpdateTable
+    extends _i1.UpdateTable<PaymentTransactionTable> {
+  PaymentTransactionUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> orderId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.orderId,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> amount(double value) => _i1.ColumnValue(
+    table.amount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.PaymentMethod, _i3.PaymentMethod> paymentMethod(
+    _i3.PaymentMethod value,
+  ) => _i1.ColumnValue(
+    table.paymentMethod,
+    value,
+  );
+
+  _i1.ColumnValue<_i4.PaymentStatus, _i4.PaymentStatus> paymentStatus(
+    _i4.PaymentStatus value,
+  ) => _i1.ColumnValue(
+    table.paymentStatus,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> gatewayName(String value) => _i1.ColumnValue(
+    table.gatewayName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> gatewayTransactionId(String? value) =>
+      _i1.ColumnValue(
+        table.gatewayTransactionId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> gatewayResponse(String? value) =>
+      _i1.ColumnValue(
+        table.gatewayResponse,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> cryptoType(String? value) => _i1.ColumnValue(
+    table.cryptoType,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> cryptoAmount(double? value) =>
+      _i1.ColumnValue(
+        table.cryptoAmount,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> walletAddress(String? value) =>
+      _i1.ColumnValue(
+        table.walletAddress,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> transactionHash(String? value) =>
+      _i1.ColumnValue(
+        table.transactionHash,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> blockchainNetwork(String? value) =>
+      _i1.ColumnValue(
+        table.blockchainNetwork,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> conversionRate(double? value) =>
+      _i1.ColumnValue(
+        table.conversionRate,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> platformFee(double value) => _i1.ColumnValue(
+    table.platformFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> gatewayFee(double value) => _i1.ColumnValue(
+    table.gatewayFee,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isPending(bool value) => _i1.ColumnValue(
+    table.isPending,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isCompleted(bool value) => _i1.ColumnValue(
+    table.isCompleted,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFailed(bool value) => _i1.ColumnValue(
+    table.isFailed,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> metadata(String? value) => _i1.ColumnValue(
+    table.metadata,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> failureReason(String? value) =>
+      _i1.ColumnValue(
+        table.failureReason,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> completedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.completedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> failedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.failedAt,
+        value,
+      );
+}
+
 class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
   PaymentTransactionTable({super.tableRelation})
-      : super(tableName: 'payment_transactions') {
+    : super(tableName: 'payment_transactions') {
+    updateTable = PaymentTransactionUpdateTable(this);
     orderId = _i1.ColumnUuid(
       'orderId',
       this,
@@ -478,12 +640,12 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
     paymentMethod = _i1.ColumnEnum(
       'paymentMethod',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     paymentStatus = _i1.ColumnEnum(
       'paymentStatus',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     gatewayName = _i1.ColumnString(
       'gatewayName',
@@ -574,6 +736,8 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final PaymentTransactionUpdateTable updateTable;
+
   late final _i1.ColumnUuid orderId;
 
   _i2.OrderTable? _order;
@@ -641,33 +805,33 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        orderId,
-        amount,
-        currency,
-        paymentMethod,
-        paymentStatus,
-        gatewayName,
-        gatewayTransactionId,
-        gatewayResponse,
-        cryptoType,
-        cryptoAmount,
-        walletAddress,
-        transactionHash,
-        blockchainNetwork,
-        conversionRate,
-        platformFee,
-        gatewayFee,
-        isPending,
-        isCompleted,
-        isFailed,
-        metadata,
-        failureReason,
-        createdAt,
-        updatedAt,
-        completedAt,
-        failedAt,
-      ];
+    id,
+    orderId,
+    amount,
+    currency,
+    paymentMethod,
+    paymentStatus,
+    gatewayName,
+    gatewayTransactionId,
+    gatewayResponse,
+    cryptoType,
+    cryptoAmount,
+    walletAddress,
+    transactionHash,
+    blockchainNetwork,
+    conversionRate,
+    platformFee,
+    gatewayFee,
+    isPending,
+    isCompleted,
+    isFailed,
+    metadata,
+    failureReason,
+    createdAt,
+    updatedAt,
+    completedAt,
+    failedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -875,6 +1039,48 @@ class PaymentTransactionRepository {
     return session.db.updateRow<PaymentTransaction>(
       row,
       columns: columns?.call(PaymentTransaction.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [PaymentTransaction] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<PaymentTransaction?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<PaymentTransactionUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<PaymentTransaction>(
+      id,
+      columnValues: columnValues(PaymentTransaction.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [PaymentTransaction]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<PaymentTransaction>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<PaymentTransactionUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<PaymentTransactionTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<PaymentTransactionTable>? orderBy,
+    _i1.OrderByListBuilder<PaymentTransactionTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<PaymentTransaction>(
+      columnValues: columnValues(PaymentTransaction.t.updateTable),
+      where: where(PaymentTransaction.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(PaymentTransaction.t),
+      orderByList: orderByList?.call(PaymentTransaction.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

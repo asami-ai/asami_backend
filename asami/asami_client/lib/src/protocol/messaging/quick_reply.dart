@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -27,11 +28,11 @@ abstract class QuickReply implements _i1.SerializableModel {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        displayOrder = displayOrder ?? 0,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       displayOrder = displayOrder ?? 0,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory QuickReply({
     _i1.UuidValue? id,
@@ -52,25 +53,28 @@ abstract class QuickReply implements _i1.SerializableModel {
     return QuickReply(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       intent: jsonSerialization['intent'] as String,
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       title: jsonSerialization['title'] as String,
       payload: jsonSerialization['payload'] as String,
       description: jsonSerialization['description'] as String?,
       iconUrl: jsonSerialization['iconUrl'] as String?,
       displayOrder: jsonSerialization['displayOrder'] as int,
       isActive: jsonSerialization['isActive'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   String intent;
@@ -115,6 +119,7 @@ abstract class QuickReply implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'QuickReply',
       'id': id.toJson(),
       'intent': intent,
       'userType': userType.toJson(),
@@ -153,19 +158,19 @@ class _QuickReplyImpl extends QuickReply {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          intent: intent,
-          userType: userType,
-          platform: platform,
-          title: title,
-          payload: payload,
-          description: description,
-          iconUrl: iconUrl,
-          displayOrder: displayOrder,
-          isActive: isActive,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         intent: intent,
+         userType: userType,
+         platform: platform,
+         title: title,
+         payload: payload,
+         description: description,
+         iconUrl: iconUrl,
+         displayOrder: displayOrder,
+         isActive: isActive,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [QuickReply]
   /// with some or all fields replaced by the given arguments.

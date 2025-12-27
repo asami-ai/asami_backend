@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../messaging/platfom_type.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class TemplateMessage
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -32,13 +34,13 @@ abstract class TemplateMessage
     this.lastUsedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        language = language ?? 'en',
-        isApproved = isApproved ?? false,
-        isActive = isActive ?? true,
-        usageCount = usageCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       language = language ?? 'en',
+       isApproved = isApproved ?? false,
+       isActive = isActive ?? true,
+       usageCount = usageCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory TemplateMessage({
     _i1.UuidValue? id,
@@ -69,12 +71,15 @@ abstract class TemplateMessage
       header: jsonSerialization['header'] as String?,
       body: jsonSerialization['body'] as String,
       footer: jsonSerialization['footer'] as String?,
-      variables: (jsonSerialization['variables'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      variables: jsonSerialization['variables'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['variables'],
+            ),
       sampleValues: jsonSerialization['sampleValues'] as String?,
-      platform:
-          _i2.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      platform: _i2.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformTemplateId: jsonSerialization['platformTemplateId'] as String?,
       isApproved: jsonSerialization['isApproved'] as bool,
       isActive: jsonSerialization['isActive'] as bool,
@@ -82,10 +87,12 @@ abstract class TemplateMessage
       lastUsedAt: jsonSerialization['lastUsedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['lastUsedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -156,6 +163,7 @@ abstract class TemplateMessage
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'TemplateMessage',
       'id': id.toJson(),
       'name': name,
       'category': category,
@@ -179,6 +187,7 @@ abstract class TemplateMessage
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'TemplateMessage',
       'id': id.toJson(),
       'name': name,
       'category': category,
@@ -251,24 +260,24 @@ class _TemplateMessageImpl extends TemplateMessage {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          name: name,
-          category: category,
-          language: language,
-          header: header,
-          body: body,
-          footer: footer,
-          variables: variables,
-          sampleValues: sampleValues,
-          platform: platform,
-          platformTemplateId: platformTemplateId,
-          isApproved: isApproved,
-          isActive: isActive,
-          usageCount: usageCount,
-          lastUsedAt: lastUsedAt,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         name: name,
+         category: category,
+         language: language,
+         header: header,
+         body: body,
+         footer: footer,
+         variables: variables,
+         sampleValues: sampleValues,
+         platform: platform,
+         platformTemplateId: platformTemplateId,
+         isApproved: isApproved,
+         isActive: isActive,
+         usageCount: usageCount,
+         lastUsedAt: lastUsedAt,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [TemplateMessage]
   /// with some or all fields replaced by the given arguments.
@@ -319,9 +328,102 @@ class _TemplateMessageImpl extends TemplateMessage {
   }
 }
 
+class TemplateMessageUpdateTable extends _i1.UpdateTable<TemplateMessageTable> {
+  TemplateMessageUpdateTable(super.table);
+
+  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
+    table.name,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> category(String value) => _i1.ColumnValue(
+    table.category,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> language(String value) => _i1.ColumnValue(
+    table.language,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> header(String? value) => _i1.ColumnValue(
+    table.header,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> body(String value) => _i1.ColumnValue(
+    table.body,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> footer(String? value) => _i1.ColumnValue(
+    table.footer,
+    value,
+  );
+
+  _i1.ColumnValue<List<String>, List<String>> variables(List<String>? value) =>
+      _i1.ColumnValue(
+        table.variables,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> sampleValues(String? value) =>
+      _i1.ColumnValue(
+        table.sampleValues,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.PlatformType, _i2.PlatformType> platform(
+    _i2.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> platformTemplateId(String? value) =>
+      _i1.ColumnValue(
+        table.platformTemplateId,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isApproved(bool value) => _i1.ColumnValue(
+    table.isApproved,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> usageCount(int value) => _i1.ColumnValue(
+    table.usageCount,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> lastUsedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastUsedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
   TemplateMessageTable({super.tableRelation})
-      : super(tableName: 'template_messages') {
+    : super(tableName: 'template_messages') {
+    updateTable = TemplateMessageUpdateTable(this);
     name = _i1.ColumnString(
       'name',
       this,
@@ -347,7 +449,7 @@ class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
       'footer',
       this,
     );
-    variables = _i1.ColumnSerializable(
+    variables = _i1.ColumnSerializable<List<String>>(
       'variables',
       this,
     );
@@ -358,7 +460,7 @@ class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     platformTemplateId = _i1.ColumnString(
       'platformTemplateId',
@@ -395,6 +497,8 @@ class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final TemplateMessageUpdateTable updateTable;
+
   late final _i1.ColumnString name;
 
   late final _i1.ColumnString category;
@@ -407,7 +511,7 @@ class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnString footer;
 
-  late final _i1.ColumnSerializable variables;
+  late final _i1.ColumnSerializable<List<String>> variables;
 
   late final _i1.ColumnString sampleValues;
 
@@ -429,24 +533,24 @@ class TemplateMessageTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        name,
-        category,
-        language,
-        header,
-        body,
-        footer,
-        variables,
-        sampleValues,
-        platform,
-        platformTemplateId,
-        isApproved,
-        isActive,
-        usageCount,
-        lastUsedAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    name,
+    category,
+    language,
+    header,
+    body,
+    footer,
+    variables,
+    sampleValues,
+    platform,
+    platformTemplateId,
+    isApproved,
+    isActive,
+    usageCount,
+    lastUsedAt,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class TemplateMessageInclude extends _i1.IncludeObject {
@@ -634,6 +738,48 @@ class TemplateMessageRepository {
     return session.db.updateRow<TemplateMessage>(
       row,
       columns: columns?.call(TemplateMessage.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [TemplateMessage] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<TemplateMessage?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<TemplateMessageUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<TemplateMessage>(
+      id,
+      columnValues: columnValues(TemplateMessage.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [TemplateMessage]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<TemplateMessage>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<TemplateMessageUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<TemplateMessageTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<TemplateMessageTable>? orderBy,
+    _i1.OrderByListBuilder<TemplateMessageTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<TemplateMessage>(
+      columnValues: columnValues(TemplateMessage.t.updateTable),
+      where: where(TemplateMessage.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(TemplateMessage.t),
+      orderByList: orderByList?.call(TemplateMessage.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

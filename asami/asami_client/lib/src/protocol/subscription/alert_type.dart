@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -20,30 +21,29 @@ enum AlertType implements _i1.SerializableModel {
   upgrade_recommended,
   cost_threshold;
 
-  static AlertType fromJson(int index) {
-    switch (index) {
-      case 0:
+  static AlertType fromJson(String name) {
+    switch (name) {
+      case 'soft_limit_approaching':
         return AlertType.soft_limit_approaching;
-      case 1:
+      case 'soft_limit_reached':
         return AlertType.soft_limit_reached;
-      case 2:
+      case 'hard_limit_reached':
         return AlertType.hard_limit_reached;
-      case 3:
+      case 'grace_period_activated':
         return AlertType.grace_period_activated;
-      case 4:
+      case 'limit_reset':
         return AlertType.limit_reset;
-      case 5:
+      case 'upgrade_recommended':
         return AlertType.upgrade_recommended;
-      case 6:
+      case 'cost_threshold':
         return AlertType.cost_threshold;
       default:
-        throw ArgumentError(
-            'Value "$index" cannot be converted to "AlertType"');
+        throw ArgumentError('Value "$name" cannot be converted to "AlertType"');
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

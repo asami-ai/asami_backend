@@ -1,7 +1,7 @@
 // File: server/lib/src/services/messaging/whatsapp/whatsapp_webhook_handler.dart
 
 import 'package:asami_server/utils/logger/asami_logger.dart';
-import 'package:serverpod/serverpod.dart' hide Order;
+import 'package:serverpod/serverpod.dart' hide Order, Message;
 import '../../../endpoints/bot_endpoint.dart';
 import '../../../generated/protocol.dart';
 import '../../auth/auth_state_manager.dart';

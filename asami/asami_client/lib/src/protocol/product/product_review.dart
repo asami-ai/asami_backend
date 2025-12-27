@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../product/product.dart' as _i2;
 import '../user/user.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class ProductReview implements _i1.SerializableModel {
   ProductReview._({
@@ -36,14 +38,14 @@ abstract class ProductReview implements _i1.SerializableModel {
     this.vendorRespondedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isVerifiedPurchase = isVerifiedPurchase ?? false,
-        isApproved = isApproved ?? false,
-        isFlagged = isFlagged ?? false,
-        helpfulCount = helpfulCount ?? 0,
-        reportCount = reportCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isVerifiedPurchase = isVerifiedPurchase ?? false,
+       isApproved = isApproved ?? false,
+       isFlagged = isFlagged ?? false,
+       helpfulCount = helpfulCount ?? 0,
+       reportCount = reportCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory ProductReview({
     _i1.UuidValue? id,
@@ -72,27 +74,31 @@ abstract class ProductReview implements _i1.SerializableModel {
   factory ProductReview.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductReview(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+          : _i4.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i3.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['customer']),
       orderId: jsonSerialization['orderId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
       rating: jsonSerialization['rating'] as int,
       title: jsonSerialization['title'] as String?,
       comment: jsonSerialization['comment'] as String,
-      images: (jsonSerialization['images'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      images: jsonSerialization['images'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<String>>(
+              jsonSerialization['images'],
+            ),
       isVerifiedPurchase: jsonSerialization['isVerifiedPurchase'] as bool,
       isApproved: jsonSerialization['isApproved'] as bool,
       isFlagged: jsonSerialization['isFlagged'] as bool,
@@ -100,24 +106,26 @@ abstract class ProductReview implements _i1.SerializableModel {
       moderatedAt: jsonSerialization['moderatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['moderatedAt']),
+              jsonSerialization['moderatedAt'],
+            ),
       helpfulCount: jsonSerialization['helpfulCount'] as int,
       reportCount: jsonSerialization['reportCount'] as int,
       vendorResponse: jsonSerialization['vendorResponse'] as String?,
       vendorRespondedAt: jsonSerialization['vendorRespondedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['vendorRespondedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+              jsonSerialization['vendorRespondedAt'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue productId;
@@ -189,6 +197,7 @@ abstract class ProductReview implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductReview',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -246,28 +255,28 @@ class _ProductReviewImpl extends ProductReview {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          customerId: customerId,
-          customer: customer,
-          orderId: orderId,
-          rating: rating,
-          title: title,
-          comment: comment,
-          images: images,
-          isVerifiedPurchase: isVerifiedPurchase,
-          isApproved: isApproved,
-          isFlagged: isFlagged,
-          moderatedBy: moderatedBy,
-          moderatedAt: moderatedAt,
-          helpfulCount: helpfulCount,
-          reportCount: reportCount,
-          vendorResponse: vendorResponse,
-          vendorRespondedAt: vendorRespondedAt,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         customerId: customerId,
+         customer: customer,
+         orderId: orderId,
+         rating: rating,
+         title: title,
+         comment: comment,
+         images: images,
+         isVerifiedPurchase: isVerifiedPurchase,
+         isApproved: isApproved,
+         isFlagged: isFlagged,
+         moderatedBy: moderatedBy,
+         moderatedAt: moderatedAt,
+         helpfulCount: helpfulCount,
+         reportCount: reportCount,
+         vendorResponse: vendorResponse,
+         vendorRespondedAt: vendorRespondedAt,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [ProductReview]
   /// with some or all fields replaced by the given arguments.
@@ -316,8 +325,9 @@ class _ProductReviewImpl extends ProductReview {
       moderatedAt: moderatedAt is DateTime? ? moderatedAt : this.moderatedAt,
       helpfulCount: helpfulCount ?? this.helpfulCount,
       reportCount: reportCount ?? this.reportCount,
-      vendorResponse:
-          vendorResponse is String? ? vendorResponse : this.vendorResponse,
+      vendorResponse: vendorResponse is String?
+          ? vendorResponse
+          : this.vendorResponse,
       vendorRespondedAt: vendorRespondedAt is DateTime?
           ? vendorRespondedAt
           : this.vendorRespondedAt,

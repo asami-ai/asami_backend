@@ -1,15 +1,12 @@
-// File: server/lib/src/web/routes/health_route.dart
-
-import 'dart:io';
 import 'dart:convert';
 import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart';
 
-/// Health check route
+/// Health check route updated to use the modern Request/Response pattern
 class HealthCheckRoute extends Route {
   @override
-  Future<bool> handleCall(Session session, HttpRequest request) async {
-    final response = {
+  Future<Result> handleCall(Session session, Request request) async {
+    final responseData = {
       'status': 'healthy',
       'service': 'Asami E-commerce Platform',
       'version': '1.0.0',
@@ -20,12 +17,10 @@ class HealthCheckRoute extends Route {
       },
     };
 
-    Log.info('Health check requested', data: response, session: session);
+    Log.info('Health check requested', data: responseData, session: session);
 
-    request.response.statusCode = 200;
-    request.response.headers.contentType = ContentType.json;
-    request.response.write(jsonEncode(response));
-    await request.response.close();
-    return true;
+    return Response.ok(
+      body: Body.fromString(jsonEncode(responseData), mimeType: MimeType.json),
+    );
   }
 }

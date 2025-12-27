@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class VendorAnalytics
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -48,33 +50,33 @@ abstract class VendorAnalytics
     double? averageRatingPeriod,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        totalOrders = totalOrders ?? 0,
-        completedOrders = completedOrders ?? 0,
-        cancelledOrders = cancelledOrders ?? 0,
-        totalRevenue = totalRevenue ?? 0.0,
-        averageOrderValue = averageOrderValue ?? 0.0,
-        totalProducts = totalProducts ?? 0,
-        activeProducts = activeProducts ?? 0,
-        outOfStockProducts = outOfStockProducts ?? 0,
-        newProductsAdded = newProductsAdded ?? 0,
-        totalCustomers = totalCustomers ?? 0,
-        newCustomers = newCustomers ?? 0,
-        returningCustomers = returningCustomers ?? 0,
-        productViews = productViews ?? 0,
-        wishlistAdds = wishlistAdds ?? 0,
-        cartAdds = cartAdds ?? 0,
-        conversionRate = conversionRate ?? 0.0,
-        aiDescriptionsGenerated = aiDescriptionsGenerated ?? 0,
-        aiQueriesProcessed = aiQueriesProcessed ?? 0,
-        aiCostsIncurred = aiCostsIncurred ?? 0.0,
-        fiatPayments = fiatPayments ?? 0.0,
-        cryptoPayments = cryptoPayments ?? 0.0,
-        platformFeesCollected = platformFeesCollected ?? 0.0,
-        newReviews = newReviews ?? 0,
-        averageRatingPeriod = averageRatingPeriod ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       totalOrders = totalOrders ?? 0,
+       completedOrders = completedOrders ?? 0,
+       cancelledOrders = cancelledOrders ?? 0,
+       totalRevenue = totalRevenue ?? 0.0,
+       averageOrderValue = averageOrderValue ?? 0.0,
+       totalProducts = totalProducts ?? 0,
+       activeProducts = activeProducts ?? 0,
+       outOfStockProducts = outOfStockProducts ?? 0,
+       newProductsAdded = newProductsAdded ?? 0,
+       totalCustomers = totalCustomers ?? 0,
+       newCustomers = newCustomers ?? 0,
+       returningCustomers = returningCustomers ?? 0,
+       productViews = productViews ?? 0,
+       wishlistAdds = wishlistAdds ?? 0,
+       cartAdds = cartAdds ?? 0,
+       conversionRate = conversionRate ?? 0.0,
+       aiDescriptionsGenerated = aiDescriptionsGenerated ?? 0,
+       aiQueriesProcessed = aiQueriesProcessed ?? 0,
+       aiCostsIncurred = aiCostsIncurred ?? 0.0,
+       fiatPayments = fiatPayments ?? 0.0,
+       cryptoPayments = cryptoPayments ?? 0.0,
+       platformFeesCollected = platformFeesCollected ?? 0.0,
+       newReviews = newReviews ?? 0,
+       averageRatingPeriod = averageRatingPeriod ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory VendorAnalytics({
     _i1.UuidValue? id,
@@ -113,20 +115,22 @@ abstract class VendorAnalytics
   factory VendorAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return VendorAnalytics(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
       totalOrders: jsonSerialization['totalOrders'] as int,
       completedOrders: jsonSerialization['completedOrders'] as int,
       cancelledOrders: jsonSerialization['cancelledOrders'] as int,
       totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageOrderValue:
-          (jsonSerialization['averageOrderValue'] as num).toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
+          .toDouble(),
       totalProducts: jsonSerialization['totalProducts'] as int,
       activeProducts: jsonSerialization['activeProducts'] as int,
       outOfStockProducts: jsonSerialization['outOfStockProducts'] as int,
@@ -144,15 +148,17 @@ abstract class VendorAnalytics
       aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num).toDouble(),
       fiatPayments: (jsonSerialization['fiatPayments'] as num).toDouble(),
       cryptoPayments: (jsonSerialization['cryptoPayments'] as num).toDouble(),
-      platformFeesCollected:
-          (jsonSerialization['platformFeesCollected'] as num).toDouble(),
+      platformFeesCollected: (jsonSerialization['platformFeesCollected'] as num)
+          .toDouble(),
       newReviews: jsonSerialization['newReviews'] as int,
-      averageRatingPeriod:
-          (jsonSerialization['averageRatingPeriod'] as num).toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      averageRatingPeriod: (jsonSerialization['averageRatingPeriod'] as num)
+          .toDouble(),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -265,6 +271,7 @@ abstract class VendorAnalytics
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'VendorAnalytics',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -302,6 +309,7 @@ abstract class VendorAnalytics
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'VendorAnalytics',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJsonForProtocol(),
@@ -402,38 +410,38 @@ class _VendorAnalyticsImpl extends VendorAnalytics {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          date: date,
-          period: period,
-          totalOrders: totalOrders,
-          completedOrders: completedOrders,
-          cancelledOrders: cancelledOrders,
-          totalRevenue: totalRevenue,
-          averageOrderValue: averageOrderValue,
-          totalProducts: totalProducts,
-          activeProducts: activeProducts,
-          outOfStockProducts: outOfStockProducts,
-          newProductsAdded: newProductsAdded,
-          totalCustomers: totalCustomers,
-          newCustomers: newCustomers,
-          returningCustomers: returningCustomers,
-          productViews: productViews,
-          wishlistAdds: wishlistAdds,
-          cartAdds: cartAdds,
-          conversionRate: conversionRate,
-          aiDescriptionsGenerated: aiDescriptionsGenerated,
-          aiQueriesProcessed: aiQueriesProcessed,
-          aiCostsIncurred: aiCostsIncurred,
-          fiatPayments: fiatPayments,
-          cryptoPayments: cryptoPayments,
-          platformFeesCollected: platformFeesCollected,
-          newReviews: newReviews,
-          averageRatingPeriod: averageRatingPeriod,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         date: date,
+         period: period,
+         totalOrders: totalOrders,
+         completedOrders: completedOrders,
+         cancelledOrders: cancelledOrders,
+         totalRevenue: totalRevenue,
+         averageOrderValue: averageOrderValue,
+         totalProducts: totalProducts,
+         activeProducts: activeProducts,
+         outOfStockProducts: outOfStockProducts,
+         newProductsAdded: newProductsAdded,
+         totalCustomers: totalCustomers,
+         newCustomers: newCustomers,
+         returningCustomers: returningCustomers,
+         productViews: productViews,
+         wishlistAdds: wishlistAdds,
+         cartAdds: cartAdds,
+         conversionRate: conversionRate,
+         aiDescriptionsGenerated: aiDescriptionsGenerated,
+         aiQueriesProcessed: aiQueriesProcessed,
+         aiCostsIncurred: aiCostsIncurred,
+         fiatPayments: fiatPayments,
+         cryptoPayments: cryptoPayments,
+         platformFeesCollected: platformFeesCollected,
+         newReviews: newReviews,
+         averageRatingPeriod: averageRatingPeriod,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [VendorAnalytics]
   /// with some or all fields replaced by the given arguments.
@@ -510,9 +518,169 @@ class _VendorAnalyticsImpl extends VendorAnalytics {
   }
 }
 
+class VendorAnalyticsUpdateTable extends _i1.UpdateTable<VendorAnalyticsTable> {
+  VendorAnalyticsUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> date(DateTime value) => _i1.ColumnValue(
+    table.date,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> period(String value) => _i1.ColumnValue(
+    table.period,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalOrders(int value) => _i1.ColumnValue(
+    table.totalOrders,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> completedOrders(int value) => _i1.ColumnValue(
+    table.completedOrders,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> cancelledOrders(int value) => _i1.ColumnValue(
+    table.cancelledOrders,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalRevenue(double value) => _i1.ColumnValue(
+    table.totalRevenue,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageOrderValue(double value) =>
+      _i1.ColumnValue(
+        table.averageOrderValue,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> totalProducts(int value) => _i1.ColumnValue(
+    table.totalProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> activeProducts(int value) => _i1.ColumnValue(
+    table.activeProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> outOfStockProducts(int value) => _i1.ColumnValue(
+    table.outOfStockProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> newProductsAdded(int value) => _i1.ColumnValue(
+    table.newProductsAdded,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalCustomers(int value) => _i1.ColumnValue(
+    table.totalCustomers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> newCustomers(int value) => _i1.ColumnValue(
+    table.newCustomers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> returningCustomers(int value) => _i1.ColumnValue(
+    table.returningCustomers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> productViews(int value) => _i1.ColumnValue(
+    table.productViews,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> wishlistAdds(int value) => _i1.ColumnValue(
+    table.wishlistAdds,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> cartAdds(int value) => _i1.ColumnValue(
+    table.cartAdds,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> conversionRate(double value) =>
+      _i1.ColumnValue(
+        table.conversionRate,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> aiDescriptionsGenerated(int value) =>
+      _i1.ColumnValue(
+        table.aiDescriptionsGenerated,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> aiQueriesProcessed(int value) => _i1.ColumnValue(
+    table.aiQueriesProcessed,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> aiCostsIncurred(double value) =>
+      _i1.ColumnValue(
+        table.aiCostsIncurred,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> fiatPayments(double value) => _i1.ColumnValue(
+    table.fiatPayments,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> cryptoPayments(double value) =>
+      _i1.ColumnValue(
+        table.cryptoPayments,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> platformFeesCollected(double value) =>
+      _i1.ColumnValue(
+        table.platformFeesCollected,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> newReviews(int value) => _i1.ColumnValue(
+    table.newReviews,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageRatingPeriod(double value) =>
+      _i1.ColumnValue(
+        table.averageRatingPeriod,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class VendorAnalyticsTable extends _i1.Table<_i1.UuidValue> {
   VendorAnalyticsTable({super.tableRelation})
-      : super(tableName: 'vendor_analytics') {
+    : super(tableName: 'vendor_analytics') {
+    updateTable = VendorAnalyticsUpdateTable(this);
     vendorId = _i1.ColumnUuid(
       'vendorId',
       this,
@@ -657,6 +825,8 @@ class VendorAnalyticsTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final VendorAnalyticsUpdateTable updateTable;
+
   late final _i1.ColumnUuid vendorId;
 
   _i2.VendorProfileTable? _vendor;
@@ -732,37 +902,37 @@ class VendorAnalyticsTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        vendorId,
-        date,
-        period,
-        totalOrders,
-        completedOrders,
-        cancelledOrders,
-        totalRevenue,
-        averageOrderValue,
-        totalProducts,
-        activeProducts,
-        outOfStockProducts,
-        newProductsAdded,
-        totalCustomers,
-        newCustomers,
-        returningCustomers,
-        productViews,
-        wishlistAdds,
-        cartAdds,
-        conversionRate,
-        aiDescriptionsGenerated,
-        aiQueriesProcessed,
-        aiCostsIncurred,
-        fiatPayments,
-        cryptoPayments,
-        platformFeesCollected,
-        newReviews,
-        averageRatingPeriod,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    vendorId,
+    date,
+    period,
+    totalOrders,
+    completedOrders,
+    cancelledOrders,
+    totalRevenue,
+    averageOrderValue,
+    totalProducts,
+    activeProducts,
+    outOfStockProducts,
+    newProductsAdded,
+    totalCustomers,
+    newCustomers,
+    returningCustomers,
+    productViews,
+    wishlistAdds,
+    cartAdds,
+    conversionRate,
+    aiDescriptionsGenerated,
+    aiQueriesProcessed,
+    aiCostsIncurred,
+    fiatPayments,
+    cryptoPayments,
+    platformFeesCollected,
+    newReviews,
+    averageRatingPeriod,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -970,6 +1140,48 @@ class VendorAnalyticsRepository {
     return session.db.updateRow<VendorAnalytics>(
       row,
       columns: columns?.call(VendorAnalytics.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [VendorAnalytics] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<VendorAnalytics?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<VendorAnalyticsUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<VendorAnalytics>(
+      id,
+      columnValues: columnValues(VendorAnalytics.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [VendorAnalytics]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<VendorAnalytics>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<VendorAnalyticsUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<VendorAnalyticsTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<VendorAnalyticsTable>? orderBy,
+    _i1.OrderByListBuilder<VendorAnalyticsTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<VendorAnalytics>(
+      columnValues: columnValues(VendorAnalytics.t.updateTable),
+      where: where(VendorAnalytics.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(VendorAnalytics.t),
+      orderByList: orderByList?.call(VendorAnalytics.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

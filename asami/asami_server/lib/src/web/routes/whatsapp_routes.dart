@@ -1,6 +1,3 @@
-// File: server/lib/src/web/routes/whatsapp_routes.dart
-
-import 'dart:io';
 import 'dart:convert';
 import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_webhook_handler.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
@@ -8,17 +5,18 @@ import 'package:serverpod/serverpod.dart';
 
 /// Combined route for WhatsApp webhook (handles both GET and POST)
 class WhatsAppWebhookRoute extends Route {
+  WhatsAppWebhookRoute():super(methods: {Method.get, Method.post});
   @override
-  Future<bool> handleCall(Session session, HttpRequest request) async {
-    Log.webhook('WhatsApp', request.method, request.uri.path, session: session);
+  Future<Result> handleCall(Session session, Request request) async {
+    Log.webhook('WhatsApp', request.method.value, request.url.path, session: session);
 
-    // Handle GET - webhook verification
-    if (request.method == 'GET') {
+    // Handle GET - WhatsApp/Meta webhook verification
+    if (request.method == Method.get) {
       try {
-        // Extract query parameters
-        final mode = request.uri.queryParameters['hub.mode'];
-        final token = request.uri.queryParameters['hub.verify_token'];
-        final challenge = request.uri.queryParameters['hub.challenge'];
+        final queryParams = request.url.queryParameters;
+        final mode = queryParams['hub.mode'];
+        final token = queryParams['hub.verify_token'];
+        final challenge = queryParams['hub.challenge'];
 
         Log.verification('WhatsApp', 
           params: {
@@ -29,18 +27,12 @@ class WhatsAppWebhookRoute extends Route {
           session: session,
         );
 
-        // Get handler
         final handler = WhatsAppWebhookHandler.instance;
         if (handler == null) {
           Log.error('WhatsApp webhook handler not initialized', session: session);
-          request.response.statusCode = 200;
-          request.response.headers.contentType = ContentType.json;
-          request.response.write(jsonEncode({'ok': true}));
-          await request.response.close();
-          return true;  // FIXED: Changed to true
+          return Response.ok(body: Body.fromString('Handler not ready', mimeType: MimeType.plainText));
         }
 
-        // Verify webhook
         final result = handler.verifyWebhook(
           mode: mode,
           token: token,
@@ -49,67 +41,39 @@ class WhatsAppWebhookRoute extends Route {
 
         if (result['success'] == true) {
           Log.success('WhatsApp webhook verified', session: session);
-          // Return the challenge as plain text
-          request.response.statusCode = 200;
-          request.response.headers.contentType = ContentType.text;
-          request.response.write(result['challenge'] ?? '');
-          await request.response.close();
-          return true;  // FIXED: Changed to true
+          // Return the challenge as PLAIN TEXT (Requirement for Meta)
+          return Response.ok(
+            body: Body.fromString(result['challenge'] ?? '', mimeType: MimeType.plainText),
+          );
         } else {
           Log.error('WhatsApp webhook verification failed', session: session);
-          request.response.statusCode = 403;
-          request.response.headers.contentType = ContentType.text;
-          request.response.write('Verification failed');
-          await request.response.close();
-          return true;  // FIXED: Changed to true
+          return Response.forbidden();
         }
       } catch (e, stackTrace) {
-        Log.error('WhatsApp verification error', 
-          error: e, 
-          stackTrace: stackTrace,
-          session: session,
-        );
-        request.response.statusCode = 500;
-        request.response.headers.contentType = ContentType.text;
-        request.response.write('Internal error');
-        await request.response.close();
-        return true;  // FIXED: Changed to true
+        Log.error('WhatsApp verification error', error: e, stackTrace: stackTrace, session: session);
+        return Response.internalServerError();
       }
     }
 
-    // Handle POST - webhook messages
-    if (request.method == 'POST') {
+    // Handle POST - Webhook messages
+    if (request.method == Method.post) {
       try {
-        Log.request('Received WhatsApp webhook POST request', session: session);
-
-        // Read the request body
-        final body = await request.cast<List<int>>().transform(utf8.decoder).join();
+        final body = await request.readAsString();
 
         if (body.isEmpty) {
-          Log.warning('Empty request body received', session: session);
-          request.response.statusCode = 200;
-          request.response.headers.contentType = ContentType.json;
-          request.response.write(jsonEncode({'success': true, 'message': 'Empty body'}));
-          await request.response.close();
-          return true;  // FIXED: Changed to true
+          return Response.ok(
+            body: Body.fromString(jsonEncode({'ok': true}), mimeType: MimeType.json),
+          );
         }
 
-        // Parse JSON
         final payload = jsonDecode(body) as Map<String, dynamic>;
-        Log.payload('Payload received', payload.keys.toList(), session: session);
-
-        // Get handler
         final handler = WhatsAppWebhookHandler.instance;
+        
         if (handler == null) {
           Log.error('WhatsApp webhook handler not initialized', session: session);
-          request.response.statusCode = 200;
-          request.response.headers.contentType = ContentType.json;
-          request.response.write(jsonEncode({'ok': true}));
-          await request.response.close();
-          return true;  // FIXED: Changed to true
+          return Response.ok(body: Body.fromString(jsonEncode({'ok': true}), mimeType: MimeType.json));
         }
 
-        // Process webhook
         final result = await handler.processWebhook(session, payload);
 
         Log.success('WhatsApp webhook processed', 
@@ -117,33 +81,18 @@ class WhatsAppWebhookRoute extends Route {
           session: session,
         );
 
-        // Return JSON response
-        request.response.statusCode = 200;
-        request.response.headers.contentType = ContentType.json;
-        request.response.write(jsonEncode(result));
-        await request.response.close();
-        return true;  // FIXED: Changed to true
-      } catch (e, stackTrace) {
-        Log.error('WhatsApp webhook error', 
-          error: e, 
-          stackTrace: stackTrace,
-          session: session,
+        return Response.ok(
+          body: Body.fromString(jsonEncode(result), mimeType: MimeType.json),
         );
-
-        request.response.statusCode = 500;
-        request.response.headers.contentType = ContentType.json;
-        request.response.write(jsonEncode({'success': false, 'error': e.toString()}));
-        await request.response.close();
-        return true;  // FIXED: Changed to true
+      } catch (e, stackTrace) {
+        Log.error('WhatsApp webhook error', error: e, stackTrace: stackTrace, session: session);
+        // Always return 200 to Meta to avoid retry loops
+        return Response.ok(
+          body: Body.fromString(jsonEncode({'ok': true}), mimeType: MimeType.json),
+        );
       }
     }
 
-    // Handle other methods
-    Log.warning('Method not allowed: ${request.method}', session: session);
-    request.response.statusCode = 405;
-    request.response.headers.contentType = ContentType.json;
-    request.response.write(jsonEncode({'error': 'Method not allowed. Use GET or POST.'}));
-    await request.response.close();
-    return true;  // FIXED: Changed to true
+    return Response.badRequest();
   }
 }

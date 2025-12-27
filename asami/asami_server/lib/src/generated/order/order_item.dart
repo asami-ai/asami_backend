@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -16,6 +17,7 @@ import '../order/order_status.dart' as _i2;
 import '../order/order.dart' as _i3;
 import '../product/product.dart' as _i4;
 import '../product/product_variant.dart' as _i5;
+import 'package:asami_server/src/generated/protocol.dart' as _i6;
 
 abstract class OrderItem
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -47,13 +49,13 @@ abstract class OrderItem
     this.returnBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        taxAmount = taxAmount ?? 0.0,
-        status = status ?? _i2.OrderStatus.pending,
-        isFulfilled = isFulfilled ?? false,
-        isReturnable = isReturnable ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       taxAmount = taxAmount ?? 0.0,
+       status = status ?? _i2.OrderStatus.pending,
+       isFulfilled = isFulfilled ?? false,
+       isReturnable = isReturnable ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory OrderItem({
     _i1.UuidValue? id,
@@ -88,25 +90,28 @@ abstract class OrderItem
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return OrderItem(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
+      orderId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['orderId'],
+      ),
       order: jsonSerialization['order'] == null
           ? null
-          : _i3.Order.fromJson(
-              (jsonSerialization['order'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i6.Protocol().deserialize<_i3.Order>(jsonSerialization['order']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i4.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i4.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       variant: jsonSerialization['variant'] == null
           ? null
-          : _i5.ProductVariant.fromJson(
-              (jsonSerialization['variant'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i5.ProductVariant>(
+              jsonSerialization['variant'],
+            ),
       productName: jsonSerialization['productName'] as String,
       productDescription: jsonSerialization['productDescription'] as String?,
       productImageUrl: jsonSerialization['productImageUrl'] as String?,
@@ -120,20 +125,23 @@ abstract class OrderItem
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as int)),
+      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
       isFulfilled: jsonSerialization['isFulfilled'] as bool,
       fulfilledAt: jsonSerialization['fulfilledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['fulfilledAt']),
+              jsonSerialization['fulfilledAt'],
+            ),
       isReturnable: jsonSerialization['isReturnable'] as bool,
       returnBy: jsonSerialization['returnBy'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['returnBy']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -234,6 +242,7 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'OrderItem',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJson(),
@@ -267,6 +276,7 @@ abstract class OrderItem
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'OrderItem',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJsonForProtocol(),
@@ -367,34 +377,34 @@ class _OrderItemImpl extends OrderItem {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          order: order,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          variant: variant,
-          productName: productName,
-          productDescription: productDescription,
-          productImageUrl: productImageUrl,
-          sku: sku,
-          variantName: variantName,
-          color: color,
-          size: size,
-          unitPrice: unitPrice,
-          discountPrice: discountPrice,
-          quantity: quantity,
-          subtotal: subtotal,
-          taxAmount: taxAmount,
-          totalAmount: totalAmount,
-          status: status,
-          isFulfilled: isFulfilled,
-          fulfilledAt: fulfilledAt,
-          isReturnable: isReturnable,
-          returnBy: returnBy,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         orderId: orderId,
+         order: order,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         variant: variant,
+         productName: productName,
+         productDescription: productDescription,
+         productImageUrl: productImageUrl,
+         sku: sku,
+         variantName: variantName,
+         color: color,
+         size: size,
+         unitPrice: unitPrice,
+         discountPrice: discountPrice,
+         quantity: quantity,
+         subtotal: subtotal,
+         taxAmount: taxAmount,
+         totalAmount: totalAmount,
+         status: status,
+         isFulfilled: isFulfilled,
+         fulfilledAt: fulfilledAt,
+         isReturnable: isReturnable,
+         returnBy: returnBy,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.
@@ -436,21 +446,24 @@ class _OrderItemImpl extends OrderItem {
       productId: productId ?? this.productId,
       product: product is _i4.Product? ? product : this.product?.copyWith(),
       variantId: variantId is _i1.UuidValue? ? variantId : this.variantId,
-      variant:
-          variant is _i5.ProductVariant? ? variant : this.variant?.copyWith(),
+      variant: variant is _i5.ProductVariant?
+          ? variant
+          : this.variant?.copyWith(),
       productName: productName ?? this.productName,
       productDescription: productDescription is String?
           ? productDescription
           : this.productDescription,
-      productImageUrl:
-          productImageUrl is String? ? productImageUrl : this.productImageUrl,
+      productImageUrl: productImageUrl is String?
+          ? productImageUrl
+          : this.productImageUrl,
       sku: sku is String? ? sku : this.sku,
       variantName: variantName is String? ? variantName : this.variantName,
       color: color is String? ? color : this.color,
       size: size is String? ? size : this.size,
       unitPrice: unitPrice ?? this.unitPrice,
-      discountPrice:
-          discountPrice is double? ? discountPrice : this.discountPrice,
+      discountPrice: discountPrice is double?
+          ? discountPrice
+          : this.discountPrice,
       quantity: quantity ?? this.quantity,
       subtotal: subtotal ?? this.subtotal,
       taxAmount: taxAmount ?? this.taxAmount,
@@ -466,8 +479,142 @@ class _OrderItemImpl extends OrderItem {
   }
 }
 
+class OrderItemUpdateTable extends _i1.UpdateTable<OrderItemTable> {
+  OrderItemUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> orderId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.orderId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> variantId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.variantId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> productName(String value) => _i1.ColumnValue(
+    table.productName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> productDescription(String? value) =>
+      _i1.ColumnValue(
+        table.productDescription,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> productImageUrl(String? value) =>
+      _i1.ColumnValue(
+        table.productImageUrl,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> sku(String? value) => _i1.ColumnValue(
+    table.sku,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> variantName(String? value) => _i1.ColumnValue(
+    table.variantName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> color(String? value) => _i1.ColumnValue(
+    table.color,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> size(String? value) => _i1.ColumnValue(
+    table.size,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> unitPrice(double value) => _i1.ColumnValue(
+    table.unitPrice,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discountPrice(double? value) =>
+      _i1.ColumnValue(
+        table.discountPrice,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
+    table.quantity,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subtotal(double value) => _i1.ColumnValue(
+    table.subtotal,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> taxAmount(double value) => _i1.ColumnValue(
+    table.taxAmount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalAmount(double value) => _i1.ColumnValue(
+    table.totalAmount,
+    value,
+  );
+
+  _i1.ColumnValue<_i2.OrderStatus, _i2.OrderStatus> status(
+    _i2.OrderStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFulfilled(bool value) => _i1.ColumnValue(
+    table.isFulfilled,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> fulfilledAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.fulfilledAt,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isReturnable(bool value) => _i1.ColumnValue(
+    table.isReturnable,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> returnBy(DateTime? value) =>
+      _i1.ColumnValue(
+        table.returnBy,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class OrderItemTable extends _i1.Table<_i1.UuidValue> {
   OrderItemTable({super.tableRelation}) : super(tableName: 'order_items') {
+    updateTable = OrderItemUpdateTable(this);
     orderId = _i1.ColumnUuid(
       'orderId',
       this,
@@ -536,7 +683,7 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
     status = _i1.ColumnEnum(
       'status',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
     isFulfilled = _i1.ColumnBool(
@@ -568,6 +715,8 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final OrderItemUpdateTable updateTable;
 
   late final _i1.ColumnUuid orderId;
 
@@ -662,31 +811,31 @@ class OrderItemTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        orderId,
-        productId,
-        variantId,
-        productName,
-        productDescription,
-        productImageUrl,
-        sku,
-        variantName,
-        color,
-        size,
-        unitPrice,
-        discountPrice,
-        quantity,
-        subtotal,
-        taxAmount,
-        totalAmount,
-        status,
-        isFulfilled,
-        fulfilledAt,
-        isReturnable,
-        returnBy,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    orderId,
+    productId,
+    variantId,
+    productName,
+    productDescription,
+    productImageUrl,
+    sku,
+    variantName,
+    color,
+    size,
+    unitPrice,
+    discountPrice,
+    quantity,
+    subtotal,
+    taxAmount,
+    totalAmount,
+    status,
+    isFulfilled,
+    fulfilledAt,
+    isReturnable,
+    returnBy,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -722,10 +871,10 @@ class OrderItemInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'order': _order,
-        'product': _product,
-        'variant': _variant,
-      };
+    'order': _order,
+    'product': _product,
+    'variant': _variant,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => OrderItem.t;
@@ -920,6 +1069,46 @@ class OrderItemRepository {
     );
   }
 
+  /// Updates a single [OrderItem] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<OrderItem?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<OrderItem>(
+      id,
+      columnValues: columnValues(OrderItem.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [OrderItem]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<OrderItem>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<OrderItemUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<OrderItemTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<OrderItemTable>? orderBy,
+    _i1.OrderByListBuilder<OrderItemTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<OrderItem>(
+      columnValues: columnValues(OrderItem.t.updateTable),
+      where: where(OrderItem.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(OrderItem.t),
+      orderByList: orderByList?.call(OrderItem.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [OrderItem]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -1057,16 +1246,16 @@ class OrderItemDetachRowRepository {
   /// the related record.
   Future<void> variant(
     _i1.Session session,
-    OrderItem orderitem, {
+    OrderItem orderItem, {
     _i1.Transaction? transaction,
   }) async {
-    if (orderitem.id == null) {
-      throw ArgumentError.notNull('orderitem.id');
+    if (orderItem.id == null) {
+      throw ArgumentError.notNull('orderItem.id');
     }
 
-    var $orderitem = orderitem.copyWith(variantId: null);
+    var $orderItem = orderItem.copyWith(variantId: null);
     await session.db.updateRow<OrderItem>(
-      $orderitem,
+      $orderItem,
       columns: [OrderItem.t.variantId],
       transaction: transaction,
     );

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -15,19 +16,19 @@ enum UserType implements _i1.SerializableModel {
   customer,
   vendor;
 
-  static UserType fromJson(int index) {
-    switch (index) {
-      case 0:
+  static UserType fromJson(String name) {
+    switch (name) {
+      case 'customer':
         return UserType.customer;
-      case 1:
+      case 'vendor':
         return UserType.vendor;
       default:
-        throw ArgumentError('Value "$index" cannot be converted to "UserType"');
+        throw ArgumentError('Value "$name" cannot be converted to "UserType"');
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

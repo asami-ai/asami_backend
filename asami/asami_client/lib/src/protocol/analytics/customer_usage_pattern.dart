@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -33,20 +34,20 @@ abstract class CustomerUsagePattern implements _i1.SerializableModel {
     int? analysisCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        averageDailyMessages = averageDailyMessages ?? 0.0,
-        averageDailyToolCalls = averageDailyToolCalls ?? 0.0,
-        isAbuser = isAbuser ?? false,
-        abuseScore = abuseScore ?? 0.0,
-        toolSuccessRate = toolSuccessRate ?? 1.0,
-        averageToolExecutionTime = averageToolExecutionTime ?? 0.0,
-        averageConversationLength = averageConversationLength ?? 0.0,
-        repetitiveQueryScore = repetitiveQueryScore ?? 0.0,
-        shouldThrottle = shouldThrottle ?? false,
-        currentThrottleDelay = currentThrottleDelay ?? 0,
-        analysisCount = analysisCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       averageDailyMessages = averageDailyMessages ?? 0.0,
+       averageDailyToolCalls = averageDailyToolCalls ?? 0.0,
+       isAbuser = isAbuser ?? false,
+       abuseScore = abuseScore ?? 0.0,
+       toolSuccessRate = toolSuccessRate ?? 1.0,
+       averageToolExecutionTime = averageToolExecutionTime ?? 0.0,
+       averageConversationLength = averageConversationLength ?? 0.0,
+       repetitiveQueryScore = repetitiveQueryScore ?? 0.0,
+       shouldThrottle = shouldThrottle ?? false,
+       currentThrottleDelay = currentThrottleDelay ?? 0,
+       analysisCount = analysisCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CustomerUsagePattern({
     _i1.UuidValue? id,
@@ -71,17 +72,19 @@ abstract class CustomerUsagePattern implements _i1.SerializableModel {
   }) = _CustomerUsagePatternImpl;
 
   factory CustomerUsagePattern.fromJson(
-      Map<String, dynamic> jsonSerialization) {
+    Map<String, dynamic> jsonSerialization,
+  ) {
     return CustomerUsagePattern(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      averageDailyMessages:
-          (jsonSerialization['averageDailyMessages'] as num).toDouble(),
-      averageDailyToolCalls:
-          (jsonSerialization['averageDailyToolCalls'] as num).toDouble(),
+      averageDailyMessages: (jsonSerialization['averageDailyMessages'] as num)
+          .toDouble(),
+      averageDailyToolCalls: (jsonSerialization['averageDailyToolCalls'] as num)
+          .toDouble(),
       peakUsageHour: jsonSerialization['peakUsageHour'] as int?,
-      usageClass:
-          _i2.UsageClass.fromJson((jsonSerialization['usageClass'] as int)),
+      usageClass: _i2.UsageClass.fromJson(
+        (jsonSerialization['usageClass'] as String),
+      ),
       isAbuser: jsonSerialization['isAbuser'] as bool,
       abuseScore: (jsonSerialization['abuseScore'] as num).toDouble(),
       toolSuccessRate: (jsonSerialization['toolSuccessRate'] as num).toDouble(),
@@ -89,26 +92,27 @@ abstract class CustomerUsagePattern implements _i1.SerializableModel {
           (jsonSerialization['averageToolExecutionTime'] as num).toDouble(),
       averageConversationLength:
           (jsonSerialization['averageConversationLength'] as num).toDouble(),
-      repetitiveQueryScore:
-          (jsonSerialization['repetitiveQueryScore'] as num).toDouble(),
+      repetitiveQueryScore: (jsonSerialization['repetitiveQueryScore'] as num)
+          .toDouble(),
       shouldThrottle: jsonSerialization['shouldThrottle'] as bool,
       throttleReason: jsonSerialization['throttleReason'] as String?,
       currentThrottleDelay: jsonSerialization['currentThrottleDelay'] as int,
       lastAnalyzedAt: jsonSerialization['lastAnalyzedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastAnalyzedAt']),
+              jsonSerialization['lastAnalyzedAt'],
+            ),
       analysisCount: jsonSerialization['analysisCount'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -174,6 +178,7 @@ abstract class CustomerUsagePattern implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CustomerUsagePattern',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'averageDailyMessages': averageDailyMessages,
@@ -226,26 +231,26 @@ class _CustomerUsagePatternImpl extends CustomerUsagePattern {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          averageDailyMessages: averageDailyMessages,
-          averageDailyToolCalls: averageDailyToolCalls,
-          peakUsageHour: peakUsageHour,
-          usageClass: usageClass,
-          isAbuser: isAbuser,
-          abuseScore: abuseScore,
-          toolSuccessRate: toolSuccessRate,
-          averageToolExecutionTime: averageToolExecutionTime,
-          averageConversationLength: averageConversationLength,
-          repetitiveQueryScore: repetitiveQueryScore,
-          shouldThrottle: shouldThrottle,
-          throttleReason: throttleReason,
-          currentThrottleDelay: currentThrottleDelay,
-          lastAnalyzedAt: lastAnalyzedAt,
-          analysisCount: analysisCount,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         averageDailyMessages: averageDailyMessages,
+         averageDailyToolCalls: averageDailyToolCalls,
+         peakUsageHour: peakUsageHour,
+         usageClass: usageClass,
+         isAbuser: isAbuser,
+         abuseScore: abuseScore,
+         toolSuccessRate: toolSuccessRate,
+         averageToolExecutionTime: averageToolExecutionTime,
+         averageConversationLength: averageConversationLength,
+         repetitiveQueryScore: repetitiveQueryScore,
+         shouldThrottle: shouldThrottle,
+         throttleReason: throttleReason,
+         currentThrottleDelay: currentThrottleDelay,
+         lastAnalyzedAt: lastAnalyzedAt,
+         analysisCount: analysisCount,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CustomerUsagePattern]
   /// with some or all fields replaced by the given arguments.
@@ -289,11 +294,13 @@ class _CustomerUsagePatternImpl extends CustomerUsagePattern {
           averageConversationLength ?? this.averageConversationLength,
       repetitiveQueryScore: repetitiveQueryScore ?? this.repetitiveQueryScore,
       shouldThrottle: shouldThrottle ?? this.shouldThrottle,
-      throttleReason:
-          throttleReason is String? ? throttleReason : this.throttleReason,
+      throttleReason: throttleReason is String?
+          ? throttleReason
+          : this.throttleReason,
       currentThrottleDelay: currentThrottleDelay ?? this.currentThrottleDelay,
-      lastAnalyzedAt:
-          lastAnalyzedAt is DateTime? ? lastAnalyzedAt : this.lastAnalyzedAt,
+      lastAnalyzedAt: lastAnalyzedAt is DateTime?
+          ? lastAnalyzedAt
+          : this.lastAnalyzedAt,
       analysisCount: analysisCount ?? this.analysisCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

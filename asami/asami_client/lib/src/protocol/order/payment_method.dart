@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -25,40 +26,41 @@ enum PaymentMethod implements _i1.SerializableModel {
   usdc,
   other_crypto;
 
-  static PaymentMethod fromJson(int index) {
-    switch (index) {
-      case 0:
+  static PaymentMethod fromJson(String name) {
+    switch (name) {
+      case 'credit_card':
         return PaymentMethod.credit_card;
-      case 1:
+      case 'debit_card':
         return PaymentMethod.debit_card;
-      case 2:
+      case 'bank_transfer':
         return PaymentMethod.bank_transfer;
-      case 3:
+      case 'mobile_money':
         return PaymentMethod.mobile_money;
-      case 4:
+      case 'paypal':
         return PaymentMethod.paypal;
-      case 5:
+      case 'apple_pay':
         return PaymentMethod.apple_pay;
-      case 6:
+      case 'google_pay':
         return PaymentMethod.google_pay;
-      case 7:
+      case 'bitcoin':
         return PaymentMethod.bitcoin;
-      case 8:
+      case 'ethereum':
         return PaymentMethod.ethereum;
-      case 9:
+      case 'usdt':
         return PaymentMethod.usdt;
-      case 10:
+      case 'usdc':
         return PaymentMethod.usdc;
-      case 11:
+      case 'other_crypto':
         return PaymentMethod.other_crypto;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "PaymentMethod"');
+          'Value "$name" cannot be converted to "PaymentMethod"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

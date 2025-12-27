@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../product/product.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class ProductAnalytics
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -42,26 +44,26 @@ abstract class ProductAnalytics
     int? stockLevelEnd,
     int? stockOuts,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        views = views ?? 0,
-        uniqueViews = uniqueViews ?? 0,
-        wishlistAdds = wishlistAdds ?? 0,
-        cartAdds = cartAdds ?? 0,
-        orderCount = orderCount ?? 0,
-        quantitySold = quantitySold ?? 0,
-        revenue = revenue ?? 0.0,
-        conversionRate = conversionRate ?? 0.0,
-        bounceRate = bounceRate ?? 0.0,
-        averageTimeOnPage = averageTimeOnPage ?? 0.0,
-        newReviews = newReviews ?? 0,
-        averageRating = averageRating ?? 0.0,
-        searchImpressions = searchImpressions ?? 0,
-        searchClicks = searchClicks ?? 0,
-        searchRanking = searchRanking ?? 0.0,
-        stockLevelStart = stockLevelStart ?? 0,
-        stockLevelEnd = stockLevelEnd ?? 0,
-        stockOuts = stockOuts ?? 0,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       views = views ?? 0,
+       uniqueViews = uniqueViews ?? 0,
+       wishlistAdds = wishlistAdds ?? 0,
+       cartAdds = cartAdds ?? 0,
+       orderCount = orderCount ?? 0,
+       quantitySold = quantitySold ?? 0,
+       revenue = revenue ?? 0.0,
+       conversionRate = conversionRate ?? 0.0,
+       bounceRate = bounceRate ?? 0.0,
+       averageTimeOnPage = averageTimeOnPage ?? 0.0,
+       newReviews = newReviews ?? 0,
+       averageRating = averageRating ?? 0.0,
+       searchImpressions = searchImpressions ?? 0,
+       searchClicks = searchClicks ?? 0,
+       searchRanking = searchRanking ?? 0.0,
+       stockLevelStart = stockLevelStart ?? 0,
+       stockLevelEnd = stockLevelEnd ?? 0,
+       stockOuts = stockOuts ?? 0,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ProductAnalytics({
     _i1.UuidValue? id,
@@ -94,14 +96,17 @@ abstract class ProductAnalytics
   factory ProductAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductAnalytics(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i3.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
       views: jsonSerialization['views'] as int,
@@ -113,8 +118,8 @@ abstract class ProductAnalytics
       revenue: (jsonSerialization['revenue'] as num).toDouble(),
       conversionRate: (jsonSerialization['conversionRate'] as num).toDouble(),
       bounceRate: (jsonSerialization['bounceRate'] as num).toDouble(),
-      averageTimeOnPage:
-          (jsonSerialization['averageTimeOnPage'] as num).toDouble(),
+      averageTimeOnPage: (jsonSerialization['averageTimeOnPage'] as num)
+          .toDouble(),
       newReviews: jsonSerialization['newReviews'] as int,
       averageRating: (jsonSerialization['averageRating'] as num).toDouble(),
       searchImpressions: jsonSerialization['searchImpressions'] as int,
@@ -123,8 +128,9 @@ abstract class ProductAnalytics
       stockLevelStart: jsonSerialization['stockLevelStart'] as int,
       stockLevelEnd: jsonSerialization['stockLevelEnd'] as int,
       stockOuts: jsonSerialization['stockOuts'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -219,6 +225,7 @@ abstract class ProductAnalytics
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductAnalytics',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -250,6 +257,7 @@ abstract class ProductAnalytics
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'ProductAnalytics',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJsonForProtocol(),
@@ -338,32 +346,32 @@ class _ProductAnalyticsImpl extends ProductAnalytics {
     int? stockOuts,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          vendorId: vendorId,
-          date: date,
-          period: period,
-          views: views,
-          uniqueViews: uniqueViews,
-          wishlistAdds: wishlistAdds,
-          cartAdds: cartAdds,
-          orderCount: orderCount,
-          quantitySold: quantitySold,
-          revenue: revenue,
-          conversionRate: conversionRate,
-          bounceRate: bounceRate,
-          averageTimeOnPage: averageTimeOnPage,
-          newReviews: newReviews,
-          averageRating: averageRating,
-          searchImpressions: searchImpressions,
-          searchClicks: searchClicks,
-          searchRanking: searchRanking,
-          stockLevelStart: stockLevelStart,
-          stockLevelEnd: stockLevelEnd,
-          stockOuts: stockOuts,
-          createdAt: createdAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         vendorId: vendorId,
+         date: date,
+         period: period,
+         views: views,
+         uniqueViews: uniqueViews,
+         wishlistAdds: wishlistAdds,
+         cartAdds: cartAdds,
+         orderCount: orderCount,
+         quantitySold: quantitySold,
+         revenue: revenue,
+         conversionRate: conversionRate,
+         bounceRate: bounceRate,
+         averageTimeOnPage: averageTimeOnPage,
+         newReviews: newReviews,
+         averageRating: averageRating,
+         searchImpressions: searchImpressions,
+         searchClicks: searchClicks,
+         searchRanking: searchRanking,
+         stockLevelStart: stockLevelStart,
+         stockLevelEnd: stockLevelEnd,
+         stockOuts: stockOuts,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ProductAnalytics]
   /// with some or all fields replaced by the given arguments.
@@ -426,9 +434,138 @@ class _ProductAnalyticsImpl extends ProductAnalytics {
   }
 }
 
+class ProductAnalyticsUpdateTable
+    extends _i1.UpdateTable<ProductAnalyticsTable> {
+  ProductAnalyticsUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> date(DateTime value) => _i1.ColumnValue(
+    table.date,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> period(String value) => _i1.ColumnValue(
+    table.period,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> views(int value) => _i1.ColumnValue(
+    table.views,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> uniqueViews(int value) => _i1.ColumnValue(
+    table.uniqueViews,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> wishlistAdds(int value) => _i1.ColumnValue(
+    table.wishlistAdds,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> cartAdds(int value) => _i1.ColumnValue(
+    table.cartAdds,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> orderCount(int value) => _i1.ColumnValue(
+    table.orderCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> quantitySold(int value) => _i1.ColumnValue(
+    table.quantitySold,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> revenue(double value) => _i1.ColumnValue(
+    table.revenue,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> conversionRate(double value) =>
+      _i1.ColumnValue(
+        table.conversionRate,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> bounceRate(double value) => _i1.ColumnValue(
+    table.bounceRate,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageTimeOnPage(double value) =>
+      _i1.ColumnValue(
+        table.averageTimeOnPage,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> newReviews(int value) => _i1.ColumnValue(
+    table.newReviews,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageRating(double value) =>
+      _i1.ColumnValue(
+        table.averageRating,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> searchImpressions(int value) => _i1.ColumnValue(
+    table.searchImpressions,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> searchClicks(int value) => _i1.ColumnValue(
+    table.searchClicks,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> searchRanking(double value) =>
+      _i1.ColumnValue(
+        table.searchRanking,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> stockLevelStart(int value) => _i1.ColumnValue(
+    table.stockLevelStart,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> stockLevelEnd(int value) => _i1.ColumnValue(
+    table.stockLevelEnd,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> stockOuts(int value) => _i1.ColumnValue(
+    table.stockOuts,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class ProductAnalyticsTable extends _i1.Table<_i1.UuidValue> {
   ProductAnalyticsTable({super.tableRelation})
-      : super(tableName: 'product_analytics') {
+    : super(tableName: 'product_analytics') {
+    updateTable = ProductAnalyticsUpdateTable(this);
     productId = _i1.ColumnUuid(
       'productId',
       this,
@@ -542,6 +679,8 @@ class ProductAnalyticsTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final ProductAnalyticsUpdateTable updateTable;
+
   late final _i1.ColumnUuid productId;
 
   _i2.ProductTable? _product;
@@ -605,31 +744,31 @@ class ProductAnalyticsTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        productId,
-        vendorId,
-        date,
-        period,
-        views,
-        uniqueViews,
-        wishlistAdds,
-        cartAdds,
-        orderCount,
-        quantitySold,
-        revenue,
-        conversionRate,
-        bounceRate,
-        averageTimeOnPage,
-        newReviews,
-        averageRating,
-        searchImpressions,
-        searchClicks,
-        searchRanking,
-        stockLevelStart,
-        stockLevelEnd,
-        stockOuts,
-        createdAt,
-      ];
+    id,
+    productId,
+    vendorId,
+    date,
+    period,
+    views,
+    uniqueViews,
+    wishlistAdds,
+    cartAdds,
+    orderCount,
+    quantitySold,
+    revenue,
+    conversionRate,
+    bounceRate,
+    averageTimeOnPage,
+    newReviews,
+    averageRating,
+    searchImpressions,
+    searchClicks,
+    searchRanking,
+    stockLevelStart,
+    stockLevelEnd,
+    stockOuts,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -837,6 +976,48 @@ class ProductAnalyticsRepository {
     return session.db.updateRow<ProductAnalytics>(
       row,
       columns: columns?.call(ProductAnalytics.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [ProductAnalytics] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<ProductAnalytics?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ProductAnalyticsUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<ProductAnalytics>(
+      id,
+      columnValues: columnValues(ProductAnalytics.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [ProductAnalytics]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<ProductAnalytics>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ProductAnalyticsUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<ProductAnalyticsTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ProductAnalyticsTable>? orderBy,
+    _i1.OrderByListBuilder<ProductAnalyticsTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<ProductAnalytics>(
+      columnValues: columnValues(ProductAnalytics.t.updateTable),
+      where: where(ProductAnalytics.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(ProductAnalytics.t),
+      orderByList: orderByList?.call(ProductAnalytics.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

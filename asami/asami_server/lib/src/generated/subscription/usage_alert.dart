@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -34,11 +35,11 @@ abstract class UsageAlert
     this.deliveryMethod,
     this.sentAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        actionRequired = actionRequired ?? false,
-        isRead = isRead ?? false,
-        isDismissed = isDismissed ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       actionRequired = actionRequired ?? false,
+       isRead = isRead ?? false,
+       isDismissed = isDismissed ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory UsageAlert({
     _i1.UuidValue? id,
@@ -64,11 +65,15 @@ abstract class UsageAlert
     return UsageAlert(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      alertType:
-          _i3.AlertType.fromJson((jsonSerialization['alertType'] as int)),
-      limitType:
-          _i4.LimitType.fromJson((jsonSerialization['limitType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      alertType: _i3.AlertType.fromJson(
+        (jsonSerialization['alertType'] as String),
+      ),
+      limitType: _i4.LimitType.fromJson(
+        (jsonSerialization['limitType'] as String),
+      ),
       thresholdPercentage: jsonSerialization['thresholdPercentage'] as int,
       currentUsage: jsonSerialization['currentUsage'] as int,
       limitValue: jsonSerialization['limitValue'] as int,
@@ -82,8 +87,9 @@ abstract class UsageAlert
       sentAt: jsonSerialization['sentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['sentAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -154,6 +160,7 @@ abstract class UsageAlert
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UsageAlert',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -177,6 +184,7 @@ abstract class UsageAlert
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'UsageAlert',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -249,24 +257,24 @@ class _UsageAlertImpl extends UsageAlert {
     DateTime? sentAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          alertType: alertType,
-          limitType: limitType,
-          thresholdPercentage: thresholdPercentage,
-          currentUsage: currentUsage,
-          limitValue: limitValue,
-          title: title,
-          message: message,
-          actionRequired: actionRequired,
-          actionUrl: actionUrl,
-          isRead: isRead,
-          isDismissed: isDismissed,
-          deliveryMethod: deliveryMethod,
-          sentAt: sentAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         alertType: alertType,
+         limitType: limitType,
+         thresholdPercentage: thresholdPercentage,
+         currentUsage: currentUsage,
+         limitValue: limitValue,
+         title: title,
+         message: message,
+         actionRequired: actionRequired,
+         actionUrl: actionUrl,
+         isRead: isRead,
+         isDismissed: isDismissed,
+         deliveryMethod: deliveryMethod,
+         sentAt: sentAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UsageAlert]
   /// with some or all fields replaced by the given arguments.
@@ -306,16 +314,111 @@ class _UsageAlertImpl extends UsageAlert {
       actionUrl: actionUrl is String? ? actionUrl : this.actionUrl,
       isRead: isRead ?? this.isRead,
       isDismissed: isDismissed ?? this.isDismissed,
-      deliveryMethod:
-          deliveryMethod is String? ? deliveryMethod : this.deliveryMethod,
+      deliveryMethod: deliveryMethod is String?
+          ? deliveryMethod
+          : this.deliveryMethod,
       sentAt: sentAt is DateTime? ? sentAt : this.sentAt,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 }
 
+class UsageAlertUpdateTable extends _i1.UpdateTable<UsageAlertTable> {
+  UsageAlertUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.UserType, _i2.UserType> userType(_i2.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.AlertType, _i3.AlertType> alertType(
+    _i3.AlertType value,
+  ) => _i1.ColumnValue(
+    table.alertType,
+    value,
+  );
+
+  _i1.ColumnValue<_i4.LimitType, _i4.LimitType> limitType(
+    _i4.LimitType value,
+  ) => _i1.ColumnValue(
+    table.limitType,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> thresholdPercentage(int value) => _i1.ColumnValue(
+    table.thresholdPercentage,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> currentUsage(int value) => _i1.ColumnValue(
+    table.currentUsage,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> limitValue(int value) => _i1.ColumnValue(
+    table.limitValue,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> title(String value) => _i1.ColumnValue(
+    table.title,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> message(String value) => _i1.ColumnValue(
+    table.message,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> actionRequired(bool value) => _i1.ColumnValue(
+    table.actionRequired,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> actionUrl(String? value) => _i1.ColumnValue(
+    table.actionUrl,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isRead(bool value) => _i1.ColumnValue(
+    table.isRead,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isDismissed(bool value) => _i1.ColumnValue(
+    table.isDismissed,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> deliveryMethod(String? value) =>
+      _i1.ColumnValue(
+        table.deliveryMethod,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> sentAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.sentAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class UsageAlertTable extends _i1.Table<_i1.UuidValue> {
   UsageAlertTable({super.tableRelation}) : super(tableName: 'usage_alerts') {
+    updateTable = UsageAlertUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -323,17 +426,17 @@ class UsageAlertTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     alertType = _i1.ColumnEnum(
       'alertType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     limitType = _i1.ColumnEnum(
       'limitType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     thresholdPercentage = _i1.ColumnInt(
       'thresholdPercentage',
@@ -389,6 +492,8 @@ class UsageAlertTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final UsageAlertUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   late final _i1.ColumnEnum<_i2.UserType> userType;
@@ -423,24 +528,24 @@ class UsageAlertTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        userType,
-        alertType,
-        limitType,
-        thresholdPercentage,
-        currentUsage,
-        limitValue,
-        title,
-        message,
-        actionRequired,
-        actionUrl,
-        isRead,
-        isDismissed,
-        deliveryMethod,
-        sentAt,
-        createdAt,
-      ];
+    id,
+    userId,
+    userType,
+    alertType,
+    limitType,
+    thresholdPercentage,
+    currentUsage,
+    limitValue,
+    title,
+    message,
+    actionRequired,
+    actionUrl,
+    isRead,
+    isDismissed,
+    deliveryMethod,
+    sentAt,
+    createdAt,
+  ];
 }
 
 class UsageAlertInclude extends _i1.IncludeObject {
@@ -628,6 +733,46 @@ class UsageAlertRepository {
     return session.db.updateRow<UsageAlert>(
       row,
       columns: columns?.call(UsageAlert.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [UsageAlert] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<UsageAlert?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<UsageAlertUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<UsageAlert>(
+      id,
+      columnValues: columnValues(UsageAlert.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [UsageAlert]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<UsageAlert>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<UsageAlertUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<UsageAlertTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<UsageAlertTable>? orderBy,
+    _i1.OrderByListBuilder<UsageAlertTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<UsageAlert>(
+      columnValues: columnValues(UsageAlert.t.updateTable),
+      where: where(UsageAlert.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(UsageAlert.t),
+      orderByList: orderByList?.call(UsageAlert.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../order/cart.dart' as _i2;
 import '../product/product.dart' as _i3;
 import '../product/product_variant.dart' as _i4;
+import 'package:asami_client/src/protocol/protocol.dart' as _i5;
 
 abstract class CartItem implements _i1.SerializableModel {
   CartItem._({
@@ -29,9 +31,9 @@ abstract class CartItem implements _i1.SerializableModel {
     this.customerNotes,
     DateTime? addedAt,
     DateTime? updatedAt,
-  })  : quantity = quantity ?? 1,
-        addedAt = addedAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : quantity = quantity ?? 1,
+       addedAt = addedAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CartItem({
     int? id,
@@ -55,28 +57,31 @@ abstract class CartItem implements _i1.SerializableModel {
       cartId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['cartId']),
       cart: jsonSerialization['cart'] == null
           ? null
-          : _i2.Cart.fromJson(
-              (jsonSerialization['cart'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i5.Protocol().deserialize<_i2.Cart>(jsonSerialization['cart']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       variant: jsonSerialization['variant'] == null
           ? null
-          : _i4.ProductVariant.fromJson(
-              (jsonSerialization['variant'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i4.ProductVariant>(
+              jsonSerialization['variant'],
+            ),
       quantity: jsonSerialization['quantity'] as int,
       unitPrice: (jsonSerialization['unitPrice'] as num).toDouble(),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       customerNotes: jsonSerialization['customerNotes'] as String?,
       addedAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -130,6 +135,7 @@ abstract class CartItem implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CartItem',
       if (id != null) 'id': id,
       'cartId': cartId.toJson(),
       if (cart != null) 'cart': cart?.toJson(),
@@ -170,20 +176,20 @@ class _CartItemImpl extends CartItem {
     DateTime? addedAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          cartId: cartId,
-          cart: cart,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          variant: variant,
-          quantity: quantity,
-          unitPrice: unitPrice,
-          subtotal: subtotal,
-          customerNotes: customerNotes,
-          addedAt: addedAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         cartId: cartId,
+         cart: cart,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         variant: variant,
+         quantity: quantity,
+         unitPrice: unitPrice,
+         subtotal: subtotal,
+         customerNotes: customerNotes,
+         addedAt: addedAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CartItem]
   /// with some or all fields replaced by the given arguments.
@@ -211,13 +217,15 @@ class _CartItemImpl extends CartItem {
       productId: productId ?? this.productId,
       product: product is _i3.Product? ? product : this.product?.copyWith(),
       variantId: variantId is _i1.UuidValue? ? variantId : this.variantId,
-      variant:
-          variant is _i4.ProductVariant? ? variant : this.variant?.copyWith(),
+      variant: variant is _i4.ProductVariant?
+          ? variant
+          : this.variant?.copyWith(),
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
       subtotal: subtotal ?? this.subtotal,
-      customerNotes:
-          customerNotes is String? ? customerNotes : this.customerNotes,
+      customerNotes: customerNotes is String?
+          ? customerNotes
+          : this.customerNotes,
       addedAt: addedAt ?? this.addedAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

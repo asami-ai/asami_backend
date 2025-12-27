@@ -39,6 +39,7 @@ order:
 product:
   - createProduct:
   - updateProduct:
+  - deleteProduct:
   - publishProduct:
   - getProduct:
   - getVendorProducts:

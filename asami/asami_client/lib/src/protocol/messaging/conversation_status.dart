@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -19,28 +20,29 @@ enum ConversationStatus implements _i1.SerializableModel {
   resolved,
   archived;
 
-  static ConversationStatus fromJson(int index) {
-    switch (index) {
-      case 0:
+  static ConversationStatus fromJson(String name) {
+    switch (name) {
+      case 'active':
         return ConversationStatus.active;
-      case 1:
+      case 'waiting_user':
         return ConversationStatus.waiting_user;
-      case 2:
+      case 'waiting_bot':
         return ConversationStatus.waiting_bot;
-      case 3:
+      case 'escalated_to_vendor':
         return ConversationStatus.escalated_to_vendor;
-      case 4:
+      case 'resolved':
         return ConversationStatus.resolved;
-      case 5:
+      case 'archived':
         return ConversationStatus.archived;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "ConversationStatus"');
+          'Value "$name" cannot be converted to "ConversationStatus"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

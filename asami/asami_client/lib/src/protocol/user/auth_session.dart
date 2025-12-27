@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
 import '../messaging/platfom_type.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class AuthSession implements _i1.SerializableModel {
   AuthSession._({
@@ -29,10 +31,10 @@ abstract class AuthSession implements _i1.SerializableModel {
     this.userAgent,
     this.lastActivityAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isActive = isActive ?? true,
-        loginAt = loginAt ?? DateTime.now(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isActive = isActive ?? true,
+       loginAt = loginAt ?? DateTime.now(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory AuthSession({
     _i1.UuidValue? id,
@@ -57,10 +59,10 @@ abstract class AuthSession implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i4.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformUserId: jsonSerialization['platformUserId'] as String,
       isActive: jsonSerialization['isActive'] as bool,
       loginAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['loginAt']),
@@ -76,15 +78,15 @@ abstract class AuthSession implements _i1.SerializableModel {
       lastActivityAt: jsonSerialization['lastActivityAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastActivityAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+              jsonSerialization['lastActivityAt'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -135,6 +137,7 @@ abstract class AuthSession implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'AuthSession',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -177,21 +180,21 @@ class _AuthSessionImpl extends AuthSession {
     DateTime? lastActivityAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          platform: platform,
-          platformUserId: platformUserId,
-          isActive: isActive,
-          loginAt: loginAt,
-          logoutAt: logoutAt,
-          expiresAt: expiresAt,
-          deviceInfo: deviceInfo,
-          ipAddress: ipAddress,
-          userAgent: userAgent,
-          lastActivityAt: lastActivityAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         platform: platform,
+         platformUserId: platformUserId,
+         isActive: isActive,
+         loginAt: loginAt,
+         logoutAt: logoutAt,
+         expiresAt: expiresAt,
+         deviceInfo: deviceInfo,
+         ipAddress: ipAddress,
+         userAgent: userAgent,
+         lastActivityAt: lastActivityAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [AuthSession]
   /// with some or all fields replaced by the given arguments.
@@ -226,8 +229,9 @@ class _AuthSessionImpl extends AuthSession {
       deviceInfo: deviceInfo is String? ? deviceInfo : this.deviceInfo,
       ipAddress: ipAddress is String? ? ipAddress : this.ipAddress,
       userAgent: userAgent is String? ? userAgent : this.userAgent,
-      lastActivityAt:
-          lastActivityAt is DateTime? ? lastActivityAt : this.lastActivityAt,
+      lastActivityAt: lastActivityAt is DateTime?
+          ? lastActivityAt
+          : this.lastActivityAt,
       createdAt: createdAt ?? this.createdAt,
     );
   }

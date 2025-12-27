@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -28,13 +29,13 @@ abstract class ToolUsageLimit implements _i1.SerializableModel {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        allowGracePeriod = allowGracePeriod ?? true,
-        gracePeriodActions = gracePeriodActions ?? 5,
-        costPerUsage = costPerUsage ?? 0.0,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       allowGracePeriod = allowGracePeriod ?? true,
+       gracePeriodActions = gracePeriodActions ?? 5,
+       costPerUsage = costPerUsage ?? 0.0,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory ToolUsageLimit({
     _i1.UuidValue? id,
@@ -55,9 +56,12 @@ abstract class ToolUsageLimit implements _i1.SerializableModel {
   factory ToolUsageLimit.fromJson(Map<String, dynamic> jsonSerialization) {
     return ToolUsageLimit(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      tier: _i2.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
-      limitType:
-          _i3.LimitType.fromJson((jsonSerialization['limitType'] as int)),
+      tier: _i2.SubscriptionTier.fromJson(
+        (jsonSerialization['tier'] as String),
+      ),
+      limitType: _i3.LimitType.fromJson(
+        (jsonSerialization['limitType'] as String),
+      ),
       dailyLimit: jsonSerialization['dailyLimit'] as int,
       monthlyLimit: jsonSerialization['monthlyLimit'] as int?,
       allowGracePeriod: jsonSerialization['allowGracePeriod'] as bool,
@@ -67,16 +71,16 @@ abstract class ToolUsageLimit implements _i1.SerializableModel {
           jsonSerialization['allowedToolsAfterLimit'] as String?,
       costPerUsage: (jsonSerialization['costPerUsage'] as num).toDouble(),
       isActive: jsonSerialization['isActive'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i2.SubscriptionTier tier;
@@ -124,6 +128,7 @@ abstract class ToolUsageLimit implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ToolUsageLimit',
       'id': id.toJson(),
       'tier': tier.toJson(),
       'limitType': limitType.toJson(),
@@ -165,20 +170,20 @@ class _ToolUsageLimitImpl extends ToolUsageLimit {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          tier: tier,
-          limitType: limitType,
-          dailyLimit: dailyLimit,
-          monthlyLimit: monthlyLimit,
-          allowGracePeriod: allowGracePeriod,
-          gracePeriodActions: gracePeriodActions,
-          restrictedTools: restrictedTools,
-          allowedToolsAfterLimit: allowedToolsAfterLimit,
-          costPerUsage: costPerUsage,
-          isActive: isActive,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         tier: tier,
+         limitType: limitType,
+         dailyLimit: dailyLimit,
+         monthlyLimit: monthlyLimit,
+         allowGracePeriod: allowGracePeriod,
+         gracePeriodActions: gracePeriodActions,
+         restrictedTools: restrictedTools,
+         allowedToolsAfterLimit: allowedToolsAfterLimit,
+         costPerUsage: costPerUsage,
+         isActive: isActive,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [ToolUsageLimit]
   /// with some or all fields replaced by the given arguments.
@@ -207,8 +212,9 @@ class _ToolUsageLimitImpl extends ToolUsageLimit {
       monthlyLimit: monthlyLimit is int? ? monthlyLimit : this.monthlyLimit,
       allowGracePeriod: allowGracePeriod ?? this.allowGracePeriod,
       gracePeriodActions: gracePeriodActions ?? this.gracePeriodActions,
-      restrictedTools:
-          restrictedTools is String? ? restrictedTools : this.restrictedTools,
+      restrictedTools: restrictedTools is String?
+          ? restrictedTools
+          : this.restrictedTools,
       allowedToolsAfterLimit: allowedToolsAfterLimit is String?
           ? allowedToolsAfterLimit
           : this.allowedToolsAfterLimit,

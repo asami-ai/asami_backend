@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -17,6 +18,7 @@ import '../product/product.dart' as _i3;
 import '../user/vendor_profile.dart' as _i4;
 import '../messaging/platfom_type.dart' as _i5;
 import '../messaging/conversation.dart' as _i6;
+import 'package:asami_server/src/generated/protocol.dart' as _i7;
 
 abstract class UserActivity
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -43,8 +45,8 @@ abstract class UserActivity
     this.metadata,
     this.durationSeconds,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory UserActivity({
     _i1.UuidValue? id,
@@ -77,35 +79,39 @@ abstract class UserActivity
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       activityType: jsonSerialization['activityType'] as String,
       productId: jsonSerialization['productId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       vendorId: jsonSerialization['vendorId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i4.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i4.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       categoryName: jsonSerialization['categoryName'] as String?,
       searchQuery: jsonSerialization['searchQuery'] as String?,
-      platform:
-          _i5.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      platform: _i5.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i6.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i6.Conversation>(
+              jsonSerialization['conversation'],
+            ),
       latitude: (jsonSerialization['latitude'] as num?)?.toDouble(),
       longitude: (jsonSerialization['longitude'] as num?)?.toDouble(),
       city: jsonSerialization['city'] as String?,
@@ -114,8 +120,9 @@ abstract class UserActivity
       sessionId: jsonSerialization['sessionId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       durationSeconds: jsonSerialization['durationSeconds'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -201,6 +208,7 @@ abstract class UserActivity
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UserActivity',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -229,6 +237,7 @@ abstract class UserActivity
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'UserActivity',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -322,29 +331,29 @@ class _UserActivityImpl extends UserActivity {
     int? durationSeconds,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          activityType: activityType,
-          productId: productId,
-          product: product,
-          vendorId: vendorId,
-          vendor: vendor,
-          categoryName: categoryName,
-          searchQuery: searchQuery,
-          platform: platform,
-          conversationId: conversationId,
-          conversation: conversation,
-          latitude: latitude,
-          longitude: longitude,
-          city: city,
-          state: state,
-          country: country,
-          sessionId: sessionId,
-          metadata: metadata,
-          durationSeconds: durationSeconds,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         activityType: activityType,
+         productId: productId,
+         product: product,
+         vendorId: vendorId,
+         vendor: vendor,
+         categoryName: categoryName,
+         searchQuery: searchQuery,
+         platform: platform,
+         conversationId: conversationId,
+         conversation: conversation,
+         latitude: latitude,
+         longitude: longitude,
+         city: city,
+         state: state,
+         country: country,
+         sessionId: sessionId,
+         metadata: metadata,
+         durationSeconds: durationSeconds,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UserActivity]
   /// with some or all fields replaced by the given arguments.
@@ -399,15 +408,117 @@ class _UserActivityImpl extends UserActivity {
       country: country is String? ? country : this.country,
       sessionId: sessionId is String? ? sessionId : this.sessionId,
       metadata: metadata is String? ? metadata : this.metadata,
-      durationSeconds:
-          durationSeconds is int? ? durationSeconds : this.durationSeconds,
+      durationSeconds: durationSeconds is int?
+          ? durationSeconds
+          : this.durationSeconds,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 }
 
+class UserActivityUpdateTable extends _i1.UpdateTable<UserActivityTable> {
+  UserActivityUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> activityType(String value) => _i1.ColumnValue(
+    table.activityType,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.vendorId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> categoryName(String? value) =>
+      _i1.ColumnValue(
+        table.categoryName,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> searchQuery(String? value) => _i1.ColumnValue(
+    table.searchQuery,
+    value,
+  );
+
+  _i1.ColumnValue<_i5.PlatformType, _i5.PlatformType> platform(
+    _i5.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> latitude(double? value) => _i1.ColumnValue(
+    table.latitude,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> longitude(double? value) => _i1.ColumnValue(
+    table.longitude,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> city(String? value) => _i1.ColumnValue(
+    table.city,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> state(String? value) => _i1.ColumnValue(
+    table.state,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> country(String? value) => _i1.ColumnValue(
+    table.country,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> sessionId(String? value) => _i1.ColumnValue(
+    table.sessionId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> metadata(String? value) => _i1.ColumnValue(
+    table.metadata,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> durationSeconds(int? value) => _i1.ColumnValue(
+    table.durationSeconds,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class UserActivityTable extends _i1.Table<_i1.UuidValue> {
   UserActivityTable({super.tableRelation}) : super(tableName: 'user_activity') {
+    updateTable = UserActivityUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -435,7 +546,7 @@ class UserActivityTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     conversationId = _i1.ColumnUuid(
       'conversationId',
@@ -479,6 +590,8 @@ class UserActivityTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final UserActivityUpdateTable updateTable;
 
   late final _i1.ColumnUuid userId;
 
@@ -576,25 +689,25 @@ class UserActivityTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        activityType,
-        productId,
-        vendorId,
-        categoryName,
-        searchQuery,
-        platform,
-        conversationId,
-        latitude,
-        longitude,
-        city,
-        state,
-        country,
-        sessionId,
-        metadata,
-        durationSeconds,
-        createdAt,
-      ];
+    id,
+    userId,
+    activityType,
+    productId,
+    vendorId,
+    categoryName,
+    searchQuery,
+    platform,
+    conversationId,
+    latitude,
+    longitude,
+    city,
+    state,
+    country,
+    sessionId,
+    metadata,
+    durationSeconds,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -637,11 +750,11 @@ class UserActivityInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'user': _user,
-        'product': _product,
-        'vendor': _vendor,
-        'conversation': _conversation,
-      };
+    'user': _user,
+    'product': _product,
+    'vendor': _vendor,
+    'conversation': _conversation,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => UserActivity.t;
@@ -836,6 +949,46 @@ class UserActivityRepository {
     );
   }
 
+  /// Updates a single [UserActivity] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<UserActivity?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<UserActivityUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<UserActivity>(
+      id,
+      columnValues: columnValues(UserActivity.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [UserActivity]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<UserActivity>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<UserActivityUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<UserActivityTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<UserActivityTable>? orderBy,
+    _i1.OrderByListBuilder<UserActivityTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<UserActivity>(
+      columnValues: columnValues(UserActivity.t.updateTable),
+      where: where(UserActivity.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(UserActivity.t),
+      orderByList: orderByList?.call(UserActivity.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [UserActivity]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -996,16 +1149,16 @@ class UserActivityDetachRowRepository {
   /// the related record.
   Future<void> product(
     _i1.Session session,
-    UserActivity useractivity, {
+    UserActivity userActivity, {
     _i1.Transaction? transaction,
   }) async {
-    if (useractivity.id == null) {
-      throw ArgumentError.notNull('useractivity.id');
+    if (userActivity.id == null) {
+      throw ArgumentError.notNull('userActivity.id');
     }
 
-    var $useractivity = useractivity.copyWith(productId: null);
+    var $userActivity = userActivity.copyWith(productId: null);
     await session.db.updateRow<UserActivity>(
-      $useractivity,
+      $userActivity,
       columns: [UserActivity.t.productId],
       transaction: transaction,
     );
@@ -1018,16 +1171,16 @@ class UserActivityDetachRowRepository {
   /// the related record.
   Future<void> vendor(
     _i1.Session session,
-    UserActivity useractivity, {
+    UserActivity userActivity, {
     _i1.Transaction? transaction,
   }) async {
-    if (useractivity.id == null) {
-      throw ArgumentError.notNull('useractivity.id');
+    if (userActivity.id == null) {
+      throw ArgumentError.notNull('userActivity.id');
     }
 
-    var $useractivity = useractivity.copyWith(vendorId: null);
+    var $userActivity = userActivity.copyWith(vendorId: null);
     await session.db.updateRow<UserActivity>(
-      $useractivity,
+      $userActivity,
       columns: [UserActivity.t.vendorId],
       transaction: transaction,
     );
@@ -1040,16 +1193,16 @@ class UserActivityDetachRowRepository {
   /// the related record.
   Future<void> conversation(
     _i1.Session session,
-    UserActivity useractivity, {
+    UserActivity userActivity, {
     _i1.Transaction? transaction,
   }) async {
-    if (useractivity.id == null) {
-      throw ArgumentError.notNull('useractivity.id');
+    if (userActivity.id == null) {
+      throw ArgumentError.notNull('userActivity.id');
     }
 
-    var $useractivity = useractivity.copyWith(conversationId: null);
+    var $userActivity = userActivity.copyWith(conversationId: null);
     await session.db.updateRow<UserActivity>(
-      $useractivity,
+      $userActivity,
       columns: [UserActivity.t.conversationId],
       transaction: transaction,
     );

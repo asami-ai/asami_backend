@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -47,37 +48,37 @@ abstract class PlatformAnalytics
     double? subscriptionRevenue,
     double? churnRate,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        totalUsers = totalUsers ?? 0,
-        activeUsers = activeUsers ?? 0,
-        newUsers = newUsers ?? 0,
-        totalCustomers = totalCustomers ?? 0,
-        totalVendors = totalVendors ?? 0,
-        totalOrders = totalOrders ?? 0,
-        totalRevenue = totalRevenue ?? 0.0,
-        averageOrderValue = averageOrderValue ?? 0.0,
-        platformFeesCollected = platformFeesCollected ?? 0.0,
-        totalProducts = totalProducts ?? 0,
-        activeProducts = activeProducts ?? 0,
-        newProducts = newProducts ?? 0,
-        totalAiInteractions = totalAiInteractions ?? 0,
-        successfulAiResponses = successfulAiResponses ?? 0,
-        aiResponseTime = aiResponseTime ?? 0.0,
-        aiCostsIncurred = aiCostsIncurred ?? 0.0,
-        whatsappMessages = whatsappMessages ?? 0,
-        telegramMessages = telegramMessages ?? 0,
-        totalConversations = totalConversations ?? 0,
-        activeConversations = activeConversations ?? 0,
-        fiatTransactions = fiatTransactions ?? 0,
-        cryptoTransactions = cryptoTransactions ?? 0,
-        fiatVolume = fiatVolume ?? 0.0,
-        cryptoVolume = cryptoVolume ?? 0.0,
-        freemiumVendors = freemiumVendors ?? 0,
-        proVendors = proVendors ?? 0,
-        proMaxVendors = proMaxVendors ?? 0,
-        subscriptionRevenue = subscriptionRevenue ?? 0.0,
-        churnRate = churnRate ?? 0.0,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       totalUsers = totalUsers ?? 0,
+       activeUsers = activeUsers ?? 0,
+       newUsers = newUsers ?? 0,
+       totalCustomers = totalCustomers ?? 0,
+       totalVendors = totalVendors ?? 0,
+       totalOrders = totalOrders ?? 0,
+       totalRevenue = totalRevenue ?? 0.0,
+       averageOrderValue = averageOrderValue ?? 0.0,
+       platformFeesCollected = platformFeesCollected ?? 0.0,
+       totalProducts = totalProducts ?? 0,
+       activeProducts = activeProducts ?? 0,
+       newProducts = newProducts ?? 0,
+       totalAiInteractions = totalAiInteractions ?? 0,
+       successfulAiResponses = successfulAiResponses ?? 0,
+       aiResponseTime = aiResponseTime ?? 0.0,
+       aiCostsIncurred = aiCostsIncurred ?? 0.0,
+       whatsappMessages = whatsappMessages ?? 0,
+       telegramMessages = telegramMessages ?? 0,
+       totalConversations = totalConversations ?? 0,
+       activeConversations = activeConversations ?? 0,
+       fiatTransactions = fiatTransactions ?? 0,
+       cryptoTransactions = cryptoTransactions ?? 0,
+       fiatVolume = fiatVolume ?? 0.0,
+       cryptoVolume = cryptoVolume ?? 0.0,
+       freemiumVendors = freemiumVendors ?? 0,
+       proVendors = proVendors ?? 0,
+       proMaxVendors = proMaxVendors ?? 0,
+       subscriptionRevenue = subscriptionRevenue ?? 0.0,
+       churnRate = churnRate ?? 0.0,
+       createdAt = createdAt ?? DateTime.now();
 
   factory PlatformAnalytics({
     _i1.UuidValue? id,
@@ -127,10 +128,10 @@ abstract class PlatformAnalytics
       totalVendors: jsonSerialization['totalVendors'] as int,
       totalOrders: jsonSerialization['totalOrders'] as int,
       totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageOrderValue:
-          (jsonSerialization['averageOrderValue'] as num).toDouble(),
-      platformFeesCollected:
-          (jsonSerialization['platformFeesCollected'] as num).toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
+          .toDouble(),
+      platformFeesCollected: (jsonSerialization['platformFeesCollected'] as num)
+          .toDouble(),
       totalProducts: jsonSerialization['totalProducts'] as int,
       activeProducts: jsonSerialization['activeProducts'] as int,
       newProducts: jsonSerialization['newProducts'] as int,
@@ -149,11 +150,12 @@ abstract class PlatformAnalytics
       freemiumVendors: jsonSerialization['freemiumVendors'] as int,
       proVendors: jsonSerialization['proVendors'] as int,
       proMaxVendors: jsonSerialization['proMaxVendors'] as int,
-      subscriptionRevenue:
-          (jsonSerialization['subscriptionRevenue'] as num).toDouble(),
+      subscriptionRevenue: (jsonSerialization['subscriptionRevenue'] as num)
+          .toDouble(),
       churnRate: (jsonSerialization['churnRate'] as num).toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -272,6 +274,7 @@ abstract class PlatformAnalytics
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'PlatformAnalytics',
       'id': id.toJson(),
       'date': date.toJson(),
       'period': period,
@@ -311,6 +314,7 @@ abstract class PlatformAnalytics
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'PlatformAnalytics',
       'id': id.toJson(),
       'date': date.toJson(),
       'period': period,
@@ -413,40 +417,40 @@ class _PlatformAnalyticsImpl extends PlatformAnalytics {
     double? churnRate,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          date: date,
-          period: period,
-          totalUsers: totalUsers,
-          activeUsers: activeUsers,
-          newUsers: newUsers,
-          totalCustomers: totalCustomers,
-          totalVendors: totalVendors,
-          totalOrders: totalOrders,
-          totalRevenue: totalRevenue,
-          averageOrderValue: averageOrderValue,
-          platformFeesCollected: platformFeesCollected,
-          totalProducts: totalProducts,
-          activeProducts: activeProducts,
-          newProducts: newProducts,
-          totalAiInteractions: totalAiInteractions,
-          successfulAiResponses: successfulAiResponses,
-          aiResponseTime: aiResponseTime,
-          aiCostsIncurred: aiCostsIncurred,
-          whatsappMessages: whatsappMessages,
-          telegramMessages: telegramMessages,
-          totalConversations: totalConversations,
-          activeConversations: activeConversations,
-          fiatTransactions: fiatTransactions,
-          cryptoTransactions: cryptoTransactions,
-          fiatVolume: fiatVolume,
-          cryptoVolume: cryptoVolume,
-          freemiumVendors: freemiumVendors,
-          proVendors: proVendors,
-          proMaxVendors: proMaxVendors,
-          subscriptionRevenue: subscriptionRevenue,
-          churnRate: churnRate,
-          createdAt: createdAt,
-        );
+         id: id,
+         date: date,
+         period: period,
+         totalUsers: totalUsers,
+         activeUsers: activeUsers,
+         newUsers: newUsers,
+         totalCustomers: totalCustomers,
+         totalVendors: totalVendors,
+         totalOrders: totalOrders,
+         totalRevenue: totalRevenue,
+         averageOrderValue: averageOrderValue,
+         platformFeesCollected: platformFeesCollected,
+         totalProducts: totalProducts,
+         activeProducts: activeProducts,
+         newProducts: newProducts,
+         totalAiInteractions: totalAiInteractions,
+         successfulAiResponses: successfulAiResponses,
+         aiResponseTime: aiResponseTime,
+         aiCostsIncurred: aiCostsIncurred,
+         whatsappMessages: whatsappMessages,
+         telegramMessages: telegramMessages,
+         totalConversations: totalConversations,
+         activeConversations: activeConversations,
+         fiatTransactions: fiatTransactions,
+         cryptoTransactions: cryptoTransactions,
+         fiatVolume: fiatVolume,
+         cryptoVolume: cryptoVolume,
+         freemiumVendors: freemiumVendors,
+         proVendors: proVendors,
+         proMaxVendors: proMaxVendors,
+         subscriptionRevenue: subscriptionRevenue,
+         churnRate: churnRate,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [PlatformAnalytics]
   /// with some or all fields replaced by the given arguments.
@@ -527,9 +531,181 @@ class _PlatformAnalyticsImpl extends PlatformAnalytics {
   }
 }
 
+class PlatformAnalyticsUpdateTable
+    extends _i1.UpdateTable<PlatformAnalyticsTable> {
+  PlatformAnalyticsUpdateTable(super.table);
+
+  _i1.ColumnValue<DateTime, DateTime> date(DateTime value) => _i1.ColumnValue(
+    table.date,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> period(String value) => _i1.ColumnValue(
+    table.period,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalUsers(int value) => _i1.ColumnValue(
+    table.totalUsers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> activeUsers(int value) => _i1.ColumnValue(
+    table.activeUsers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> newUsers(int value) => _i1.ColumnValue(
+    table.newUsers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalCustomers(int value) => _i1.ColumnValue(
+    table.totalCustomers,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalVendors(int value) => _i1.ColumnValue(
+    table.totalVendors,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalOrders(int value) => _i1.ColumnValue(
+    table.totalOrders,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalRevenue(double value) => _i1.ColumnValue(
+    table.totalRevenue,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageOrderValue(double value) =>
+      _i1.ColumnValue(
+        table.averageOrderValue,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> platformFeesCollected(double value) =>
+      _i1.ColumnValue(
+        table.platformFeesCollected,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> totalProducts(int value) => _i1.ColumnValue(
+    table.totalProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> activeProducts(int value) => _i1.ColumnValue(
+    table.activeProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> newProducts(int value) => _i1.ColumnValue(
+    table.newProducts,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalAiInteractions(int value) => _i1.ColumnValue(
+    table.totalAiInteractions,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> successfulAiResponses(int value) => _i1.ColumnValue(
+    table.successfulAiResponses,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> aiResponseTime(double value) =>
+      _i1.ColumnValue(
+        table.aiResponseTime,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> aiCostsIncurred(double value) =>
+      _i1.ColumnValue(
+        table.aiCostsIncurred,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> whatsappMessages(int value) => _i1.ColumnValue(
+    table.whatsappMessages,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> telegramMessages(int value) => _i1.ColumnValue(
+    table.telegramMessages,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalConversations(int value) => _i1.ColumnValue(
+    table.totalConversations,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> activeConversations(int value) => _i1.ColumnValue(
+    table.activeConversations,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> fiatTransactions(int value) => _i1.ColumnValue(
+    table.fiatTransactions,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> cryptoTransactions(int value) => _i1.ColumnValue(
+    table.cryptoTransactions,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> fiatVolume(double value) => _i1.ColumnValue(
+    table.fiatVolume,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> cryptoVolume(double value) => _i1.ColumnValue(
+    table.cryptoVolume,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> freemiumVendors(int value) => _i1.ColumnValue(
+    table.freemiumVendors,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> proVendors(int value) => _i1.ColumnValue(
+    table.proVendors,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> proMaxVendors(int value) => _i1.ColumnValue(
+    table.proMaxVendors,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subscriptionRevenue(double value) =>
+      _i1.ColumnValue(
+        table.subscriptionRevenue,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> churnRate(double value) => _i1.ColumnValue(
+    table.churnRate,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class PlatformAnalyticsTable extends _i1.Table<_i1.UuidValue> {
   PlatformAnalyticsTable({super.tableRelation})
-      : super(tableName: 'platform_analytics') {
+    : super(tableName: 'platform_analytics') {
+    updateTable = PlatformAnalyticsUpdateTable(this);
     date = _i1.ColumnDateTime(
       'date',
       this,
@@ -690,6 +866,8 @@ class PlatformAnalyticsTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final PlatformAnalyticsUpdateTable updateTable;
+
   late final _i1.ColumnDateTime date;
 
   late final _i1.ColumnString period;
@@ -756,40 +934,40 @@ class PlatformAnalyticsTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        date,
-        period,
-        totalUsers,
-        activeUsers,
-        newUsers,
-        totalCustomers,
-        totalVendors,
-        totalOrders,
-        totalRevenue,
-        averageOrderValue,
-        platformFeesCollected,
-        totalProducts,
-        activeProducts,
-        newProducts,
-        totalAiInteractions,
-        successfulAiResponses,
-        aiResponseTime,
-        aiCostsIncurred,
-        whatsappMessages,
-        telegramMessages,
-        totalConversations,
-        activeConversations,
-        fiatTransactions,
-        cryptoTransactions,
-        fiatVolume,
-        cryptoVolume,
-        freemiumVendors,
-        proVendors,
-        proMaxVendors,
-        subscriptionRevenue,
-        churnRate,
-        createdAt,
-      ];
+    id,
+    date,
+    period,
+    totalUsers,
+    activeUsers,
+    newUsers,
+    totalCustomers,
+    totalVendors,
+    totalOrders,
+    totalRevenue,
+    averageOrderValue,
+    platformFeesCollected,
+    totalProducts,
+    activeProducts,
+    newProducts,
+    totalAiInteractions,
+    successfulAiResponses,
+    aiResponseTime,
+    aiCostsIncurred,
+    whatsappMessages,
+    telegramMessages,
+    totalConversations,
+    activeConversations,
+    fiatTransactions,
+    cryptoTransactions,
+    fiatVolume,
+    cryptoVolume,
+    freemiumVendors,
+    proVendors,
+    proMaxVendors,
+    subscriptionRevenue,
+    churnRate,
+    createdAt,
+  ];
 }
 
 class PlatformAnalyticsInclude extends _i1.IncludeObject {
@@ -977,6 +1155,48 @@ class PlatformAnalyticsRepository {
     return session.db.updateRow<PlatformAnalytics>(
       row,
       columns: columns?.call(PlatformAnalytics.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [PlatformAnalytics] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<PlatformAnalytics?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<PlatformAnalyticsUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<PlatformAnalytics>(
+      id,
+      columnValues: columnValues(PlatformAnalytics.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [PlatformAnalytics]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<PlatformAnalytics>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<PlatformAnalyticsUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<PlatformAnalyticsTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<PlatformAnalyticsTable>? orderBy,
+    _i1.OrderByListBuilder<PlatformAnalyticsTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<PlatformAnalytics>(
+      columnValues: columnValues(PlatformAnalytics.t.updateTable),
+      where: where(PlatformAnalytics.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(PlatformAnalytics.t),
+      orderByList: orderByList?.call(PlatformAnalytics.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

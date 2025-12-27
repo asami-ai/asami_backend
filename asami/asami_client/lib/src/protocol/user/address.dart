@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Address implements _i1.SerializableModel {
   Address._({
@@ -33,11 +35,11 @@ abstract class Address implements _i1.SerializableModel {
     this.longitude,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isDefault = isDefault ?? false,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isDefault = isDefault ?? false,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Address({
     _i1.UuidValue? id,
@@ -67,8 +69,7 @@ abstract class Address implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       label: jsonSerialization['label'] as String,
       recipientName: jsonSerialization['recipientName'] as String,
       phoneNumber: jsonSerialization['phoneNumber'] as String,
@@ -83,16 +84,16 @@ abstract class Address implements _i1.SerializableModel {
       isActive: jsonSerialization['isActive'] as bool,
       latitude: (jsonSerialization['latitude'] as num?)?.toDouble(),
       longitude: (jsonSerialization['longitude'] as num?)?.toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -158,6 +159,7 @@ abstract class Address implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Address',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -210,26 +212,26 @@ class _AddressImpl extends Address {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          label: label,
-          recipientName: recipientName,
-          phoneNumber: phoneNumber,
-          addressLine1: addressLine1,
-          addressLine2: addressLine2,
-          city: city,
-          state: state,
-          country: country,
-          postalCode: postalCode,
-          landmark: landmark,
-          isDefault: isDefault,
-          isActive: isActive,
-          latitude: latitude,
-          longitude: longitude,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         label: label,
+         recipientName: recipientName,
+         phoneNumber: phoneNumber,
+         addressLine1: addressLine1,
+         addressLine2: addressLine2,
+         city: city,
+         state: state,
+         country: country,
+         postalCode: postalCode,
+         landmark: landmark,
+         isDefault: isDefault,
+         isActive: isActive,
+         latitude: latitude,
+         longitude: longitude,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Address]
   /// with some or all fields replaced by the given arguments.

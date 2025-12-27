@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../order/order.dart' as _i2;
 import '../order/payment_method.dart' as _i3;
 import '../order/payment_status.dart' as _i4;
+import 'package:asami_client/src/protocol/protocol.dart' as _i5;
 
 abstract class PaymentTransaction implements _i1.SerializableModel {
   PaymentTransaction._({
@@ -43,15 +45,15 @@ abstract class PaymentTransaction implements _i1.SerializableModel {
     DateTime? updatedAt,
     this.completedAt,
     this.failedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        currency = currency ?? 'USD',
-        platformFee = platformFee ?? 0.0,
-        gatewayFee = gatewayFee ?? 0.0,
-        isPending = isPending ?? true,
-        isCompleted = isCompleted ?? false,
-        isFailed = isFailed ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       currency = currency ?? 'USD',
+       platformFee = platformFee ?? 0.0,
+       gatewayFee = gatewayFee ?? 0.0,
+       isPending = isPending ?? true,
+       isCompleted = isCompleted ?? false,
+       isFailed = isFailed ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory PaymentTransaction({
     _i1.UuidValue? id,
@@ -86,18 +88,20 @@ abstract class PaymentTransaction implements _i1.SerializableModel {
   factory PaymentTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return PaymentTransaction(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
+      orderId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['orderId'],
+      ),
       order: jsonSerialization['order'] == null
           ? null
-          : _i2.Order.fromJson(
-              (jsonSerialization['order'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i2.Order>(jsonSerialization['order']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       paymentMethod: _i3.PaymentMethod.fromJson(
-          (jsonSerialization['paymentMethod'] as int)),
+        (jsonSerialization['paymentMethod'] as String),
+      ),
       paymentStatus: _i4.PaymentStatus.fromJson(
-          (jsonSerialization['paymentStatus'] as int)),
+        (jsonSerialization['paymentStatus'] as String),
+      ),
       gatewayName: jsonSerialization['gatewayName'] as String,
       gatewayTransactionId:
           jsonSerialization['gatewayTransactionId'] as String?,
@@ -115,23 +119,24 @@ abstract class PaymentTransaction implements _i1.SerializableModel {
       isFailed: jsonSerialization['isFailed'] as bool,
       metadata: jsonSerialization['metadata'] as String?,
       failureReason: jsonSerialization['failureReason'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       completedAt: jsonSerialization['completedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['completedAt']),
+              jsonSerialization['completedAt'],
+            ),
       failedAt: jsonSerialization['failedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['failedAt']),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue orderId;
@@ -221,6 +226,7 @@ abstract class PaymentTransaction implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'PaymentTransaction',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJson(),
@@ -290,34 +296,34 @@ class _PaymentTransactionImpl extends PaymentTransaction {
     DateTime? completedAt,
     DateTime? failedAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          order: order,
-          amount: amount,
-          currency: currency,
-          paymentMethod: paymentMethod,
-          paymentStatus: paymentStatus,
-          gatewayName: gatewayName,
-          gatewayTransactionId: gatewayTransactionId,
-          gatewayResponse: gatewayResponse,
-          cryptoType: cryptoType,
-          cryptoAmount: cryptoAmount,
-          walletAddress: walletAddress,
-          transactionHash: transactionHash,
-          blockchainNetwork: blockchainNetwork,
-          conversionRate: conversionRate,
-          platformFee: platformFee,
-          gatewayFee: gatewayFee,
-          isPending: isPending,
-          isCompleted: isCompleted,
-          isFailed: isFailed,
-          metadata: metadata,
-          failureReason: failureReason,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          completedAt: completedAt,
-          failedAt: failedAt,
-        );
+         id: id,
+         orderId: orderId,
+         order: order,
+         amount: amount,
+         currency: currency,
+         paymentMethod: paymentMethod,
+         paymentStatus: paymentStatus,
+         gatewayName: gatewayName,
+         gatewayTransactionId: gatewayTransactionId,
+         gatewayResponse: gatewayResponse,
+         cryptoType: cryptoType,
+         cryptoAmount: cryptoAmount,
+         walletAddress: walletAddress,
+         transactionHash: transactionHash,
+         blockchainNetwork: blockchainNetwork,
+         conversionRate: conversionRate,
+         platformFee: platformFee,
+         gatewayFee: gatewayFee,
+         isPending: isPending,
+         isCompleted: isCompleted,
+         isFailed: isFailed,
+         metadata: metadata,
+         failureReason: failureReason,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         completedAt: completedAt,
+         failedAt: failedAt,
+       );
 
   /// Returns a shallow copy of this [PaymentTransaction]
   /// with some or all fields replaced by the given arguments.
@@ -364,27 +370,32 @@ class _PaymentTransactionImpl extends PaymentTransaction {
       gatewayTransactionId: gatewayTransactionId is String?
           ? gatewayTransactionId
           : this.gatewayTransactionId,
-      gatewayResponse:
-          gatewayResponse is String? ? gatewayResponse : this.gatewayResponse,
+      gatewayResponse: gatewayResponse is String?
+          ? gatewayResponse
+          : this.gatewayResponse,
       cryptoType: cryptoType is String? ? cryptoType : this.cryptoType,
       cryptoAmount: cryptoAmount is double? ? cryptoAmount : this.cryptoAmount,
-      walletAddress:
-          walletAddress is String? ? walletAddress : this.walletAddress,
-      transactionHash:
-          transactionHash is String? ? transactionHash : this.transactionHash,
+      walletAddress: walletAddress is String?
+          ? walletAddress
+          : this.walletAddress,
+      transactionHash: transactionHash is String?
+          ? transactionHash
+          : this.transactionHash,
       blockchainNetwork: blockchainNetwork is String?
           ? blockchainNetwork
           : this.blockchainNetwork,
-      conversionRate:
-          conversionRate is double? ? conversionRate : this.conversionRate,
+      conversionRate: conversionRate is double?
+          ? conversionRate
+          : this.conversionRate,
       platformFee: platformFee ?? this.platformFee,
       gatewayFee: gatewayFee ?? this.gatewayFee,
       isPending: isPending ?? this.isPending,
       isCompleted: isCompleted ?? this.isCompleted,
       isFailed: isFailed ?? this.isFailed,
       metadata: metadata is String? ? metadata : this.metadata,
-      failureReason:
-          failureReason is String? ? failureReason : this.failureReason,
+      failureReason: failureReason is String?
+          ? failureReason
+          : this.failureReason,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       completedAt: completedAt is DateTime? ? completedAt : this.completedAt,

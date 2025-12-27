@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../messaging/conversation.dart' as _i2;
 import '../messaging/message.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class BotInteraction
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -43,9 +45,9 @@ abstract class BotInteraction
     this.completionTokens,
     this.totalTokens,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isSuccess = isSuccess ?? true,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isSuccess = isSuccess ?? true,
+       createdAt = createdAt ?? DateTime.now();
 
   factory BotInteraction({
     _i1.UuidValue? id,
@@ -79,19 +81,22 @@ abstract class BotInteraction
     return BotInteraction(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i2.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i2.Conversation>(
+              jsonSerialization['conversation'],
+            ),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       messageId: jsonSerialization['messageId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['messageId']),
       message: jsonSerialization['message'] == null
           ? null
-          : _i3.Message.fromJson(
-              (jsonSerialization['message'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.Message>(
+              jsonSerialization['message'],
+            ),
       intent: jsonSerialization['intent'] as String,
       confidence: (jsonSerialization['confidence'] as num).toDouble(),
       entities: jsonSerialization['entities'] as String?,
@@ -112,8 +117,9 @@ abstract class BotInteraction
       promptTokens: jsonSerialization['promptTokens'] as int?,
       completionTokens: jsonSerialization['completionTokens'] as int?,
       totalTokens: jsonSerialization['totalTokens'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -208,6 +214,7 @@ abstract class BotInteraction
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'BotInteraction',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null) 'conversation': conversation?.toJson(),
@@ -239,6 +246,7 @@ abstract class BotInteraction
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'BotInteraction',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null)
@@ -334,32 +342,32 @@ class _BotInteractionImpl extends BotInteraction {
     int? totalTokens,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          conversationId: conversationId,
-          conversation: conversation,
-          userId: userId,
-          messageId: messageId,
-          message: message,
-          intent: intent,
-          confidence: confidence,
-          entities: entities,
-          userQuery: userQuery,
-          botResponse: botResponse,
-          functionName: functionName,
-          functionInput: functionInput,
-          functionOutput: functionOutput,
-          executionTime: executionTime,
-          isSuccess: isSuccess,
-          errorMessage: errorMessage,
-          wasHelpful: wasHelpful,
-          userFeedback: userFeedback,
-          feedbackAt: feedbackAt,
-          modelUsed: modelUsed,
-          promptTokens: promptTokens,
-          completionTokens: completionTokens,
-          totalTokens: totalTokens,
-          createdAt: createdAt,
-        );
+         id: id,
+         conversationId: conversationId,
+         conversation: conversation,
+         userId: userId,
+         messageId: messageId,
+         message: message,
+         intent: intent,
+         confidence: confidence,
+         entities: entities,
+         userQuery: userQuery,
+         botResponse: botResponse,
+         functionName: functionName,
+         functionInput: functionInput,
+         functionOutput: functionOutput,
+         executionTime: executionTime,
+         isSuccess: isSuccess,
+         errorMessage: errorMessage,
+         wasHelpful: wasHelpful,
+         userFeedback: userFeedback,
+         feedbackAt: feedbackAt,
+         modelUsed: modelUsed,
+         promptTokens: promptTokens,
+         completionTokens: completionTokens,
+         totalTokens: totalTokens,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [BotInteraction]
   /// with some or all fields replaced by the given arguments.
@@ -407,10 +415,12 @@ class _BotInteractionImpl extends BotInteraction {
       userQuery: userQuery is String? ? userQuery : this.userQuery,
       botResponse: botResponse is String? ? botResponse : this.botResponse,
       functionName: functionName is String? ? functionName : this.functionName,
-      functionInput:
-          functionInput is String? ? functionInput : this.functionInput,
-      functionOutput:
-          functionOutput is String? ? functionOutput : this.functionOutput,
+      functionInput: functionInput is String?
+          ? functionInput
+          : this.functionInput,
+      functionOutput: functionOutput is String?
+          ? functionOutput
+          : this.functionOutput,
       executionTime: executionTime is int? ? executionTime : this.executionTime,
       isSuccess: isSuccess ?? this.isSuccess,
       errorMessage: errorMessage is String? ? errorMessage : this.errorMessage,
@@ -419,17 +429,145 @@ class _BotInteractionImpl extends BotInteraction {
       feedbackAt: feedbackAt is DateTime? ? feedbackAt : this.feedbackAt,
       modelUsed: modelUsed is String? ? modelUsed : this.modelUsed,
       promptTokens: promptTokens is int? ? promptTokens : this.promptTokens,
-      completionTokens:
-          completionTokens is int? ? completionTokens : this.completionTokens,
+      completionTokens: completionTokens is int?
+          ? completionTokens
+          : this.completionTokens,
       totalTokens: totalTokens is int? ? totalTokens : this.totalTokens,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 }
 
+class BotInteractionUpdateTable extends _i1.UpdateTable<BotInteractionTable> {
+  BotInteractionUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> messageId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.messageId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> intent(String value) => _i1.ColumnValue(
+    table.intent,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> confidence(double value) => _i1.ColumnValue(
+    table.confidence,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> entities(String? value) => _i1.ColumnValue(
+    table.entities,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> userQuery(String? value) => _i1.ColumnValue(
+    table.userQuery,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> botResponse(String? value) => _i1.ColumnValue(
+    table.botResponse,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> functionName(String? value) =>
+      _i1.ColumnValue(
+        table.functionName,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> functionInput(String? value) =>
+      _i1.ColumnValue(
+        table.functionInput,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> functionOutput(String? value) =>
+      _i1.ColumnValue(
+        table.functionOutput,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> executionTime(int? value) => _i1.ColumnValue(
+    table.executionTime,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isSuccess(bool value) => _i1.ColumnValue(
+    table.isSuccess,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> errorMessage(String? value) =>
+      _i1.ColumnValue(
+        table.errorMessage,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> wasHelpful(bool? value) => _i1.ColumnValue(
+    table.wasHelpful,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> userFeedback(String? value) =>
+      _i1.ColumnValue(
+        table.userFeedback,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> feedbackAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.feedbackAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> modelUsed(String? value) => _i1.ColumnValue(
+    table.modelUsed,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> promptTokens(int? value) => _i1.ColumnValue(
+    table.promptTokens,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> completionTokens(int? value) => _i1.ColumnValue(
+    table.completionTokens,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalTokens(int? value) => _i1.ColumnValue(
+    table.totalTokens,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class BotInteractionTable extends _i1.Table<_i1.UuidValue> {
   BotInteractionTable({super.tableRelation})
-      : super(tableName: 'bot_interactions') {
+    : super(tableName: 'bot_interactions') {
+    updateTable = BotInteractionUpdateTable(this);
     conversationId = _i1.ColumnUuid(
       'conversationId',
       this,
@@ -522,6 +660,8 @@ class BotInteractionTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final BotInteractionUpdateTable updateTable;
+
   late final _i1.ColumnUuid conversationId;
 
   _i2.ConversationTable? _conversation;
@@ -598,30 +738,30 @@ class BotInteractionTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        conversationId,
-        userId,
-        messageId,
-        intent,
-        confidence,
-        entities,
-        userQuery,
-        botResponse,
-        functionName,
-        functionInput,
-        functionOutput,
-        executionTime,
-        isSuccess,
-        errorMessage,
-        wasHelpful,
-        userFeedback,
-        feedbackAt,
-        modelUsed,
-        promptTokens,
-        completionTokens,
-        totalTokens,
-        createdAt,
-      ];
+    id,
+    conversationId,
+    userId,
+    messageId,
+    intent,
+    confidence,
+    entities,
+    userQuery,
+    botResponse,
+    functionName,
+    functionInput,
+    functionOutput,
+    executionTime,
+    isSuccess,
+    errorMessage,
+    wasHelpful,
+    userFeedback,
+    feedbackAt,
+    modelUsed,
+    promptTokens,
+    completionTokens,
+    totalTokens,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -650,9 +790,9 @@ class BotInteractionInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'conversation': _conversation,
-        'message': _message,
-      };
+    'conversation': _conversation,
+    'message': _message,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => BotInteraction.t;
@@ -847,6 +987,46 @@ class BotInteractionRepository {
     );
   }
 
+  /// Updates a single [BotInteraction] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<BotInteraction?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<BotInteractionUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<BotInteraction>(
+      id,
+      columnValues: columnValues(BotInteraction.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [BotInteraction]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<BotInteraction>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<BotInteractionUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<BotInteractionTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<BotInteractionTable>? orderBy,
+    _i1.OrderByListBuilder<BotInteractionTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<BotInteraction>(
+      columnValues: columnValues(BotInteraction.t.updateTable),
+      where: where(BotInteraction.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(BotInteraction.t),
+      orderByList: orderByList?.call(BotInteraction.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [BotInteraction]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -919,8 +1099,9 @@ class BotInteractionAttachRowRepository {
       throw ArgumentError.notNull('conversation.id');
     }
 
-    var $botInteraction =
-        botInteraction.copyWith(conversationId: conversation.id);
+    var $botInteraction = botInteraction.copyWith(
+      conversationId: conversation.id,
+    );
     await session.db.updateRow<BotInteraction>(
       $botInteraction,
       columns: [BotInteraction.t.conversationId],
@@ -962,16 +1143,16 @@ class BotInteractionDetachRowRepository {
   /// the related record.
   Future<void> message(
     _i1.Session session,
-    BotInteraction botinteraction, {
+    BotInteraction botInteraction, {
     _i1.Transaction? transaction,
   }) async {
-    if (botinteraction.id == null) {
-      throw ArgumentError.notNull('botinteraction.id');
+    if (botInteraction.id == null) {
+      throw ArgumentError.notNull('botInteraction.id');
     }
 
-    var $botinteraction = botinteraction.copyWith(messageId: null);
+    var $botInteraction = botInteraction.copyWith(messageId: null);
     await session.db.updateRow<BotInteraction>(
-      $botinteraction,
+      $botInteraction,
       columns: [BotInteraction.t.messageId],
       transaction: transaction,
     );

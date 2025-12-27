@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -38,20 +39,20 @@ abstract class TierFeature implements _i1.SerializableModel {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        allowBulkOperations = allowBulkOperations ?? false,
-        allowAdvancedAnalytics = allowAdvancedAnalytics ?? false,
-        allowAPIAccess = allowAPIAccess ?? false,
-        allowWhiteLabel = allowWhiteLabel ?? false,
-        supportPriority = supportPriority ?? 'standard',
-        supportResponseTime = supportResponseTime ?? 24,
-        overageToolCallPrice = overageToolCallPrice ?? 0.01,
-        overageAIMessagePrice = overageAIMessagePrice ?? 0.001,
-        overageProductPrice = overageProductPrice ?? 1.0,
-        overageAIDescriptionPrice = overageAIDescriptionPrice ?? 0.1,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       allowBulkOperations = allowBulkOperations ?? false,
+       allowAdvancedAnalytics = allowAdvancedAnalytics ?? false,
+       allowAPIAccess = allowAPIAccess ?? false,
+       allowWhiteLabel = allowWhiteLabel ?? false,
+       supportPriority = supportPriority ?? 'standard',
+       supportResponseTime = supportResponseTime ?? 24,
+       overageToolCallPrice = overageToolCallPrice ?? 0.01,
+       overageAIMessagePrice = overageAIMessagePrice ?? 0.001,
+       overageProductPrice = overageProductPrice ?? 1.0,
+       overageAIDescriptionPrice = overageAIDescriptionPrice ?? 0.1,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory TierFeature({
     _i1.UuidValue? id,
@@ -83,7 +84,9 @@ abstract class TierFeature implements _i1.SerializableModel {
   factory TierFeature.fromJson(Map<String, dynamic> jsonSerialization) {
     return TierFeature(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      tier: _i2.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
+      tier: _i2.SubscriptionTier.fromJson(
+        (jsonSerialization['tier'] as String),
+      ),
       dailyToolCallLimit: jsonSerialization['dailyToolCallLimit'] as int,
       monthlyToolCallLimit: jsonSerialization['monthlyToolCallLimit'] as int,
       dailyAIMessageLimit: jsonSerialization['dailyAIMessageLimit'] as int,
@@ -101,25 +104,25 @@ abstract class TierFeature implements _i1.SerializableModel {
       yearlyPrice: (jsonSerialization['yearlyPrice'] as num).toDouble(),
       platformTransactionFee:
           (jsonSerialization['platformTransactionFee'] as num).toDouble(),
-      overageToolCallPrice:
-          (jsonSerialization['overageToolCallPrice'] as num).toDouble(),
-      overageAIMessagePrice:
-          (jsonSerialization['overageAIMessagePrice'] as num).toDouble(),
-      overageProductPrice:
-          (jsonSerialization['overageProductPrice'] as num).toDouble(),
+      overageToolCallPrice: (jsonSerialization['overageToolCallPrice'] as num)
+          .toDouble(),
+      overageAIMessagePrice: (jsonSerialization['overageAIMessagePrice'] as num)
+          .toDouble(),
+      overageProductPrice: (jsonSerialization['overageProductPrice'] as num)
+          .toDouble(),
       overageAIDescriptionPrice:
           (jsonSerialization['overageAIDescriptionPrice'] as num).toDouble(),
       isActive: jsonSerialization['isActive'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i2.SubscriptionTier tier;
@@ -200,6 +203,7 @@ abstract class TierFeature implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'TierFeature',
       'id': id.toJson(),
       'tier': tier.toJson(),
       'dailyToolCallLimit': dailyToolCallLimit,
@@ -260,31 +264,31 @@ class _TierFeatureImpl extends TierFeature {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          tier: tier,
-          dailyToolCallLimit: dailyToolCallLimit,
-          monthlyToolCallLimit: monthlyToolCallLimit,
-          dailyAIMessageLimit: dailyAIMessageLimit,
-          monthlyAIMessageLimit: monthlyAIMessageLimit,
-          productLimit: productLimit,
-          aiDescriptionLimit: aiDescriptionLimit,
-          allowBulkOperations: allowBulkOperations,
-          allowAdvancedAnalytics: allowAdvancedAnalytics,
-          allowAPIAccess: allowAPIAccess,
-          allowWhiteLabel: allowWhiteLabel,
-          supportPriority: supportPriority,
-          supportResponseTime: supportResponseTime,
-          monthlyPrice: monthlyPrice,
-          yearlyPrice: yearlyPrice,
-          platformTransactionFee: platformTransactionFee,
-          overageToolCallPrice: overageToolCallPrice,
-          overageAIMessagePrice: overageAIMessagePrice,
-          overageProductPrice: overageProductPrice,
-          overageAIDescriptionPrice: overageAIDescriptionPrice,
-          isActive: isActive,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         tier: tier,
+         dailyToolCallLimit: dailyToolCallLimit,
+         monthlyToolCallLimit: monthlyToolCallLimit,
+         dailyAIMessageLimit: dailyAIMessageLimit,
+         monthlyAIMessageLimit: monthlyAIMessageLimit,
+         productLimit: productLimit,
+         aiDescriptionLimit: aiDescriptionLimit,
+         allowBulkOperations: allowBulkOperations,
+         allowAdvancedAnalytics: allowAdvancedAnalytics,
+         allowAPIAccess: allowAPIAccess,
+         allowWhiteLabel: allowWhiteLabel,
+         supportPriority: supportPriority,
+         supportResponseTime: supportResponseTime,
+         monthlyPrice: monthlyPrice,
+         yearlyPrice: yearlyPrice,
+         platformTransactionFee: platformTransactionFee,
+         overageToolCallPrice: overageToolCallPrice,
+         overageAIMessagePrice: overageAIMessagePrice,
+         overageProductPrice: overageProductPrice,
+         overageAIDescriptionPrice: overageAIDescriptionPrice,
+         isActive: isActive,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [TierFeature]
   /// with some or all fields replaced by the given arguments.

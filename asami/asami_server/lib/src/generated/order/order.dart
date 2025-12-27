@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -18,6 +19,7 @@ import '../user/user.dart' as _i4;
 import '../user/vendor_profile.dart' as _i5;
 import '../user/address.dart' as _i6;
 import '../order/payment_method.dart' as _i7;
+import 'package:asami_server/src/generated/protocol.dart' as _i8;
 
 abstract class Order
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -63,20 +65,20 @@ abstract class Order
     this.shippedAt,
     this.deliveredAt,
     this.cancelledAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.OrderStatus.pending,
-        taxAmount = taxAmount ?? 0.0,
-        shippingCost = shippingCost ?? 0.0,
-        discountAmount = discountAmount ?? 0.0,
-        platformFee = platformFee ?? 0.0,
-        currency = currency ?? 'USD',
-        paymentStatus = paymentStatus ?? _i3.PaymentStatus.pending,
-        orderSource = orderSource ?? 'whatsapp',
-        isGift = isGift ?? false,
-        requiresSignature = requiresSignature ?? false,
-        isPriority = isPriority ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.OrderStatus.pending,
+       taxAmount = taxAmount ?? 0.0,
+       shippingCost = shippingCost ?? 0.0,
+       discountAmount = discountAmount ?? 0.0,
+       platformFee = platformFee ?? 0.0,
+       currency = currency ?? 'USD',
+       paymentStatus = paymentStatus ?? _i3.PaymentStatus.pending,
+       orderSource = orderSource ?? 'whatsapp',
+       isGift = isGift ?? false,
+       requiresSignature = requiresSignature ?? false,
+       isPriority = isPriority ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Order({
     _i1.UuidValue? id,
@@ -125,20 +127,22 @@ abstract class Order
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i4.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i8.Protocol().deserialize<_i4.User>(jsonSerialization['customer']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i5.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i8.Protocol().deserialize<_i5.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       orderNumber: jsonSerialization['orderNumber'] as String,
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as int)),
+      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       shippingCost: (jsonSerialization['shippingCost'] as num).toDouble(),
@@ -147,30 +151,36 @@ abstract class Order
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       shippingAddressId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['shippingAddressId']),
+        jsonSerialization['shippingAddressId'],
+      ),
       shippingAddress: jsonSerialization['shippingAddress'] == null
           ? null
-          : _i6.Address.fromJson(
-              (jsonSerialization['shippingAddress'] as Map<String, dynamic>)),
+          : _i8.Protocol().deserialize<_i6.Address>(
+              jsonSerialization['shippingAddress'],
+            ),
       deliveryInstructions:
           jsonSerialization['deliveryInstructions'] as String?,
       estimatedDeliveryDate: jsonSerialization['estimatedDeliveryDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['estimatedDeliveryDate']),
+              jsonSerialization['estimatedDeliveryDate'],
+            ),
       actualDeliveryDate: jsonSerialization['actualDeliveryDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['actualDeliveryDate']),
+              jsonSerialization['actualDeliveryDate'],
+            ),
       trackingNumber: jsonSerialization['trackingNumber'] as String?,
       shippingProvider: jsonSerialization['shippingProvider'] as String?,
       customerName: jsonSerialization['customerName'] as String,
       customerPhone: jsonSerialization['customerPhone'] as String,
       customerEmail: jsonSerialization['customerEmail'] as String?,
       paymentMethod: _i7.PaymentMethod.fromJson(
-          (jsonSerialization['paymentMethod'] as int)),
+        (jsonSerialization['paymentMethod'] as String),
+      ),
       paymentStatus: _i3.PaymentStatus.fromJson(
-          (jsonSerialization['paymentStatus'] as int)),
+        (jsonSerialization['paymentStatus'] as String),
+      ),
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
@@ -181,29 +191,35 @@ abstract class Order
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       isGift: jsonSerialization['isGift'] as bool,
       requiresSignature: jsonSerialization['requiresSignature'] as bool,
       isPriority: jsonSerialization['isPriority'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       confirmedAt: jsonSerialization['confirmedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['confirmedAt']),
+              jsonSerialization['confirmedAt'],
+            ),
       shippedAt: jsonSerialization['shippedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['shippedAt']),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['deliveredAt']),
+              jsonSerialization['deliveredAt'],
+            ),
       cancelledAt: jsonSerialization['cancelledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['cancelledAt']),
+              jsonSerialization['cancelledAt'],
+            ),
     );
   }
 
@@ -346,6 +362,7 @@ abstract class Order
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Order',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJson(),
@@ -396,6 +413,7 @@ abstract class Order
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Order',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJsonForProtocol(),
@@ -528,48 +546,48 @@ class _OrderImpl extends Order {
     DateTime? deliveredAt,
     DateTime? cancelledAt,
   }) : super._(
-          id: id,
-          customerId: customerId,
-          customer: customer,
-          vendorId: vendorId,
-          vendor: vendor,
-          orderNumber: orderNumber,
-          status: status,
-          subtotal: subtotal,
-          taxAmount: taxAmount,
-          shippingCost: shippingCost,
-          discountAmount: discountAmount,
-          platformFee: platformFee,
-          totalAmount: totalAmount,
-          currency: currency,
-          shippingAddressId: shippingAddressId,
-          shippingAddress: shippingAddress,
-          deliveryInstructions: deliveryInstructions,
-          estimatedDeliveryDate: estimatedDeliveryDate,
-          actualDeliveryDate: actualDeliveryDate,
-          trackingNumber: trackingNumber,
-          shippingProvider: shippingProvider,
-          customerName: customerName,
-          customerPhone: customerPhone,
-          customerEmail: customerEmail,
-          paymentMethod: paymentMethod,
-          paymentStatus: paymentStatus,
-          paidAt: paidAt,
-          customerNotes: customerNotes,
-          vendorNotes: vendorNotes,
-          cancellationReason: cancellationReason,
-          orderSource: orderSource,
-          conversationId: conversationId,
-          isGift: isGift,
-          requiresSignature: requiresSignature,
-          isPriority: isPriority,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          confirmedAt: confirmedAt,
-          shippedAt: shippedAt,
-          deliveredAt: deliveredAt,
-          cancelledAt: cancelledAt,
-        );
+         id: id,
+         customerId: customerId,
+         customer: customer,
+         vendorId: vendorId,
+         vendor: vendor,
+         orderNumber: orderNumber,
+         status: status,
+         subtotal: subtotal,
+         taxAmount: taxAmount,
+         shippingCost: shippingCost,
+         discountAmount: discountAmount,
+         platformFee: platformFee,
+         totalAmount: totalAmount,
+         currency: currency,
+         shippingAddressId: shippingAddressId,
+         shippingAddress: shippingAddress,
+         deliveryInstructions: deliveryInstructions,
+         estimatedDeliveryDate: estimatedDeliveryDate,
+         actualDeliveryDate: actualDeliveryDate,
+         trackingNumber: trackingNumber,
+         shippingProvider: shippingProvider,
+         customerName: customerName,
+         customerPhone: customerPhone,
+         customerEmail: customerEmail,
+         paymentMethod: paymentMethod,
+         paymentStatus: paymentStatus,
+         paidAt: paidAt,
+         customerNotes: customerNotes,
+         vendorNotes: vendorNotes,
+         cancellationReason: cancellationReason,
+         orderSource: orderSource,
+         conversationId: conversationId,
+         isGift: isGift,
+         requiresSignature: requiresSignature,
+         isPriority: isPriority,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         confirmedAt: confirmedAt,
+         shippedAt: shippedAt,
+         deliveredAt: deliveredAt,
+         cancelledAt: cancelledAt,
+       );
 
   /// Returns a shallow copy of this [Order]
   /// with some or all fields replaced by the given arguments.
@@ -646,20 +664,23 @@ class _OrderImpl extends Order {
       actualDeliveryDate: actualDeliveryDate is DateTime?
           ? actualDeliveryDate
           : this.actualDeliveryDate,
-      trackingNumber:
-          trackingNumber is String? ? trackingNumber : this.trackingNumber,
+      trackingNumber: trackingNumber is String?
+          ? trackingNumber
+          : this.trackingNumber,
       shippingProvider: shippingProvider is String?
           ? shippingProvider
           : this.shippingProvider,
       customerName: customerName ?? this.customerName,
       customerPhone: customerPhone ?? this.customerPhone,
-      customerEmail:
-          customerEmail is String? ? customerEmail : this.customerEmail,
+      customerEmail: customerEmail is String?
+          ? customerEmail
+          : this.customerEmail,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       paidAt: paidAt is DateTime? ? paidAt : this.paidAt,
-      customerNotes:
-          customerNotes is String? ? customerNotes : this.customerNotes,
+      customerNotes: customerNotes is String?
+          ? customerNotes
+          : this.customerNotes,
       vendorNotes: vendorNotes is String? ? vendorNotes : this.vendorNotes,
       cancellationReason: cancellationReason is String?
           ? cancellationReason
@@ -681,8 +702,228 @@ class _OrderImpl extends Order {
   }
 }
 
+class OrderUpdateTable extends _i1.UpdateTable<OrderTable> {
+  OrderUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> customerId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.customerId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> orderNumber(String value) => _i1.ColumnValue(
+    table.orderNumber,
+    value,
+  );
+
+  _i1.ColumnValue<_i2.OrderStatus, _i2.OrderStatus> status(
+    _i2.OrderStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subtotal(double value) => _i1.ColumnValue(
+    table.subtotal,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> taxAmount(double value) => _i1.ColumnValue(
+    table.taxAmount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> shippingCost(double value) => _i1.ColumnValue(
+    table.shippingCost,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discountAmount(double value) =>
+      _i1.ColumnValue(
+        table.discountAmount,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> platformFee(double value) => _i1.ColumnValue(
+    table.platformFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalAmount(double value) => _i1.ColumnValue(
+    table.totalAmount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> shippingAddressId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.shippingAddressId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> deliveryInstructions(String? value) =>
+      _i1.ColumnValue(
+        table.deliveryInstructions,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> estimatedDeliveryDate(DateTime? value) =>
+      _i1.ColumnValue(
+        table.estimatedDeliveryDate,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> actualDeliveryDate(DateTime? value) =>
+      _i1.ColumnValue(
+        table.actualDeliveryDate,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> trackingNumber(String? value) =>
+      _i1.ColumnValue(
+        table.trackingNumber,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> shippingProvider(String? value) =>
+      _i1.ColumnValue(
+        table.shippingProvider,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> customerName(String value) => _i1.ColumnValue(
+    table.customerName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> customerPhone(String value) =>
+      _i1.ColumnValue(
+        table.customerPhone,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> customerEmail(String? value) =>
+      _i1.ColumnValue(
+        table.customerEmail,
+        value,
+      );
+
+  _i1.ColumnValue<_i7.PaymentMethod, _i7.PaymentMethod> paymentMethod(
+    _i7.PaymentMethod value,
+  ) => _i1.ColumnValue(
+    table.paymentMethod,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.PaymentStatus, _i3.PaymentStatus> paymentStatus(
+    _i3.PaymentStatus value,
+  ) => _i1.ColumnValue(
+    table.paymentStatus,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> paidAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.paidAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> customerNotes(String? value) =>
+      _i1.ColumnValue(
+        table.customerNotes,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> vendorNotes(String? value) => _i1.ColumnValue(
+    table.vendorNotes,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> cancellationReason(String? value) =>
+      _i1.ColumnValue(
+        table.cancellationReason,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> orderSource(String value) => _i1.ColumnValue(
+    table.orderSource,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isGift(bool value) => _i1.ColumnValue(
+    table.isGift,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> requiresSignature(bool value) => _i1.ColumnValue(
+    table.requiresSignature,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isPriority(bool value) => _i1.ColumnValue(
+    table.isPriority,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> confirmedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.confirmedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> shippedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.shippedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> deliveredAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.deliveredAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> cancelledAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.cancelledAt,
+        value,
+      );
+}
+
 class OrderTable extends _i1.Table<_i1.UuidValue> {
   OrderTable({super.tableRelation}) : super(tableName: 'orders') {
+    updateTable = OrderUpdateTable(this);
     customerId = _i1.ColumnUuid(
       'customerId',
       this,
@@ -698,7 +939,7 @@ class OrderTable extends _i1.Table<_i1.UuidValue> {
     status = _i1.ColumnEnum(
       'status',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
     subtotal = _i1.ColumnDouble(
@@ -773,12 +1014,12 @@ class OrderTable extends _i1.Table<_i1.UuidValue> {
     paymentMethod = _i1.ColumnEnum(
       'paymentMethod',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     paymentStatus = _i1.ColumnEnum(
       'paymentStatus',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
     paidAt = _i1.ColumnDateTime(
@@ -848,6 +1089,8 @@ class OrderTable extends _i1.Table<_i1.UuidValue> {
       this,
     );
   }
+
+  late final OrderUpdateTable updateTable;
 
   late final _i1.ColumnUuid customerId;
 
@@ -970,45 +1213,45 @@ class OrderTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        customerId,
-        vendorId,
-        orderNumber,
-        status,
-        subtotal,
-        taxAmount,
-        shippingCost,
-        discountAmount,
-        platformFee,
-        totalAmount,
-        currency,
-        shippingAddressId,
-        deliveryInstructions,
-        estimatedDeliveryDate,
-        actualDeliveryDate,
-        trackingNumber,
-        shippingProvider,
-        customerName,
-        customerPhone,
-        customerEmail,
-        paymentMethod,
-        paymentStatus,
-        paidAt,
-        customerNotes,
-        vendorNotes,
-        cancellationReason,
-        orderSource,
-        conversationId,
-        isGift,
-        requiresSignature,
-        isPriority,
-        createdAt,
-        updatedAt,
-        confirmedAt,
-        shippedAt,
-        deliveredAt,
-        cancelledAt,
-      ];
+    id,
+    customerId,
+    vendorId,
+    orderNumber,
+    status,
+    subtotal,
+    taxAmount,
+    shippingCost,
+    discountAmount,
+    platformFee,
+    totalAmount,
+    currency,
+    shippingAddressId,
+    deliveryInstructions,
+    estimatedDeliveryDate,
+    actualDeliveryDate,
+    trackingNumber,
+    shippingProvider,
+    customerName,
+    customerPhone,
+    customerEmail,
+    paymentMethod,
+    paymentStatus,
+    paidAt,
+    customerNotes,
+    vendorNotes,
+    cancellationReason,
+    orderSource,
+    conversationId,
+    isGift,
+    requiresSignature,
+    isPriority,
+    createdAt,
+    updatedAt,
+    confirmedAt,
+    shippedAt,
+    deliveredAt,
+    cancelledAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -1044,10 +1287,10 @@ class OrderInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'customer': _customer,
-        'vendor': _vendor,
-        'shippingAddress': _shippingAddress,
-      };
+    'customer': _customer,
+    'vendor': _vendor,
+    'shippingAddress': _shippingAddress,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => Order.t;
@@ -1236,6 +1479,46 @@ class OrderRepository {
     return session.db.updateRow<Order>(
       row,
       columns: columns?.call(Order.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Order] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Order?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<OrderUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Order>(
+      id,
+      columnValues: columnValues(Order.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Order]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Order>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<OrderUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<OrderTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<OrderTable>? orderBy,
+    _i1.OrderByListBuilder<OrderTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Order>(
+      columnValues: columnValues(Order.t.updateTable),
+      where: where(Order.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Order.t),
+      orderByList: orderByList?.call(Order.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

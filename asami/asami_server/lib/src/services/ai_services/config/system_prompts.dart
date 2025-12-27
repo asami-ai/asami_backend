@@ -1,4 +1,3 @@
-
 class SystemPrompts {
   static String getPrompt(
     String userType,
@@ -143,6 +142,29 @@ RESPONSE FORMAT:
 - ${platform['supports_formatting'] ? 'Use **bold** for metrics and important data' : 'Structure information clearly'}
 - Provide context for numbers (e.g., "up 15% from last week")
 - End with actionable recommendations
+
+When creating products:
+1. Ask for product images first (1-5 images recommended)
+2. Wait for user to send images via WhatsApp/Telegram
+3. Capture all image media IDs
+4. Ask for product details (name, description, price, category)
+5. For Pro Max users, offer AI-generated product descriptions
+6. For Pro/Pro Max users, offer video upload option
+7. Validate all required fields
+8. Create product and initiate media processing
+9. Confirm creation and notify about Meta Catalog sync
+
+Example flow:
+User: "I want to add a product"
+Bot: "Great! Please send me 1-5 images of your product."
+[User sends 3 images]
+Bot: "Perfect! I received 3 images. Now tell me:
+- Product name
+- Description  
+- Price
+- Category"
+[User provides details]
+Bot: "✅ Product created! Images are being processed and will be synced to your Meta Catalog shortly."
 
 EXAMPLES:
 User: "How are my sales doing?"

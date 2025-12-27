@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class Cart
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -28,12 +30,12 @@ abstract class Cart
     DateTime? createdAt,
     DateTime? updatedAt,
     this.expiresAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isActive = isActive ?? true,
-        itemCount = itemCount ?? 0,
-        subtotal = subtotal ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isActive = isActive ?? true,
+       itemCount = itemCount ?? 0,
+       subtotal = subtotal ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Cart({
     _i1.UuidValue? id,
@@ -52,21 +54,23 @@ abstract class Cart
   factory Cart.fromJson(Map<String, dynamic> jsonSerialization) {
     return Cart(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['customer']),
       sessionId: jsonSerialization['sessionId'] as String?,
       isActive: jsonSerialization['isActive'] as bool,
       itemCount: jsonSerialization['itemCount'] as int,
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       convertedToOrderId: jsonSerialization['convertedToOrderId'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
@@ -122,6 +126,7 @@ abstract class Cart
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Cart',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJson(),
@@ -139,6 +144,7 @@ abstract class Cart
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Cart',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJsonForProtocol(),
@@ -199,18 +205,18 @@ class _CartImpl extends Cart {
     DateTime? updatedAt,
     DateTime? expiresAt,
   }) : super._(
-          id: id,
-          customerId: customerId,
-          customer: customer,
-          sessionId: sessionId,
-          isActive: isActive,
-          itemCount: itemCount,
-          subtotal: subtotal,
-          convertedToOrderId: convertedToOrderId,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          expiresAt: expiresAt,
-        );
+         id: id,
+         customerId: customerId,
+         customer: customer,
+         sessionId: sessionId,
+         isActive: isActive,
+         itemCount: itemCount,
+         subtotal: subtotal,
+         convertedToOrderId: convertedToOrderId,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         expiresAt: expiresAt,
+       );
 
   /// Returns a shallow copy of this [Cart]
   /// with some or all fields replaced by the given arguments.
@@ -247,8 +253,64 @@ class _CartImpl extends Cart {
   }
 }
 
+class CartUpdateTable extends _i1.UpdateTable<CartTable> {
+  CartUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> customerId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.customerId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> sessionId(String? value) => _i1.ColumnValue(
+    table.sessionId,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> itemCount(int value) => _i1.ColumnValue(
+    table.itemCount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subtotal(double value) => _i1.ColumnValue(
+    table.subtotal,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> convertedToOrderId(String? value) =>
+      _i1.ColumnValue(
+        table.convertedToOrderId,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> expiresAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.expiresAt,
+        value,
+      );
+}
+
 class CartTable extends _i1.Table<_i1.UuidValue> {
   CartTable({super.tableRelation}) : super(tableName: 'carts') {
+    updateTable = CartUpdateTable(this);
     customerId = _i1.ColumnUuid(
       'customerId',
       this,
@@ -292,6 +354,8 @@ class CartTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final CartUpdateTable updateTable;
+
   late final _i1.ColumnUuid customerId;
 
   _i2.UserTable? _customer;
@@ -327,17 +391,17 @@ class CartTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        customerId,
-        sessionId,
-        isActive,
-        itemCount,
-        subtotal,
-        convertedToOrderId,
-        createdAt,
-        updatedAt,
-        expiresAt,
-      ];
+    id,
+    customerId,
+    sessionId,
+    isActive,
+    itemCount,
+    subtotal,
+    convertedToOrderId,
+    createdAt,
+    updatedAt,
+    expiresAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -545,6 +609,46 @@ class CartRepository {
     return session.db.updateRow<Cart>(
       row,
       columns: columns?.call(Cart.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Cart] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Cart?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<CartUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Cart>(
+      id,
+      columnValues: columnValues(Cart.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Cart]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Cart>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<CartUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<CartTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<CartTable>? orderBy,
+    _i1.OrderByListBuilder<CartTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Cart>(
+      columnValues: columnValues(Cart.t.updateTable),
+      where: where(Cart.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Cart.t),
+      orderByList: orderByList?.call(Cart.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

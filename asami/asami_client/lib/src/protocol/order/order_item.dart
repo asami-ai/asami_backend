@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -14,6 +15,7 @@ import '../order/order_status.dart' as _i2;
 import '../order/order.dart' as _i3;
 import '../product/product.dart' as _i4;
 import '../product/product_variant.dart' as _i5;
+import 'package:asami_client/src/protocol/protocol.dart' as _i6;
 
 abstract class OrderItem implements _i1.SerializableModel {
   OrderItem._({
@@ -44,13 +46,13 @@ abstract class OrderItem implements _i1.SerializableModel {
     this.returnBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        taxAmount = taxAmount ?? 0.0,
-        status = status ?? _i2.OrderStatus.pending,
-        isFulfilled = isFulfilled ?? false,
-        isReturnable = isReturnable ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       taxAmount = taxAmount ?? 0.0,
+       status = status ?? _i2.OrderStatus.pending,
+       isFulfilled = isFulfilled ?? false,
+       isReturnable = isReturnable ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory OrderItem({
     _i1.UuidValue? id,
@@ -85,25 +87,28 @@ abstract class OrderItem implements _i1.SerializableModel {
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return OrderItem(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
+      orderId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['orderId'],
+      ),
       order: jsonSerialization['order'] == null
           ? null
-          : _i3.Order.fromJson(
-              (jsonSerialization['order'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i6.Protocol().deserialize<_i3.Order>(jsonSerialization['order']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i4.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i4.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       variant: jsonSerialization['variant'] == null
           ? null
-          : _i5.ProductVariant.fromJson(
-              (jsonSerialization['variant'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i5.ProductVariant>(
+              jsonSerialization['variant'],
+            ),
       productName: jsonSerialization['productName'] as String,
       productDescription: jsonSerialization['productDescription'] as String?,
       productImageUrl: jsonSerialization['productImageUrl'] as String?,
@@ -117,26 +122,27 @@ abstract class OrderItem implements _i1.SerializableModel {
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as int)),
+      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
       isFulfilled: jsonSerialization['isFulfilled'] as bool,
       fulfilledAt: jsonSerialization['fulfilledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['fulfilledAt']),
+              jsonSerialization['fulfilledAt'],
+            ),
       isReturnable: jsonSerialization['isReturnable'] as bool,
       returnBy: jsonSerialization['returnBy'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['returnBy']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue orderId;
@@ -226,6 +232,7 @@ abstract class OrderItem implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'OrderItem',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJson(),
@@ -294,34 +301,34 @@ class _OrderItemImpl extends OrderItem {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          order: order,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          variant: variant,
-          productName: productName,
-          productDescription: productDescription,
-          productImageUrl: productImageUrl,
-          sku: sku,
-          variantName: variantName,
-          color: color,
-          size: size,
-          unitPrice: unitPrice,
-          discountPrice: discountPrice,
-          quantity: quantity,
-          subtotal: subtotal,
-          taxAmount: taxAmount,
-          totalAmount: totalAmount,
-          status: status,
-          isFulfilled: isFulfilled,
-          fulfilledAt: fulfilledAt,
-          isReturnable: isReturnable,
-          returnBy: returnBy,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         orderId: orderId,
+         order: order,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         variant: variant,
+         productName: productName,
+         productDescription: productDescription,
+         productImageUrl: productImageUrl,
+         sku: sku,
+         variantName: variantName,
+         color: color,
+         size: size,
+         unitPrice: unitPrice,
+         discountPrice: discountPrice,
+         quantity: quantity,
+         subtotal: subtotal,
+         taxAmount: taxAmount,
+         totalAmount: totalAmount,
+         status: status,
+         isFulfilled: isFulfilled,
+         fulfilledAt: fulfilledAt,
+         isReturnable: isReturnable,
+         returnBy: returnBy,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [OrderItem]
   /// with some or all fields replaced by the given arguments.
@@ -363,21 +370,24 @@ class _OrderItemImpl extends OrderItem {
       productId: productId ?? this.productId,
       product: product is _i4.Product? ? product : this.product?.copyWith(),
       variantId: variantId is _i1.UuidValue? ? variantId : this.variantId,
-      variant:
-          variant is _i5.ProductVariant? ? variant : this.variant?.copyWith(),
+      variant: variant is _i5.ProductVariant?
+          ? variant
+          : this.variant?.copyWith(),
       productName: productName ?? this.productName,
       productDescription: productDescription is String?
           ? productDescription
           : this.productDescription,
-      productImageUrl:
-          productImageUrl is String? ? productImageUrl : this.productImageUrl,
+      productImageUrl: productImageUrl is String?
+          ? productImageUrl
+          : this.productImageUrl,
       sku: sku is String? ? sku : this.sku,
       variantName: variantName is String? ? variantName : this.variantName,
       color: color is String? ? color : this.color,
       size: size is String? ? size : this.size,
       unitPrice: unitPrice ?? this.unitPrice,
-      discountPrice:
-          discountPrice is double? ? discountPrice : this.discountPrice,
+      discountPrice: discountPrice is double?
+          ? discountPrice
+          : this.discountPrice,
       quantity: quantity ?? this.quantity,
       subtotal: subtotal ?? this.subtotal,
       taxAmount: taxAmount ?? this.taxAmount,

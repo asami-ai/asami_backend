@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -28,11 +29,11 @@ abstract class QuickReply
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        displayOrder = displayOrder ?? 0,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       displayOrder = displayOrder ?? 0,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory QuickReply({
     _i1.UuidValue? id,
@@ -53,19 +54,24 @@ abstract class QuickReply
     return QuickReply(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       intent: jsonSerialization['intent'] as String,
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       title: jsonSerialization['title'] as String,
       payload: jsonSerialization['payload'] as String,
       description: jsonSerialization['description'] as String?,
       iconUrl: jsonSerialization['iconUrl'] as String?,
       displayOrder: jsonSerialization['displayOrder'] as int,
       isActive: jsonSerialization['isActive'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -121,6 +127,7 @@ abstract class QuickReply
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'QuickReply',
       'id': id.toJson(),
       'intent': intent,
       'userType': userType.toJson(),
@@ -139,6 +146,7 @@ abstract class QuickReply
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'QuickReply',
       'id': id.toJson(),
       'intent': intent,
       'userType': userType.toJson(),
@@ -201,19 +209,19 @@ class _QuickReplyImpl extends QuickReply {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          intent: intent,
-          userType: userType,
-          platform: platform,
-          title: title,
-          payload: payload,
-          description: description,
-          iconUrl: iconUrl,
-          displayOrder: displayOrder,
-          isActive: isActive,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         intent: intent,
+         userType: userType,
+         platform: platform,
+         title: title,
+         payload: payload,
+         description: description,
+         iconUrl: iconUrl,
+         displayOrder: displayOrder,
+         isActive: isActive,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [QuickReply]
   /// with some or all fields replaced by the given arguments.
@@ -250,8 +258,73 @@ class _QuickReplyImpl extends QuickReply {
   }
 }
 
+class QuickReplyUpdateTable extends _i1.UpdateTable<QuickReplyTable> {
+  QuickReplyUpdateTable(super.table);
+
+  _i1.ColumnValue<String, String> intent(String value) => _i1.ColumnValue(
+    table.intent,
+    value,
+  );
+
+  _i1.ColumnValue<_i2.UserType, _i2.UserType> userType(_i2.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.PlatformType, _i3.PlatformType> platform(
+    _i3.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> title(String value) => _i1.ColumnValue(
+    table.title,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> payload(String value) => _i1.ColumnValue(
+    table.payload,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> description(String? value) => _i1.ColumnValue(
+    table.description,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> iconUrl(String? value) => _i1.ColumnValue(
+    table.iconUrl,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> displayOrder(int value) => _i1.ColumnValue(
+    table.displayOrder,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class QuickReplyTable extends _i1.Table<_i1.UuidValue> {
   QuickReplyTable({super.tableRelation}) : super(tableName: 'quick_replies') {
+    updateTable = QuickReplyUpdateTable(this);
     intent = _i1.ColumnString(
       'intent',
       this,
@@ -259,12 +332,12 @@ class QuickReplyTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     title = _i1.ColumnString(
       'title',
@@ -304,6 +377,8 @@ class QuickReplyTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final QuickReplyUpdateTable updateTable;
+
   late final _i1.ColumnString intent;
 
   late final _i1.ColumnEnum<_i2.UserType> userType;
@@ -328,19 +403,19 @@ class QuickReplyTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        intent,
-        userType,
-        platform,
-        title,
-        payload,
-        description,
-        iconUrl,
-        displayOrder,
-        isActive,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    intent,
+    userType,
+    platform,
+    title,
+    payload,
+    description,
+    iconUrl,
+    displayOrder,
+    isActive,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class QuickReplyInclude extends _i1.IncludeObject {
@@ -528,6 +603,46 @@ class QuickReplyRepository {
     return session.db.updateRow<QuickReply>(
       row,
       columns: columns?.call(QuickReply.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [QuickReply] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<QuickReply?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<QuickReplyUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<QuickReply>(
+      id,
+      columnValues: columnValues(QuickReply.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [QuickReply]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<QuickReply>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<QuickReplyUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<QuickReplyTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<QuickReplyTable>? orderBy,
+    _i1.OrderByListBuilder<QuickReplyTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<QuickReply>(
+      columnValues: columnValues(QuickReply.t.updateTable),
+      where: where(QuickReply.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(QuickReply.t),
+      orderByList: orderByList?.call(QuickReply.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

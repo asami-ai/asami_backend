@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:asami_server/src/services/dependency_injection.dart';
 import 'package:asami_server/src/services/messaging/telegram/telegram_service.dart';
 import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_service.dart';
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod/serverpod.dart' hide Message;
 import 'package:televerse/telegram.dart' hide User, Message;
 import '../../generated/protocol.dart';
 

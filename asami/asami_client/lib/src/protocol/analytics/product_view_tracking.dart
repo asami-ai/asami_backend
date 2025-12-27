@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
 import '../product/product.dart' as _i3;
 import '../messaging/platfom_type.dart' as _i4;
+import 'package:asami_client/src/protocol/protocol.dart' as _i5;
 
 abstract class ProductView implements _i1.SerializableModel {
   ProductView._({
@@ -27,10 +29,10 @@ abstract class ProductView implements _i1.SerializableModel {
     bool? addedToCart,
     bool? purchased,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        addedToCart = addedToCart ?? false,
-        purchased = purchased ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       addedToCart = addedToCart ?? false,
+       purchased = purchased ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ProductView({
     _i1.UuidValue? id,
@@ -52,28 +54,29 @@ abstract class ProductView implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i5.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      platform:
-          _i4.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i5.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
+      platform: _i4.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       source: jsonSerialization['source'] as String?,
       viewDurationSeconds: jsonSerialization['viewDurationSeconds'] as int?,
       addedToCart: jsonSerialization['addedToCart'] as bool,
       purchased: jsonSerialization['purchased'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -115,6 +118,7 @@ abstract class ProductView implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductView',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -152,18 +156,18 @@ class _ProductViewImpl extends ProductView {
     bool? purchased,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          productId: productId,
-          product: product,
-          platform: platform,
-          source: source,
-          viewDurationSeconds: viewDurationSeconds,
-          addedToCart: addedToCart,
-          purchased: purchased,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         productId: productId,
+         product: product,
+         platform: platform,
+         source: source,
+         viewDurationSeconds: viewDurationSeconds,
+         addedToCart: addedToCart,
+         purchased: purchased,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ProductView]
   /// with some or all fields replaced by the given arguments.

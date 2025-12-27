@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -29,16 +30,16 @@ abstract class AIConversationUsage
     required this.date,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        messageCount = messageCount ?? 0,
-        totalTokens = totalTokens ?? 0,
-        inputTokens = inputTokens ?? 0,
-        outputTokens = outputTokens ?? 0,
-        toolCallsInConversation = toolCallsInConversation ?? 0,
-        estimatedCost = estimatedCost ?? 0.0,
-        averageResponseTime = averageResponseTime ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       messageCount = messageCount ?? 0,
+       totalTokens = totalTokens ?? 0,
+       inputTokens = inputTokens ?? 0,
+       outputTokens = outputTokens ?? 0,
+       toolCallsInConversation = toolCallsInConversation ?? 0,
+       estimatedCost = estimatedCost ?? 0.0,
+       averageResponseTime = averageResponseTime ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory AIConversationUsage({
     _i1.UuidValue? id,
@@ -63,7 +64,8 @@ abstract class AIConversationUsage
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       messageCount: jsonSerialization['messageCount'] as int,
       totalTokens: jsonSerialization['totalTokens'] as int,
       inputTokens: jsonSerialization['inputTokens'] as int,
@@ -72,15 +74,17 @@ abstract class AIConversationUsage
           jsonSerialization['toolCallsInConversation'] as int,
       uniqueToolsUsed: jsonSerialization['uniqueToolsUsed'] as String?,
       estimatedCost: (jsonSerialization['estimatedCost'] as num).toDouble(),
-      averageResponseTime:
-          (jsonSerialization['averageResponseTime'] as num).toDouble(),
+      averageResponseTime: (jsonSerialization['averageResponseTime'] as num)
+          .toDouble(),
       userSatisfactionRating:
           (jsonSerialization['userSatisfactionRating'] as num?)?.toDouble(),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -145,6 +149,7 @@ abstract class AIConversationUsage
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'AIConversationUsage',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'conversationId': conversationId.toJson(),
@@ -167,6 +172,7 @@ abstract class AIConversationUsage
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'AIConversationUsage',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'conversationId': conversationId.toJson(),
@@ -236,22 +242,22 @@ class _AIConversationUsageImpl extends AIConversationUsage {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          conversationId: conversationId,
-          messageCount: messageCount,
-          totalTokens: totalTokens,
-          inputTokens: inputTokens,
-          outputTokens: outputTokens,
-          toolCallsInConversation: toolCallsInConversation,
-          uniqueToolsUsed: uniqueToolsUsed,
-          estimatedCost: estimatedCost,
-          averageResponseTime: averageResponseTime,
-          userSatisfactionRating: userSatisfactionRating,
-          date: date,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         conversationId: conversationId,
+         messageCount: messageCount,
+         totalTokens: totalTokens,
+         inputTokens: inputTokens,
+         outputTokens: outputTokens,
+         toolCallsInConversation: toolCallsInConversation,
+         uniqueToolsUsed: uniqueToolsUsed,
+         estimatedCost: estimatedCost,
+         averageResponseTime: averageResponseTime,
+         userSatisfactionRating: userSatisfactionRating,
+         date: date,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [AIConversationUsage]
   /// with some or all fields replaced by the given arguments.
@@ -284,8 +290,9 @@ class _AIConversationUsageImpl extends AIConversationUsage {
       outputTokens: outputTokens ?? this.outputTokens,
       toolCallsInConversation:
           toolCallsInConversation ?? this.toolCallsInConversation,
-      uniqueToolsUsed:
-          uniqueToolsUsed is String? ? uniqueToolsUsed : this.uniqueToolsUsed,
+      uniqueToolsUsed: uniqueToolsUsed is String?
+          ? uniqueToolsUsed
+          : this.uniqueToolsUsed,
       estimatedCost: estimatedCost ?? this.estimatedCost,
       averageResponseTime: averageResponseTime ?? this.averageResponseTime,
       userSatisfactionRating: userSatisfactionRating is double?
@@ -298,9 +305,95 @@ class _AIConversationUsageImpl extends AIConversationUsage {
   }
 }
 
+class AIConversationUsageUpdateTable
+    extends _i1.UpdateTable<AIConversationUsageTable> {
+  AIConversationUsageUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> messageCount(int value) => _i1.ColumnValue(
+    table.messageCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> totalTokens(int value) => _i1.ColumnValue(
+    table.totalTokens,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> inputTokens(int value) => _i1.ColumnValue(
+    table.inputTokens,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> outputTokens(int value) => _i1.ColumnValue(
+    table.outputTokens,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> toolCallsInConversation(int value) =>
+      _i1.ColumnValue(
+        table.toolCallsInConversation,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> uniqueToolsUsed(String? value) =>
+      _i1.ColumnValue(
+        table.uniqueToolsUsed,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> estimatedCost(double value) =>
+      _i1.ColumnValue(
+        table.estimatedCost,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> averageResponseTime(double value) =>
+      _i1.ColumnValue(
+        table.averageResponseTime,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> userSatisfactionRating(double? value) =>
+      _i1.ColumnValue(
+        table.userSatisfactionRating,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> date(DateTime value) => _i1.ColumnValue(
+    table.date,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class AIConversationUsageTable extends _i1.Table<_i1.UuidValue> {
   AIConversationUsageTable({super.tableRelation})
-      : super(tableName: 'ai_conversation_usage') {
+    : super(tableName: 'ai_conversation_usage') {
+    updateTable = AIConversationUsageUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -368,6 +461,8 @@ class AIConversationUsageTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final AIConversationUsageUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   late final _i1.ColumnUuid conversationId;
@@ -398,22 +493,22 @@ class AIConversationUsageTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        conversationId,
-        messageCount,
-        totalTokens,
-        inputTokens,
-        outputTokens,
-        toolCallsInConversation,
-        uniqueToolsUsed,
-        estimatedCost,
-        averageResponseTime,
-        userSatisfactionRating,
-        date,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    conversationId,
+    messageCount,
+    totalTokens,
+    inputTokens,
+    outputTokens,
+    toolCallsInConversation,
+    uniqueToolsUsed,
+    estimatedCost,
+    averageResponseTime,
+    userSatisfactionRating,
+    date,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class AIConversationUsageInclude extends _i1.IncludeObject {
@@ -601,6 +696,48 @@ class AIConversationUsageRepository {
     return session.db.updateRow<AIConversationUsage>(
       row,
       columns: columns?.call(AIConversationUsage.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [AIConversationUsage] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<AIConversationUsage?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<AIConversationUsageUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<AIConversationUsage>(
+      id,
+      columnValues: columnValues(AIConversationUsage.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [AIConversationUsage]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<AIConversationUsage>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<AIConversationUsageUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<AIConversationUsageTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<AIConversationUsageTable>? orderBy,
+    _i1.OrderByListBuilder<AIConversationUsageTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<AIConversationUsage>(
+      columnValues: columnValues(AIConversationUsage.t.updateTable),
+      where: where(AIConversationUsage.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(AIConversationUsage.t),
+      orderByList: orderByList?.call(AIConversationUsage.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

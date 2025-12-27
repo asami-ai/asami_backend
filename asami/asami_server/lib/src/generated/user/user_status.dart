@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -17,24 +18,25 @@ enum UserStatus implements _i1.SerializableModel {
   deactivated,
   pending_verification;
 
-  static UserStatus fromJson(int index) {
-    switch (index) {
-      case 0:
+  static UserStatus fromJson(String name) {
+    switch (name) {
+      case 'active':
         return UserStatus.active;
-      case 1:
+      case 'suspended':
         return UserStatus.suspended;
-      case 2:
+      case 'deactivated':
         return UserStatus.deactivated;
-      case 3:
+      case 'pending_verification':
         return UserStatus.pending_verification;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "UserStatus"');
+          'Value "$name" cannot be converted to "UserStatus"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

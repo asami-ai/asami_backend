@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -15,6 +16,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/user.dart' as _i2;
 import '../product/product.dart' as _i3;
 import '../messaging/platfom_type.dart' as _i4;
+import 'package:asami_server/src/generated/protocol.dart' as _i5;
 
 abstract class ProductView
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -30,10 +32,10 @@ abstract class ProductView
     bool? addedToCart,
     bool? purchased,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        addedToCart = addedToCart ?? false,
-        purchased = purchased ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       addedToCart = addedToCart ?? false,
+       purchased = purchased ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ProductView({
     _i1.UuidValue? id,
@@ -55,22 +57,25 @@ abstract class ProductView
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i5.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      platform:
-          _i4.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i5.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
+      platform: _i4.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       source: jsonSerialization['source'] as String?,
       viewDurationSeconds: jsonSerialization['viewDurationSeconds'] as int?,
       addedToCart: jsonSerialization['addedToCart'] as bool,
       purchased: jsonSerialization['purchased'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -123,6 +128,7 @@ abstract class ProductView
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductView',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -141,6 +147,7 @@ abstract class ProductView
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'ProductView',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -208,18 +215,18 @@ class _ProductViewImpl extends ProductView {
     bool? purchased,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          productId: productId,
-          product: product,
-          platform: platform,
-          source: source,
-          viewDurationSeconds: viewDurationSeconds,
-          addedToCart: addedToCart,
-          purchased: purchased,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         productId: productId,
+         product: product,
+         platform: platform,
+         source: source,
+         viewDurationSeconds: viewDurationSeconds,
+         addedToCart: addedToCart,
+         purchased: purchased,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ProductView]
   /// with some or all fields replaced by the given arguments.
@@ -256,8 +263,59 @@ class _ProductViewImpl extends ProductView {
   }
 }
 
+class ProductViewUpdateTable extends _i1.UpdateTable<ProductViewTable> {
+  ProductViewUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i4.PlatformType, _i4.PlatformType> platform(
+    _i4.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> source(String? value) => _i1.ColumnValue(
+    table.source,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> viewDurationSeconds(int? value) => _i1.ColumnValue(
+    table.viewDurationSeconds,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> addedToCart(bool value) => _i1.ColumnValue(
+    table.addedToCart,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> purchased(bool value) => _i1.ColumnValue(
+    table.purchased,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class ProductViewTable extends _i1.Table<_i1.UuidValue> {
   ProductViewTable({super.tableRelation}) : super(tableName: 'product_views') {
+    updateTable = ProductViewUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -269,7 +327,7 @@ class ProductViewTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     source = _i1.ColumnString(
       'source',
@@ -295,6 +353,8 @@ class ProductViewTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final ProductViewUpdateTable updateTable;
 
   late final _i1.ColumnUuid userId;
 
@@ -344,16 +404,16 @@ class ProductViewTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        productId,
-        platform,
-        source,
-        viewDurationSeconds,
-        addedToCart,
-        purchased,
-        createdAt,
-      ];
+    id,
+    userId,
+    productId,
+    platform,
+    source,
+    viewDurationSeconds,
+    addedToCart,
+    purchased,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -382,9 +442,9 @@ class ProductViewInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'user': _user,
-        'product': _product,
-      };
+    'user': _user,
+    'product': _product,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => ProductView.t;
@@ -573,6 +633,46 @@ class ProductViewRepository {
     return session.db.updateRow<ProductView>(
       row,
       columns: columns?.call(ProductView.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [ProductView] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<ProductView?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ProductViewUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<ProductView>(
+      id,
+      columnValues: columnValues(ProductView.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [ProductView]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<ProductView>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ProductViewUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<ProductViewTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ProductViewTable>? orderBy,
+    _i1.OrderByListBuilder<ProductViewTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<ProductView>(
+      columnValues: columnValues(ProductView.t.updateTable),
+      where: where(ProductView.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(ProductView.t),
+      orderByList: orderByList?.call(ProductView.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class VendorAnalytics implements _i1.SerializableModel {
   VendorAnalytics._({
@@ -45,33 +47,33 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
     double? averageRatingPeriod,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        totalOrders = totalOrders ?? 0,
-        completedOrders = completedOrders ?? 0,
-        cancelledOrders = cancelledOrders ?? 0,
-        totalRevenue = totalRevenue ?? 0.0,
-        averageOrderValue = averageOrderValue ?? 0.0,
-        totalProducts = totalProducts ?? 0,
-        activeProducts = activeProducts ?? 0,
-        outOfStockProducts = outOfStockProducts ?? 0,
-        newProductsAdded = newProductsAdded ?? 0,
-        totalCustomers = totalCustomers ?? 0,
-        newCustomers = newCustomers ?? 0,
-        returningCustomers = returningCustomers ?? 0,
-        productViews = productViews ?? 0,
-        wishlistAdds = wishlistAdds ?? 0,
-        cartAdds = cartAdds ?? 0,
-        conversionRate = conversionRate ?? 0.0,
-        aiDescriptionsGenerated = aiDescriptionsGenerated ?? 0,
-        aiQueriesProcessed = aiQueriesProcessed ?? 0,
-        aiCostsIncurred = aiCostsIncurred ?? 0.0,
-        fiatPayments = fiatPayments ?? 0.0,
-        cryptoPayments = cryptoPayments ?? 0.0,
-        platformFeesCollected = platformFeesCollected ?? 0.0,
-        newReviews = newReviews ?? 0,
-        averageRatingPeriod = averageRatingPeriod ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       totalOrders = totalOrders ?? 0,
+       completedOrders = completedOrders ?? 0,
+       cancelledOrders = cancelledOrders ?? 0,
+       totalRevenue = totalRevenue ?? 0.0,
+       averageOrderValue = averageOrderValue ?? 0.0,
+       totalProducts = totalProducts ?? 0,
+       activeProducts = activeProducts ?? 0,
+       outOfStockProducts = outOfStockProducts ?? 0,
+       newProductsAdded = newProductsAdded ?? 0,
+       totalCustomers = totalCustomers ?? 0,
+       newCustomers = newCustomers ?? 0,
+       returningCustomers = returningCustomers ?? 0,
+       productViews = productViews ?? 0,
+       wishlistAdds = wishlistAdds ?? 0,
+       cartAdds = cartAdds ?? 0,
+       conversionRate = conversionRate ?? 0.0,
+       aiDescriptionsGenerated = aiDescriptionsGenerated ?? 0,
+       aiQueriesProcessed = aiQueriesProcessed ?? 0,
+       aiCostsIncurred = aiCostsIncurred ?? 0.0,
+       fiatPayments = fiatPayments ?? 0.0,
+       cryptoPayments = cryptoPayments ?? 0.0,
+       platformFeesCollected = platformFeesCollected ?? 0.0,
+       newReviews = newReviews ?? 0,
+       averageRatingPeriod = averageRatingPeriod ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory VendorAnalytics({
     _i1.UuidValue? id,
@@ -110,20 +112,22 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
   factory VendorAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return VendorAnalytics(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
       totalOrders: jsonSerialization['totalOrders'] as int,
       completedOrders: jsonSerialization['completedOrders'] as int,
       cancelledOrders: jsonSerialization['cancelledOrders'] as int,
       totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageOrderValue:
-          (jsonSerialization['averageOrderValue'] as num).toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
+          .toDouble(),
       totalProducts: jsonSerialization['totalProducts'] as int,
       activeProducts: jsonSerialization['activeProducts'] as int,
       outOfStockProducts: jsonSerialization['outOfStockProducts'] as int,
@@ -141,21 +145,21 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
       aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num).toDouble(),
       fiatPayments: (jsonSerialization['fiatPayments'] as num).toDouble(),
       cryptoPayments: (jsonSerialization['cryptoPayments'] as num).toDouble(),
-      platformFeesCollected:
-          (jsonSerialization['platformFeesCollected'] as num).toDouble(),
+      platformFeesCollected: (jsonSerialization['platformFeesCollected'] as num)
+          .toDouble(),
       newReviews: jsonSerialization['newReviews'] as int,
-      averageRatingPeriod:
-          (jsonSerialization['averageRatingPeriod'] as num).toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      averageRatingPeriod: (jsonSerialization['averageRatingPeriod'] as num)
+          .toDouble(),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue vendorId;
@@ -257,6 +261,7 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'VendorAnalytics',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -333,38 +338,38 @@ class _VendorAnalyticsImpl extends VendorAnalytics {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          date: date,
-          period: period,
-          totalOrders: totalOrders,
-          completedOrders: completedOrders,
-          cancelledOrders: cancelledOrders,
-          totalRevenue: totalRevenue,
-          averageOrderValue: averageOrderValue,
-          totalProducts: totalProducts,
-          activeProducts: activeProducts,
-          outOfStockProducts: outOfStockProducts,
-          newProductsAdded: newProductsAdded,
-          totalCustomers: totalCustomers,
-          newCustomers: newCustomers,
-          returningCustomers: returningCustomers,
-          productViews: productViews,
-          wishlistAdds: wishlistAdds,
-          cartAdds: cartAdds,
-          conversionRate: conversionRate,
-          aiDescriptionsGenerated: aiDescriptionsGenerated,
-          aiQueriesProcessed: aiQueriesProcessed,
-          aiCostsIncurred: aiCostsIncurred,
-          fiatPayments: fiatPayments,
-          cryptoPayments: cryptoPayments,
-          platformFeesCollected: platformFeesCollected,
-          newReviews: newReviews,
-          averageRatingPeriod: averageRatingPeriod,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         date: date,
+         period: period,
+         totalOrders: totalOrders,
+         completedOrders: completedOrders,
+         cancelledOrders: cancelledOrders,
+         totalRevenue: totalRevenue,
+         averageOrderValue: averageOrderValue,
+         totalProducts: totalProducts,
+         activeProducts: activeProducts,
+         outOfStockProducts: outOfStockProducts,
+         newProductsAdded: newProductsAdded,
+         totalCustomers: totalCustomers,
+         newCustomers: newCustomers,
+         returningCustomers: returningCustomers,
+         productViews: productViews,
+         wishlistAdds: wishlistAdds,
+         cartAdds: cartAdds,
+         conversionRate: conversionRate,
+         aiDescriptionsGenerated: aiDescriptionsGenerated,
+         aiQueriesProcessed: aiQueriesProcessed,
+         aiCostsIncurred: aiCostsIncurred,
+         fiatPayments: fiatPayments,
+         cryptoPayments: cryptoPayments,
+         platformFeesCollected: platformFeesCollected,
+         newReviews: newReviews,
+         averageRatingPeriod: averageRatingPeriod,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [VendorAnalytics]
   /// with some or all fields replaced by the given arguments.

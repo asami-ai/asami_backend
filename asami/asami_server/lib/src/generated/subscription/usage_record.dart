@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
 import '../subscription/subscription_invoice.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class UsageRecord
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -36,11 +38,11 @@ abstract class UsageRecord
     bool? isBilled,
     this.billedAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        quantity = quantity ?? 1,
-        currency = currency ?? 'USD',
-        isBilled = isBilled ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       quantity = quantity ?? 1,
+       currency = currency ?? 'USD',
+       isBilled = isBilled ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory UsageRecord({
     _i1.UuidValue? id,
@@ -66,12 +68,14 @@ abstract class UsageRecord
   factory UsageRecord.fromJson(Map<String, dynamic> jsonSerialization) {
     return UsageRecord(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       subscriptionId: jsonSerialization['subscriptionId'] as String?,
       usageType: jsonSerialization['usageType'] as String,
       quantity: jsonSerialization['quantity'] as int,
@@ -81,22 +85,26 @@ abstract class UsageRecord
       resourceId: jsonSerialization['resourceId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       billingPeriodStart: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['billingPeriodStart']),
+        jsonSerialization['billingPeriodStart'],
+      ),
       billingPeriodEnd: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['billingPeriodEnd']),
+        jsonSerialization['billingPeriodEnd'],
+      ),
       invoiceId: jsonSerialization['invoiceId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['invoiceId']),
       invoice: jsonSerialization['invoice'] == null
           ? null
-          : _i3.SubscriptionInvoice.fromJson(
-              (jsonSerialization['invoice'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.SubscriptionInvoice>(
+              jsonSerialization['invoice'],
+            ),
       isBilled: jsonSerialization['isBilled'] as bool,
       billedAt: jsonSerialization['billedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['billedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -170,6 +178,7 @@ abstract class UsageRecord
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UsageRecord',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -194,6 +203,7 @@ abstract class UsageRecord
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'UsageRecord',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJsonForProtocol(),
@@ -274,25 +284,25 @@ class _UsageRecordImpl extends UsageRecord {
     DateTime? billedAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          subscriptionId: subscriptionId,
-          usageType: usageType,
-          quantity: quantity,
-          unitPrice: unitPrice,
-          totalAmount: totalAmount,
-          currency: currency,
-          resourceId: resourceId,
-          metadata: metadata,
-          billingPeriodStart: billingPeriodStart,
-          billingPeriodEnd: billingPeriodEnd,
-          invoiceId: invoiceId,
-          invoice: invoice,
-          isBilled: isBilled,
-          billedAt: billedAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         subscriptionId: subscriptionId,
+         usageType: usageType,
+         quantity: quantity,
+         unitPrice: unitPrice,
+         totalAmount: totalAmount,
+         currency: currency,
+         resourceId: resourceId,
+         metadata: metadata,
+         billingPeriodStart: billingPeriodStart,
+         billingPeriodEnd: billingPeriodEnd,
+         invoiceId: invoiceId,
+         invoice: invoice,
+         isBilled: isBilled,
+         billedAt: billedAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UsageRecord]
   /// with some or all fields replaced by the given arguments.
@@ -322,8 +332,9 @@ class _UsageRecordImpl extends UsageRecord {
       id: id ?? this.id,
       vendorId: vendorId ?? this.vendorId,
       vendor: vendor is _i2.VendorProfile? ? vendor : this.vendor?.copyWith(),
-      subscriptionId:
-          subscriptionId is String? ? subscriptionId : this.subscriptionId,
+      subscriptionId: subscriptionId is String?
+          ? subscriptionId
+          : this.subscriptionId,
       usageType: usageType ?? this.usageType,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
@@ -344,8 +355,96 @@ class _UsageRecordImpl extends UsageRecord {
   }
 }
 
+class UsageRecordUpdateTable extends _i1.UpdateTable<UsageRecordTable> {
+  UsageRecordUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> subscriptionId(String? value) =>
+      _i1.ColumnValue(
+        table.subscriptionId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> usageType(String value) => _i1.ColumnValue(
+    table.usageType,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
+    table.quantity,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> unitPrice(double value) => _i1.ColumnValue(
+    table.unitPrice,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> totalAmount(double value) => _i1.ColumnValue(
+    table.totalAmount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> resourceId(String? value) => _i1.ColumnValue(
+    table.resourceId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> metadata(String? value) => _i1.ColumnValue(
+    table.metadata,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> billingPeriodStart(DateTime value) =>
+      _i1.ColumnValue(
+        table.billingPeriodStart,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> billingPeriodEnd(DateTime value) =>
+      _i1.ColumnValue(
+        table.billingPeriodEnd,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> invoiceId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.invoiceId,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isBilled(bool value) => _i1.ColumnValue(
+    table.isBilled,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> billedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.billedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class UsageRecordTable extends _i1.Table<_i1.UuidValue> {
   UsageRecordTable({super.tableRelation}) : super(tableName: 'usage_records') {
+    updateTable = UsageRecordUpdateTable(this);
     vendorId = _i1.ColumnUuid(
       'vendorId',
       this,
@@ -412,6 +511,8 @@ class UsageRecordTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final UsageRecordUpdateTable updateTable;
+
   late final _i1.ColumnUuid vendorId;
 
   _i2.VendorProfileTable? _vendor;
@@ -474,23 +575,23 @@ class UsageRecordTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        vendorId,
-        subscriptionId,
-        usageType,
-        quantity,
-        unitPrice,
-        totalAmount,
-        currency,
-        resourceId,
-        metadata,
-        billingPeriodStart,
-        billingPeriodEnd,
-        invoiceId,
-        isBilled,
-        billedAt,
-        createdAt,
-      ];
+    id,
+    vendorId,
+    subscriptionId,
+    usageType,
+    quantity,
+    unitPrice,
+    totalAmount,
+    currency,
+    resourceId,
+    metadata,
+    billingPeriodStart,
+    billingPeriodEnd,
+    invoiceId,
+    isBilled,
+    billedAt,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -519,9 +620,9 @@ class UsageRecordInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'vendor': _vendor,
-        'invoice': _invoice,
-      };
+    'vendor': _vendor,
+    'invoice': _invoice,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => UsageRecord.t;
@@ -716,6 +817,46 @@ class UsageRecordRepository {
     );
   }
 
+  /// Updates a single [UsageRecord] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<UsageRecord?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<UsageRecordUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<UsageRecord>(
+      id,
+      columnValues: columnValues(UsageRecord.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [UsageRecord]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<UsageRecord>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<UsageRecordUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<UsageRecordTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<UsageRecordTable>? orderBy,
+    _i1.OrderByListBuilder<UsageRecordTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<UsageRecord>(
+      columnValues: columnValues(UsageRecord.t.updateTable),
+      where: where(UsageRecord.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(UsageRecord.t),
+      orderByList: orderByList?.call(UsageRecord.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [UsageRecord]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -830,16 +971,16 @@ class UsageRecordDetachRowRepository {
   /// the related record.
   Future<void> invoice(
     _i1.Session session,
-    UsageRecord usagerecord, {
+    UsageRecord usageRecord, {
     _i1.Transaction? transaction,
   }) async {
-    if (usagerecord.id == null) {
-      throw ArgumentError.notNull('usagerecord.id');
+    if (usageRecord.id == null) {
+      throw ArgumentError.notNull('usageRecord.id');
     }
 
-    var $usagerecord = usagerecord.copyWith(invoiceId: null);
+    var $usageRecord = usageRecord.copyWith(invoiceId: null);
     await session.db.updateRow<UsageRecord>(
-      $usagerecord,
+      $usageRecord,
       columns: [UsageRecord.t.invoiceId],
       transaction: transaction,
     );

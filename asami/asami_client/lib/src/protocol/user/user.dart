@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -47,18 +48,18 @@ abstract class User implements _i1.SerializableModel {
     DateTime? updatedAt,
     this.lastActiveAt,
     this.deletedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.UserStatus.active,
-        isPhoneVerified = isPhoneVerified ?? false,
-        language = language ?? 'en',
-        timezone = timezone ?? 'UTC',
-        emailVerified = emailVerified ?? false,
-        whatsappAuthenticated = whatsappAuthenticated ?? false,
-        telegramAuthenticated = telegramAuthenticated ?? false,
-        webAuthenticated = webAuthenticated ?? false,
-        verificationAttempts = verificationAttempts ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.UserStatus.active,
+       isPhoneVerified = isPhoneVerified ?? false,
+       language = language ?? 'en',
+       timezone = timezone ?? 'UTC',
+       emailVerified = emailVerified ?? false,
+       whatsappAuthenticated = whatsappAuthenticated ?? false,
+       telegramAuthenticated = telegramAuthenticated ?? false,
+       webAuthenticated = webAuthenticated ?? false,
+       verificationAttempts = verificationAttempts ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory User({
     _i1.UuidValue? id,
@@ -98,8 +99,10 @@ abstract class User implements _i1.SerializableModel {
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      userType: _i3.UserType.fromJson((jsonSerialization['userType'] as int)),
-      status: _i2.UserStatus.fromJson((jsonSerialization['status'] as int)),
+      userType: _i3.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      status: _i2.UserStatus.fromJson((jsonSerialization['status'] as String)),
       email: jsonSerialization['email'] as String?,
       phoneNumber: jsonSerialization['phoneNumber'] as String,
       countryCode: jsonSerialization['countryCode'] as String,
@@ -118,46 +121,52 @@ abstract class User implements _i1.SerializableModel {
       emailVerifiedAt: jsonSerialization['emailVerifiedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['emailVerifiedAt']),
+              jsonSerialization['emailVerifiedAt'],
+            ),
       whatsappAuthenticated: jsonSerialization['whatsappAuthenticated'] as bool,
       telegramAuthenticated: jsonSerialization['telegramAuthenticated'] as bool,
       webAuthenticated: jsonSerialization['webAuthenticated'] as bool,
       lastWhatsappLogin: jsonSerialization['lastWhatsappLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastWhatsappLogin']),
+              jsonSerialization['lastWhatsappLogin'],
+            ),
       lastTelegramLogin: jsonSerialization['lastTelegramLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastTelegramLogin']),
+              jsonSerialization['lastTelegramLogin'],
+            ),
       lastWebLogin: jsonSerialization['lastWebLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastWebLogin']),
+              jsonSerialization['lastWebLogin'],
+            ),
       verificationCode: jsonSerialization['verificationCode'] as String?,
       verificationCodeExpiry:
           jsonSerialization['verificationCodeExpiry'] == null
-              ? null
-              : _i1.DateTimeJsonExtension.fromJson(
-                  jsonSerialization['verificationCodeExpiry']),
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['verificationCodeExpiry'],
+            ),
       verificationAttempts: jsonSerialization['verificationAttempts'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       lastActiveAt: jsonSerialization['lastActiveAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastActiveAt']),
+              jsonSerialization['lastActiveAt'],
+            ),
       deletedAt: jsonSerialization['deletedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['deletedAt']),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i3.UserType userType;
@@ -262,6 +271,7 @@ abstract class User implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'User',
       'id': id.toJson(),
       'userType': userType.toJson(),
       'status': status.toJson(),
@@ -343,39 +353,39 @@ class _UserImpl extends User {
     DateTime? lastActiveAt,
     DateTime? deletedAt,
   }) : super._(
-          id: id,
-          userType: userType,
-          status: status,
-          email: email,
-          phoneNumber: phoneNumber,
-          countryCode: countryCode,
-          isPhoneVerified: isPhoneVerified,
-          whatsappId: whatsappId,
-          telegramId: telegramId,
-          firstName: firstName,
-          lastName: lastName,
-          profileImageUrl: profileImageUrl,
-          language: language,
-          timezone: timezone,
-          city: city,
-          state: state,
-          country: country,
-          emailVerified: emailVerified,
-          emailVerifiedAt: emailVerifiedAt,
-          whatsappAuthenticated: whatsappAuthenticated,
-          telegramAuthenticated: telegramAuthenticated,
-          webAuthenticated: webAuthenticated,
-          lastWhatsappLogin: lastWhatsappLogin,
-          lastTelegramLogin: lastTelegramLogin,
-          lastWebLogin: lastWebLogin,
-          verificationCode: verificationCode,
-          verificationCodeExpiry: verificationCodeExpiry,
-          verificationAttempts: verificationAttempts,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          lastActiveAt: lastActiveAt,
-          deletedAt: deletedAt,
-        );
+         id: id,
+         userType: userType,
+         status: status,
+         email: email,
+         phoneNumber: phoneNumber,
+         countryCode: countryCode,
+         isPhoneVerified: isPhoneVerified,
+         whatsappId: whatsappId,
+         telegramId: telegramId,
+         firstName: firstName,
+         lastName: lastName,
+         profileImageUrl: profileImageUrl,
+         language: language,
+         timezone: timezone,
+         city: city,
+         state: state,
+         country: country,
+         emailVerified: emailVerified,
+         emailVerifiedAt: emailVerifiedAt,
+         whatsappAuthenticated: whatsappAuthenticated,
+         telegramAuthenticated: telegramAuthenticated,
+         webAuthenticated: webAuthenticated,
+         lastWhatsappLogin: lastWhatsappLogin,
+         lastTelegramLogin: lastTelegramLogin,
+         lastWebLogin: lastWebLogin,
+         verificationCode: verificationCode,
+         verificationCodeExpiry: verificationCodeExpiry,
+         verificationAttempts: verificationAttempts,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         lastActiveAt: lastActiveAt,
+         deletedAt: deletedAt,
+       );
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
@@ -427,16 +437,18 @@ class _UserImpl extends User {
       telegramId: telegramId is String? ? telegramId : this.telegramId,
       firstName: firstName is String? ? firstName : this.firstName,
       lastName: lastName is String? ? lastName : this.lastName,
-      profileImageUrl:
-          profileImageUrl is String? ? profileImageUrl : this.profileImageUrl,
+      profileImageUrl: profileImageUrl is String?
+          ? profileImageUrl
+          : this.profileImageUrl,
       language: language ?? this.language,
       timezone: timezone ?? this.timezone,
       city: city is String? ? city : this.city,
       state: state is String? ? state : this.state,
       country: country is String? ? country : this.country,
       emailVerified: emailVerified ?? this.emailVerified,
-      emailVerifiedAt:
-          emailVerifiedAt is DateTime? ? emailVerifiedAt : this.emailVerifiedAt,
+      emailVerifiedAt: emailVerifiedAt is DateTime?
+          ? emailVerifiedAt
+          : this.emailVerifiedAt,
       whatsappAuthenticated:
           whatsappAuthenticated ?? this.whatsappAuthenticated,
       telegramAuthenticated:
@@ -448,8 +460,9 @@ class _UserImpl extends User {
       lastTelegramLogin: lastTelegramLogin is DateTime?
           ? lastTelegramLogin
           : this.lastTelegramLogin,
-      lastWebLogin:
-          lastWebLogin is DateTime? ? lastWebLogin : this.lastWebLogin,
+      lastWebLogin: lastWebLogin is DateTime?
+          ? lastWebLogin
+          : this.lastWebLogin,
       verificationCode: verificationCode is String?
           ? verificationCode
           : this.verificationCode,
@@ -459,8 +472,9 @@ class _UserImpl extends User {
       verificationAttempts: verificationAttempts ?? this.verificationAttempts,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastActiveAt:
-          lastActiveAt is DateTime? ? lastActiveAt : this.lastActiveAt,
+      lastActiveAt: lastActiveAt is DateTime?
+          ? lastActiveAt
+          : this.lastActiveAt,
       deletedAt: deletedAt is DateTime? ? deletedAt : this.deletedAt,
     );
   }

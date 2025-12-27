@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -21,17 +22,16 @@ import '../endpoints/telegram_webhook_endpoint.dart' as _i9;
 import '../endpoints/usage_endpoint.dart' as _i10;
 import '../endpoints/user_endpoint.dart' as _i11;
 import '../endpoints/whatsapp_webhook_endpoint.dart' as _i12;
-import 'package:uuid/uuid_value.dart' as _i13;
-import 'package:asami_server/src/generated/user/user_type.dart' as _i14;
-import 'package:asami_server/src/generated/messaging/platfom_type.dart' as _i15;
-import 'package:asami_server/src/generated/messaging/message_type.dart' as _i16;
-import 'package:asami_server/src/generated/product/product.dart' as _i17;
-import 'package:asami_server/src/generated/order/order.dart' as _i18;
-import 'package:asami_server/src/generated/order/order_item.dart' as _i19;
-import 'package:asami_server/src/generated/order/payment_method.dart' as _i20;
-import 'package:asami_server/src/generated/order/order_status.dart' as _i21;
-import 'package:asami_server/src/generated/product/product_status.dart' as _i22;
-import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i23;
+import 'package:asami_server/src/generated/user/user_type.dart' as _i13;
+import 'package:asami_server/src/generated/messaging/platfom_type.dart' as _i14;
+import 'package:asami_server/src/generated/messaging/message_type.dart' as _i15;
+import 'package:asami_server/src/generated/product/product.dart' as _i16;
+import 'package:asami_server/src/generated/order/order.dart' as _i17;
+import 'package:asami_server/src/generated/order/order_item.dart' as _i18;
+import 'package:asami_server/src/generated/order/payment_method.dart' as _i19;
+import 'package:asami_server/src/generated/order/order_status.dart' as _i20;
+import 'package:asami_server/src/generated/product/product_status.dart' as _i21;
+import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i22;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -113,7 +113,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'date': _i1.ParameterDescription(
@@ -127,24 +127,24 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getVendorAnalytics(
-            session,
-            vendorId: params['vendorId'],
-            date: params['date'],
-            period: params['period'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    date: params['date'],
+                    period: params['period'],
+                  ),
         ),
         'getVendorAnalyticsRange': _i1.MethodConnector(
           name: 'getVendorAnalyticsRange',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -163,44 +163,44 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getVendorAnalyticsRange(
-            session,
-            vendorId: params['vendorId'],
-            startDate: params['startDate'],
-            endDate: params['endDate'],
-            period: params['period'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    startDate: params['startDate'],
+                    endDate: params['endDate'],
+                    period: params['period'],
+                  ),
         ),
         'getVendorDashboard': _i1.MethodConnector(
           name: 'getVendorDashboard',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getVendorDashboard(
-            session,
-            params['vendorId'],
-          ),
+                    session,
+                    params['vendorId'],
+                  ),
         ),
         'getProductAnalytics': _i1.MethodConnector(
           name: 'getProductAnalytics',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -214,24 +214,24 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getProductAnalytics(
-            session,
-            productId: params['productId'],
-            startDate: params['startDate'],
-            endDate: params['endDate'],
-          ),
+                    session,
+                    productId: params['productId'],
+                    startDate: params['startDate'],
+                    endDate: params['endDate'],
+                  ),
         ),
         'getTopSellingProducts': _i1.MethodConnector(
           name: 'getTopSellingProducts',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'limit': _i1.ParameterDescription(
@@ -240,23 +240,23 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getTopSellingProducts(
-            session,
-            vendorId: params['vendorId'],
-            limit: params['limit'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    limit: params['limit'],
+                  ),
         ),
         'getPaymentMethodBreakdown': _i1.MethodConnector(
           name: 'getPaymentMethodBreakdown',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'startDate': _i1.ParameterDescription(
@@ -270,17 +270,17 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .getPaymentMethodBreakdown(
-            session,
-            vendorId: params['vendorId'],
-            startDate: params['startDate'],
-            endDate: params['endDate'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    startDate: params['startDate'],
+                    endDate: params['endDate'],
+                  ),
         ),
         'recordDailyAnalytics': _i1.MethodConnector(
           name: 'recordDailyAnalytics',
@@ -289,17 +289,17 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'date',
               type: _i1.getType<DateTime>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['analytics'] as _i2.AnalyticsEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['analytics'] as _i2.AnalyticsEndpoint)
                   .recordDailyAnalytics(
-            session,
-            params['date'],
-          ),
+                    session,
+                    params['date'],
+                  ),
         ),
       },
     );
@@ -317,7 +317,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'userType': _i1.ParameterDescription(
               name: 'userType',
-              type: _i1.getType<_i14.UserType>(),
+              type: _i1.getType<_i13.UserType>(),
               nullable: false,
             ),
             'phoneNumber': _i1.ParameterDescription(
@@ -337,7 +337,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'platformUserId': _i1.ParameterDescription(
@@ -346,20 +346,20 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).initiateSignup(
-            session,
-            email: params['email'],
-            userType: params['userType'],
-            phoneNumber: params['phoneNumber'],
-            firstName: params['firstName'],
-            lastName: params['lastName'],
-            platform: params['platform'],
-            platformUserId: params['platformUserId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).initiateSignup(
+                session,
+                email: params['email'],
+                userType: params['userType'],
+                phoneNumber: params['phoneNumber'],
+                firstName: params['firstName'],
+                lastName: params['lastName'],
+                platform: params['platform'],
+                platformUserId: params['platformUserId'],
+              ),
         ),
         'verifySignupCode': _i1.MethodConnector(
           name: 'verifySignupCode',
@@ -376,7 +376,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'platformUserId': _i1.ParameterDescription(
@@ -385,17 +385,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).verifySignupCode(
-            session,
-            email: params['email'],
-            code: params['code'],
-            platform: params['platform'],
-            platformUserId: params['platformUserId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['auth'] as _i3.AuthEndpoint).verifySignupCode(
+                    session,
+                    email: params['email'],
+                    code: params['code'],
+                    platform: params['platform'],
+                    platformUserId: params['platformUserId'],
+                  ),
         ),
         'initiateLogin': _i1.MethodConnector(
           name: 'initiateLogin',
@@ -404,16 +405,16 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'email',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).initiateLogin(
-            session,
-            email: params['email'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).initiateLogin(
+                session,
+                email: params['email'],
+              ),
         ),
         'verifyLoginCode': _i1.MethodConnector(
           name: 'verifyLoginCode',
@@ -430,7 +431,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'platformUserId': _i1.ParameterDescription(
@@ -439,24 +440,25 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).verifyLoginCode(
-            session,
-            email: params['email'],
-            code: params['code'],
-            platform: params['platform'],
-            platformUserId: params['platformUserId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['auth'] as _i3.AuthEndpoint).verifyLoginCode(
+                    session,
+                    email: params['email'],
+                    code: params['code'],
+                    platform: params['platform'],
+                    platformUserId: params['platformUserId'],
+                  ),
         ),
         'checkAuth': _i1.MethodConnector(
           name: 'checkAuth',
           params: {
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'platformUserId': _i1.ParameterDescription(
@@ -465,15 +467,15 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).checkAuth(
-            session,
-            platform: params['platform'],
-            platformUserId: params['platformUserId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).checkAuth(
+                session,
+                platform: params['platform'],
+                platformUserId: params['platformUserId'],
+              ),
         ),
         'logout': _i1.MethodConnector(
           name: 'logout',
@@ -485,19 +487,19 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).logout(
-            session,
-            userId: params['userId'],
-            platform: params['platform'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).logout(
+                session,
+                userId: params['userId'],
+                platform: params['platform'],
+              ),
         ),
         'resendCode': _i1.MethodConnector(
           name: 'resendCode',
@@ -506,16 +508,16 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'email',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).resendCode(
-            session,
-            email: params['email'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).resendCode(
+                session,
+                email: params['email'],
+              ),
         ),
         'upgradeToVendor': _i1.MethodConnector(
           name: 'upgradeToVendor',
@@ -536,16 +538,17 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).upgradeToVendor(
-            session,
-            userId: params['userId'],
-            businessName: params['businessName'],
-            businessCategory: params['businessCategory'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['auth'] as _i3.AuthEndpoint).upgradeToVendor(
+                    session,
+                    userId: params['userId'],
+                    businessName: params['businessName'],
+                    businessCategory: params['businessCategory'],
+                  ),
         ),
         'deleteTempUser': _i1.MethodConnector(
           name: 'deleteTempUser',
@@ -554,16 +557,16 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'email',
               type: _i1.getType<String>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['auth'] as _i3.AuthEndpoint).deleteTempUser(
-            session,
-            email: params['email'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['auth'] as _i3.AuthEndpoint).deleteTempUser(
+                session,
+                email: params['email'],
+              ),
         ),
       },
     );
@@ -581,7 +584,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'messageContent': _i1.ParameterDescription(
@@ -591,7 +594,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'messageType': _i1.ParameterDescription(
               name: 'messageType',
-              type: _i1.getType<_i16.MessageType>(),
+              type: _i1.getType<_i15.MessageType>(),
               nullable: false,
             ),
             'mediaUrl': _i1.ParameterDescription(
@@ -605,19 +608,19 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['bot'] as _i4.BotEndpoint).processMessage(
-            session,
-            platformUserId: params['platformUserId'],
-            platform: params['platform'],
-            messageContent: params['messageContent'],
-            messageType: params['messageType'],
-            mediaUrl: params['mediaUrl'],
-            platformMessageId: params['platformMessageId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['bot'] as _i4.BotEndpoint).processMessage(
+                session,
+                platformUserId: params['platformUserId'],
+                platform: params['platform'],
+                messageContent: params['messageContent'],
+                messageType: params['messageType'],
+                mediaUrl: params['mediaUrl'],
+                platformMessageId: params['platformMessageId'],
+              ),
         ),
         'sendFormattedMessage': _i1.MethodConnector(
           name: 'sendFormattedMessage',
@@ -629,7 +632,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'message': _i1.ParameterDescription(
@@ -643,17 +646,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['bot'] as _i4.BotEndpoint).sendFormattedMessage(
-            session,
-            platformUserId: params['platformUserId'],
-            platform: params['platform'],
-            message: params['message'],
-            interactiveData: params['interactiveData'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['bot'] as _i4.BotEndpoint).sendFormattedMessage(
+                    session,
+                    platformUserId: params['platformUserId'],
+                    platform: params['platform'],
+                    message: params['message'],
+                    interactiveData: params['interactiveData'],
+                  ),
         ),
         'sendProductList': _i1.MethodConnector(
           name: 'sendProductList',
@@ -665,25 +669,25 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'products': _i1.ParameterDescription(
               name: 'products',
-              type: _i1.getType<List<_i17.Product>>(),
+              type: _i1.getType<List<_i16.Product>>(),
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['bot'] as _i4.BotEndpoint).sendProductList(
-            session,
-            platformUserId: params['platformUserId'],
-            platform: params['platform'],
-            products: params['products'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['bot'] as _i4.BotEndpoint).sendProductList(
+                session,
+                platformUserId: params['platformUserId'],
+                platform: params['platform'],
+                products: params['products'],
+              ),
         ),
         'sendOrderConfirmation': _i1.MethodConnector(
           name: 'sendOrderConfirmation',
@@ -695,31 +699,32 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'platform': _i1.ParameterDescription(
               name: 'platform',
-              type: _i1.getType<_i15.PlatformType>(),
+              type: _i1.getType<_i14.PlatformType>(),
               nullable: false,
             ),
             'order': _i1.ParameterDescription(
               name: 'order',
-              type: _i1.getType<_i18.Order>(),
+              type: _i1.getType<_i17.Order>(),
               nullable: false,
             ),
             'items': _i1.ParameterDescription(
               name: 'items',
-              type: _i1.getType<List<_i19.OrderItem>>(),
+              type: _i1.getType<List<_i18.OrderItem>>(),
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['bot'] as _i4.BotEndpoint).sendOrderConfirmation(
-            session,
-            platformUserId: params['platformUserId'],
-            platform: params['platform'],
-            order: params['order'],
-            items: params['items'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['bot'] as _i4.BotEndpoint).sendOrderConfirmation(
+                    session,
+                    platformUserId: params['platformUserId'],
+                    platform: params['platform'],
+                    order: params['order'],
+                    items: params['items'],
+                  ),
         ),
       },
     );
@@ -732,35 +737,36 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).getOrCreateCart(
-            session,
-            params['customerId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['cart'] as _i5.CartEndpoint).getOrCreateCart(
+                    session,
+                    params['customerId'],
+                  ),
         ),
         'addToCart': _i1.MethodConnector(
           name: 'addToCart',
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'variantId': _i1.ParameterDescription(
               name: 'variantId',
-              type: _i1.getType<_i13.UuidValue?>(),
+              type: _i1.getType<_i1.UuidValue?>(),
               nullable: true,
             ),
             'quantity': _i1.ParameterDescription(
@@ -774,18 +780,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).addToCart(
-            session,
-            customerId: params['customerId'],
-            productId: params['productId'],
-            variantId: params['variantId'],
-            quantity: params['quantity'],
-            customerNotes: params['customerNotes'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cart'] as _i5.CartEndpoint).addToCart(
+                session,
+                customerId: params['customerId'],
+                productId: params['productId'],
+                variantId: params['variantId'],
+                quantity: params['quantity'],
+                customerNotes: params['customerNotes'],
+              ),
         ),
         'updateCartItemQuantity': _i1.MethodConnector(
           name: 'updateCartItemQuantity',
@@ -801,15 +807,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).updateCartItemQuantity(
-            session,
-            cartItemId: params['cartItemId'],
-            quantity: params['quantity'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cart'] as _i5.CartEndpoint)
+                  .updateCartItemQuantity(
+                    session,
+                    cartItemId: params['cartItemId'],
+                    quantity: params['quantity'],
+                  ),
         ),
         'removeFromCart': _i1.MethodConnector(
           name: 'removeFromCart',
@@ -818,52 +825,53 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'cartItemId',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).removeFromCart(
-            session,
-            params['cartItemId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cart'] as _i5.CartEndpoint).removeFromCart(
+                session,
+                params['cartItemId'],
+              ),
         ),
         'getCartWithItems': _i1.MethodConnector(
           name: 'getCartWithItems',
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).getCartWithItems(
-            session,
-            params['customerId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['cart'] as _i5.CartEndpoint).getCartWithItems(
+                    session,
+                    params['customerId'],
+                  ),
         ),
         'clearCart': _i1.MethodConnector(
           name: 'clearCart',
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['cart'] as _i5.CartEndpoint).clearCart(
-            session,
-            params['customerId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['cart'] as _i5.CartEndpoint).clearCart(
+                session,
+                params['customerId'],
+              ),
         ),
       },
     );
@@ -876,17 +884,17 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'shippingAddressId': _i1.ParameterDescription(
               name: 'shippingAddressId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'paymentMethod': _i1.ParameterDescription(
               name: 'paymentMethod',
-              type: _i1.getType<_i20.PaymentMethod>(),
+              type: _i1.getType<_i19.PaymentMethod>(),
               nullable: false,
             ),
             'customerNotes': _i1.ParameterDescription(
@@ -896,7 +904,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'conversationId': _i1.ParameterDescription(
               name: 'conversationId',
-              type: _i1.getType<_i13.UuidValue?>(),
+              type: _i1.getType<_i1.UuidValue?>(),
               nullable: true,
             ),
             'orderSource': _i1.ParameterDescription(
@@ -905,67 +913,68 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).createOrder(
-            session,
-            customerId: params['customerId'],
-            shippingAddressId: params['shippingAddressId'],
-            paymentMethod: params['paymentMethod'],
-            customerNotes: params['customerNotes'],
-            conversationId: params['conversationId'],
-            orderSource: params['orderSource'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['order'] as _i6.OrderEndpoint).createOrder(
+                session,
+                customerId: params['customerId'],
+                shippingAddressId: params['shippingAddressId'],
+                paymentMethod: params['paymentMethod'],
+                customerNotes: params['customerNotes'],
+                conversationId: params['conversationId'],
+                orderSource: params['orderSource'],
+              ),
         ),
         'getOrder': _i1.MethodConnector(
           name: 'getOrder',
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).getOrder(
-            session,
-            params['orderId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['order'] as _i6.OrderEndpoint).getOrder(
+                session,
+                params['orderId'],
+              ),
         ),
         'getOrderWithItems': _i1.MethodConnector(
           name: 'getOrderWithItems',
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).getOrderWithItems(
-            session,
-            params['orderId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['order'] as _i6.OrderEndpoint).getOrderWithItems(
+                    session,
+                    params['orderId'],
+                  ),
         ),
         'getCustomerOrders': _i1.MethodConnector(
           name: 'getCustomerOrders',
           params: {
             'customerId': _i1.ParameterDescription(
               name: 'customerId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.OrderStatus?>(),
+              type: _i1.getType<_i20.OrderStatus?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -979,29 +988,30 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).getCustomerOrders(
-            session,
-            customerId: params['customerId'],
-            status: params['status'],
-            limit: params['limit'],
-            offset: params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['order'] as _i6.OrderEndpoint).getCustomerOrders(
+                    session,
+                    customerId: params['customerId'],
+                    status: params['status'],
+                    limit: params['limit'],
+                    offset: params['offset'],
+                  ),
         ),
         'getVendorOrders': _i1.MethodConnector(
           name: 'getVendorOrders',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.OrderStatus?>(),
+              type: _i1.getType<_i20.OrderStatus?>(),
               nullable: true,
             ),
             'limit': _i1.ParameterDescription(
@@ -1015,29 +1025,30 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).getVendorOrders(
-            session,
-            vendorId: params['vendorId'],
-            status: params['status'],
-            limit: params['limit'],
-            offset: params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['order'] as _i6.OrderEndpoint).getVendorOrders(
+                    session,
+                    vendorId: params['vendorId'],
+                    status: params['status'],
+                    limit: params['limit'],
+                    offset: params['offset'],
+                  ),
         ),
         'updateOrderStatus': _i1.MethodConnector(
           name: 'updateOrderStatus',
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.OrderStatus>(),
+              type: _i1.getType<_i20.OrderStatus>(),
               nullable: false,
             ),
             'trackingNumber': _i1.ParameterDescription(
@@ -1051,24 +1062,25 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).updateOrderStatus(
-            session,
-            orderId: params['orderId'],
-            status: params['status'],
-            trackingNumber: params['trackingNumber'],
-            vendorNotes: params['vendorNotes'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['order'] as _i6.OrderEndpoint).updateOrderStatus(
+                    session,
+                    orderId: params['orderId'],
+                    status: params['status'],
+                    trackingNumber: params['trackingNumber'],
+                    vendorNotes: params['vendorNotes'],
+                  ),
         ),
         'cancelOrder': _i1.MethodConnector(
           name: 'cancelOrder',
           params: {
             'orderId': _i1.ParameterDescription(
               name: 'orderId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'cancellationReason': _i1.ParameterDescription(
@@ -1082,16 +1094,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['order'] as _i6.OrderEndpoint).cancelOrder(
-            session,
-            orderId: params['orderId'],
-            cancellationReason: params['cancellationReason'],
-            refund: params['refund'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['order'] as _i6.OrderEndpoint).cancelOrder(
+                session,
+                orderId: params['orderId'],
+                cancellationReason: params['cancellationReason'],
+                refund: params['refund'],
+              ),
         ),
       },
     );
@@ -1104,7 +1116,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'name': _i1.ParameterDescription(
@@ -1202,41 +1214,48 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<bool>(),
               nullable: false,
             ),
+            'status': _i1.ParameterDescription(
+              name: 'status',
+              type: _i1.getType<_i21.ProductStatus>(),
+              nullable: false,
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).createProduct(
-            session,
-            vendorId: params['vendorId'],
-            name: params['name'],
-            description: params['description'],
-            category: params['category'],
-            basePrice: params['basePrice'],
-            shortDescription: params['shortDescription'],
-            subCategory: params['subCategory'],
-            tags: params['tags'],
-            images: params['images'],
-            isAiGenerated: params['isAiGenerated'],
-            aiConfidenceScore: params['aiConfidenceScore'],
-            quantity: params['quantity'],
-            sku: params['sku'],
-            color: params['color'],
-            size: params['size'],
-            material: params['material'],
-            brand: params['brand'],
-            weight: params['weight'],
-            weightUnit: params['weightUnit'],
-            trackInventory: params['trackInventory'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).createProduct(
+                    session,
+                    vendorId: params['vendorId'],
+                    name: params['name'],
+                    description: params['description'],
+                    category: params['category'],
+                    basePrice: params['basePrice'],
+                    shortDescription: params['shortDescription'],
+                    subCategory: params['subCategory'],
+                    tags: params['tags'],
+                    images: params['images'],
+                    isAiGenerated: params['isAiGenerated'],
+                    aiConfidenceScore: params['aiConfidenceScore'],
+                    quantity: params['quantity'],
+                    sku: params['sku'],
+                    color: params['color'],
+                    size: params['size'],
+                    material: params['material'],
+                    brand: params['brand'],
+                    weight: params['weight'],
+                    weightUnit: params['weightUnit'],
+                    trackInventory: params['trackInventory'],
+                    status: params['status'],
+                  ),
         ),
         'updateProduct': _i1.MethodConnector(
           name: 'updateProduct',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'name': _i1.ParameterDescription(
@@ -1286,7 +1305,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i22.ProductStatus?>(),
+              type: _i1.getType<_i21.ProductStatus?>(),
               nullable: true,
             ),
             'images': _i1.ParameterDescription(
@@ -1305,75 +1324,97 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).updateProduct(
-            session,
-            productId: params['productId'],
-            name: params['name'],
-            description: params['description'],
-            shortDescription: params['shortDescription'],
-            category: params['category'],
-            subCategory: params['subCategory'],
-            tags: params['tags'],
-            basePrice: params['basePrice'],
-            discountPrice: params['discountPrice'],
-            quantity: params['quantity'],
-            status: params['status'],
-            images: params['images'],
-            isActive: params['isActive'],
-            isFeatured: params['isFeatured'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).updateProduct(
+                    session,
+                    productId: params['productId'],
+                    name: params['name'],
+                    description: params['description'],
+                    shortDescription: params['shortDescription'],
+                    category: params['category'],
+                    subCategory: params['subCategory'],
+                    tags: params['tags'],
+                    basePrice: params['basePrice'],
+                    discountPrice: params['discountPrice'],
+                    quantity: params['quantity'],
+                    status: params['status'],
+                    images: params['images'],
+                    isActive: params['isActive'],
+                    isFeatured: params['isFeatured'],
+                  ),
+        ),
+        'deleteProduct': _i1.MethodConnector(
+          name: 'deleteProduct',
+          params: {
+            'productId': _i1.ParameterDescription(
+              name: 'productId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).deleteProduct(
+                    session,
+                    params['productId'],
+                  ),
         ),
         'publishProduct': _i1.MethodConnector(
           name: 'publishProduct',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).publishProduct(
-            session,
-            params['productId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).publishProduct(
+                    session,
+                    params['productId'],
+                  ),
         ),
         'getProduct': _i1.MethodConnector(
           name: 'getProduct',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).getProduct(
-            session,
-            params['productId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).getProduct(
+                    session,
+                    params['productId'],
+                  ),
         ),
         'getVendorProducts': _i1.MethodConnector(
           name: 'getVendorProducts',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i22.ProductStatus?>(),
+              type: _i1.getType<_i21.ProductStatus?>(),
               nullable: true,
             ),
             'isActive': _i1.ParameterDescription(
@@ -1392,18 +1433,19 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).getVendorProducts(
-            session,
-            vendorId: params['vendorId'],
-            status: params['status'],
-            isActive: params['isActive'],
-            limit: params['limit'],
-            offset: params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['product'] as _i7.ProductEndpoint)
+                  .getVendorProducts(
+                    session,
+                    vendorId: params['vendorId'],
+                    status: params['status'],
+                    isActive: params['isActive'],
+                    limit: params['limit'],
+                    offset: params['offset'],
+                  ),
         ),
         'searchProducts': _i1.MethodConnector(
           name: 'searchProducts',
@@ -1454,29 +1496,30 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).searchProducts(
-            session,
-            query: params['query'],
-            category: params['category'],
-            minPrice: params['minPrice'],
-            maxPrice: params['maxPrice'],
-            tags: params['tags'],
-            color: params['color'],
-            size: params['size'],
-            limit: params['limit'],
-            offset: params['offset'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).searchProducts(
+                    session,
+                    query: params['query'],
+                    category: params['category'],
+                    minPrice: params['minPrice'],
+                    maxPrice: params['maxPrice'],
+                    tags: params['tags'],
+                    color: params['color'],
+                    size: params['size'],
+                    limit: params['limit'],
+                    offset: params['offset'],
+                  ),
         ),
         'updateInventory': _i1.MethodConnector(
           name: 'updateInventory',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'quantity': _i1.ParameterDescription(
@@ -1485,22 +1528,23 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).updateInventory(
-            session,
-            productId: params['productId'],
-            quantity: params['quantity'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['product'] as _i7.ProductEndpoint).updateInventory(
+                    session,
+                    productId: params['productId'],
+                    quantity: params['quantity'],
+                  ),
         ),
         'decrementInventory': _i1.MethodConnector(
           name: 'decrementInventory',
           params: {
             'productId': _i1.ParameterDescription(
               name: 'productId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'quantity': _i1.ParameterDescription(
@@ -1509,15 +1553,16 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).decrementInventory(
-            session,
-            productId: params['productId'],
-            quantity: params['quantity'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['product'] as _i7.ProductEndpoint)
+                  .decrementInventory(
+                    session,
+                    productId: params['productId'],
+                    quantity: params['quantity'],
+                  ),
         ),
         'getFeaturedProducts': _i1.MethodConnector(
           name: 'getFeaturedProducts',
@@ -1526,16 +1571,17 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'limit',
               type: _i1.getType<int>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint).getFeaturedProducts(
-            session,
-            limit: params['limit'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['product'] as _i7.ProductEndpoint)
+                  .getFeaturedProducts(
+                    session,
+                    limit: params['limit'],
+                  ),
         ),
         'getProductsByCategory': _i1.MethodConnector(
           name: 'getProductsByCategory',
@@ -1561,18 +1607,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['product'] as _i7.ProductEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['product'] as _i7.ProductEndpoint)
                   .getProductsByCategory(
-            session,
-            category: params['category'],
-            subCategory: params['subCategory'],
-            limit: params['limit'],
-            offset: params['offset'],
-          ),
+                    session,
+                    category: params['category'],
+                    subCategory: params['subCategory'],
+                    limit: params['limit'],
+                    offset: params['offset'],
+                  ),
         ),
       },
     );
@@ -1585,51 +1631,51 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['subscription'] as _i8.SubscriptionEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['subscription'] as _i8.SubscriptionEndpoint)
                   .getVendorSubscription(
-            session,
-            params['vendorId'],
-          ),
+                    session,
+                    params['vendorId'],
+                  ),
         ),
         'changeTier': _i1.MethodConnector(
           name: 'changeTier',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'newTier': _i1.ParameterDescription(
               name: 'newTier',
-              type: _i1.getType<_i23.SubscriptionTier>(),
+              type: _i1.getType<_i22.SubscriptionTier>(),
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['subscription'] as _i8.SubscriptionEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['subscription'] as _i8.SubscriptionEndpoint)
                   .changeTier(
-            session,
-            vendorId: params['vendorId'],
-            newTier: params['newTier'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    newTier: params['newTier'],
+                  ),
         ),
         'getUsageRecords': _i1.MethodConnector(
           name: 'getUsageRecords',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'periodStart': _i1.ParameterDescription(
@@ -1643,24 +1689,24 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['subscription'] as _i8.SubscriptionEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['subscription'] as _i8.SubscriptionEndpoint)
                   .getUsageRecords(
-            session,
-            vendorId: params['vendorId'],
-            periodStart: params['periodStart'],
-            periodEnd: params['periodEnd'],
-          ),
+                    session,
+                    vendorId: params['vendorId'],
+                    periodStart: params['periodStart'],
+                    periodEnd: params['periodEnd'],
+                  ),
         ),
         'generateInvoice': _i1.MethodConnector(
           name: 'generateInvoice',
           params: {
             'subscriptionId': _i1.ParameterDescription(
               name: 'subscriptionId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'periodStart': _i1.ParameterDescription(
@@ -1674,36 +1720,36 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['subscription'] as _i8.SubscriptionEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['subscription'] as _i8.SubscriptionEndpoint)
                   .generateInvoice(
-            session,
-            subscriptionId: params['subscriptionId'],
-            periodStart: params['periodStart'],
-            periodEnd: params['periodEnd'],
-          ),
+                    session,
+                    subscriptionId: params['subscriptionId'],
+                    periodStart: params['periodStart'],
+                    periodEnd: params['periodEnd'],
+                  ),
         ),
         'checkTierLimits': _i1.MethodConnector(
           name: 'checkTierLimits',
           params: {
             'vendorId': _i1.ParameterDescription(
               name: 'vendorId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['subscription'] as _i8.SubscriptionEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['subscription'] as _i8.SubscriptionEndpoint)
                   .checkTierLimits(
-            session,
-            params['vendorId'],
-          ),
+                    session,
+                    params['vendorId'],
+                  ),
         ),
       },
     );
@@ -1718,18 +1764,19 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'payload',
               type: _i1.getType<Map<String, dynamic>>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['telegramWebhook'] as _i9.TelegramWebhookEndpoint)
-                  .processWebhook(
-            session,
-            params['payload'],
-          ),
-        )
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['telegramWebhook'] as _i9.TelegramWebhookEndpoint)
+                      .processWebhook(
+                        session,
+                        params['payload'],
+                      ),
+        ),
       },
     );
     connectors['usage'] = _i1.EndpointConnector(
@@ -1739,13 +1786,13 @@ class Endpoints extends _i1.EndpointDispatch {
         'resetDailyLimits': _i1.MethodConnector(
           name: 'resetDailyLimits',
           params: {},
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['usage'] as _i10.UsageEndpoint)
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['usage'] as _i10.UsageEndpoint)
                   .resetDailyLimits(session),
-        )
+        ),
       },
     );
     connectors['user'] = _i1.EndpointConnector(
@@ -1757,7 +1804,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'firstName': _i1.ParameterDescription(
@@ -1806,48 +1853,49 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).updateProfile(
-            session,
-            userId: params['userId'],
-            firstName: params['firstName'],
-            lastName: params['lastName'],
-            email: params['email'],
-            profileImageUrl: params['profileImageUrl'],
-            city: params['city'],
-            state: params['state'],
-            country: params['country'],
-            language: params['language'],
-            timezone: params['timezone'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['user'] as _i11.UserEndpoint).updateProfile(
+                session,
+                userId: params['userId'],
+                firstName: params['firstName'],
+                lastName: params['lastName'],
+                email: params['email'],
+                profileImageUrl: params['profileImageUrl'],
+                city: params['city'],
+                state: params['state'],
+                country: params['country'],
+                language: params['language'],
+                timezone: params['timezone'],
+              ),
         ),
         'getCustomerProfile': _i1.MethodConnector(
           name: 'getCustomerProfile',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).getCustomerProfile(
-            session,
-            params['userId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['user'] as _i11.UserEndpoint).getCustomerProfile(
+                    session,
+                    params['userId'],
+                  ),
         ),
         'updateCustomerProfile': _i1.MethodConnector(
           name: 'updateCustomerProfile',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'preferredPaymentMethod': _i1.ParameterDescription(
@@ -1861,41 +1909,43 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).updateCustomerProfile(
-            session,
-            userId: params['userId'],
-            preferredPaymentMethod: params['preferredPaymentMethod'],
-            favoriteVendors: params['favoriteVendors'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['user'] as _i11.UserEndpoint)
+                  .updateCustomerProfile(
+                    session,
+                    userId: params['userId'],
+                    preferredPaymentMethod: params['preferredPaymentMethod'],
+                    favoriteVendors: params['favoriteVendors'],
+                  ),
         ),
         'getVendorProfile': _i1.MethodConnector(
           name: 'getVendorProfile',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).getVendorProfile(
-            session,
-            params['userId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['user'] as _i11.UserEndpoint).getVendorProfile(
+                    session,
+                    params['userId'],
+                  ),
         ),
         'updateVendorProfile': _i1.MethodConnector(
           name: 'updateVendorProfile',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'businessName': _i1.ParameterDescription(
@@ -1934,28 +1984,29 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).updateVendorProfile(
-            session,
-            userId: params['userId'],
-            businessName: params['businessName'],
-            businessDescription: params['businessDescription'],
-            businessCategory: params['businessCategory'],
-            businessLogoUrl: params['businessLogoUrl'],
-            businessBannerUrl: params['businessBannerUrl'],
-            supportEmail: params['supportEmail'],
-            supportPhone: params['supportPhone'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['user'] as _i11.UserEndpoint).updateVendorProfile(
+                    session,
+                    userId: params['userId'],
+                    businessName: params['businessName'],
+                    businessDescription: params['businessDescription'],
+                    businessCategory: params['businessCategory'],
+                    businessLogoUrl: params['businessLogoUrl'],
+                    businessBannerUrl: params['businessBannerUrl'],
+                    supportEmail: params['supportEmail'],
+                    supportPhone: params['supportPhone'],
+                  ),
         ),
         'addAddress': _i1.MethodConnector(
           name: 'addAddress',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'label': _i1.ParameterDescription(
@@ -2024,69 +2075,71 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).addAddress(
-            session,
-            userId: params['userId'],
-            label: params['label'],
-            recipientName: params['recipientName'],
-            phoneNumber: params['phoneNumber'],
-            addressLine1: params['addressLine1'],
-            addressLine2: params['addressLine2'],
-            city: params['city'],
-            state: params['state'],
-            country: params['country'],
-            postalCode: params['postalCode'],
-            landmark: params['landmark'],
-            isDefault: params['isDefault'],
-            latitude: params['latitude'],
-            longitude: params['longitude'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['user'] as _i11.UserEndpoint).addAddress(
+                session,
+                userId: params['userId'],
+                label: params['label'],
+                recipientName: params['recipientName'],
+                phoneNumber: params['phoneNumber'],
+                addressLine1: params['addressLine1'],
+                addressLine2: params['addressLine2'],
+                city: params['city'],
+                state: params['state'],
+                country: params['country'],
+                postalCode: params['postalCode'],
+                landmark: params['landmark'],
+                isDefault: params['isDefault'],
+                latitude: params['latitude'],
+                longitude: params['longitude'],
+              ),
         ),
         'getUserAddresses': _i1.MethodConnector(
           name: 'getUserAddresses',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).getUserAddresses(
-            session,
-            params['userId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['user'] as _i11.UserEndpoint).getUserAddresses(
+                    session,
+                    params['userId'],
+                  ),
         ),
         'setDefaultAddress': _i1.MethodConnector(
           name: 'setDefaultAddress',
           params: {
             'userId': _i1.ParameterDescription(
               name: 'userId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
             'addressId': _i1.ParameterDescription(
               name: 'addressId',
-              type: _i1.getType<_i13.UuidValue>(),
+              type: _i1.getType<_i1.UuidValue>(),
               nullable: false,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['user'] as _i11.UserEndpoint).setDefaultAddress(
-            session,
-            userId: params['userId'],
-            addressId: params['addressId'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['user'] as _i11.UserEndpoint).setDefaultAddress(
+                    session,
+                    userId: params['userId'],
+                    addressId: params['addressId'],
+                  ),
         ),
       },
     );
@@ -2113,17 +2166,18 @@ class Endpoints extends _i1.EndpointDispatch {
               nullable: true,
             ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
-                  .verifyWebhook(
-            session,
-            mode: params['mode'],
-            token: params['token'],
-            challenge: params['challenge'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
+                      .verifyWebhook(
+                        session,
+                        mode: params['mode'],
+                        token: params['token'],
+                        challenge: params['challenge'],
+                      ),
         ),
         'processWebhook': _i1.MethodConnector(
           name: 'processWebhook',
@@ -2132,17 +2186,18 @@ class Endpoints extends _i1.EndpointDispatch {
               name: 'payload',
               type: _i1.getType<Map<String, dynamic>>(),
               nullable: false,
-            )
+            ),
           },
-          call: (
-            _i1.Session session,
-            Map<String, dynamic> params,
-          ) async =>
-              (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
-                  .processWebhook(
-            session,
-            params['payload'],
-          ),
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['whatsAppWebhook'] as _i12.WhatsAppWebhookEndpoint)
+                      .processWebhook(
+                        session,
+                        params['payload'],
+                      ),
         ),
       },
     );

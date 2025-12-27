@@ -1,5 +1,7 @@
 // File: server/lib/src/services/ai_services/config/command_registry.dart
 
+import 'package:asami_server/src/services/dependency_injection.dart';
+import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_service.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/analytics_endpoint.dart';
 import '../../../endpoints/cart_endpoint.dart';
@@ -562,6 +564,8 @@ Type "upgrade" to see Pro and Pro Max options!
       vendorId: UuidValue.fromString(context.userId),
       limit: 10,
     );
+
+    // getIt<WhatsAppService>().sendFlowMessage(phoneNumber: phoneNumber, flowToken: flowToken, flowId: flowId, flowCta: flowCta, flowActionPayload: flowActionPayload)
 
     if (products.isEmpty) {
       return {

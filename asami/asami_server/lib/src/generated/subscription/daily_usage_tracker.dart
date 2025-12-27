@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -39,19 +40,19 @@ abstract class DailyUsageTracker
     bool? hardLimitReached,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        toolCallsCount = toolCallsCount ?? 0,
-        aiMessagesCount = aiMessagesCount ?? 0,
-        productsCreatedCount = productsCreatedCount ?? 0,
-        aiDescriptionsCount = aiDescriptionsCount ?? 0,
-        analyticsQueriesCount = analyticsQueriesCount ?? 0,
-        isInGracePeriod = isInGracePeriod ?? false,
-        gracePeriodUsed = gracePeriodUsed ?? 0,
-        gracePeriodLimit = gracePeriodLimit ?? 5,
-        softLimitWarned = softLimitWarned ?? false,
-        hardLimitReached = hardLimitReached ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       toolCallsCount = toolCallsCount ?? 0,
+       aiMessagesCount = aiMessagesCount ?? 0,
+       productsCreatedCount = productsCreatedCount ?? 0,
+       aiDescriptionsCount = aiDescriptionsCount ?? 0,
+       analyticsQueriesCount = analyticsQueriesCount ?? 0,
+       isInGracePeriod = isInGracePeriod ?? false,
+       gracePeriodUsed = gracePeriodUsed ?? 0,
+       gracePeriodLimit = gracePeriodLimit ?? 5,
+       softLimitWarned = softLimitWarned ?? false,
+       hardLimitReached = hardLimitReached ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory DailyUsageTracker({
     _i1.UuidValue? id,
@@ -83,7 +84,9 @@ abstract class DailyUsageTracker
     return DailyUsageTracker(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       resetAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['resetAt']),
       toolCallsCount: jsonSerialization['toolCallsCount'] as int,
@@ -102,13 +105,16 @@ abstract class DailyUsageTracker
       subscriptionTier: jsonSerialization['subscriptionTier'] == null
           ? null
           : _i3.SubscriptionTier.fromJson(
-              (jsonSerialization['subscriptionTier'] as int)),
+              (jsonSerialization['subscriptionTier'] as String),
+            ),
       softLimitWarned: jsonSerialization['softLimitWarned'] as bool,
       hardLimitReached: jsonSerialization['hardLimitReached'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -197,6 +203,7 @@ abstract class DailyUsageTracker
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'DailyUsageTracker',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -227,6 +234,7 @@ abstract class DailyUsageTracker
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'DailyUsageTracker',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -312,30 +320,30 @@ class _DailyUsageTrackerImpl extends DailyUsageTracker {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          date: date,
-          resetAt: resetAt,
-          toolCallsCount: toolCallsCount,
-          toolCallsLimit: toolCallsLimit,
-          aiMessagesCount: aiMessagesCount,
-          aiMessagesLimit: aiMessagesLimit,
-          productsCreatedCount: productsCreatedCount,
-          productsCreatedLimit: productsCreatedLimit,
-          aiDescriptionsCount: aiDescriptionsCount,
-          aiDescriptionsLimit: aiDescriptionsLimit,
-          analyticsQueriesCount: analyticsQueriesCount,
-          analyticsQueriesLimit: analyticsQueriesLimit,
-          isInGracePeriod: isInGracePeriod,
-          gracePeriodUsed: gracePeriodUsed,
-          gracePeriodLimit: gracePeriodLimit,
-          subscriptionTier: subscriptionTier,
-          softLimitWarned: softLimitWarned,
-          hardLimitReached: hardLimitReached,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         date: date,
+         resetAt: resetAt,
+         toolCallsCount: toolCallsCount,
+         toolCallsLimit: toolCallsLimit,
+         aiMessagesCount: aiMessagesCount,
+         aiMessagesLimit: aiMessagesLimit,
+         productsCreatedCount: productsCreatedCount,
+         productsCreatedLimit: productsCreatedLimit,
+         aiDescriptionsCount: aiDescriptionsCount,
+         aiDescriptionsLimit: aiDescriptionsLimit,
+         analyticsQueriesCount: analyticsQueriesCount,
+         analyticsQueriesLimit: analyticsQueriesLimit,
+         isInGracePeriod: isInGracePeriod,
+         gracePeriodUsed: gracePeriodUsed,
+         gracePeriodLimit: gracePeriodLimit,
+         subscriptionTier: subscriptionTier,
+         softLimitWarned: softLimitWarned,
+         hardLimitReached: hardLimitReached,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [DailyUsageTracker]
   /// with some or all fields replaced by the given arguments.
@@ -398,9 +406,132 @@ class _DailyUsageTrackerImpl extends DailyUsageTracker {
   }
 }
 
+class DailyUsageTrackerUpdateTable
+    extends _i1.UpdateTable<DailyUsageTrackerTable> {
+  DailyUsageTrackerUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.UserType, _i2.UserType> userType(_i2.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> date(DateTime value) => _i1.ColumnValue(
+    table.date,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> resetAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.resetAt,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> toolCallsCount(int value) => _i1.ColumnValue(
+    table.toolCallsCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> toolCallsLimit(int value) => _i1.ColumnValue(
+    table.toolCallsLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> aiMessagesCount(int value) => _i1.ColumnValue(
+    table.aiMessagesCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> aiMessagesLimit(int value) => _i1.ColumnValue(
+    table.aiMessagesLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> productsCreatedCount(int value) => _i1.ColumnValue(
+    table.productsCreatedCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> productsCreatedLimit(int value) => _i1.ColumnValue(
+    table.productsCreatedLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> aiDescriptionsCount(int value) => _i1.ColumnValue(
+    table.aiDescriptionsCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> aiDescriptionsLimit(int value) => _i1.ColumnValue(
+    table.aiDescriptionsLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> analyticsQueriesCount(int value) => _i1.ColumnValue(
+    table.analyticsQueriesCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> analyticsQueriesLimit(int value) => _i1.ColumnValue(
+    table.analyticsQueriesLimit,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isInGracePeriod(bool value) => _i1.ColumnValue(
+    table.isInGracePeriod,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> gracePeriodUsed(int value) => _i1.ColumnValue(
+    table.gracePeriodUsed,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> gracePeriodLimit(int value) => _i1.ColumnValue(
+    table.gracePeriodLimit,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.SubscriptionTier, _i3.SubscriptionTier> subscriptionTier(
+    _i3.SubscriptionTier? value,
+  ) => _i1.ColumnValue(
+    table.subscriptionTier,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> softLimitWarned(bool value) => _i1.ColumnValue(
+    table.softLimitWarned,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> hardLimitReached(bool value) => _i1.ColumnValue(
+    table.hardLimitReached,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class DailyUsageTrackerTable extends _i1.Table<_i1.UuidValue> {
   DailyUsageTrackerTable({super.tableRelation})
-      : super(tableName: 'daily_usage_trackers') {
+    : super(tableName: 'daily_usage_trackers') {
+    updateTable = DailyUsageTrackerUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -408,7 +539,7 @@ class DailyUsageTrackerTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     date = _i1.ColumnDateTime(
       'date',
@@ -481,7 +612,7 @@ class DailyUsageTrackerTable extends _i1.Table<_i1.UuidValue> {
     subscriptionTier = _i1.ColumnEnum(
       'subscriptionTier',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     softLimitWarned = _i1.ColumnBool(
       'softLimitWarned',
@@ -504,6 +635,8 @@ class DailyUsageTrackerTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final DailyUsageTrackerUpdateTable updateTable;
 
   late final _i1.ColumnUuid userId;
 
@@ -551,30 +684,30 @@ class DailyUsageTrackerTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        userType,
-        date,
-        resetAt,
-        toolCallsCount,
-        toolCallsLimit,
-        aiMessagesCount,
-        aiMessagesLimit,
-        productsCreatedCount,
-        productsCreatedLimit,
-        aiDescriptionsCount,
-        aiDescriptionsLimit,
-        analyticsQueriesCount,
-        analyticsQueriesLimit,
-        isInGracePeriod,
-        gracePeriodUsed,
-        gracePeriodLimit,
-        subscriptionTier,
-        softLimitWarned,
-        hardLimitReached,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    userType,
+    date,
+    resetAt,
+    toolCallsCount,
+    toolCallsLimit,
+    aiMessagesCount,
+    aiMessagesLimit,
+    productsCreatedCount,
+    productsCreatedLimit,
+    aiDescriptionsCount,
+    aiDescriptionsLimit,
+    analyticsQueriesCount,
+    analyticsQueriesLimit,
+    isInGracePeriod,
+    gracePeriodUsed,
+    gracePeriodLimit,
+    subscriptionTier,
+    softLimitWarned,
+    hardLimitReached,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class DailyUsageTrackerInclude extends _i1.IncludeObject {
@@ -762,6 +895,48 @@ class DailyUsageTrackerRepository {
     return session.db.updateRow<DailyUsageTracker>(
       row,
       columns: columns?.call(DailyUsageTracker.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [DailyUsageTracker] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<DailyUsageTracker?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<DailyUsageTrackerUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<DailyUsageTracker>(
+      id,
+      columnValues: columnValues(DailyUsageTracker.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [DailyUsageTracker]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<DailyUsageTracker>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<DailyUsageTrackerUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<DailyUsageTrackerTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<DailyUsageTrackerTable>? orderBy,
+    _i1.OrderByListBuilder<DailyUsageTrackerTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<DailyUsageTracker>(
+      columnValues: columnValues(DailyUsageTracker.t.updateTable),
+      where: where(DailyUsageTracker.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(DailyUsageTracker.t),
+      orderByList: orderByList?.call(DailyUsageTracker.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../product/wishlist.dart' as _i2;
 import '../product/product.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class WishlistItem implements _i1.SerializableModel {
   WishlistItem._({
@@ -28,9 +30,9 @@ abstract class WishlistItem implements _i1.SerializableModel {
     bool? notifyOnPriceDrop,
     this.targetPrice,
     DateTime? addedAt,
-  })  : priority = priority ?? 0,
-        notifyOnPriceDrop = notifyOnPriceDrop ?? false,
-        addedAt = addedAt ?? DateTime.now();
+  }) : priority = priority ?? 0,
+       notifyOnPriceDrop = notifyOnPriceDrop ?? false,
+       addedAt = addedAt ?? DateTime.now();
 
   factory WishlistItem({
     int? id,
@@ -51,20 +53,25 @@ abstract class WishlistItem implements _i1.SerializableModel {
   factory WishlistItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return WishlistItem(
       id: jsonSerialization['id'] as int?,
-      wishlistId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['wishlistId']),
+      wishlistId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['wishlistId'],
+      ),
       wishlist: jsonSerialization['wishlist'] == null
           ? null
-          : _i2.Wishlist.fromJson(
-              (jsonSerialization['wishlist'] as Map<String, dynamic>)),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i4.Protocol().deserialize<_i2.Wishlist>(
+              jsonSerialization['wishlist'],
+            ),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
@@ -127,6 +134,7 @@ abstract class WishlistItem implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'WishlistItem',
       if (id != null) 'id': id,
       'wishlistId': wishlistId.toJson(),
       if (wishlist != null) 'wishlist': wishlist?.toJson(),
@@ -167,20 +175,20 @@ class _WishlistItemImpl extends WishlistItem {
     double? targetPrice,
     DateTime? addedAt,
   }) : super._(
-          id: id,
-          wishlistId: wishlistId,
-          wishlist: wishlist,
-          customerId: customerId,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          notes: notes,
-          priority: priority,
-          priceWhenAdded: priceWhenAdded,
-          notifyOnPriceDrop: notifyOnPriceDrop,
-          targetPrice: targetPrice,
-          addedAt: addedAt,
-        );
+         id: id,
+         wishlistId: wishlistId,
+         wishlist: wishlist,
+         customerId: customerId,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         notes: notes,
+         priority: priority,
+         priceWhenAdded: priceWhenAdded,
+         notifyOnPriceDrop: notifyOnPriceDrop,
+         targetPrice: targetPrice,
+         addedAt: addedAt,
+       );
 
   /// Returns a shallow copy of this [WishlistItem]
   /// with some or all fields replaced by the given arguments.
@@ -204,8 +212,9 @@ class _WishlistItemImpl extends WishlistItem {
     return WishlistItem(
       id: id is int? ? id : this.id,
       wishlistId: wishlistId ?? this.wishlistId,
-      wishlist:
-          wishlist is _i2.Wishlist? ? wishlist : this.wishlist?.copyWith(),
+      wishlist: wishlist is _i2.Wishlist?
+          ? wishlist
+          : this.wishlist?.copyWith(),
       customerId: customerId ?? this.customerId,
       productId: productId ?? this.productId,
       product: product is _i3.Product? ? product : this.product?.copyWith(),

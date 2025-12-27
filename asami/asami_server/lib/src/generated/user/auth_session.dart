@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/user.dart' as _i2;
 import '../messaging/platfom_type.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class AuthSession
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -32,10 +34,10 @@ abstract class AuthSession
     this.userAgent,
     this.lastActivityAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isActive = isActive ?? true,
-        loginAt = loginAt ?? DateTime.now(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isActive = isActive ?? true,
+       loginAt = loginAt ?? DateTime.now(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory AuthSession({
     _i1.UuidValue? id,
@@ -60,10 +62,10 @@ abstract class AuthSession
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i4.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformUserId: jsonSerialization['platformUserId'] as String,
       isActive: jsonSerialization['isActive'] as bool,
       loginAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['loginAt']),
@@ -79,9 +81,11 @@ abstract class AuthSession
       lastActivityAt: jsonSerialization['lastActivityAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastActivityAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+              jsonSerialization['lastActivityAt'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -143,6 +147,7 @@ abstract class AuthSession
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'AuthSession',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -163,6 +168,7 @@ abstract class AuthSession
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'AuthSession',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -229,21 +235,21 @@ class _AuthSessionImpl extends AuthSession {
     DateTime? lastActivityAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          platform: platform,
-          platformUserId: platformUserId,
-          isActive: isActive,
-          loginAt: loginAt,
-          logoutAt: logoutAt,
-          expiresAt: expiresAt,
-          deviceInfo: deviceInfo,
-          ipAddress: ipAddress,
-          userAgent: userAgent,
-          lastActivityAt: lastActivityAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         platform: platform,
+         platformUserId: platformUserId,
+         isActive: isActive,
+         loginAt: loginAt,
+         logoutAt: logoutAt,
+         expiresAt: expiresAt,
+         deviceInfo: deviceInfo,
+         ipAddress: ipAddress,
+         userAgent: userAgent,
+         lastActivityAt: lastActivityAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [AuthSession]
   /// with some or all fields replaced by the given arguments.
@@ -278,15 +284,90 @@ class _AuthSessionImpl extends AuthSession {
       deviceInfo: deviceInfo is String? ? deviceInfo : this.deviceInfo,
       ipAddress: ipAddress is String? ? ipAddress : this.ipAddress,
       userAgent: userAgent is String? ? userAgent : this.userAgent,
-      lastActivityAt:
-          lastActivityAt is DateTime? ? lastActivityAt : this.lastActivityAt,
+      lastActivityAt: lastActivityAt is DateTime?
+          ? lastActivityAt
+          : this.lastActivityAt,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 }
 
+class AuthSessionUpdateTable extends _i1.UpdateTable<AuthSessionTable> {
+  AuthSessionUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.PlatformType, _i3.PlatformType> platform(
+    _i3.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> platformUserId(String value) =>
+      _i1.ColumnValue(
+        table.platformUserId,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> loginAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.loginAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> logoutAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.logoutAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> expiresAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.expiresAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> deviceInfo(String? value) => _i1.ColumnValue(
+    table.deviceInfo,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> ipAddress(String? value) => _i1.ColumnValue(
+    table.ipAddress,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> userAgent(String? value) => _i1.ColumnValue(
+    table.userAgent,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> lastActivityAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastActivityAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class AuthSessionTable extends _i1.Table<_i1.UuidValue> {
   AuthSessionTable({super.tableRelation}) : super(tableName: 'auth_sessions') {
+    updateTable = AuthSessionUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -294,7 +375,7 @@ class AuthSessionTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     platformUserId = _i1.ColumnString(
       'platformUserId',
@@ -341,6 +422,8 @@ class AuthSessionTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final AuthSessionUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
@@ -382,20 +465,20 @@ class AuthSessionTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        platform,
-        platformUserId,
-        isActive,
-        loginAt,
-        logoutAt,
-        expiresAt,
-        deviceInfo,
-        ipAddress,
-        userAgent,
-        lastActivityAt,
-        createdAt,
-      ];
+    id,
+    userId,
+    platform,
+    platformUserId,
+    isActive,
+    loginAt,
+    logoutAt,
+    expiresAt,
+    deviceInfo,
+    ipAddress,
+    userAgent,
+    lastActivityAt,
+    createdAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -603,6 +686,46 @@ class AuthSessionRepository {
     return session.db.updateRow<AuthSession>(
       row,
       columns: columns?.call(AuthSession.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [AuthSession] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<AuthSession?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<AuthSessionUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<AuthSession>(
+      id,
+      columnValues: columnValues(AuthSession.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [AuthSession]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<AuthSession>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<AuthSessionUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<AuthSessionTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<AuthSessionTable>? orderBy,
+    _i1.OrderByListBuilder<AuthSessionTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<AuthSession>(
+      columnValues: columnValues(AuthSession.t.updateTable),
+      where: where(AuthSession.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(AuthSession.t),
+      orderByList: orderByList?.call(AuthSession.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

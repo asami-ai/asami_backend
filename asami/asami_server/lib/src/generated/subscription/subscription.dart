@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
 import '../user/subscription_tier.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class Subscription
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -40,15 +42,15 @@ abstract class Subscription
     this.cancellationReason,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? 'active',
-        billingCycle = billingCycle ?? 'monthly',
-        currency = currency ?? 'USD',
-        autoRenew = autoRenew ?? true,
-        cancelAtPeriodEnd = cancelAtPeriodEnd ?? false,
-        isTrialing = isTrialing ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? 'active',
+       billingCycle = billingCycle ?? 'monthly',
+       currency = currency ?? 'USD',
+       autoRenew = autoRenew ?? true,
+       cancelAtPeriodEnd = cancelAtPeriodEnd ?? false,
+       isTrialing = isTrialing ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Subscription({
     _i1.UuidValue? id,
@@ -78,21 +80,27 @@ abstract class Subscription
   factory Subscription.fromJson(Map<String, dynamic> jsonSerialization) {
     return Subscription(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
-      tier: _i3.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
+          : _i4.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
+      tier: _i3.SubscriptionTier.fromJson(
+        (jsonSerialization['tier'] as String),
+      ),
       status: jsonSerialization['status'] as String,
       billingCycle: jsonSerialization['billingCycle'] as String,
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       currentPeriodStart: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['currentPeriodStart']),
+        jsonSerialization['currentPeriodStart'],
+      ),
       currentPeriodEnd: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['currentPeriodEnd']),
+        jsonSerialization['currentPeriodEnd'],
+      ),
       productLimit: jsonSerialization['productLimit'] as int,
       aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int,
       platformTransactionFee:
@@ -109,12 +117,15 @@ abstract class Subscription
       cancelledAt: jsonSerialization['cancelledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['cancelledAt']),
+              jsonSerialization['cancelledAt'],
+            ),
       cancellationReason: jsonSerialization['cancellationReason'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -200,6 +211,7 @@ abstract class Subscription
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Subscription',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -228,6 +240,7 @@ abstract class Subscription
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Subscription',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJsonForProtocol(),
@@ -310,29 +323,29 @@ class _SubscriptionImpl extends Subscription {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          tier: tier,
-          status: status,
-          billingCycle: billingCycle,
-          amount: amount,
-          currency: currency,
-          currentPeriodStart: currentPeriodStart,
-          currentPeriodEnd: currentPeriodEnd,
-          productLimit: productLimit,
-          aiDescriptionsLimit: aiDescriptionsLimit,
-          platformTransactionFee: platformTransactionFee,
-          autoRenew: autoRenew,
-          cancelAtPeriodEnd: cancelAtPeriodEnd,
-          isTrialing: isTrialing,
-          trialStart: trialStart,
-          trialEnd: trialEnd,
-          cancelledAt: cancelledAt,
-          cancellationReason: cancellationReason,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         tier: tier,
+         status: status,
+         billingCycle: billingCycle,
+         amount: amount,
+         currency: currency,
+         currentPeriodStart: currentPeriodStart,
+         currentPeriodEnd: currentPeriodEnd,
+         productLimit: productLimit,
+         aiDescriptionsLimit: aiDescriptionsLimit,
+         platformTransactionFee: platformTransactionFee,
+         autoRenew: autoRenew,
+         cancelAtPeriodEnd: cancelAtPeriodEnd,
+         isTrialing: isTrialing,
+         trialStart: trialStart,
+         trialEnd: trialEnd,
+         cancelledAt: cancelledAt,
+         cancellationReason: cancellationReason,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Subscription]
   /// with some or all fields replaced by the given arguments.
@@ -392,8 +405,125 @@ class _SubscriptionImpl extends Subscription {
   }
 }
 
+class SubscriptionUpdateTable extends _i1.UpdateTable<SubscriptionTable> {
+  SubscriptionUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.SubscriptionTier, _i3.SubscriptionTier> tier(
+    _i3.SubscriptionTier value,
+  ) => _i1.ColumnValue(
+    table.tier,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> status(String value) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> billingCycle(String value) => _i1.ColumnValue(
+    table.billingCycle,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> amount(double value) => _i1.ColumnValue(
+    table.amount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> currentPeriodStart(DateTime value) =>
+      _i1.ColumnValue(
+        table.currentPeriodStart,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> currentPeriodEnd(DateTime value) =>
+      _i1.ColumnValue(
+        table.currentPeriodEnd,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> productLimit(int value) => _i1.ColumnValue(
+    table.productLimit,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> aiDescriptionsLimit(int value) => _i1.ColumnValue(
+    table.aiDescriptionsLimit,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> platformTransactionFee(double value) =>
+      _i1.ColumnValue(
+        table.platformTransactionFee,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> autoRenew(bool value) => _i1.ColumnValue(
+    table.autoRenew,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> cancelAtPeriodEnd(bool value) => _i1.ColumnValue(
+    table.cancelAtPeriodEnd,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isTrialing(bool value) => _i1.ColumnValue(
+    table.isTrialing,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> trialStart(DateTime? value) =>
+      _i1.ColumnValue(
+        table.trialStart,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> trialEnd(DateTime? value) =>
+      _i1.ColumnValue(
+        table.trialEnd,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> cancelledAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.cancelledAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> cancellationReason(String? value) =>
+      _i1.ColumnValue(
+        table.cancellationReason,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class SubscriptionTable extends _i1.Table<_i1.UuidValue> {
   SubscriptionTable({super.tableRelation}) : super(tableName: 'subscriptions') {
+    updateTable = SubscriptionUpdateTable(this);
     vendorId = _i1.ColumnUuid(
       'vendorId',
       this,
@@ -401,7 +531,7 @@ class SubscriptionTable extends _i1.Table<_i1.UuidValue> {
     tier = _i1.ColumnEnum(
       'tier',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     status = _i1.ColumnString(
       'status',
@@ -485,6 +615,8 @@ class SubscriptionTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final SubscriptionUpdateTable updateTable;
+
   late final _i1.ColumnUuid vendorId;
 
   _i2.VendorProfileTable? _vendor;
@@ -542,28 +674,28 @@ class SubscriptionTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        vendorId,
-        tier,
-        status,
-        billingCycle,
-        amount,
-        currency,
-        currentPeriodStart,
-        currentPeriodEnd,
-        productLimit,
-        aiDescriptionsLimit,
-        platformTransactionFee,
-        autoRenew,
-        cancelAtPeriodEnd,
-        isTrialing,
-        trialStart,
-        trialEnd,
-        cancelledAt,
-        cancellationReason,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    vendorId,
+    tier,
+    status,
+    billingCycle,
+    amount,
+    currency,
+    currentPeriodStart,
+    currentPeriodEnd,
+    productLimit,
+    aiDescriptionsLimit,
+    platformTransactionFee,
+    autoRenew,
+    cancelAtPeriodEnd,
+    isTrialing,
+    trialStart,
+    trialEnd,
+    cancelledAt,
+    cancellationReason,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -771,6 +903,46 @@ class SubscriptionRepository {
     return session.db.updateRow<Subscription>(
       row,
       columns: columns?.call(Subscription.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Subscription] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Subscription?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<SubscriptionUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Subscription>(
+      id,
+      columnValues: columnValues(Subscription.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Subscription]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Subscription>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<SubscriptionUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<SubscriptionTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<SubscriptionTable>? orderBy,
+    _i1.OrderByListBuilder<SubscriptionTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Subscription>(
+      columnValues: columnValues(Subscription.t.updateTable),
+      where: where(Subscription.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Subscription.t),
+      orderByList: orderByList?.call(Subscription.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

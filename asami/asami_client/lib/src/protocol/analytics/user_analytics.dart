@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -15,6 +16,7 @@ import '../product/product.dart' as _i3;
 import '../user/vendor_profile.dart' as _i4;
 import '../messaging/platfom_type.dart' as _i5;
 import '../messaging/conversation.dart' as _i6;
+import 'package:asami_client/src/protocol/protocol.dart' as _i7;
 
 abstract class UserActivity implements _i1.SerializableModel {
   UserActivity._({
@@ -40,8 +42,8 @@ abstract class UserActivity implements _i1.SerializableModel {
     this.metadata,
     this.durationSeconds,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       createdAt = createdAt ?? DateTime.now();
 
   factory UserActivity({
     _i1.UuidValue? id,
@@ -74,35 +76,39 @@ abstract class UserActivity implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       activityType: jsonSerialization['activityType'] as String,
       productId: jsonSerialization['productId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       vendorId: jsonSerialization['vendorId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i4.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i4.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       categoryName: jsonSerialization['categoryName'] as String?,
       searchQuery: jsonSerialization['searchQuery'] as String?,
-      platform:
-          _i5.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      platform: _i5.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i6.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
+          : _i7.Protocol().deserialize<_i6.Conversation>(
+              jsonSerialization['conversation'],
+            ),
       latitude: (jsonSerialization['latitude'] as num?)?.toDouble(),
       longitude: (jsonSerialization['longitude'] as num?)?.toDouble(),
       city: jsonSerialization['city'] as String?,
@@ -111,14 +117,13 @@ abstract class UserActivity implements _i1.SerializableModel {
       sessionId: jsonSerialization['sessionId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       durationSeconds: jsonSerialization['durationSeconds'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -193,6 +198,7 @@ abstract class UserActivity implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UserActivity',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -251,29 +257,29 @@ class _UserActivityImpl extends UserActivity {
     int? durationSeconds,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          activityType: activityType,
-          productId: productId,
-          product: product,
-          vendorId: vendorId,
-          vendor: vendor,
-          categoryName: categoryName,
-          searchQuery: searchQuery,
-          platform: platform,
-          conversationId: conversationId,
-          conversation: conversation,
-          latitude: latitude,
-          longitude: longitude,
-          city: city,
-          state: state,
-          country: country,
-          sessionId: sessionId,
-          metadata: metadata,
-          durationSeconds: durationSeconds,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         activityType: activityType,
+         productId: productId,
+         product: product,
+         vendorId: vendorId,
+         vendor: vendor,
+         categoryName: categoryName,
+         searchQuery: searchQuery,
+         platform: platform,
+         conversationId: conversationId,
+         conversation: conversation,
+         latitude: latitude,
+         longitude: longitude,
+         city: city,
+         state: state,
+         country: country,
+         sessionId: sessionId,
+         metadata: metadata,
+         durationSeconds: durationSeconds,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UserActivity]
   /// with some or all fields replaced by the given arguments.
@@ -328,8 +334,9 @@ class _UserActivityImpl extends UserActivity {
       country: country is String? ? country : this.country,
       sessionId: sessionId is String? ? sessionId : this.sessionId,
       metadata: metadata is String? ? metadata : this.metadata,
-      durationSeconds:
-          durationSeconds is int? ? durationSeconds : this.durationSeconds,
+      durationSeconds: durationSeconds is int?
+          ? durationSeconds
+          : this.durationSeconds,
       createdAt: createdAt ?? this.createdAt,
     );
   }

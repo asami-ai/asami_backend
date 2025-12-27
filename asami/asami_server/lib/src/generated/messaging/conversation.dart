@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -16,6 +17,7 @@ import '../messaging/conversation_status.dart' as _i2;
 import '../user/user.dart' as _i3;
 import '../messaging/platfom_type.dart' as _i4;
 import '../user/user_type.dart' as _i5;
+import 'package:asami_server/src/generated/protocol.dart' as _i6;
 
 abstract class Conversation
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -49,13 +51,13 @@ abstract class Conversation
     this.lastMessageAt,
     this.resolvedAt,
     this.archivedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.ConversationStatus.active,
-        isEscalated = isEscalated ?? false,
-        messageCount = messageCount ?? 0,
-        botResponseCount = botResponseCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.ConversationStatus.active,
+       isEscalated = isEscalated ?? false,
+       messageCount = messageCount ?? 0,
+       botResponseCount = botResponseCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Conversation({
     _i1.UuidValue? id,
@@ -97,15 +99,18 @@ abstract class Conversation
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i3.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      platform:
-          _i4.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i6.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
+      platform: _i4.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformUserId: jsonSerialization['platformUserId'] as String,
       platformUsername: jsonSerialization['platformUsername'] as String?,
-      userType: _i5.UserType.fromJson((jsonSerialization['userType'] as int)),
-      status:
-          _i2.ConversationStatus.fromJson((jsonSerialization['status'] as int)),
+      userType: _i5.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      status: _i2.ConversationStatus.fromJson(
+        (jsonSerialization['status'] as String),
+      ),
       sessionData: jsonSerialization['sessionData'] as String?,
       contextData: jsonSerialization['contextData'] as String?,
       activeCartId: jsonSerialization['activeCartId'] as String?,
@@ -120,20 +125,24 @@ abstract class Conversation
       escalatedAt: jsonSerialization['escalatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['escalatedAt']),
+              jsonSerialization['escalatedAt'],
+            ),
       escalationReason: jsonSerialization['escalationReason'] as String?,
       messageCount: jsonSerialization['messageCount'] as int,
       botResponseCount: jsonSerialization['botResponseCount'] as int,
-      averageResponseTime:
-          (jsonSerialization['averageResponseTime'] as num?)?.toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      averageResponseTime: (jsonSerialization['averageResponseTime'] as num?)
+          ?.toDouble(),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       lastMessageAt: jsonSerialization['lastMessageAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastMessageAt']),
+              jsonSerialization['lastMessageAt'],
+            ),
       resolvedAt: jsonSerialization['resolvedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['resolvedAt']),
@@ -246,6 +255,7 @@ abstract class Conversation
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Conversation',
       'id': id.toJson(),
       if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -283,6 +293,7 @@ abstract class Conversation
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Conversation',
       'id': id.toJson(),
       if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -381,36 +392,36 @@ class _ConversationImpl extends Conversation {
     DateTime? resolvedAt,
     DateTime? archivedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          platform: platform,
-          platformUserId: platformUserId,
-          platformUsername: platformUsername,
-          userType: userType,
-          status: status,
-          sessionData: sessionData,
-          contextData: contextData,
-          activeCartId: activeCartId,
-          currentProductId: currentProductId,
-          currentVendorId: currentVendorId,
-          lastIntent: lastIntent,
-          lastEntities: lastEntities,
-          agentState: agentState,
-          conversationSummary: conversationSummary,
-          isEscalated: isEscalated,
-          escalatedTo: escalatedTo,
-          escalatedAt: escalatedAt,
-          escalationReason: escalationReason,
-          messageCount: messageCount,
-          botResponseCount: botResponseCount,
-          averageResponseTime: averageResponseTime,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          lastMessageAt: lastMessageAt,
-          resolvedAt: resolvedAt,
-          archivedAt: archivedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         platform: platform,
+         platformUserId: platformUserId,
+         platformUsername: platformUsername,
+         userType: userType,
+         status: status,
+         sessionData: sessionData,
+         contextData: contextData,
+         activeCartId: activeCartId,
+         currentProductId: currentProductId,
+         currentVendorId: currentVendorId,
+         lastIntent: lastIntent,
+         lastEntities: lastEntities,
+         agentState: agentState,
+         conversationSummary: conversationSummary,
+         isEscalated: isEscalated,
+         escalatedTo: escalatedTo,
+         escalatedAt: escalatedAt,
+         escalationReason: escalationReason,
+         messageCount: messageCount,
+         botResponseCount: botResponseCount,
+         averageResponseTime: averageResponseTime,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         lastMessageAt: lastMessageAt,
+         resolvedAt: resolvedAt,
+         archivedAt: archivedAt,
+       );
 
   /// Returns a shallow copy of this [Conversation]
   /// with some or all fields replaced by the given arguments.
@@ -464,8 +475,9 @@ class _ConversationImpl extends Conversation {
       currentProductId: currentProductId is String?
           ? currentProductId
           : this.currentProductId,
-      currentVendorId:
-          currentVendorId is String? ? currentVendorId : this.currentVendorId,
+      currentVendorId: currentVendorId is String?
+          ? currentVendorId
+          : this.currentVendorId,
       lastIntent: lastIntent is String? ? lastIntent : this.lastIntent,
       lastEntities: lastEntities is String? ? lastEntities : this.lastEntities,
       agentState: agentState is String? ? agentState : this.agentState,
@@ -485,16 +497,178 @@ class _ConversationImpl extends Conversation {
           : this.averageResponseTime,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastMessageAt:
-          lastMessageAt is DateTime? ? lastMessageAt : this.lastMessageAt,
+      lastMessageAt: lastMessageAt is DateTime?
+          ? lastMessageAt
+          : this.lastMessageAt,
       resolvedAt: resolvedAt is DateTime? ? resolvedAt : this.resolvedAt,
       archivedAt: archivedAt is DateTime? ? archivedAt : this.archivedAt,
     );
   }
 }
 
+class ConversationUpdateTable extends _i1.UpdateTable<ConversationTable> {
+  ConversationUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue? value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i4.PlatformType, _i4.PlatformType> platform(
+    _i4.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> platformUserId(String value) =>
+      _i1.ColumnValue(
+        table.platformUserId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> platformUsername(String? value) =>
+      _i1.ColumnValue(
+        table.platformUsername,
+        value,
+      );
+
+  _i1.ColumnValue<_i5.UserType, _i5.UserType> userType(_i5.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.ConversationStatus, _i2.ConversationStatus> status(
+    _i2.ConversationStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> sessionData(String? value) => _i1.ColumnValue(
+    table.sessionData,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> contextData(String? value) => _i1.ColumnValue(
+    table.contextData,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> activeCartId(String? value) =>
+      _i1.ColumnValue(
+        table.activeCartId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> currentProductId(String? value) =>
+      _i1.ColumnValue(
+        table.currentProductId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> currentVendorId(String? value) =>
+      _i1.ColumnValue(
+        table.currentVendorId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> lastIntent(String? value) => _i1.ColumnValue(
+    table.lastIntent,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> lastEntities(String? value) =>
+      _i1.ColumnValue(
+        table.lastEntities,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> agentState(String? value) => _i1.ColumnValue(
+    table.agentState,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> conversationSummary(String? value) =>
+      _i1.ColumnValue(
+        table.conversationSummary,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isEscalated(bool value) => _i1.ColumnValue(
+    table.isEscalated,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> escalatedTo(String? value) => _i1.ColumnValue(
+    table.escalatedTo,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> escalatedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.escalatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> escalationReason(String? value) =>
+      _i1.ColumnValue(
+        table.escalationReason,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> messageCount(int value) => _i1.ColumnValue(
+    table.messageCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> botResponseCount(int value) => _i1.ColumnValue(
+    table.botResponseCount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> averageResponseTime(double? value) =>
+      _i1.ColumnValue(
+        table.averageResponseTime,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> lastMessageAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastMessageAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> resolvedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.resolvedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> archivedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.archivedAt,
+        value,
+      );
+}
+
 class ConversationTable extends _i1.Table<_i1.UuidValue> {
   ConversationTable({super.tableRelation}) : super(tableName: 'conversations') {
+    updateTable = ConversationUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -502,7 +676,7 @@ class ConversationTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     platformUserId = _i1.ColumnString(
       'platformUserId',
@@ -515,12 +689,12 @@ class ConversationTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     status = _i1.ColumnEnum(
       'status',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
     sessionData = _i1.ColumnString(
@@ -614,6 +788,8 @@ class ConversationTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final ConversationUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   _i3.UserTable? _user;
@@ -685,35 +861,35 @@ class ConversationTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        platform,
-        platformUserId,
-        platformUsername,
-        userType,
-        status,
-        sessionData,
-        contextData,
-        activeCartId,
-        currentProductId,
-        currentVendorId,
-        lastIntent,
-        lastEntities,
-        agentState,
-        conversationSummary,
-        isEscalated,
-        escalatedTo,
-        escalatedAt,
-        escalationReason,
-        messageCount,
-        botResponseCount,
-        averageResponseTime,
-        createdAt,
-        updatedAt,
-        lastMessageAt,
-        resolvedAt,
-        archivedAt,
-      ];
+    id,
+    userId,
+    platform,
+    platformUserId,
+    platformUsername,
+    userType,
+    status,
+    sessionData,
+    contextData,
+    activeCartId,
+    currentProductId,
+    currentVendorId,
+    lastIntent,
+    lastEntities,
+    agentState,
+    conversationSummary,
+    isEscalated,
+    escalatedTo,
+    escalatedAt,
+    escalationReason,
+    messageCount,
+    botResponseCount,
+    averageResponseTime,
+    createdAt,
+    updatedAt,
+    lastMessageAt,
+    resolvedAt,
+    archivedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -923,6 +1099,46 @@ class ConversationRepository {
     return session.db.updateRow<Conversation>(
       row,
       columns: columns?.call(Conversation.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Conversation] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Conversation?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ConversationUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Conversation>(
+      id,
+      columnValues: columnValues(Conversation.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Conversation]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Conversation>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ConversationUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<ConversationTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ConversationTable>? orderBy,
+    _i1.OrderByListBuilder<ConversationTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Conversation>(
+      columnValues: columnValues(Conversation.t.updateTable),
+      where: where(Conversation.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Conversation.t),
+      orderByList: orderByList?.call(Conversation.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

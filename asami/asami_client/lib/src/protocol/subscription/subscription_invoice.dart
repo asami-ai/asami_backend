@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../subscription/subscription.dart' as _i2;
 import '../order/payment_method.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class SubscriptionInvoice implements _i1.SerializableModel {
   SubscriptionInvoice._({
@@ -36,16 +38,16 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
     required this.dueDate,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        currency = currency ?? 'USD',
-        subscriptionAmount = subscriptionAmount ?? 0.0,
-        usageCharges = usageCharges ?? 0.0,
-        taxAmount = taxAmount ?? 0.0,
-        discountAmount = discountAmount ?? 0.0,
-        status = status ?? 'pending',
-        isPaid = isPaid ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       currency = currency ?? 'USD',
+       subscriptionAmount = subscriptionAmount ?? 0.0,
+       usageCharges = usageCharges ?? 0.0,
+       taxAmount = taxAmount ?? 0.0,
+       discountAmount = discountAmount ?? 0.0,
+       status = status ?? 'pending',
+       isPaid = isPaid ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory SubscriptionInvoice({
     _i1.UuidValue? id,
@@ -75,18 +77,21 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
     return SubscriptionInvoice(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       subscriptionId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['subscriptionId']),
+        jsonSerialization['subscriptionId'],
+      ),
       subscription: jsonSerialization['subscription'] == null
           ? null
-          : _i2.Subscription.fromJson(
-              (jsonSerialization['subscription'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i4.Protocol().deserialize<_i2.Subscription>(
+              jsonSerialization['subscription'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       invoiceNumber: jsonSerialization['invoiceNumber'] as String,
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
-      subscriptionAmount:
-          (jsonSerialization['subscriptionAmount'] as num).toDouble(),
+      subscriptionAmount: (jsonSerialization['subscriptionAmount'] as num)
+          .toDouble(),
       usageCharges: (jsonSerialization['usageCharges'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       discountAmount: (jsonSerialization['discountAmount'] as num).toDouble(),
@@ -95,27 +100,30 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
       paymentMethod: jsonSerialization['paymentMethod'] == null
           ? null
           : _i3.PaymentMethod.fromJson(
-              (jsonSerialization['paymentMethod'] as int)),
+              (jsonSerialization['paymentMethod'] as String),
+            ),
       paymentTransactionId:
           jsonSerialization['paymentTransactionId'] as String?,
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
-      periodStart:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodStart']),
-      periodEnd:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodEnd']),
+      periodStart: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodStart'],
+      ),
+      periodEnd: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodEnd'],
+      ),
       dueDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dueDate']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue subscriptionId;
@@ -187,6 +195,7 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SubscriptionInvoice',
       'id': id.toJson(),
       'subscriptionId': subscriptionId.toJson(),
       if (subscription != null) 'subscription': subscription?.toJson(),
@@ -244,28 +253,28 @@ class _SubscriptionInvoiceImpl extends SubscriptionInvoice {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          subscriptionId: subscriptionId,
-          subscription: subscription,
-          vendorId: vendorId,
-          invoiceNumber: invoiceNumber,
-          amount: amount,
-          currency: currency,
-          subscriptionAmount: subscriptionAmount,
-          usageCharges: usageCharges,
-          taxAmount: taxAmount,
-          discountAmount: discountAmount,
-          status: status,
-          isPaid: isPaid,
-          paymentMethod: paymentMethod,
-          paymentTransactionId: paymentTransactionId,
-          paidAt: paidAt,
-          periodStart: periodStart,
-          periodEnd: periodEnd,
-          dueDate: dueDate,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         subscriptionId: subscriptionId,
+         subscription: subscription,
+         vendorId: vendorId,
+         invoiceNumber: invoiceNumber,
+         amount: amount,
+         currency: currency,
+         subscriptionAmount: subscriptionAmount,
+         usageCharges: usageCharges,
+         taxAmount: taxAmount,
+         discountAmount: discountAmount,
+         status: status,
+         isPaid: isPaid,
+         paymentMethod: paymentMethod,
+         paymentTransactionId: paymentTransactionId,
+         paidAt: paidAt,
+         periodStart: periodStart,
+         periodEnd: periodEnd,
+         dueDate: dueDate,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [SubscriptionInvoice]
   /// with some or all fields replaced by the given arguments.

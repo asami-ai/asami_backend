@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../product/product.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class ProductAnalytics implements _i1.SerializableModel {
   ProductAnalytics._({
@@ -39,26 +41,26 @@ abstract class ProductAnalytics implements _i1.SerializableModel {
     int? stockLevelEnd,
     int? stockOuts,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        views = views ?? 0,
-        uniqueViews = uniqueViews ?? 0,
-        wishlistAdds = wishlistAdds ?? 0,
-        cartAdds = cartAdds ?? 0,
-        orderCount = orderCount ?? 0,
-        quantitySold = quantitySold ?? 0,
-        revenue = revenue ?? 0.0,
-        conversionRate = conversionRate ?? 0.0,
-        bounceRate = bounceRate ?? 0.0,
-        averageTimeOnPage = averageTimeOnPage ?? 0.0,
-        newReviews = newReviews ?? 0,
-        averageRating = averageRating ?? 0.0,
-        searchImpressions = searchImpressions ?? 0,
-        searchClicks = searchClicks ?? 0,
-        searchRanking = searchRanking ?? 0.0,
-        stockLevelStart = stockLevelStart ?? 0,
-        stockLevelEnd = stockLevelEnd ?? 0,
-        stockOuts = stockOuts ?? 0,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       views = views ?? 0,
+       uniqueViews = uniqueViews ?? 0,
+       wishlistAdds = wishlistAdds ?? 0,
+       cartAdds = cartAdds ?? 0,
+       orderCount = orderCount ?? 0,
+       quantitySold = quantitySold ?? 0,
+       revenue = revenue ?? 0.0,
+       conversionRate = conversionRate ?? 0.0,
+       bounceRate = bounceRate ?? 0.0,
+       averageTimeOnPage = averageTimeOnPage ?? 0.0,
+       newReviews = newReviews ?? 0,
+       averageRating = averageRating ?? 0.0,
+       searchImpressions = searchImpressions ?? 0,
+       searchClicks = searchClicks ?? 0,
+       searchRanking = searchRanking ?? 0.0,
+       stockLevelStart = stockLevelStart ?? 0,
+       stockLevelEnd = stockLevelEnd ?? 0,
+       stockOuts = stockOuts ?? 0,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ProductAnalytics({
     _i1.UuidValue? id,
@@ -91,14 +93,17 @@ abstract class ProductAnalytics implements _i1.SerializableModel {
   factory ProductAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductAnalytics(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i3.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
       views: jsonSerialization['views'] as int,
@@ -110,8 +115,8 @@ abstract class ProductAnalytics implements _i1.SerializableModel {
       revenue: (jsonSerialization['revenue'] as num).toDouble(),
       conversionRate: (jsonSerialization['conversionRate'] as num).toDouble(),
       bounceRate: (jsonSerialization['bounceRate'] as num).toDouble(),
-      averageTimeOnPage:
-          (jsonSerialization['averageTimeOnPage'] as num).toDouble(),
+      averageTimeOnPage: (jsonSerialization['averageTimeOnPage'] as num)
+          .toDouble(),
       newReviews: jsonSerialization['newReviews'] as int,
       averageRating: (jsonSerialization['averageRating'] as num).toDouble(),
       searchImpressions: jsonSerialization['searchImpressions'] as int,
@@ -120,14 +125,13 @@ abstract class ProductAnalytics implements _i1.SerializableModel {
       stockLevelStart: jsonSerialization['stockLevelStart'] as int,
       stockLevelEnd: jsonSerialization['stockLevelEnd'] as int,
       stockOuts: jsonSerialization['stockOuts'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue productId;
@@ -211,6 +215,7 @@ abstract class ProductAnalytics implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductAnalytics',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -275,32 +280,32 @@ class _ProductAnalyticsImpl extends ProductAnalytics {
     int? stockOuts,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          vendorId: vendorId,
-          date: date,
-          period: period,
-          views: views,
-          uniqueViews: uniqueViews,
-          wishlistAdds: wishlistAdds,
-          cartAdds: cartAdds,
-          orderCount: orderCount,
-          quantitySold: quantitySold,
-          revenue: revenue,
-          conversionRate: conversionRate,
-          bounceRate: bounceRate,
-          averageTimeOnPage: averageTimeOnPage,
-          newReviews: newReviews,
-          averageRating: averageRating,
-          searchImpressions: searchImpressions,
-          searchClicks: searchClicks,
-          searchRanking: searchRanking,
-          stockLevelStart: stockLevelStart,
-          stockLevelEnd: stockLevelEnd,
-          stockOuts: stockOuts,
-          createdAt: createdAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         vendorId: vendorId,
+         date: date,
+         period: period,
+         views: views,
+         uniqueViews: uniqueViews,
+         wishlistAdds: wishlistAdds,
+         cartAdds: cartAdds,
+         orderCount: orderCount,
+         quantitySold: quantitySold,
+         revenue: revenue,
+         conversionRate: conversionRate,
+         bounceRate: bounceRate,
+         averageTimeOnPage: averageTimeOnPage,
+         newReviews: newReviews,
+         averageRating: averageRating,
+         searchImpressions: searchImpressions,
+         searchClicks: searchClicks,
+         searchRanking: searchRanking,
+         stockLevelStart: stockLevelStart,
+         stockLevelEnd: stockLevelEnd,
+         stockOuts: stockOuts,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ProductAnalytics]
   /// with some or all fields replaced by the given arguments.

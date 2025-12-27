@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../product/category.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class Category
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -30,12 +32,12 @@ abstract class Category
     int? productCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        displayOrder = displayOrder ?? 0,
-        isActive = isActive ?? true,
-        productCount = productCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       displayOrder = displayOrder ?? 0,
+       isActive = isActive ?? true,
+       productCount = productCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Category({
     _i1.UuidValue? id,
@@ -62,20 +64,24 @@ abstract class Category
       parentCategoryId: jsonSerialization['parentCategoryId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['parentCategoryId']),
+              jsonSerialization['parentCategoryId'],
+            ),
       parentCategory: jsonSerialization['parentCategory'] == null
           ? null
-          : _i2.Category.fromJson(
-              (jsonSerialization['parentCategory'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.Category>(
+              jsonSerialization['parentCategory'],
+            ),
       iconUrl: jsonSerialization['iconUrl'] as String?,
       imageUrl: jsonSerialization['imageUrl'] as String?,
       displayOrder: jsonSerialization['displayOrder'] as int,
       isActive: jsonSerialization['isActive'] as bool,
       productCount: jsonSerialization['productCount'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -134,6 +140,7 @@ abstract class Category
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Category',
       'id': id.toJson(),
       'name': name,
       'slug': slug,
@@ -154,6 +161,7 @@ abstract class Category
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Category',
       'id': id.toJson(),
       'name': name,
       'slug': slug,
@@ -220,20 +228,20 @@ class _CategoryImpl extends Category {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          name: name,
-          slug: slug,
-          description: description,
-          parentCategoryId: parentCategoryId,
-          parentCategory: parentCategory,
-          iconUrl: iconUrl,
-          imageUrl: imageUrl,
-          displayOrder: displayOrder,
-          isActive: isActive,
-          productCount: productCount,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         name: name,
+         slug: slug,
+         description: description,
+         parentCategoryId: parentCategoryId,
+         parentCategory: parentCategory,
+         iconUrl: iconUrl,
+         imageUrl: imageUrl,
+         displayOrder: displayOrder,
+         isActive: isActive,
+         productCount: productCount,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Category]
   /// with some or all fields replaced by the given arguments.
@@ -276,8 +284,72 @@ class _CategoryImpl extends Category {
   }
 }
 
+class CategoryUpdateTable extends _i1.UpdateTable<CategoryTable> {
+  CategoryUpdateTable(super.table);
+
+  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
+    table.name,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> slug(String value) => _i1.ColumnValue(
+    table.slug,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> description(String? value) => _i1.ColumnValue(
+    table.description,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> parentCategoryId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.parentCategoryId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> iconUrl(String? value) => _i1.ColumnValue(
+    table.iconUrl,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> imageUrl(String? value) => _i1.ColumnValue(
+    table.imageUrl,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> displayOrder(int value) => _i1.ColumnValue(
+    table.displayOrder,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> productCount(int value) => _i1.ColumnValue(
+    table.productCount,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class CategoryTable extends _i1.Table<_i1.UuidValue> {
   CategoryTable({super.tableRelation}) : super(tableName: 'categories') {
+    updateTable = CategoryUpdateTable(this);
     name = _i1.ColumnString(
       'name',
       this,
@@ -329,6 +401,8 @@ class CategoryTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final CategoryUpdateTable updateTable;
+
   late final _i1.ColumnString name;
 
   late final _i1.ColumnString slug;
@@ -368,19 +442,19 @@ class CategoryTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        name,
-        slug,
-        description,
-        parentCategoryId,
-        iconUrl,
-        imageUrl,
-        displayOrder,
-        isActive,
-        productCount,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    name,
+    slug,
+    description,
+    parentCategoryId,
+    iconUrl,
+    imageUrl,
+    displayOrder,
+    isActive,
+    productCount,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -590,6 +664,46 @@ class CategoryRepository {
     return session.db.updateRow<Category>(
       row,
       columns: columns?.call(Category.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Category] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Category?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<CategoryUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Category>(
+      id,
+      columnValues: columnValues(Category.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Category]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Category>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<CategoryUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<CategoryTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<CategoryTable>? orderBy,
+    _i1.OrderByListBuilder<CategoryTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Category>(
+      columnValues: columnValues(Category.t.updateTable),
+      where: where(Category.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Category.t),
+      orderByList: orderByList?.call(Category.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

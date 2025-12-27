@@ -1,7 +1,7 @@
 // File: server/lib/src/services/auth/auth_service.dart
 
 import 'dart:math';
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod/serverpod.dart' hide Message;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import '../../generated/protocol.dart' hide Message, Address;

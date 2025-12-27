@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../product/product.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class ProductVariant implements _i1.SerializableModel {
   ProductVariant._({
@@ -34,12 +36,12 @@ abstract class ProductVariant implements _i1.SerializableModel {
     bool? isDefault,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        quantity = quantity ?? 0,
-        isActive = isActive ?? true,
-        isDefault = isDefault ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       quantity = quantity ?? 0,
+       isActive = isActive ?? true,
+       isDefault = isDefault ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory ProductVariant({
     _i1.UuidValue? id,
@@ -67,12 +69,14 @@ abstract class ProductVariant implements _i1.SerializableModel {
   factory ProductVariant.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductVariant(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
       name: jsonSerialization['name'] as String,
       sku: jsonSerialization['sku'] as String?,
       barcode: jsonSerialization['barcode'] as String?,
@@ -85,21 +89,23 @@ abstract class ProductVariant implements _i1.SerializableModel {
       discountPrice: (jsonSerialization['discountPrice'] as num?)?.toDouble(),
       quantity: jsonSerialization['quantity'] as int,
       imageUrl: jsonSerialization['imageUrl'] as String?,
-      images: (jsonSerialization['images'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      images: jsonSerialization['images'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['images'],
+            ),
       isActive: jsonSerialization['isActive'] as bool,
       isDefault: jsonSerialization['isDefault'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue productId;
@@ -168,6 +174,7 @@ abstract class ProductVariant implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductVariant',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -222,27 +229,27 @@ class _ProductVariantImpl extends ProductVariant {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          name: name,
-          sku: sku,
-          barcode: barcode,
-          color: color,
-          size: size,
-          material: material,
-          style: style,
-          customAttributes: customAttributes,
-          price: price,
-          discountPrice: discountPrice,
-          quantity: quantity,
-          imageUrl: imageUrl,
-          images: images,
-          isActive: isActive,
-          isDefault: isDefault,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         name: name,
+         sku: sku,
+         barcode: barcode,
+         color: color,
+         size: size,
+         material: material,
+         style: style,
+         customAttributes: customAttributes,
+         price: price,
+         discountPrice: discountPrice,
+         quantity: quantity,
+         imageUrl: imageUrl,
+         images: images,
+         isActive: isActive,
+         isDefault: isDefault,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [ProductVariant]
   /// with some or all fields replaced by the given arguments.
@@ -285,8 +292,9 @@ class _ProductVariantImpl extends ProductVariant {
           ? customAttributes
           : this.customAttributes,
       price: price ?? this.price,
-      discountPrice:
-          discountPrice is double? ? discountPrice : this.discountPrice,
+      discountPrice: discountPrice is double?
+          ? discountPrice
+          : this.discountPrice,
       quantity: quantity ?? this.quantity,
       imageUrl: imageUrl is String? ? imageUrl : this.imageUrl,
       images: images is List<String>?

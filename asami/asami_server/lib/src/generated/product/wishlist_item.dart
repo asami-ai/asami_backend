@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../product/wishlist.dart' as _i2;
 import '../product/product.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class WishlistItem
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -31,9 +33,9 @@ abstract class WishlistItem
     bool? notifyOnPriceDrop,
     this.targetPrice,
     DateTime? addedAt,
-  })  : priority = priority ?? 0,
-        notifyOnPriceDrop = notifyOnPriceDrop ?? false,
-        addedAt = addedAt ?? DateTime.now();
+  }) : priority = priority ?? 0,
+       notifyOnPriceDrop = notifyOnPriceDrop ?? false,
+       addedAt = addedAt ?? DateTime.now();
 
   factory WishlistItem({
     int? id,
@@ -54,20 +56,25 @@ abstract class WishlistItem
   factory WishlistItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return WishlistItem(
       id: jsonSerialization['id'] as int?,
-      wishlistId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['wishlistId']),
+      wishlistId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['wishlistId'],
+      ),
       wishlist: jsonSerialization['wishlist'] == null
           ? null
-          : _i2.Wishlist.fromJson(
-              (jsonSerialization['wishlist'] as Map<String, dynamic>)),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i4.Protocol().deserialize<_i2.Wishlist>(
+              jsonSerialization['wishlist'],
+            ),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
@@ -135,6 +142,7 @@ abstract class WishlistItem
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'WishlistItem',
       if (id != null) 'id': id,
       'wishlistId': wishlistId.toJson(),
       if (wishlist != null) 'wishlist': wishlist?.toJson(),
@@ -154,6 +162,7 @@ abstract class WishlistItem
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'WishlistItem',
       if (id != null) 'id': id,
       'wishlistId': wishlistId.toJson(),
       if (wishlist != null) 'wishlist': wishlist?.toJsonForProtocol(),
@@ -224,20 +233,20 @@ class _WishlistItemImpl extends WishlistItem {
     double? targetPrice,
     DateTime? addedAt,
   }) : super._(
-          id: id,
-          wishlistId: wishlistId,
-          wishlist: wishlist,
-          customerId: customerId,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          notes: notes,
-          priority: priority,
-          priceWhenAdded: priceWhenAdded,
-          notifyOnPriceDrop: notifyOnPriceDrop,
-          targetPrice: targetPrice,
-          addedAt: addedAt,
-        );
+         id: id,
+         wishlistId: wishlistId,
+         wishlist: wishlist,
+         customerId: customerId,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         notes: notes,
+         priority: priority,
+         priceWhenAdded: priceWhenAdded,
+         notifyOnPriceDrop: notifyOnPriceDrop,
+         targetPrice: targetPrice,
+         addedAt: addedAt,
+       );
 
   /// Returns a shallow copy of this [WishlistItem]
   /// with some or all fields replaced by the given arguments.
@@ -261,8 +270,9 @@ class _WishlistItemImpl extends WishlistItem {
     return WishlistItem(
       id: id is int? ? id : this.id,
       wishlistId: wishlistId ?? this.wishlistId,
-      wishlist:
-          wishlist is _i2.Wishlist? ? wishlist : this.wishlist?.copyWith(),
+      wishlist: wishlist is _i2.Wishlist?
+          ? wishlist
+          : this.wishlist?.copyWith(),
       customerId: customerId ?? this.customerId,
       productId: productId ?? this.productId,
       product: product is _i3.Product? ? product : this.product?.copyWith(),
@@ -277,9 +287,74 @@ class _WishlistItemImpl extends WishlistItem {
   }
 }
 
+class WishlistItemUpdateTable extends _i1.UpdateTable<WishlistItemTable> {
+  WishlistItemUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> wishlistId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.wishlistId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> customerId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.customerId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> variantId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.variantId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> notes(String? value) => _i1.ColumnValue(
+    table.notes,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> priority(int value) => _i1.ColumnValue(
+    table.priority,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> priceWhenAdded(double value) =>
+      _i1.ColumnValue(
+        table.priceWhenAdded,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> notifyOnPriceDrop(bool value) => _i1.ColumnValue(
+    table.notifyOnPriceDrop,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> targetPrice(double? value) => _i1.ColumnValue(
+    table.targetPrice,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> addedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.addedAt,
+        value,
+      );
+}
+
 class WishlistItemTable extends _i1.Table<int?> {
   WishlistItemTable({super.tableRelation})
-      : super(tableName: 'wishlist_items') {
+    : super(tableName: 'wishlist_items') {
+    updateTable = WishlistItemUpdateTable(this);
     wishlistId = _i1.ColumnUuid(
       'wishlistId',
       this,
@@ -324,6 +399,8 @@ class WishlistItemTable extends _i1.Table<int?> {
       hasDefault: true,
     );
   }
+
+  late final WishlistItemUpdateTable updateTable;
 
   late final _i1.ColumnUuid wishlistId;
 
@@ -377,18 +454,18 @@ class WishlistItemTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        wishlistId,
-        customerId,
-        productId,
-        variantId,
-        notes,
-        priority,
-        priceWhenAdded,
-        notifyOnPriceDrop,
-        targetPrice,
-        addedAt,
-      ];
+    id,
+    wishlistId,
+    customerId,
+    productId,
+    variantId,
+    notes,
+    priority,
+    priceWhenAdded,
+    notifyOnPriceDrop,
+    targetPrice,
+    addedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -417,9 +494,9 @@ class WishlistItemInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'wishlist': _wishlist,
-        'product': _product,
-      };
+    'wishlist': _wishlist,
+    'product': _product,
+  };
 
   @override
   _i1.Table<int?> get table => WishlistItem.t;
@@ -608,6 +685,46 @@ class WishlistItemRepository {
     return session.db.updateRow<WishlistItem>(
       row,
       columns: columns?.call(WishlistItem.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [WishlistItem] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<WishlistItem?> updateById(
+    _i1.Session session,
+    int id, {
+    required _i1.ColumnValueListBuilder<WishlistItemUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<WishlistItem>(
+      id,
+      columnValues: columnValues(WishlistItem.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [WishlistItem]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<WishlistItem>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<WishlistItemUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<WishlistItemTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<WishlistItemTable>? orderBy,
+    _i1.OrderByListBuilder<WishlistItemTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<WishlistItem>(
+      columnValues: columnValues(WishlistItem.t.updateTable),
+      where: where(WishlistItem.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(WishlistItem.t),
+      orderByList: orderByList?.call(WishlistItem.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

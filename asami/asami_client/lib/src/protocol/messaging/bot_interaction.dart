@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../messaging/conversation.dart' as _i2;
 import '../messaging/message.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class BotInteraction implements _i1.SerializableModel {
   BotInteraction._({
@@ -40,9 +42,9 @@ abstract class BotInteraction implements _i1.SerializableModel {
     this.completionTokens,
     this.totalTokens,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isSuccess = isSuccess ?? true,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isSuccess = isSuccess ?? true,
+       createdAt = createdAt ?? DateTime.now();
 
   factory BotInteraction({
     _i1.UuidValue? id,
@@ -76,19 +78,22 @@ abstract class BotInteraction implements _i1.SerializableModel {
     return BotInteraction(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i2.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i2.Conversation>(
+              jsonSerialization['conversation'],
+            ),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       messageId: jsonSerialization['messageId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['messageId']),
       message: jsonSerialization['message'] == null
           ? null
-          : _i3.Message.fromJson(
-              (jsonSerialization['message'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.Message>(
+              jsonSerialization['message'],
+            ),
       intent: jsonSerialization['intent'] as String,
       confidence: (jsonSerialization['confidence'] as num).toDouble(),
       entities: jsonSerialization['entities'] as String?,
@@ -109,14 +114,13 @@ abstract class BotInteraction implements _i1.SerializableModel {
       promptTokens: jsonSerialization['promptTokens'] as int?,
       completionTokens: jsonSerialization['completionTokens'] as int?,
       totalTokens: jsonSerialization['totalTokens'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue conversationId;
@@ -200,6 +204,7 @@ abstract class BotInteraction implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'BotInteraction',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null) 'conversation': conversation?.toJson(),
@@ -264,32 +269,32 @@ class _BotInteractionImpl extends BotInteraction {
     int? totalTokens,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          conversationId: conversationId,
-          conversation: conversation,
-          userId: userId,
-          messageId: messageId,
-          message: message,
-          intent: intent,
-          confidence: confidence,
-          entities: entities,
-          userQuery: userQuery,
-          botResponse: botResponse,
-          functionName: functionName,
-          functionInput: functionInput,
-          functionOutput: functionOutput,
-          executionTime: executionTime,
-          isSuccess: isSuccess,
-          errorMessage: errorMessage,
-          wasHelpful: wasHelpful,
-          userFeedback: userFeedback,
-          feedbackAt: feedbackAt,
-          modelUsed: modelUsed,
-          promptTokens: promptTokens,
-          completionTokens: completionTokens,
-          totalTokens: totalTokens,
-          createdAt: createdAt,
-        );
+         id: id,
+         conversationId: conversationId,
+         conversation: conversation,
+         userId: userId,
+         messageId: messageId,
+         message: message,
+         intent: intent,
+         confidence: confidence,
+         entities: entities,
+         userQuery: userQuery,
+         botResponse: botResponse,
+         functionName: functionName,
+         functionInput: functionInput,
+         functionOutput: functionOutput,
+         executionTime: executionTime,
+         isSuccess: isSuccess,
+         errorMessage: errorMessage,
+         wasHelpful: wasHelpful,
+         userFeedback: userFeedback,
+         feedbackAt: feedbackAt,
+         modelUsed: modelUsed,
+         promptTokens: promptTokens,
+         completionTokens: completionTokens,
+         totalTokens: totalTokens,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [BotInteraction]
   /// with some or all fields replaced by the given arguments.
@@ -337,10 +342,12 @@ class _BotInteractionImpl extends BotInteraction {
       userQuery: userQuery is String? ? userQuery : this.userQuery,
       botResponse: botResponse is String? ? botResponse : this.botResponse,
       functionName: functionName is String? ? functionName : this.functionName,
-      functionInput:
-          functionInput is String? ? functionInput : this.functionInput,
-      functionOutput:
-          functionOutput is String? ? functionOutput : this.functionOutput,
+      functionInput: functionInput is String?
+          ? functionInput
+          : this.functionInput,
+      functionOutput: functionOutput is String?
+          ? functionOutput
+          : this.functionOutput,
       executionTime: executionTime is int? ? executionTime : this.executionTime,
       isSuccess: isSuccess ?? this.isSuccess,
       errorMessage: errorMessage is String? ? errorMessage : this.errorMessage,
@@ -349,8 +356,9 @@ class _BotInteractionImpl extends BotInteraction {
       feedbackAt: feedbackAt is DateTime? ? feedbackAt : this.feedbackAt,
       modelUsed: modelUsed is String? ? modelUsed : this.modelUsed,
       promptTokens: promptTokens is int? ? promptTokens : this.promptTokens,
-      completionTokens:
-          completionTokens is int? ? completionTokens : this.completionTokens,
+      completionTokens: completionTokens is int?
+          ? completionTokens
+          : this.completionTokens,
       totalTokens: totalTokens is int? ? totalTokens : this.totalTokens,
       createdAt: createdAt ?? this.createdAt,
     );

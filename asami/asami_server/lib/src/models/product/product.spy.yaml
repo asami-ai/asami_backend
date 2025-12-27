@@ -13,10 +13,17 @@ fields:
   subCategory: String?
   tags: List<String>?
   
+  # Facebook Product Categories (for Meta Catalog)
+  facebookCategory: String?
+  facebookCategoryId: String?
+  googleCategory: String?
+  googleCategoryId: String?
+  
   # AI Generated Content
   isAiGenerated: bool, default=false
   aiGeneratedAt: DateTime?
   aiConfidenceScore: double?
+  hasAiGeneratedImages: bool, default=false
   
   # Pricing
   basePrice: double
@@ -48,10 +55,27 @@ fields:
   isFeatured: bool, default=false
   condition: ProductCondition, default=newItem
   
-  # Media
+  # Media (Enhanced)
   images: List<String>
   thumbnailUrl: String?
   videoUrl: String?
+  videoThumbnailUrl: String?
+  
+  # Platform Media IDs (for tracking original sources)
+  whatsappMediaIds: List<String>?
+  telegramFileIds: List<String>?
+  
+  # CDN Upload Status
+  cdnUploadStatus: String, default='pending'
+  cdnUploadedAt: DateTime?
+  originalMediaUrls: List<String>?
+  
+  # Meta Catalog Integration
+  metaCatalogId: String?
+  metaProductId: String?
+  metaSyncStatus: String, default='pending'
+  metaSyncedAt: DateTime?
+  metaSyncError: String?
   
   # Delivery
   shippingRequired: bool, default=true
@@ -70,7 +94,7 @@ fields:
   # SEO & Search
   searchKeywords: List<String>?
   metaTitle: String?
-  metaDescription: String?
+  metaDescription: String?  
   
   # Timestamps
   createdAt: DateTime, default=now
@@ -89,4 +113,7 @@ indexes:
     fields: isFeatured, isActive
   search_idx:
     fields: name, category
-    
+  meta_sync_idx:
+    fields: metaSyncStatus
+  cdn_upload_idx:
+    fields: cdnUploadStatus

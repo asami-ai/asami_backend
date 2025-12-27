@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Wishlist implements _i1.SerializableModel {
   Wishlist._({
@@ -22,11 +24,11 @@ abstract class Wishlist implements _i1.SerializableModel {
     bool? isPublic,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        name = name ?? 'My Wishlist',
-        isPublic = isPublic ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       name = name ?? 'My Wishlist',
+       isPublic = isPublic ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Wishlist({
     _i1.UuidValue? id,
@@ -42,25 +44,25 @@ abstract class Wishlist implements _i1.SerializableModel {
   factory Wishlist.fromJson(Map<String, dynamic> jsonSerialization) {
     return Wishlist(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['customer']),
       name: jsonSerialization['name'] as String,
       description: jsonSerialization['description'] as String?,
       isPublic: jsonSerialization['isPublic'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue customerId;
@@ -93,6 +95,7 @@ abstract class Wishlist implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Wishlist',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJson(),
@@ -123,15 +126,15 @@ class _WishlistImpl extends Wishlist {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          customerId: customerId,
-          customer: customer,
-          name: name,
-          description: description,
-          isPublic: isPublic,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         customerId: customerId,
+         customer: customer,
+         name: name,
+         description: description,
+         isPublic: isPublic,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Wishlist]
   /// with some or all fields replaced by the given arguments.

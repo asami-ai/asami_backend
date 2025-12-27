@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/subscription_tier.dart' as _i2;
 import '../user/user.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class VendorProfile implements _i1.SerializableModel {
   VendorProfile._({
@@ -51,27 +53,27 @@ abstract class VendorProfile implements _i1.SerializableModel {
     int? responseTime,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isVerified = isVerified ?? false,
-        subscriptionTier = subscriptionTier ?? _i2.SubscriptionTier.freemium,
-        autoRenew = autoRenew ?? true,
-        productLimit = productLimit ?? 20,
-        currentProductCount = currentProductCount ?? 0,
-        aiDescriptionsLimit = aiDescriptionsLimit ?? 50,
-        aiDescriptionsUsed = aiDescriptionsUsed ?? 0,
-        totalProducts = totalProducts ?? 0,
-        activeProducts = activeProducts ?? 0,
-        totalOrders = totalOrders ?? 0,
-        totalRevenue = totalRevenue ?? 0.0,
-        averageRating = averageRating ?? 0.0,
-        totalReviews = totalReviews ?? 0,
-        platformTransactionFee = platformTransactionFee ?? 0.05,
-        totalPlatformFees = totalPlatformFees ?? 0.0,
-        pendingPayouts = pendingPayouts ?? 0.0,
-        totalPayouts = totalPayouts ?? 0.0,
-        responseTime = responseTime ?? 24,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isVerified = isVerified ?? false,
+       subscriptionTier = subscriptionTier ?? _i2.SubscriptionTier.freemium,
+       autoRenew = autoRenew ?? true,
+       productLimit = productLimit ?? 20,
+       currentProductCount = currentProductCount ?? 0,
+       aiDescriptionsLimit = aiDescriptionsLimit ?? 50,
+       aiDescriptionsUsed = aiDescriptionsUsed ?? 0,
+       totalProducts = totalProducts ?? 0,
+       activeProducts = activeProducts ?? 0,
+       totalOrders = totalOrders ?? 0,
+       totalRevenue = totalRevenue ?? 0.0,
+       averageRating = averageRating ?? 0.0,
+       totalReviews = totalReviews ?? 0,
+       platformTransactionFee = platformTransactionFee ?? 0.05,
+       totalPlatformFees = totalPlatformFees ?? 0.0,
+       pendingPayouts = pendingPayouts ?? 0.0,
+       totalPayouts = totalPayouts ?? 0.0,
+       responseTime = responseTime ?? 24,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory VendorProfile({
     _i1.UuidValue? id,
@@ -118,8 +120,7 @@ abstract class VendorProfile implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i3.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
       businessName: jsonSerialization['businessName'] as String,
       businessDescription: jsonSerialization['businessDescription'] as String?,
       businessCategory: jsonSerialization['businessCategory'] as String,
@@ -133,15 +134,18 @@ abstract class VendorProfile implements _i1.SerializableModel {
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['verifiedAt']),
       subscriptionTier: _i2.SubscriptionTier.fromJson(
-          (jsonSerialization['subscriptionTier'] as int)),
+        (jsonSerialization['subscriptionTier'] as String),
+      ),
       subscriptionStartDate: jsonSerialization['subscriptionStartDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['subscriptionStartDate']),
+              jsonSerialization['subscriptionStartDate'],
+            ),
       subscriptionEndDate: jsonSerialization['subscriptionEndDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['subscriptionEndDate']),
+              jsonSerialization['subscriptionEndDate'],
+            ),
       autoRenew: jsonSerialization['autoRenew'] as bool,
       productLimit: jsonSerialization['productLimit'] as int,
       currentProductCount: jsonSerialization['currentProductCount'] as int,
@@ -150,7 +154,8 @@ abstract class VendorProfile implements _i1.SerializableModel {
       monthlyResetDate: jsonSerialization['monthlyResetDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['monthlyResetDate']),
+              jsonSerialization['monthlyResetDate'],
+            ),
       totalProducts: jsonSerialization['totalProducts'] as int,
       activeProducts: jsonSerialization['activeProducts'] as int,
       totalOrders: jsonSerialization['totalOrders'] as int,
@@ -159,23 +164,23 @@ abstract class VendorProfile implements _i1.SerializableModel {
       totalReviews: jsonSerialization['totalReviews'] as int,
       platformTransactionFee:
           (jsonSerialization['platformTransactionFee'] as num).toDouble(),
-      totalPlatformFees:
-          (jsonSerialization['totalPlatformFees'] as num).toDouble(),
+      totalPlatformFees: (jsonSerialization['totalPlatformFees'] as num)
+          .toDouble(),
       pendingPayouts: (jsonSerialization['pendingPayouts'] as num).toDouble(),
       totalPayouts: (jsonSerialization['totalPayouts'] as num).toDouble(),
       supportEmail: jsonSerialization['supportEmail'] as String?,
       supportPhone: jsonSerialization['supportPhone'] as String?,
       responseTime: jsonSerialization['responseTime'] as int?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -292,6 +297,7 @@ abstract class VendorProfile implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'VendorProfile',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -383,43 +389,43 @@ class _VendorProfileImpl extends VendorProfile {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          businessName: businessName,
-          businessDescription: businessDescription,
-          businessCategory: businessCategory,
-          businessLogoUrl: businessLogoUrl,
-          businessBannerUrl: businessBannerUrl,
-          businessRegistrationNumber: businessRegistrationNumber,
-          taxId: taxId,
-          isVerified: isVerified,
-          verifiedAt: verifiedAt,
-          subscriptionTier: subscriptionTier,
-          subscriptionStartDate: subscriptionStartDate,
-          subscriptionEndDate: subscriptionEndDate,
-          autoRenew: autoRenew,
-          productLimit: productLimit,
-          currentProductCount: currentProductCount,
-          aiDescriptionsLimit: aiDescriptionsLimit,
-          aiDescriptionsUsed: aiDescriptionsUsed,
-          monthlyResetDate: monthlyResetDate,
-          totalProducts: totalProducts,
-          activeProducts: activeProducts,
-          totalOrders: totalOrders,
-          totalRevenue: totalRevenue,
-          averageRating: averageRating,
-          totalReviews: totalReviews,
-          platformTransactionFee: platformTransactionFee,
-          totalPlatformFees: totalPlatformFees,
-          pendingPayouts: pendingPayouts,
-          totalPayouts: totalPayouts,
-          supportEmail: supportEmail,
-          supportPhone: supportPhone,
-          responseTime: responseTime,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         businessName: businessName,
+         businessDescription: businessDescription,
+         businessCategory: businessCategory,
+         businessLogoUrl: businessLogoUrl,
+         businessBannerUrl: businessBannerUrl,
+         businessRegistrationNumber: businessRegistrationNumber,
+         taxId: taxId,
+         isVerified: isVerified,
+         verifiedAt: verifiedAt,
+         subscriptionTier: subscriptionTier,
+         subscriptionStartDate: subscriptionStartDate,
+         subscriptionEndDate: subscriptionEndDate,
+         autoRenew: autoRenew,
+         productLimit: productLimit,
+         currentProductCount: currentProductCount,
+         aiDescriptionsLimit: aiDescriptionsLimit,
+         aiDescriptionsUsed: aiDescriptionsUsed,
+         monthlyResetDate: monthlyResetDate,
+         totalProducts: totalProducts,
+         activeProducts: activeProducts,
+         totalOrders: totalOrders,
+         totalRevenue: totalRevenue,
+         averageRating: averageRating,
+         totalReviews: totalReviews,
+         platformTransactionFee: platformTransactionFee,
+         totalPlatformFees: totalPlatformFees,
+         pendingPayouts: pendingPayouts,
+         totalPayouts: totalPayouts,
+         supportEmail: supportEmail,
+         supportPhone: supportPhone,
+         responseTime: responseTime,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [VendorProfile]
   /// with some or all fields replaced by the given arguments.
@@ -472,8 +478,9 @@ class _VendorProfileImpl extends VendorProfile {
           ? businessDescription
           : this.businessDescription,
       businessCategory: businessCategory ?? this.businessCategory,
-      businessLogoUrl:
-          businessLogoUrl is String? ? businessLogoUrl : this.businessLogoUrl,
+      businessLogoUrl: businessLogoUrl is String?
+          ? businessLogoUrl
+          : this.businessLogoUrl,
       businessBannerUrl: businessBannerUrl is String?
           ? businessBannerUrl
           : this.businessBannerUrl,

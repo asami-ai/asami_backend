@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../order/order.dart' as _i2;
 import '../order/order_item.dart' as _i3;
 import '../order/payment_method.dart' as _i4;
+import 'package:asami_client/src/protocol/protocol.dart' as _i5;
 
 abstract class Refund implements _i1.SerializableModel {
   Refund._({
@@ -36,12 +38,12 @@ abstract class Refund implements _i1.SerializableModel {
     this.rejectionReason,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        currency = currency ?? 'USD',
-        status = status ?? 'requested',
-        isApproved = isApproved ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       currency = currency ?? 'USD',
+       status = status ?? 'requested',
+       isApproved = isApproved ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Refund({
     _i1.UuidValue? id,
@@ -69,20 +71,22 @@ abstract class Refund implements _i1.SerializableModel {
   factory Refund.fromJson(Map<String, dynamic> jsonSerialization) {
     return Refund(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
+      orderId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['orderId'],
+      ),
       order: jsonSerialization['order'] == null
           ? null
-          : _i2.Order.fromJson(
-              (jsonSerialization['order'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i2.Order>(jsonSerialization['order']),
       orderItemId: jsonSerialization['orderItemId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['orderItemId']),
+              jsonSerialization['orderItemId'],
+            ),
       orderItem: jsonSerialization['orderItem'] == null
           ? null
-          : _i3.OrderItem.fromJson(
-              (jsonSerialization['orderItem'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i3.OrderItem>(
+              jsonSerialization['orderItem'],
+            ),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       reason: jsonSerialization['reason'] as String,
@@ -94,24 +98,26 @@ abstract class Refund implements _i1.SerializableModel {
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['approvedAt']),
       refundMethod: _i4.PaymentMethod.fromJson(
-          (jsonSerialization['refundMethod'] as int)),
+        (jsonSerialization['refundMethod'] as String),
+      ),
       refundTransactionId: jsonSerialization['refundTransactionId'] as String?,
       processedAt: jsonSerialization['processedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['processedAt']),
+              jsonSerialization['processedAt'],
+            ),
       vendorComment: jsonSerialization['vendorComment'] as String?,
       rejectionReason: jsonSerialization['rejectionReason'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue orderId;
@@ -180,6 +186,7 @@ abstract class Refund implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Refund',
       'id': id.toJson(),
       'orderId': orderId.toJson(),
       if (order != null) 'order': order?.toJson(),
@@ -235,27 +242,27 @@ class _RefundImpl extends Refund {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          orderId: orderId,
-          order: order,
-          orderItemId: orderItemId,
-          orderItem: orderItem,
-          amount: amount,
-          currency: currency,
-          reason: reason,
-          customerComment: customerComment,
-          status: status,
-          isApproved: isApproved,
-          approvedBy: approvedBy,
-          approvedAt: approvedAt,
-          refundMethod: refundMethod,
-          refundTransactionId: refundTransactionId,
-          processedAt: processedAt,
-          vendorComment: vendorComment,
-          rejectionReason: rejectionReason,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         orderId: orderId,
+         order: order,
+         orderItemId: orderItemId,
+         orderItem: orderItem,
+         amount: amount,
+         currency: currency,
+         reason: reason,
+         customerComment: customerComment,
+         status: status,
+         isApproved: isApproved,
+         approvedBy: approvedBy,
+         approvedAt: approvedAt,
+         refundMethod: refundMethod,
+         refundTransactionId: refundTransactionId,
+         processedAt: processedAt,
+         vendorComment: vendorComment,
+         rejectionReason: rejectionReason,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Refund]
   /// with some or all fields replaced by the given arguments.
@@ -287,15 +294,18 @@ class _RefundImpl extends Refund {
       id: id ?? this.id,
       orderId: orderId ?? this.orderId,
       order: order is _i2.Order? ? order : this.order?.copyWith(),
-      orderItemId:
-          orderItemId is _i1.UuidValue? ? orderItemId : this.orderItemId,
-      orderItem:
-          orderItem is _i3.OrderItem? ? orderItem : this.orderItem?.copyWith(),
+      orderItemId: orderItemId is _i1.UuidValue?
+          ? orderItemId
+          : this.orderItemId,
+      orderItem: orderItem is _i3.OrderItem?
+          ? orderItem
+          : this.orderItem?.copyWith(),
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
       reason: reason ?? this.reason,
-      customerComment:
-          customerComment is String? ? customerComment : this.customerComment,
+      customerComment: customerComment is String?
+          ? customerComment
+          : this.customerComment,
       status: status ?? this.status,
       isApproved: isApproved ?? this.isApproved,
       approvedBy: approvedBy is String? ? approvedBy : this.approvedBy,
@@ -305,10 +315,12 @@ class _RefundImpl extends Refund {
           ? refundTransactionId
           : this.refundTransactionId,
       processedAt: processedAt is DateTime? ? processedAt : this.processedAt,
-      vendorComment:
-          vendorComment is String? ? vendorComment : this.vendorComment,
-      rejectionReason:
-          rejectionReason is String? ? rejectionReason : this.rejectionReason,
+      vendorComment: vendorComment is String?
+          ? vendorComment
+          : this.vendorComment,
+      rejectionReason: rejectionReason is String?
+          ? rejectionReason
+          : this.rejectionReason,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

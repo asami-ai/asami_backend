@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -16,22 +17,23 @@ enum SubscriptionTier implements _i1.SerializableModel {
   pro,
   pro_max;
 
-  static SubscriptionTier fromJson(int index) {
-    switch (index) {
-      case 0:
+  static SubscriptionTier fromJson(String name) {
+    switch (name) {
+      case 'freemium':
         return SubscriptionTier.freemium;
-      case 1:
+      case 'pro':
         return SubscriptionTier.pro;
-      case 2:
+      case 'pro_max':
         return SubscriptionTier.pro_max;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "SubscriptionTier"');
+          'Value "$name" cannot be converted to "SubscriptionTier"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../subscription/subscription.dart' as _i2;
 import '../user/subscription_tier.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class SubscriptionEvent implements _i1.SerializableModel {
   SubscriptionEvent._({
@@ -43,27 +45,35 @@ abstract class SubscriptionEvent implements _i1.SerializableModel {
   factory SubscriptionEvent.fromJson(Map<String, dynamic> jsonSerialization) {
     return SubscriptionEvent(
       id: jsonSerialization['id'] as int?,
-      eventId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['eventId']),
+      eventId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['eventId'],
+      ),
       subscriptionId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['subscriptionId']),
+        jsonSerialization['subscriptionId'],
+      ),
       subscription: jsonSerialization['subscription'] == null
           ? null
-          : _i2.Subscription.fromJson(
-              (jsonSerialization['subscription'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i4.Protocol().deserialize<_i2.Subscription>(
+              jsonSerialization['subscription'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       eventType: jsonSerialization['eventType'] as String,
       eventData: jsonSerialization['eventData'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       tier: jsonSerialization['tier'] == null
           ? null
-          : _i3.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
+          : _i3.SubscriptionTier.fromJson(
+              (jsonSerialization['tier'] as String),
+            ),
       previousTier: jsonSerialization['previousTier'] == null
           ? null
           : _i3.SubscriptionTier.fromJson(
-              (jsonSerialization['previousTier'] as int)),
+              (jsonSerialization['previousTier'] as String),
+            ),
     );
   }
 
@@ -108,6 +118,7 @@ abstract class SubscriptionEvent implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SubscriptionEvent',
       if (id != null) 'id': id,
       'eventId': eventId.toJson(),
       'subscriptionId': subscriptionId.toJson(),
@@ -142,17 +153,17 @@ class _SubscriptionEventImpl extends SubscriptionEvent {
     _i3.SubscriptionTier? tier,
     _i3.SubscriptionTier? previousTier,
   }) : super._(
-          id: id,
-          eventId: eventId,
-          subscriptionId: subscriptionId,
-          subscription: subscription,
-          vendorId: vendorId,
-          eventType: eventType,
-          eventData: eventData,
-          createdAt: createdAt,
-          tier: tier,
-          previousTier: previousTier,
-        );
+         id: id,
+         eventId: eventId,
+         subscriptionId: subscriptionId,
+         subscription: subscription,
+         vendorId: vendorId,
+         eventType: eventType,
+         eventData: eventData,
+         createdAt: createdAt,
+         tier: tier,
+         previousTier: previousTier,
+       );
 
   /// Returns a shallow copy of this [SubscriptionEvent]
   /// with some or all fields replaced by the given arguments.

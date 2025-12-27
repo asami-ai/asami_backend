@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -28,16 +29,16 @@ abstract class AIConversationUsage implements _i1.SerializableModel {
     required this.date,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        messageCount = messageCount ?? 0,
-        totalTokens = totalTokens ?? 0,
-        inputTokens = inputTokens ?? 0,
-        outputTokens = outputTokens ?? 0,
-        toolCallsInConversation = toolCallsInConversation ?? 0,
-        estimatedCost = estimatedCost ?? 0.0,
-        averageResponseTime = averageResponseTime ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       messageCount = messageCount ?? 0,
+       totalTokens = totalTokens ?? 0,
+       inputTokens = inputTokens ?? 0,
+       outputTokens = outputTokens ?? 0,
+       toolCallsInConversation = toolCallsInConversation ?? 0,
+       estimatedCost = estimatedCost ?? 0.0,
+       averageResponseTime = averageResponseTime ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory AIConversationUsage({
     _i1.UuidValue? id,
@@ -62,7 +63,8 @@ abstract class AIConversationUsage implements _i1.SerializableModel {
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       messageCount: jsonSerialization['messageCount'] as int,
       totalTokens: jsonSerialization['totalTokens'] as int,
       inputTokens: jsonSerialization['inputTokens'] as int,
@@ -71,21 +73,21 @@ abstract class AIConversationUsage implements _i1.SerializableModel {
           jsonSerialization['toolCallsInConversation'] as int,
       uniqueToolsUsed: jsonSerialization['uniqueToolsUsed'] as String?,
       estimatedCost: (jsonSerialization['estimatedCost'] as num).toDouble(),
-      averageResponseTime:
-          (jsonSerialization['averageResponseTime'] as num).toDouble(),
+      averageResponseTime: (jsonSerialization['averageResponseTime'] as num)
+          .toDouble(),
       userSatisfactionRating:
           (jsonSerialization['userSatisfactionRating'] as num?)?.toDouble(),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -139,6 +141,7 @@ abstract class AIConversationUsage implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'AIConversationUsage',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'conversationId': conversationId.toJson(),
@@ -184,22 +187,22 @@ class _AIConversationUsageImpl extends AIConversationUsage {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          conversationId: conversationId,
-          messageCount: messageCount,
-          totalTokens: totalTokens,
-          inputTokens: inputTokens,
-          outputTokens: outputTokens,
-          toolCallsInConversation: toolCallsInConversation,
-          uniqueToolsUsed: uniqueToolsUsed,
-          estimatedCost: estimatedCost,
-          averageResponseTime: averageResponseTime,
-          userSatisfactionRating: userSatisfactionRating,
-          date: date,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         conversationId: conversationId,
+         messageCount: messageCount,
+         totalTokens: totalTokens,
+         inputTokens: inputTokens,
+         outputTokens: outputTokens,
+         toolCallsInConversation: toolCallsInConversation,
+         uniqueToolsUsed: uniqueToolsUsed,
+         estimatedCost: estimatedCost,
+         averageResponseTime: averageResponseTime,
+         userSatisfactionRating: userSatisfactionRating,
+         date: date,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [AIConversationUsage]
   /// with some or all fields replaced by the given arguments.
@@ -232,8 +235,9 @@ class _AIConversationUsageImpl extends AIConversationUsage {
       outputTokens: outputTokens ?? this.outputTokens,
       toolCallsInConversation:
           toolCallsInConversation ?? this.toolCallsInConversation,
-      uniqueToolsUsed:
-          uniqueToolsUsed is String? ? uniqueToolsUsed : this.uniqueToolsUsed,
+      uniqueToolsUsed: uniqueToolsUsed is String?
+          ? uniqueToolsUsed
+          : this.uniqueToolsUsed,
       estimatedCost: estimatedCost ?? this.estimatedCost,
       averageResponseTime: averageResponseTime ?? this.averageResponseTime,
       userSatisfactionRating: userSatisfactionRating is double?

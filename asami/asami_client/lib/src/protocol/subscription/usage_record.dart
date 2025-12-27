@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
 import '../subscription/subscription_invoice.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class UsageRecord implements _i1.SerializableModel {
   UsageRecord._({
@@ -33,11 +35,11 @@ abstract class UsageRecord implements _i1.SerializableModel {
     bool? isBilled,
     this.billedAt,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        quantity = quantity ?? 1,
-        currency = currency ?? 'USD',
-        isBilled = isBilled ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       quantity = quantity ?? 1,
+       currency = currency ?? 'USD',
+       isBilled = isBilled ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory UsageRecord({
     _i1.UuidValue? id,
@@ -63,12 +65,14 @@ abstract class UsageRecord implements _i1.SerializableModel {
   factory UsageRecord.fromJson(Map<String, dynamic> jsonSerialization) {
     return UsageRecord(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
       subscriptionId: jsonSerialization['subscriptionId'] as String?,
       usageType: jsonSerialization['usageType'] as String,
       quantity: jsonSerialization['quantity'] as int,
@@ -78,28 +82,30 @@ abstract class UsageRecord implements _i1.SerializableModel {
       resourceId: jsonSerialization['resourceId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       billingPeriodStart: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['billingPeriodStart']),
+        jsonSerialization['billingPeriodStart'],
+      ),
       billingPeriodEnd: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['billingPeriodEnd']),
+        jsonSerialization['billingPeriodEnd'],
+      ),
       invoiceId: jsonSerialization['invoiceId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['invoiceId']),
       invoice: jsonSerialization['invoice'] == null
           ? null
-          : _i3.SubscriptionInvoice.fromJson(
-              (jsonSerialization['invoice'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.SubscriptionInvoice>(
+              jsonSerialization['invoice'],
+            ),
       isBilled: jsonSerialization['isBilled'] as bool,
       billedAt: jsonSerialization['billedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['billedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue vendorId;
@@ -162,6 +168,7 @@ abstract class UsageRecord implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'UsageRecord',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -212,25 +219,25 @@ class _UsageRecordImpl extends UsageRecord {
     DateTime? billedAt,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          subscriptionId: subscriptionId,
-          usageType: usageType,
-          quantity: quantity,
-          unitPrice: unitPrice,
-          totalAmount: totalAmount,
-          currency: currency,
-          resourceId: resourceId,
-          metadata: metadata,
-          billingPeriodStart: billingPeriodStart,
-          billingPeriodEnd: billingPeriodEnd,
-          invoiceId: invoiceId,
-          invoice: invoice,
-          isBilled: isBilled,
-          billedAt: billedAt,
-          createdAt: createdAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         subscriptionId: subscriptionId,
+         usageType: usageType,
+         quantity: quantity,
+         unitPrice: unitPrice,
+         totalAmount: totalAmount,
+         currency: currency,
+         resourceId: resourceId,
+         metadata: metadata,
+         billingPeriodStart: billingPeriodStart,
+         billingPeriodEnd: billingPeriodEnd,
+         invoiceId: invoiceId,
+         invoice: invoice,
+         isBilled: isBilled,
+         billedAt: billedAt,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [UsageRecord]
   /// with some or all fields replaced by the given arguments.
@@ -260,8 +267,9 @@ class _UsageRecordImpl extends UsageRecord {
       id: id ?? this.id,
       vendorId: vendorId ?? this.vendorId,
       vendor: vendor is _i2.VendorProfile? ? vendor : this.vendor?.copyWith(),
-      subscriptionId:
-          subscriptionId is String? ? subscriptionId : this.subscriptionId,
+      subscriptionId: subscriptionId is String?
+          ? subscriptionId
+          : this.subscriptionId,
       usageType: usageType ?? this.usageType,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,

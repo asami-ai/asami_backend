@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -22,34 +23,35 @@ enum MessageType implements _i1.SerializableModel {
   interactive,
   template;
 
-  static MessageType fromJson(int index) {
-    switch (index) {
-      case 0:
+  static MessageType fromJson(String name) {
+    switch (name) {
+      case 'text':
         return MessageType.text;
-      case 1:
+      case 'image':
         return MessageType.image;
-      case 2:
+      case 'video':
         return MessageType.video;
-      case 3:
+      case 'audio':
         return MessageType.audio;
-      case 4:
+      case 'document':
         return MessageType.document;
-      case 5:
+      case 'location':
         return MessageType.location;
-      case 6:
+      case 'contact':
         return MessageType.contact;
-      case 7:
+      case 'interactive':
         return MessageType.interactive;
-      case 8:
+      case 'template':
         return MessageType.template;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "MessageType"');
+          'Value "$name" cannot be converted to "MessageType"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

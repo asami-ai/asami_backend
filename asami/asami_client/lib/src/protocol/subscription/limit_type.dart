@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -19,28 +20,27 @@ enum LimitType implements _i1.SerializableModel {
   analytics_queries,
   bulk_operations;
 
-  static LimitType fromJson(int index) {
-    switch (index) {
-      case 0:
+  static LimitType fromJson(String name) {
+    switch (name) {
+      case 'tool_calls':
         return LimitType.tool_calls;
-      case 1:
+      case 'ai_conversations':
         return LimitType.ai_conversations;
-      case 2:
+      case 'product_creation':
         return LimitType.product_creation;
-      case 3:
+      case 'ai_descriptions':
         return LimitType.ai_descriptions;
-      case 4:
+      case 'analytics_queries':
         return LimitType.analytics_queries;
-      case 5:
+      case 'bulk_operations':
         return LimitType.bulk_operations;
       default:
-        throw ArgumentError(
-            'Value "$index" cannot be converted to "LimitType"');
+        throw ArgumentError('Value "$name" cannot be converted to "LimitType"');
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

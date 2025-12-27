@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Cart implements _i1.SerializableModel {
   Cart._({
@@ -25,12 +27,12 @@ abstract class Cart implements _i1.SerializableModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     this.expiresAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isActive = isActive ?? true,
-        itemCount = itemCount ?? 0,
-        subtotal = subtotal ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isActive = isActive ?? true,
+       itemCount = itemCount ?? 0,
+       subtotal = subtotal ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Cart({
     _i1.UuidValue? id,
@@ -49,30 +51,30 @@ abstract class Cart implements _i1.SerializableModel {
   factory Cart.fromJson(Map<String, dynamic> jsonSerialization) {
     return Cart(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['customer']),
       sessionId: jsonSerialization['sessionId'] as String?,
       isActive: jsonSerialization['isActive'] as bool,
       itemCount: jsonSerialization['itemCount'] as int,
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       convertedToOrderId: jsonSerialization['convertedToOrderId'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue customerId;
@@ -114,6 +116,7 @@ abstract class Cart implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Cart',
       'id': id.toJson(),
       'customerId': customerId.toJson(),
       if (customer != null) 'customer': customer?.toJson(),
@@ -150,18 +153,18 @@ class _CartImpl extends Cart {
     DateTime? updatedAt,
     DateTime? expiresAt,
   }) : super._(
-          id: id,
-          customerId: customerId,
-          customer: customer,
-          sessionId: sessionId,
-          isActive: isActive,
-          itemCount: itemCount,
-          subtotal: subtotal,
-          convertedToOrderId: convertedToOrderId,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          expiresAt: expiresAt,
-        );
+         id: id,
+         customerId: customerId,
+         customer: customer,
+         sessionId: sessionId,
+         isActive: isActive,
+         itemCount: itemCount,
+         subtotal: subtotal,
+         convertedToOrderId: convertedToOrderId,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         expiresAt: expiresAt,
+       );
 
   /// Returns a shallow copy of this [Cart]
   /// with some or all fields replaced by the given arguments.

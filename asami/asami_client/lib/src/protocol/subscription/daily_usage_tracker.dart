@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -38,19 +39,19 @@ abstract class DailyUsageTracker implements _i1.SerializableModel {
     bool? hardLimitReached,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        toolCallsCount = toolCallsCount ?? 0,
-        aiMessagesCount = aiMessagesCount ?? 0,
-        productsCreatedCount = productsCreatedCount ?? 0,
-        aiDescriptionsCount = aiDescriptionsCount ?? 0,
-        analyticsQueriesCount = analyticsQueriesCount ?? 0,
-        isInGracePeriod = isInGracePeriod ?? false,
-        gracePeriodUsed = gracePeriodUsed ?? 0,
-        gracePeriodLimit = gracePeriodLimit ?? 5,
-        softLimitWarned = softLimitWarned ?? false,
-        hardLimitReached = hardLimitReached ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       toolCallsCount = toolCallsCount ?? 0,
+       aiMessagesCount = aiMessagesCount ?? 0,
+       productsCreatedCount = productsCreatedCount ?? 0,
+       aiDescriptionsCount = aiDescriptionsCount ?? 0,
+       analyticsQueriesCount = analyticsQueriesCount ?? 0,
+       isInGracePeriod = isInGracePeriod ?? false,
+       gracePeriodUsed = gracePeriodUsed ?? 0,
+       gracePeriodLimit = gracePeriodLimit ?? 5,
+       softLimitWarned = softLimitWarned ?? false,
+       hardLimitReached = hardLimitReached ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory DailyUsageTracker({
     _i1.UuidValue? id,
@@ -82,7 +83,9 @@ abstract class DailyUsageTracker implements _i1.SerializableModel {
     return DailyUsageTracker(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       resetAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['resetAt']),
       toolCallsCount: jsonSerialization['toolCallsCount'] as int,
@@ -101,19 +104,20 @@ abstract class DailyUsageTracker implements _i1.SerializableModel {
       subscriptionTier: jsonSerialization['subscriptionTier'] == null
           ? null
           : _i3.SubscriptionTier.fromJson(
-              (jsonSerialization['subscriptionTier'] as int)),
+              (jsonSerialization['subscriptionTier'] as String),
+            ),
       softLimitWarned: jsonSerialization['softLimitWarned'] as bool,
       hardLimitReached: jsonSerialization['hardLimitReached'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -191,6 +195,7 @@ abstract class DailyUsageTracker implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'DailyUsageTracker',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -252,30 +257,30 @@ class _DailyUsageTrackerImpl extends DailyUsageTracker {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          date: date,
-          resetAt: resetAt,
-          toolCallsCount: toolCallsCount,
-          toolCallsLimit: toolCallsLimit,
-          aiMessagesCount: aiMessagesCount,
-          aiMessagesLimit: aiMessagesLimit,
-          productsCreatedCount: productsCreatedCount,
-          productsCreatedLimit: productsCreatedLimit,
-          aiDescriptionsCount: aiDescriptionsCount,
-          aiDescriptionsLimit: aiDescriptionsLimit,
-          analyticsQueriesCount: analyticsQueriesCount,
-          analyticsQueriesLimit: analyticsQueriesLimit,
-          isInGracePeriod: isInGracePeriod,
-          gracePeriodUsed: gracePeriodUsed,
-          gracePeriodLimit: gracePeriodLimit,
-          subscriptionTier: subscriptionTier,
-          softLimitWarned: softLimitWarned,
-          hardLimitReached: hardLimitReached,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         date: date,
+         resetAt: resetAt,
+         toolCallsCount: toolCallsCount,
+         toolCallsLimit: toolCallsLimit,
+         aiMessagesCount: aiMessagesCount,
+         aiMessagesLimit: aiMessagesLimit,
+         productsCreatedCount: productsCreatedCount,
+         productsCreatedLimit: productsCreatedLimit,
+         aiDescriptionsCount: aiDescriptionsCount,
+         aiDescriptionsLimit: aiDescriptionsLimit,
+         analyticsQueriesCount: analyticsQueriesCount,
+         analyticsQueriesLimit: analyticsQueriesLimit,
+         isInGracePeriod: isInGracePeriod,
+         gracePeriodUsed: gracePeriodUsed,
+         gracePeriodLimit: gracePeriodLimit,
+         subscriptionTier: subscriptionTier,
+         softLimitWarned: softLimitWarned,
+         hardLimitReached: hardLimitReached,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [DailyUsageTracker]
   /// with some or all fields replaced by the given arguments.

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -14,6 +15,7 @@ import '../messaging/conversation.dart' as _i2;
 import '../messaging/platfom_type.dart' as _i3;
 import '../messaging/message_type.dart' as _i4;
 import '../messaging/message.dart' as _i5;
+import 'package:asami_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Message implements _i1.SerializableModel {
   Message._({
@@ -49,14 +51,14 @@ abstract class Message implements _i1.SerializableModel {
     DateTime? createdAt,
     this.deliveredAt,
     this.readAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isFromBot = isFromBot ?? false,
-        isFromUser = isFromUser ?? true,
-        isProcessedByAi = isProcessedByAi ?? false,
-        isDelivered = isDelivered ?? false,
-        isRead = isRead ?? false,
-        isFailed = isFailed ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isFromBot = isFromBot ?? false,
+       isFromUser = isFromUser ?? true,
+       isProcessedByAi = isProcessedByAi ?? false,
+       isDelivered = isDelivered ?? false,
+       isRead = isRead ?? false,
+       isFailed = isFailed ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory Message({
     _i1.UuidValue? id,
@@ -97,16 +99,20 @@ abstract class Message implements _i1.SerializableModel {
     return Message(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i2.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i6.Protocol().deserialize<_i2.Conversation>(
+              jsonSerialization['conversation'],
+            ),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformMessageId: jsonSerialization['platformMessageId'] as String?,
-      messageType:
-          _i4.MessageType.fromJson((jsonSerialization['messageType'] as int)),
+      messageType: _i4.MessageType.fromJson(
+        (jsonSerialization['messageType'] as String),
+      ),
       content: jsonSerialization['content'] as String,
       mediaUrl: jsonSerialization['mediaUrl'] as String?,
       mediaType: jsonSerialization['mediaType'] as String?,
@@ -132,27 +138,29 @@ abstract class Message implements _i1.SerializableModel {
       replyToMessageId: jsonSerialization['replyToMessageId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['replyToMessageId']),
+              jsonSerialization['replyToMessageId'],
+            ),
       replyToMessage: jsonSerialization['replyToMessage'] == null
           ? null
-          : _i5.Message.fromJson(
-              (jsonSerialization['replyToMessage'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i5.Message>(
+              jsonSerialization['replyToMessage'],
+            ),
       metadata: jsonSerialization['metadata'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['deliveredAt']),
+              jsonSerialization['deliveredAt'],
+            ),
       readAt: jsonSerialization['readAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['readAt']),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue conversationId;
@@ -257,6 +265,7 @@ abstract class Message implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Message',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null) 'conversation': conversation?.toJson(),
@@ -336,39 +345,39 @@ class _MessageImpl extends Message {
     DateTime? deliveredAt,
     DateTime? readAt,
   }) : super._(
-          id: id,
-          conversationId: conversationId,
-          conversation: conversation,
-          platform: platform,
-          platformMessageId: platformMessageId,
-          messageType: messageType,
-          content: content,
-          mediaUrl: mediaUrl,
-          mediaType: mediaType,
-          thumbnailUrl: thumbnailUrl,
-          isFromBot: isFromBot,
-          isFromUser: isFromUser,
-          senderId: senderId,
-          isProcessedByAi: isProcessedByAi,
-          aiIntent: aiIntent,
-          aiEntities: aiEntities,
-          aiConfidence: aiConfidence,
-          aiResponse: aiResponse,
-          processingTime: processingTime,
-          functionCalled: functionCalled,
-          functionParams: functionParams,
-          functionResult: functionResult,
-          isDelivered: isDelivered,
-          isRead: isRead,
-          isFailed: isFailed,
-          errorMessage: errorMessage,
-          replyToMessageId: replyToMessageId,
-          replyToMessage: replyToMessage,
-          metadata: metadata,
-          createdAt: createdAt,
-          deliveredAt: deliveredAt,
-          readAt: readAt,
-        );
+         id: id,
+         conversationId: conversationId,
+         conversation: conversation,
+         platform: platform,
+         platformMessageId: platformMessageId,
+         messageType: messageType,
+         content: content,
+         mediaUrl: mediaUrl,
+         mediaType: mediaType,
+         thumbnailUrl: thumbnailUrl,
+         isFromBot: isFromBot,
+         isFromUser: isFromUser,
+         senderId: senderId,
+         isProcessedByAi: isProcessedByAi,
+         aiIntent: aiIntent,
+         aiEntities: aiEntities,
+         aiConfidence: aiConfidence,
+         aiResponse: aiResponse,
+         processingTime: processingTime,
+         functionCalled: functionCalled,
+         functionParams: functionParams,
+         functionResult: functionResult,
+         isDelivered: isDelivered,
+         isRead: isRead,
+         isFailed: isFailed,
+         errorMessage: errorMessage,
+         replyToMessageId: replyToMessageId,
+         replyToMessage: replyToMessage,
+         metadata: metadata,
+         createdAt: createdAt,
+         deliveredAt: deliveredAt,
+         readAt: readAt,
+       );
 
   /// Returns a shallow copy of this [Message]
   /// with some or all fields replaced by the given arguments.
@@ -431,14 +440,18 @@ class _MessageImpl extends Message {
       aiEntities: aiEntities is String? ? aiEntities : this.aiEntities,
       aiConfidence: aiConfidence is double? ? aiConfidence : this.aiConfidence,
       aiResponse: aiResponse is String? ? aiResponse : this.aiResponse,
-      processingTime:
-          processingTime is int? ? processingTime : this.processingTime,
-      functionCalled:
-          functionCalled is String? ? functionCalled : this.functionCalled,
-      functionParams:
-          functionParams is String? ? functionParams : this.functionParams,
-      functionResult:
-          functionResult is String? ? functionResult : this.functionResult,
+      processingTime: processingTime is int?
+          ? processingTime
+          : this.processingTime,
+      functionCalled: functionCalled is String?
+          ? functionCalled
+          : this.functionCalled,
+      functionParams: functionParams is String?
+          ? functionParams
+          : this.functionParams,
+      functionResult: functionResult is String?
+          ? functionResult
+          : this.functionResult,
       isDelivered: isDelivered ?? this.isDelivered,
       isRead: isRead ?? this.isRead,
       isFailed: isFailed ?? this.isFailed,

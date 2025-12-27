@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -31,9 +32,9 @@ abstract class LimitBreachLog
     bool? userNotified,
     required this.severity,
     DateTime? breachedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        userNotified = userNotified ?? false,
-        breachedAt = breachedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       userNotified = userNotified ?? false,
+       breachedAt = breachedAt ?? DateTime.now();
 
   factory LimitBreachLog({
     _i1.UuidValue? id,
@@ -55,26 +56,33 @@ abstract class LimitBreachLog
     return LimitBreachLog(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
-      limitType:
-          _i3.LimitType.fromJson((jsonSerialization['limitType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      limitType: _i3.LimitType.fromJson(
+        (jsonSerialization['limitType'] as String),
+      ),
       attemptedAction: jsonSerialization['attemptedAction'] as String,
       currentUsage: jsonSerialization['currentUsage'] as int,
       limitValue: jsonSerialization['limitValue'] as int,
       subscriptionTier: jsonSerialization['subscriptionTier'] == null
           ? null
           : _i4.SubscriptionTier.fromJson(
-              (jsonSerialization['subscriptionTier'] as int)),
+              (jsonSerialization['subscriptionTier'] as String),
+            ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       actionTaken: jsonSerialization['actionTaken'] as String,
       userNotified: jsonSerialization['userNotified'] as bool,
-      severity:
-          _i5.BreachSeverity.fromJson((jsonSerialization['severity'] as int)),
-      breachedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['breachedAt']),
+      severity: _i5.BreachSeverity.fromJson(
+        (jsonSerialization['severity'] as String),
+      ),
+      breachedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['breachedAt'],
+      ),
     );
   }
 
@@ -133,6 +141,7 @@ abstract class LimitBreachLog
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'LimitBreachLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -153,6 +162,7 @@ abstract class LimitBreachLog
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'LimitBreachLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -218,20 +228,20 @@ class _LimitBreachLogImpl extends LimitBreachLog {
     required _i5.BreachSeverity severity,
     DateTime? breachedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          limitType: limitType,
-          attemptedAction: attemptedAction,
-          currentUsage: currentUsage,
-          limitValue: limitValue,
-          subscriptionTier: subscriptionTier,
-          conversationId: conversationId,
-          actionTaken: actionTaken,
-          userNotified: userNotified,
-          severity: severity,
-          breachedAt: breachedAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         limitType: limitType,
+         attemptedAction: attemptedAction,
+         currentUsage: currentUsage,
+         limitValue: limitValue,
+         subscriptionTier: subscriptionTier,
+         conversationId: conversationId,
+         actionTaken: actionTaken,
+         userNotified: userNotified,
+         severity: severity,
+         breachedAt: breachedAt,
+       );
 
   /// Returns a shallow copy of this [LimitBreachLog]
   /// with some or all fields replaced by the given arguments.
@@ -274,9 +284,86 @@ class _LimitBreachLogImpl extends LimitBreachLog {
   }
 }
 
+class LimitBreachLogUpdateTable extends _i1.UpdateTable<LimitBreachLogTable> {
+  LimitBreachLogUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.UserType, _i2.UserType> userType(_i2.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.LimitType, _i3.LimitType> limitType(
+    _i3.LimitType value,
+  ) => _i1.ColumnValue(
+    table.limitType,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> attemptedAction(String value) =>
+      _i1.ColumnValue(
+        table.attemptedAction,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> currentUsage(int value) => _i1.ColumnValue(
+    table.currentUsage,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> limitValue(int value) => _i1.ColumnValue(
+    table.limitValue,
+    value,
+  );
+
+  _i1.ColumnValue<_i4.SubscriptionTier, _i4.SubscriptionTier> subscriptionTier(
+    _i4.SubscriptionTier? value,
+  ) => _i1.ColumnValue(
+    table.subscriptionTier,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> actionTaken(String value) => _i1.ColumnValue(
+    table.actionTaken,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> userNotified(bool value) => _i1.ColumnValue(
+    table.userNotified,
+    value,
+  );
+
+  _i1.ColumnValue<_i5.BreachSeverity, _i5.BreachSeverity> severity(
+    _i5.BreachSeverity value,
+  ) => _i1.ColumnValue(
+    table.severity,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> breachedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.breachedAt,
+        value,
+      );
+}
+
 class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
   LimitBreachLogTable({super.tableRelation})
-      : super(tableName: 'limit_breach_logs') {
+    : super(tableName: 'limit_breach_logs') {
+    updateTable = LimitBreachLogUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -284,12 +371,12 @@ class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     limitType = _i1.ColumnEnum(
       'limitType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     attemptedAction = _i1.ColumnString(
       'attemptedAction',
@@ -306,7 +393,7 @@ class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
     subscriptionTier = _i1.ColumnEnum(
       'subscriptionTier',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     conversationId = _i1.ColumnUuid(
       'conversationId',
@@ -324,7 +411,7 @@ class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
     severity = _i1.ColumnEnum(
       'severity',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     breachedAt = _i1.ColumnDateTime(
       'breachedAt',
@@ -332,6 +419,8 @@ class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final LimitBreachLogUpdateTable updateTable;
 
   late final _i1.ColumnUuid userId;
 
@@ -359,20 +448,20 @@ class LimitBreachLogTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        userType,
-        limitType,
-        attemptedAction,
-        currentUsage,
-        limitValue,
-        subscriptionTier,
-        conversationId,
-        actionTaken,
-        userNotified,
-        severity,
-        breachedAt,
-      ];
+    id,
+    userId,
+    userType,
+    limitType,
+    attemptedAction,
+    currentUsage,
+    limitValue,
+    subscriptionTier,
+    conversationId,
+    actionTaken,
+    userNotified,
+    severity,
+    breachedAt,
+  ];
 }
 
 class LimitBreachLogInclude extends _i1.IncludeObject {
@@ -560,6 +649,46 @@ class LimitBreachLogRepository {
     return session.db.updateRow<LimitBreachLog>(
       row,
       columns: columns?.call(LimitBreachLog.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [LimitBreachLog] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<LimitBreachLog?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<LimitBreachLogUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<LimitBreachLog>(
+      id,
+      columnValues: columnValues(LimitBreachLog.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [LimitBreachLog]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<LimitBreachLog>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<LimitBreachLogUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<LimitBreachLogTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<LimitBreachLogTable>? orderBy,
+    _i1.OrderByListBuilder<LimitBreachLogTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<LimitBreachLog>(
+      columnValues: columnValues(LimitBreachLog.t.updateTable),
+      where: where(LimitBreachLog.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(LimitBreachLog.t),
+      orderByList: orderByList?.call(LimitBreachLog.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

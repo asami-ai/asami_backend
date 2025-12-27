@@ -7,11 +7,13 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/vendor_profile.dart' as _i2;
 import '../user/subscription_tier.dart' as _i3;
+import 'package:asami_client/src/protocol/protocol.dart' as _i4;
 
 abstract class Subscription implements _i1.SerializableModel {
   Subscription._({
@@ -37,15 +39,15 @@ abstract class Subscription implements _i1.SerializableModel {
     this.cancellationReason,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? 'active',
-        billingCycle = billingCycle ?? 'monthly',
-        currency = currency ?? 'USD',
-        autoRenew = autoRenew ?? true,
-        cancelAtPeriodEnd = cancelAtPeriodEnd ?? false,
-        isTrialing = isTrialing ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? 'active',
+       billingCycle = billingCycle ?? 'monthly',
+       currency = currency ?? 'USD',
+       autoRenew = autoRenew ?? true,
+       cancelAtPeriodEnd = cancelAtPeriodEnd ?? false,
+       isTrialing = isTrialing ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Subscription({
     _i1.UuidValue? id,
@@ -75,21 +77,27 @@ abstract class Subscription implements _i1.SerializableModel {
   factory Subscription.fromJson(Map<String, dynamic> jsonSerialization) {
     return Subscription(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       vendor: jsonSerialization['vendor'] == null
           ? null
-          : _i2.VendorProfile.fromJson(
-              (jsonSerialization['vendor'] as Map<String, dynamic>)),
-      tier: _i3.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
+          : _i4.Protocol().deserialize<_i2.VendorProfile>(
+              jsonSerialization['vendor'],
+            ),
+      tier: _i3.SubscriptionTier.fromJson(
+        (jsonSerialization['tier'] as String),
+      ),
       status: jsonSerialization['status'] as String,
       billingCycle: jsonSerialization['billingCycle'] as String,
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
       currentPeriodStart: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['currentPeriodStart']),
+        jsonSerialization['currentPeriodStart'],
+      ),
       currentPeriodEnd: _i1.DateTimeJsonExtension.fromJson(
-          jsonSerialization['currentPeriodEnd']),
+        jsonSerialization['currentPeriodEnd'],
+      ),
       productLimit: jsonSerialization['productLimit'] as int,
       aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int,
       platformTransactionFee:
@@ -106,18 +114,19 @@ abstract class Subscription implements _i1.SerializableModel {
       cancelledAt: jsonSerialization['cancelledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['cancelledAt']),
+              jsonSerialization['cancelledAt'],
+            ),
       cancellationReason: jsonSerialization['cancellationReason'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue vendorId;
@@ -192,6 +201,7 @@ abstract class Subscription implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Subscription',
       'id': id.toJson(),
       'vendorId': vendorId.toJson(),
       if (vendor != null) 'vendor': vendor?.toJson(),
@@ -250,29 +260,29 @@ class _SubscriptionImpl extends Subscription {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          vendorId: vendorId,
-          vendor: vendor,
-          tier: tier,
-          status: status,
-          billingCycle: billingCycle,
-          amount: amount,
-          currency: currency,
-          currentPeriodStart: currentPeriodStart,
-          currentPeriodEnd: currentPeriodEnd,
-          productLimit: productLimit,
-          aiDescriptionsLimit: aiDescriptionsLimit,
-          platformTransactionFee: platformTransactionFee,
-          autoRenew: autoRenew,
-          cancelAtPeriodEnd: cancelAtPeriodEnd,
-          isTrialing: isTrialing,
-          trialStart: trialStart,
-          trialEnd: trialEnd,
-          cancelledAt: cancelledAt,
-          cancellationReason: cancellationReason,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         vendorId: vendorId,
+         vendor: vendor,
+         tier: tier,
+         status: status,
+         billingCycle: billingCycle,
+         amount: amount,
+         currency: currency,
+         currentPeriodStart: currentPeriodStart,
+         currentPeriodEnd: currentPeriodEnd,
+         productLimit: productLimit,
+         aiDescriptionsLimit: aiDescriptionsLimit,
+         platformTransactionFee: platformTransactionFee,
+         autoRenew: autoRenew,
+         cancelAtPeriodEnd: cancelAtPeriodEnd,
+         isTrialing: isTrialing,
+         trialStart: trialStart,
+         trialEnd: trialEnd,
+         cancelledAt: cancelledAt,
+         cancellationReason: cancellationReason,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Subscription]
   /// with some or all fields replaced by the given arguments.

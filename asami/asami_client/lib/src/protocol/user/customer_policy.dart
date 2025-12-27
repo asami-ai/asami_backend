@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -30,20 +31,20 @@ abstract class CustomerAIPolicy implements _i1.SerializableModel {
     bool? isDefault,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        dailyMessageLimit = dailyMessageLimit ?? 100,
-        dailyToolCallLimit = dailyToolCallLimit ?? 20,
-        requireExplicitIntent = requireExplicitIntent ?? true,
-        minimumConfidenceScore = minimumConfidenceScore ?? 0.8,
-        throttleAfterCount = throttleAfterCount ?? 50,
-        throttleDelaySeconds = throttleDelaySeconds ?? 2,
-        enableProgressiveRestrictions = enableProgressiveRestrictions ?? true,
-        maxDailyCost = maxDailyCost ?? 1.0,
-        warnAtCostPercentage = warnAtCostPercentage ?? 0.8,
-        isActive = isActive ?? true,
-        isDefault = isDefault ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       dailyMessageLimit = dailyMessageLimit ?? 100,
+       dailyToolCallLimit = dailyToolCallLimit ?? 20,
+       requireExplicitIntent = requireExplicitIntent ?? true,
+       minimumConfidenceScore = minimumConfidenceScore ?? 0.8,
+       throttleAfterCount = throttleAfterCount ?? 50,
+       throttleDelaySeconds = throttleDelaySeconds ?? 2,
+       enableProgressiveRestrictions = enableProgressiveRestrictions ?? true,
+       maxDailyCost = maxDailyCost ?? 1.0,
+       warnAtCostPercentage = warnAtCostPercentage ?? 0.8,
+       isActive = isActive ?? true,
+       isDefault = isDefault ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CustomerAIPolicy({
     _i1.UuidValue? id,
@@ -82,20 +83,20 @@ abstract class CustomerAIPolicy implements _i1.SerializableModel {
       restrictionThresholds:
           jsonSerialization['restrictionThresholds'] as String?,
       maxDailyCost: (jsonSerialization['maxDailyCost'] as num).toDouble(),
-      warnAtCostPercentage:
-          (jsonSerialization['warnAtCostPercentage'] as num).toDouble(),
+      warnAtCostPercentage: (jsonSerialization['warnAtCostPercentage'] as num)
+          .toDouble(),
       isActive: jsonSerialization['isActive'] as bool,
       isDefault: jsonSerialization['isDefault'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   String policyName;
@@ -155,6 +156,7 @@ abstract class CustomerAIPolicy implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CustomerAIPolicy',
       'id': id.toJson(),
       'policyName': policyName,
       if (description != null) 'description': description,
@@ -204,24 +206,24 @@ class _CustomerAIPolicyImpl extends CustomerAIPolicy {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          policyName: policyName,
-          description: description,
-          dailyMessageLimit: dailyMessageLimit,
-          dailyToolCallLimit: dailyToolCallLimit,
-          requireExplicitIntent: requireExplicitIntent,
-          minimumConfidenceScore: minimumConfidenceScore,
-          throttleAfterCount: throttleAfterCount,
-          throttleDelaySeconds: throttleDelaySeconds,
-          enableProgressiveRestrictions: enableProgressiveRestrictions,
-          restrictionThresholds: restrictionThresholds,
-          maxDailyCost: maxDailyCost,
-          warnAtCostPercentage: warnAtCostPercentage,
-          isActive: isActive,
-          isDefault: isDefault,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         policyName: policyName,
+         description: description,
+         dailyMessageLimit: dailyMessageLimit,
+         dailyToolCallLimit: dailyToolCallLimit,
+         requireExplicitIntent: requireExplicitIntent,
+         minimumConfidenceScore: minimumConfidenceScore,
+         throttleAfterCount: throttleAfterCount,
+         throttleDelaySeconds: throttleDelaySeconds,
+         enableProgressiveRestrictions: enableProgressiveRestrictions,
+         restrictionThresholds: restrictionThresholds,
+         maxDailyCost: maxDailyCost,
+         warnAtCostPercentage: warnAtCostPercentage,
+         isActive: isActive,
+         isDefault: isDefault,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CustomerAIPolicy]
   /// with some or all fields replaced by the given arguments.

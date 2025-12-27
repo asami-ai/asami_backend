@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class Address
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -36,11 +38,11 @@ abstract class Address
     this.longitude,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isDefault = isDefault ?? false,
-        isActive = isActive ?? true,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isDefault = isDefault ?? false,
+       isActive = isActive ?? true,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Address({
     _i1.UuidValue? id,
@@ -70,8 +72,7 @@ abstract class Address
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       label: jsonSerialization['label'] as String,
       recipientName: jsonSerialization['recipientName'] as String,
       phoneNumber: jsonSerialization['phoneNumber'] as String,
@@ -86,10 +87,12 @@ abstract class Address
       isActive: jsonSerialization['isActive'] as bool,
       latitude: (jsonSerialization['latitude'] as num?)?.toDouble(),
       longitude: (jsonSerialization['longitude'] as num?)?.toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -166,6 +169,7 @@ abstract class Address
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Address',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -191,6 +195,7 @@ abstract class Address
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Address',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -267,26 +272,26 @@ class _AddressImpl extends Address {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          label: label,
-          recipientName: recipientName,
-          phoneNumber: phoneNumber,
-          addressLine1: addressLine1,
-          addressLine2: addressLine2,
-          city: city,
-          state: state,
-          country: country,
-          postalCode: postalCode,
-          landmark: landmark,
-          isDefault: isDefault,
-          isActive: isActive,
-          latitude: latitude,
-          longitude: longitude,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         label: label,
+         recipientName: recipientName,
+         phoneNumber: phoneNumber,
+         addressLine1: addressLine1,
+         addressLine2: addressLine2,
+         city: city,
+         state: state,
+         country: country,
+         postalCode: postalCode,
+         landmark: landmark,
+         isDefault: isDefault,
+         isActive: isActive,
+         latitude: latitude,
+         longitude: longitude,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Address]
   /// with some or all fields replaced by the given arguments.
@@ -337,8 +342,103 @@ class _AddressImpl extends Address {
   }
 }
 
+class AddressUpdateTable extends _i1.UpdateTable<AddressTable> {
+  AddressUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> label(String value) => _i1.ColumnValue(
+    table.label,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> recipientName(String value) =>
+      _i1.ColumnValue(
+        table.recipientName,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> phoneNumber(String value) => _i1.ColumnValue(
+    table.phoneNumber,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> addressLine1(String value) => _i1.ColumnValue(
+    table.addressLine1,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> addressLine2(String? value) =>
+      _i1.ColumnValue(
+        table.addressLine2,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> city(String value) => _i1.ColumnValue(
+    table.city,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> state(String value) => _i1.ColumnValue(
+    table.state,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> country(String value) => _i1.ColumnValue(
+    table.country,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> postalCode(String value) => _i1.ColumnValue(
+    table.postalCode,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> landmark(String? value) => _i1.ColumnValue(
+    table.landmark,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isDefault(bool value) => _i1.ColumnValue(
+    table.isDefault,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> latitude(double? value) => _i1.ColumnValue(
+    table.latitude,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> longitude(double? value) => _i1.ColumnValue(
+    table.longitude,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class AddressTable extends _i1.Table<_i1.UuidValue> {
   AddressTable({super.tableRelation}) : super(tableName: 'addresses') {
+    updateTable = AddressUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -413,6 +513,8 @@ class AddressTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final AddressUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
@@ -464,25 +566,25 @@ class AddressTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        label,
-        recipientName,
-        phoneNumber,
-        addressLine1,
-        addressLine2,
-        city,
-        state,
-        country,
-        postalCode,
-        landmark,
-        isDefault,
-        isActive,
-        latitude,
-        longitude,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    label,
+    recipientName,
+    phoneNumber,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    country,
+    postalCode,
+    landmark,
+    isDefault,
+    isActive,
+    latitude,
+    longitude,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -690,6 +792,46 @@ class AddressRepository {
     return session.db.updateRow<Address>(
       row,
       columns: columns?.call(Address.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Address] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Address?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<AddressUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Address>(
+      id,
+      columnValues: columnValues(Address.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Address]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Address>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<AddressUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<AddressTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<AddressTable>? orderBy,
+    _i1.OrderByListBuilder<AddressTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Address>(
+      columnValues: columnValues(Address.t.updateTable),
+      where: where(Address.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Address.t),
+      orderByList: orderByList?.call(Address.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

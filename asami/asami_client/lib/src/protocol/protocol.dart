@@ -7,10 +7,11 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
-import 'messaging/template_message.dart' as _i2;
+import 'analytics/ai_conversation_usage.dart' as _i2;
 import 'analytics/breach_severity.dart' as _i3;
 import 'analytics/customer_usage_pattern.dart' as _i4;
 import 'analytics/empty.dart' as _i5;
@@ -29,7 +30,7 @@ import 'messaging/message_type.dart' as _i17;
 import 'messaging/notification.dart' as _i18;
 import 'messaging/platfom_type.dart' as _i19;
 import 'messaging/quick_reply.dart' as _i20;
-import 'analytics/ai_conversation_usage.dart' as _i21;
+import 'messaging/template_message.dart' as _i21;
 import 'order/cart.dart' as _i22;
 import 'order/cart_item.dart' as _i23;
 import 'order/order.dart' as _i24;
@@ -47,7 +48,7 @@ import 'product/product_status.dart' as _i35;
 import 'product/product_variant.dart' as _i36;
 import 'product/wishlist.dart' as _i37;
 import 'product/wishlist_item.dart' as _i38;
-import 'user/vendor_profile.dart' as _i39;
+import 'subscription/alert_type.dart' as _i39;
 import 'subscription/billing_cycle_summary.dart' as _i40;
 import 'subscription/daily_usage_tracker.dart' as _i41;
 import 'subscription/limit_type.dart' as _i42;
@@ -67,7 +68,7 @@ import 'user/subscription_tier.dart' as _i55;
 import 'user/user.dart' as _i56;
 import 'user/user_status.dart' as _i57;
 import 'user/user_type.dart' as _i58;
-import 'subscription/alert_type.dart' as _i59;
+import 'user/vendor_profile.dart' as _i59;
 import 'package:asami_client/src/protocol/analytics/vendor_analytics.dart'
     as _i60;
 import 'package:asami_client/src/protocol/analytics/product_analytics.dart'
@@ -145,14 +146,35 @@ class Protocol extends _i1.SerializationManager {
 
   static final Protocol _instance = Protocol._();
 
+  static String? getClassNameFromObjectJson(dynamic data) {
+    if (data is! Map) return null;
+    final className = data['__className__'] as String?;
+    return className;
+  }
+
   @override
   T deserialize<T>(
     dynamic data, [
     Type? t,
   ]) {
     t ??= T;
-    if (t == _i2.TemplateMessage) {
-      return _i2.TemplateMessage.fromJson(data) as T;
+
+    final dataClassName = getClassNameFromObjectJson(data);
+    if (dataClassName != null && dataClassName != getClassNameForType(t)) {
+      try {
+        return deserializeByClassName({
+          'className': dataClassName,
+          'data': data,
+        });
+      } on FormatException catch (_) {
+        // If the className is not recognized (e.g., older client receiving
+        // data with a new subtype), fall back to deserializing without the
+        // className, using the expected type T.
+      }
+    }
+
+    if (t == _i2.AIConversationUsage) {
+      return _i2.AIConversationUsage.fromJson(data) as T;
     }
     if (t == _i3.BreachSeverity) {
       return _i3.BreachSeverity.fromJson(data) as T;
@@ -208,8 +230,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i20.QuickReply) {
       return _i20.QuickReply.fromJson(data) as T;
     }
-    if (t == _i21.AIConversationUsage) {
-      return _i21.AIConversationUsage.fromJson(data) as T;
+    if (t == _i21.TemplateMessage) {
+      return _i21.TemplateMessage.fromJson(data) as T;
     }
     if (t == _i22.Cart) {
       return _i22.Cart.fromJson(data) as T;
@@ -262,8 +284,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i38.WishlistItem) {
       return _i38.WishlistItem.fromJson(data) as T;
     }
-    if (t == _i39.VendorProfile) {
-      return _i39.VendorProfile.fromJson(data) as T;
+    if (t == _i39.AlertType) {
+      return _i39.AlertType.fromJson(data) as T;
     }
     if (t == _i40.BillingCycleSummary) {
       return _i40.BillingCycleSummary.fromJson(data) as T;
@@ -322,11 +344,12 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i58.UserType) {
       return _i58.UserType.fromJson(data) as T;
     }
-    if (t == _i59.AlertType) {
-      return _i59.AlertType.fromJson(data) as T;
+    if (t == _i59.VendorProfile) {
+      return _i59.VendorProfile.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i2.TemplateMessage?>()) {
-      return (data != null ? _i2.TemplateMessage.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i2.AIConversationUsage?>()) {
+      return (data != null ? _i2.AIConversationUsage.fromJson(data) : null)
+          as T;
     }
     if (t == _i1.getType<_i3.BreachSeverity?>()) {
       return (data != null ? _i3.BreachSeverity.fromJson(data) : null) as T;
@@ -384,9 +407,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i20.QuickReply?>()) {
       return (data != null ? _i20.QuickReply.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.AIConversationUsage?>()) {
-      return (data != null ? _i21.AIConversationUsage.fromJson(data) : null)
-          as T;
+    if (t == _i1.getType<_i21.TemplateMessage?>()) {
+      return (data != null ? _i21.TemplateMessage.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i22.Cart?>()) {
       return (data != null ? _i22.Cart.fromJson(data) : null) as T;
@@ -440,8 +462,8 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i38.WishlistItem?>()) {
       return (data != null ? _i38.WishlistItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i39.VendorProfile?>()) {
-      return (data != null ? _i39.VendorProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i39.AlertType?>()) {
+      return (data != null ? _i39.AlertType.fromJson(data) : null) as T;
     }
     if (t == _i1.getType<_i40.BillingCycleSummary?>()) {
       return (data != null ? _i40.BillingCycleSummary.fromJson(data) : null)
@@ -502,99 +524,54 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i58.UserType?>()) {
       return (data != null ? _i58.UserType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.AlertType?>()) {
-      return (data != null ? _i59.AlertType.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
+    if (t == _i1.getType<_i59.VendorProfile?>()) {
+      return (data != null ? _i59.VendorProfile.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
     }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
-    }
-    if (t == _i1.getType<List<String>?>()) {
-      return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
+          as T;
     }
     if (t == List<_i60.VendorAnalytics>) {
       return (data as List)
-          .map((e) => deserialize<_i60.VendorAnalytics>(e))
-          .toList() as T;
+              .map((e) => deserialize<_i60.VendorAnalytics>(e))
+              .toList()
+          as T;
     }
     if (t == Map<String, dynamic>) {
-      return (data as Map).map((k, v) =>
-          MapEntry(deserialize<String>(k), deserialize<dynamic>(v))) as T;
+      return (data as Map).map(
+            (k, v) => MapEntry(deserialize<String>(k), deserialize<dynamic>(v)),
+          )
+          as T;
     }
     if (t == List<_i61.ProductAnalytics>) {
       return (data as List)
-          .map((e) => deserialize<_i61.ProductAnalytics>(e))
-          .toList() as T;
+              .map((e) => deserialize<_i61.ProductAnalytics>(e))
+              .toList()
+          as T;
     }
     if (t == List<_i62.Product>) {
       return (data as List).map((e) => deserialize<_i62.Product>(e)).toList()
           as T;
     }
     if (t == Map<String, double>) {
-      return (data as Map).map((k, v) =>
-          MapEntry(deserialize<String>(k), deserialize<double>(v))) as T;
+      return (data as Map).map(
+            (k, v) => MapEntry(deserialize<String>(k), deserialize<double>(v)),
+          )
+          as T;
     }
     if (t == _i1.getType<Map<String, dynamic>?>()) {
       return (data != null
-          ? (data as Map).map((k, v) =>
-              MapEntry(deserialize<String>(k), deserialize<dynamic>(v)))
-          : null) as T;
+              ? (data as Map).map(
+                  (k, v) =>
+                      MapEntry(deserialize<String>(k), deserialize<dynamic>(v)),
+                )
+              : null)
+          as T;
     }
     if (t == List<_i63.OrderItem>) {
       return (data as List).map((e) => deserialize<_i63.OrderItem>(e)).toList()
@@ -604,15 +581,20 @@ class Protocol extends _i1.SerializationManager {
       return (data as List).map((e) => deserialize<_i64.Order>(e)).toList()
           as T;
     }
+    if (t == List<String>) {
+      return (data as List).map((e) => deserialize<String>(e)).toList() as T;
+    }
     if (t == _i1.getType<List<String>?>()) {
       return (data != null
-          ? (data as List).map((e) => deserialize<String>(e)).toList()
-          : null) as T;
+              ? (data as List).map((e) => deserialize<String>(e)).toList()
+              : null)
+          as T;
     }
     if (t == List<_i65.UsageRecord>) {
       return (data as List)
-          .map((e) => deserialize<_i65.UsageRecord>(e))
-          .toList() as T;
+              .map((e) => deserialize<_i65.UsageRecord>(e))
+              .toList()
+          as T;
     }
     if (t == List<_i66.Address>) {
       return (data as List).map((e) => deserialize<_i66.Address>(e)).toList()
@@ -621,183 +603,196 @@ class Protocol extends _i1.SerializationManager {
     return super.deserialize<T>(data, t);
   }
 
+  static String? getClassNameForType(Type type) {
+    return switch (type) {
+      _i2.AIConversationUsage => 'AIConversationUsage',
+      _i3.BreachSeverity => 'BreachSeverity',
+      _i4.CustomerUsagePattern => 'CustomerUsagePattern',
+      _i5.EmptyModel => 'EmptyModel',
+      _i6.LimitBreachLog => 'LimitBreachLog',
+      _i7.PlatformAnalytics => 'PlatformAnalytics',
+      _i8.ProductAnalytics => 'ProductAnalytics',
+      _i9.ProductView => 'ProductView',
+      _i10.ToolUsageLog => 'ToolUsageLog',
+      _i11.UserActivity => 'UserActivity',
+      _i12.VendorAnalytics => 'VendorAnalytics',
+      _i13.BotInteraction => 'BotInteraction',
+      _i14.Conversation => 'Conversation',
+      _i15.ConversationStatus => 'ConversationStatus',
+      _i16.Message => 'Message',
+      _i17.MessageType => 'MessageType',
+      _i18.Notification => 'Notification',
+      _i19.PlatformType => 'PlatformType',
+      _i20.QuickReply => 'QuickReply',
+      _i21.TemplateMessage => 'TemplateMessage',
+      _i22.Cart => 'Cart',
+      _i23.CartItem => 'CartItem',
+      _i24.Order => 'Order',
+      _i25.OrderItem => 'OrderItem',
+      _i26.OrderStatus => 'OrderStatus',
+      _i27.PaymentMethod => 'PaymentMethod',
+      _i28.PaymentStatus => 'PaymentStatus',
+      _i29.PaymentTransaction => 'PaymentTransaction',
+      _i30.Refund => 'Refund',
+      _i31.Category => 'Category',
+      _i32.Product => 'Product',
+      _i33.ProductCondition => 'ProductCondition',
+      _i34.ProductReview => 'ProductReview',
+      _i35.ProductStatus => 'ProductStatus',
+      _i36.ProductVariant => 'ProductVariant',
+      _i37.Wishlist => 'Wishlist',
+      _i38.WishlistItem => 'WishlistItem',
+      _i39.AlertType => 'AlertType',
+      _i40.BillingCycleSummary => 'BillingCycleSummary',
+      _i41.DailyUsageTracker => 'DailyUsageTracker',
+      _i42.LimitType => 'LimitType',
+      _i43.Subscription => 'Subscription',
+      _i44.SubscriptionEvent => 'SubscriptionEvent',
+      _i45.SubscriptionInvoice => 'SubscriptionInvoice',
+      _i46.TierFeature => 'TierFeature',
+      _i47.ToolUsageLimit => 'ToolUsageLimit',
+      _i48.UsageAlert => 'UsageAlert',
+      _i49.UsageClass => 'UsageClass',
+      _i50.UsageRecord => 'UsageRecord',
+      _i51.Address => 'Address',
+      _i52.AuthSession => 'AuthSession',
+      _i53.CustomerAIPolicy => 'CustomerAIPolicy',
+      _i54.CustomerProfile => 'CustomerProfile',
+      _i55.SubscriptionTier => 'SubscriptionTier',
+      _i56.User => 'User',
+      _i57.UserStatus => 'UserStatus',
+      _i58.UserType => 'UserType',
+      _i59.VendorProfile => 'VendorProfile',
+      _ => null,
+    };
+  }
+
   @override
   String? getClassNameForObject(Object? data) {
     String? className = super.getClassNameForObject(data);
     if (className != null) return className;
-    if (data is _i2.TemplateMessage) {
-      return 'TemplateMessage';
+
+    if (data is Map<String, dynamic> && data['__className__'] is String) {
+      return (data['__className__'] as String).replaceFirst('asami.', '');
     }
-    if (data is _i3.BreachSeverity) {
-      return 'BreachSeverity';
-    }
-    if (data is _i4.CustomerUsagePattern) {
-      return 'CustomerUsagePattern';
-    }
-    if (data is _i5.EmptyModel) {
-      return 'EmptyModel';
-    }
-    if (data is _i6.LimitBreachLog) {
-      return 'LimitBreachLog';
-    }
-    if (data is _i7.PlatformAnalytics) {
-      return 'PlatformAnalytics';
-    }
-    if (data is _i8.ProductAnalytics) {
-      return 'ProductAnalytics';
-    }
-    if (data is _i9.ProductView) {
-      return 'ProductView';
-    }
-    if (data is _i10.ToolUsageLog) {
-      return 'ToolUsageLog';
-    }
-    if (data is _i11.UserActivity) {
-      return 'UserActivity';
-    }
-    if (data is _i12.VendorAnalytics) {
-      return 'VendorAnalytics';
-    }
-    if (data is _i13.BotInteraction) {
-      return 'BotInteraction';
-    }
-    if (data is _i14.Conversation) {
-      return 'Conversation';
-    }
-    if (data is _i15.ConversationStatus) {
-      return 'ConversationStatus';
-    }
-    if (data is _i16.Message) {
-      return 'Message';
-    }
-    if (data is _i17.MessageType) {
-      return 'MessageType';
-    }
-    if (data is _i18.Notification) {
-      return 'Notification';
-    }
-    if (data is _i19.PlatformType) {
-      return 'PlatformType';
-    }
-    if (data is _i20.QuickReply) {
-      return 'QuickReply';
-    }
-    if (data is _i21.AIConversationUsage) {
-      return 'AIConversationUsage';
-    }
-    if (data is _i22.Cart) {
-      return 'Cart';
-    }
-    if (data is _i23.CartItem) {
-      return 'CartItem';
-    }
-    if (data is _i24.Order) {
-      return 'Order';
-    }
-    if (data is _i25.OrderItem) {
-      return 'OrderItem';
-    }
-    if (data is _i26.OrderStatus) {
-      return 'OrderStatus';
-    }
-    if (data is _i27.PaymentMethod) {
-      return 'PaymentMethod';
-    }
-    if (data is _i28.PaymentStatus) {
-      return 'PaymentStatus';
-    }
-    if (data is _i29.PaymentTransaction) {
-      return 'PaymentTransaction';
-    }
-    if (data is _i30.Refund) {
-      return 'Refund';
-    }
-    if (data is _i31.Category) {
-      return 'Category';
-    }
-    if (data is _i32.Product) {
-      return 'Product';
-    }
-    if (data is _i33.ProductCondition) {
-      return 'ProductCondition';
-    }
-    if (data is _i34.ProductReview) {
-      return 'ProductReview';
-    }
-    if (data is _i35.ProductStatus) {
-      return 'ProductStatus';
-    }
-    if (data is _i36.ProductVariant) {
-      return 'ProductVariant';
-    }
-    if (data is _i37.Wishlist) {
-      return 'Wishlist';
-    }
-    if (data is _i38.WishlistItem) {
-      return 'WishlistItem';
-    }
-    if (data is _i39.VendorProfile) {
-      return 'VendorProfile';
-    }
-    if (data is _i40.BillingCycleSummary) {
-      return 'BillingCycleSummary';
-    }
-    if (data is _i41.DailyUsageTracker) {
-      return 'DailyUsageTracker';
-    }
-    if (data is _i42.LimitType) {
-      return 'LimitType';
-    }
-    if (data is _i43.Subscription) {
-      return 'Subscription';
-    }
-    if (data is _i44.SubscriptionEvent) {
-      return 'SubscriptionEvent';
-    }
-    if (data is _i45.SubscriptionInvoice) {
-      return 'SubscriptionInvoice';
-    }
-    if (data is _i46.TierFeature) {
-      return 'TierFeature';
-    }
-    if (data is _i47.ToolUsageLimit) {
-      return 'ToolUsageLimit';
-    }
-    if (data is _i48.UsageAlert) {
-      return 'UsageAlert';
-    }
-    if (data is _i49.UsageClass) {
-      return 'UsageClass';
-    }
-    if (data is _i50.UsageRecord) {
-      return 'UsageRecord';
-    }
-    if (data is _i51.Address) {
-      return 'Address';
-    }
-    if (data is _i52.AuthSession) {
-      return 'AuthSession';
-    }
-    if (data is _i53.CustomerAIPolicy) {
-      return 'CustomerAIPolicy';
-    }
-    if (data is _i54.CustomerProfile) {
-      return 'CustomerProfile';
-    }
-    if (data is _i55.SubscriptionTier) {
-      return 'SubscriptionTier';
-    }
-    if (data is _i56.User) {
-      return 'User';
-    }
-    if (data is _i57.UserStatus) {
-      return 'UserStatus';
-    }
-    if (data is _i58.UserType) {
-      return 'UserType';
-    }
-    if (data is _i59.AlertType) {
-      return 'AlertType';
+
+    switch (data) {
+      case _i2.AIConversationUsage():
+        return 'AIConversationUsage';
+      case _i3.BreachSeverity():
+        return 'BreachSeverity';
+      case _i4.CustomerUsagePattern():
+        return 'CustomerUsagePattern';
+      case _i5.EmptyModel():
+        return 'EmptyModel';
+      case _i6.LimitBreachLog():
+        return 'LimitBreachLog';
+      case _i7.PlatformAnalytics():
+        return 'PlatformAnalytics';
+      case _i8.ProductAnalytics():
+        return 'ProductAnalytics';
+      case _i9.ProductView():
+        return 'ProductView';
+      case _i10.ToolUsageLog():
+        return 'ToolUsageLog';
+      case _i11.UserActivity():
+        return 'UserActivity';
+      case _i12.VendorAnalytics():
+        return 'VendorAnalytics';
+      case _i13.BotInteraction():
+        return 'BotInteraction';
+      case _i14.Conversation():
+        return 'Conversation';
+      case _i15.ConversationStatus():
+        return 'ConversationStatus';
+      case _i16.Message():
+        return 'Message';
+      case _i17.MessageType():
+        return 'MessageType';
+      case _i18.Notification():
+        return 'Notification';
+      case _i19.PlatformType():
+        return 'PlatformType';
+      case _i20.QuickReply():
+        return 'QuickReply';
+      case _i21.TemplateMessage():
+        return 'TemplateMessage';
+      case _i22.Cart():
+        return 'Cart';
+      case _i23.CartItem():
+        return 'CartItem';
+      case _i24.Order():
+        return 'Order';
+      case _i25.OrderItem():
+        return 'OrderItem';
+      case _i26.OrderStatus():
+        return 'OrderStatus';
+      case _i27.PaymentMethod():
+        return 'PaymentMethod';
+      case _i28.PaymentStatus():
+        return 'PaymentStatus';
+      case _i29.PaymentTransaction():
+        return 'PaymentTransaction';
+      case _i30.Refund():
+        return 'Refund';
+      case _i31.Category():
+        return 'Category';
+      case _i32.Product():
+        return 'Product';
+      case _i33.ProductCondition():
+        return 'ProductCondition';
+      case _i34.ProductReview():
+        return 'ProductReview';
+      case _i35.ProductStatus():
+        return 'ProductStatus';
+      case _i36.ProductVariant():
+        return 'ProductVariant';
+      case _i37.Wishlist():
+        return 'Wishlist';
+      case _i38.WishlistItem():
+        return 'WishlistItem';
+      case _i39.AlertType():
+        return 'AlertType';
+      case _i40.BillingCycleSummary():
+        return 'BillingCycleSummary';
+      case _i41.DailyUsageTracker():
+        return 'DailyUsageTracker';
+      case _i42.LimitType():
+        return 'LimitType';
+      case _i43.Subscription():
+        return 'Subscription';
+      case _i44.SubscriptionEvent():
+        return 'SubscriptionEvent';
+      case _i45.SubscriptionInvoice():
+        return 'SubscriptionInvoice';
+      case _i46.TierFeature():
+        return 'TierFeature';
+      case _i47.ToolUsageLimit():
+        return 'ToolUsageLimit';
+      case _i48.UsageAlert():
+        return 'UsageAlert';
+      case _i49.UsageClass():
+        return 'UsageClass';
+      case _i50.UsageRecord():
+        return 'UsageRecord';
+      case _i51.Address():
+        return 'Address';
+      case _i52.AuthSession():
+        return 'AuthSession';
+      case _i53.CustomerAIPolicy():
+        return 'CustomerAIPolicy';
+      case _i54.CustomerProfile():
+        return 'CustomerProfile';
+      case _i55.SubscriptionTier():
+        return 'SubscriptionTier';
+      case _i56.User():
+        return 'User';
+      case _i57.UserStatus():
+        return 'UserStatus';
+      case _i58.UserType():
+        return 'UserType';
+      case _i59.VendorProfile():
+        return 'VendorProfile';
     }
     return null;
   }
@@ -808,8 +803,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
-    if (dataClassName == 'TemplateMessage') {
-      return deserialize<_i2.TemplateMessage>(data['data']);
+    if (dataClassName == 'AIConversationUsage') {
+      return deserialize<_i2.AIConversationUsage>(data['data']);
     }
     if (dataClassName == 'BreachSeverity') {
       return deserialize<_i3.BreachSeverity>(data['data']);
@@ -865,8 +860,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'QuickReply') {
       return deserialize<_i20.QuickReply>(data['data']);
     }
-    if (dataClassName == 'AIConversationUsage') {
-      return deserialize<_i21.AIConversationUsage>(data['data']);
+    if (dataClassName == 'TemplateMessage') {
+      return deserialize<_i21.TemplateMessage>(data['data']);
     }
     if (dataClassName == 'Cart') {
       return deserialize<_i22.Cart>(data['data']);
@@ -919,8 +914,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'WishlistItem') {
       return deserialize<_i38.WishlistItem>(data['data']);
     }
-    if (dataClassName == 'VendorProfile') {
-      return deserialize<_i39.VendorProfile>(data['data']);
+    if (dataClassName == 'AlertType') {
+      return deserialize<_i39.AlertType>(data['data']);
     }
     if (dataClassName == 'BillingCycleSummary') {
       return deserialize<_i40.BillingCycleSummary>(data['data']);
@@ -979,8 +974,8 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'UserType') {
       return deserialize<_i58.UserType>(data['data']);
     }
-    if (dataClassName == 'AlertType') {
-      return deserialize<_i59.AlertType>(data['data']);
+    if (dataClassName == 'VendorProfile') {
+      return deserialize<_i59.VendorProfile>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

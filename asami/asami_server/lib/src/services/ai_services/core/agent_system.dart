@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'package:asami_server/src/services/product/product_creation_handler.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
-import 'package:serverpod/serverpod.dart' hide Order;
+import 'package:serverpod/serverpod.dart' hide Order, Message;
 import '../../../endpoints/user_endpoint.dart';
 import '../../../generated/protocol.dart';
 import '../../../endpoints/usage_endpoint.dart';
+import '../../dependency_injection.dart';
+import '../../product/product_creation_state.dart';
 import '../models/tool_call.dart';
 import '../providers/ai_provider_interface.dart';
 import '../models/ai_request.dart';
@@ -48,15 +51,16 @@ class AgentSystem {
     required PlatformType platform,
   }) async {
     final startTime = DateTime.now();
-    
+
     try {
       Log.info('🤖 Agent: Processing message from ${user.userType.name}');
-      Log.info('📝 Message preview: ${message.content.substring(0, message.content.length > 50 ? 50 : message.content.length)}...');
+      Log.info(
+          '📝 Message preview: ${message.content.substring(0, message.content.length > 50 ? 50 : message.content.length)}...');
 
       // ========== STEP 1: CHECK CACHE ==========
       final cacheKey = _buildCacheKey(message.content, user.userType);
       final cachedResponse = await cacheManager.get(session, cacheKey);
-      
+
       if (cachedResponse != null) {
         Log.info('💾 Cache hit: Returning cached response');
         return cachedResponse;
@@ -86,12 +90,12 @@ class AgentSystem {
       if (!securityCheck['allowed']) {
         final violationType = securityCheck['violation_type'];
         final severity = securityCheck['severity'];
-        
+
         Log.info('🚨 Security violation detected');
         Log.info('   Type: $violationType');
         Log.info('   Severity: $severity');
         Log.info('   User: ${user.id.uuid}');
-        
+
         // Log critical violations
         if (severity == 'critical' || severity == 'high') {
           await _logSecurityIncident(
@@ -103,7 +107,7 @@ class AgentSystem {
             severity: severity,
           );
         }
-        
+
         return {
           'success': true,
           'response': securityCheck['warning_message'],
@@ -112,6 +116,81 @@ class AgentSystem {
           'metadata': {
             'violation_type': violationType,
             'severity': severity,
+            'timestamp': DateTime.now().toIso8601String(),
+          },
+        };
+      }
+
+      // ========== STEP 3.5: CHECK PRODUCT CREATION FLOW (NEW) ==========
+
+      final productCreationHandler = getIt<ProductCreationHandler>();
+
+      if (await productCreationHandler.isInCreationFlow(
+          session, conversation.id.uuid)) {
+        Log.info('🔒 User in product creation flow - delegating to handler');
+
+        final creationResult =
+            await productCreationHandler.processCreationMessage(
+          session,
+          user: user,
+          conversation: conversation,
+          message: message,
+          platform: platform,
+        );
+
+        if (creationResult['blocked'] == true) {
+          // State-locked rejection - send error immediately
+          Log.info(
+              '🚫 Input blocked by state gate: ${creationResult['state']}');
+
+          return {
+            'success': true, // Technical success (message was processed)
+            'response': creationResult['message'],
+            'intent': 'product_creation_blocked',
+            'in_creation_flow': true,
+            'blocked': true,
+            'metadata': {
+              'current_state': creationResult['state'],
+              'timestamp': DateTime.now().toIso8601String(),
+            },
+          };
+        }
+
+        if (creationResult['ready_to_create'] == true) {
+          // Complete product creation
+          Log.info('✅ Product creation ready - finalizing...');
+
+          final completionResult =
+              await productCreationHandler.completeProductCreation(
+            session,
+            user: user,
+            creationSession:
+                ProductCreationSession.fromJson(creationResult['session_data']),
+            conversation: conversation,
+          );
+
+          return {
+            'success': completionResult['success'],
+            'response': completionResult['message'],
+            'intent': 'product_created',
+            'in_creation_flow': false,
+            'product_id': completionResult['product_id'],
+            'metadata': {
+              'timestamp': DateTime.now().toIso8601String(),
+            },
+          };
+        }
+
+        // State progressed normally - return the next prompt
+        Log.info('➡️ State progressed to: ${creationResult['state']}');
+
+        return {
+          'success': true,
+          'response': creationResult['message'],
+          'intent': 'product_creation_progress',
+          'in_creation_flow': true,
+          'metadata': {
+            'current_state': creationResult['state'],
             'timestamp': DateTime.now().toIso8601String(),
           },
         };
@@ -130,7 +209,7 @@ class AgentSystem {
       if (usageLimitCheck['block'] == true) {
         Log.info('🚫 Message blocked due to usage limits');
         Log.info('   Reason: ${usageLimitCheck['reason']}');
-        
+
         return {
           'success': false,
           'response': usageLimitCheck['response'],
@@ -165,12 +244,12 @@ class AgentSystem {
       );
 
       final userContext = await _getUserContext(session, user);
-      
+
       // Add usage info to system prompt
       if (usageWarning != null) {
         userContext['usage_warning'] = usageWarning;
       }
-      
+
       final systemPrompt = SystemPrompts.getPrompt(
         user.userType.name,
         platform.name,
@@ -183,7 +262,7 @@ class AgentSystem {
       // ========== STEP 6: GET AVAILABLE TOOLS ==========
       final availableTools = _getToolsForUser(user.userType);
       Log.info('🔧 Available tools: ${availableTools.length}');
-      
+
       if (user.userType == UserType.vendor) {
         Log.info('   Vendor has access to both customer and vendor tools');
       }
@@ -221,16 +300,17 @@ class AgentSystem {
           'response': _getErrorResponse(user.userType),
         };
       }
-      
+
       // ========== STEP 8: TOOL EXECUTION ==========
       if (aiResponse.toolCalls != null && aiResponse.toolCalls!.isNotEmpty) {
         Log.info('🔧 Processing ${aiResponse.toolCalls!.length} tool calls');
-        
+
         // Log each tool call
         for (var toolCall in aiResponse.toolCalls!) {
-          Log.info('   → ${toolCall.name}(${toolCall.arguments.keys.join(', ')})');
+          Log.info(
+              '   → ${toolCall.name}(${toolCall.arguments.keys.join(', ')})');
         }
-        
+
         final result = await _handleToolCallsWithTracking(
           session: session,
           user: user,
@@ -240,15 +320,16 @@ class AgentSystem {
           conversationHistory: conversationHistory,
           aiUsage: aiResponse.usage,
         );
-        
+
         // Cache tool-based responses (shorter TTL for dynamic data)
         await cacheManager.set(session, cacheKey, result, ttl: 300); // 5 min
         return result;
       }
 
       // ========== STEP 9: TRACK AI MESSAGE USAGE ==========
-      final processingTime = DateTime.now().difference(startTime).inMilliseconds;
-      
+      final processingTime =
+          DateTime.now().difference(startTime).inMilliseconds;
+
       await _trackAIMessageUsage(
         session: session,
         user: user,
@@ -298,15 +379,15 @@ class AgentSystem {
       };
 
       // Cache successful responses
-      await cacheManager.set(session, cacheKey, finalResult, ttl: 600); // 10 min
+      await cacheManager.set(session, cacheKey, finalResult,
+          ttl: 600); // 10 min
 
       Log.info('✅ Message processed successfully in ${processingTime}ms');
       return finalResult;
-
     } catch (e, stackTrace) {
       Log.info('❌ Agent system error: $e');
       session.log('Agent system error: $e', stackTrace: stackTrace);
-      
+
       return {
         'success': false,
         'error': e.toString(),
@@ -372,7 +453,7 @@ class AgentSystem {
           if (limitCheck['within_limit'] == true) {
             final remaining = limitCheck['remaining'] ?? 0;
             final limit = limitCheck['limit'] ?? 0;
-            
+
             if (remaining <= 3 && limit > 0) {
               return {
                 'allowed': true,
@@ -383,7 +464,6 @@ class AgentSystem {
         }
 
         return {'allowed': true};
-
       } else if (user.userType == UserType.customer) {
         // Check customer AI usage
         final usageCheck = await usageEndpoint.checkCustomerAIUsage(
@@ -416,11 +496,12 @@ class AgentSystem {
         // Check if approaching limit (80%)
         final usagePercent = usageCheck['usage_percent'] ?? 0;
         final remaining = usageCheck['remaining'] ?? 0;
-        
+
         if (usagePercent >= 80) {
           return {
             'allowed': true,
-            'warning': 'You are approaching your daily message limit ($usagePercent% used, $remaining remaining)',
+            'warning':
+                'You are approaching your daily message limit ($usagePercent% used, $remaining remaining)',
           };
         }
 
@@ -428,7 +509,6 @@ class AgentSystem {
       }
 
       return {'allowed': true};
-
     } catch (e) {
       Log.info('⚠️ Error checking usage limits: $e');
       return {'allowed': true}; // Fail open
@@ -477,14 +557,14 @@ class AgentSystem {
 
         if (!hasPermission) {
           Log.info('🚫 Permission denied for tool: ${toolCall.name}');
-          
+
           errorMessage = 'You do not have permission to use this function.';
-          
+
           failedTools.add({
             'tool': toolCall.name,
             'reason': 'permission_denied',
           });
-          
+
           toolResults.add(AIMessage(
             role: 'tool',
             name: toolCall.name,
@@ -495,7 +575,7 @@ class AgentSystem {
               'error_code': 'PERMISSION_DENIED',
             }),
           ));
-          
+
           // Track denied attempt
           await usageEndpoint.trackToolUsage(
             session: session,
@@ -509,7 +589,7 @@ class AgentSystem {
             errorMessage: errorMessage,
             tier: tier,
           );
-          
+
           continue;
         }
 
@@ -524,15 +604,15 @@ class AgentSystem {
 
           if (!limitCheck['allowed']) {
             errorMessage = limitCheck['message'];
-            
+
             Log.info('🚫 Limit exceeded for tool: ${toolCall.name}');
             Log.info('   Reason: ${limitCheck['reason']}');
-            
+
             failedTools.add({
               'tool': toolCall.name,
               'reason': limitCheck['reason'] ?? 'limit_exceeded',
             });
-            
+
             toolResults.add(AIMessage(
               role: 'tool',
               name: toolCall.name,
@@ -544,7 +624,7 @@ class AgentSystem {
                 'upgrade_url': limitCheck['upgrade_url'],
               }),
             ));
-            
+
             // Track denied attempt
             await usageEndpoint.trackToolUsage(
               session: session,
@@ -558,12 +638,13 @@ class AgentSystem {
               errorMessage: errorMessage,
               tier: tier,
             );
-            
+
             continue;
           }
 
           if (limitCheck['in_grace_period'] == true) {
-            Log.info('⚠️ Using grace period: ${limitCheck['grace_used']}/${limitCheck['grace_remaining'] + limitCheck['grace_used']}');
+            Log.info(
+                '⚠️ Using grace period: ${limitCheck['grace_used']}/${limitCheck['grace_remaining'] + limitCheck['grace_used']}');
           }
         }
 
@@ -576,15 +657,15 @@ class AgentSystem {
 
         if (argumentValidation['valid'] != true) {
           errorMessage = argumentValidation['error'];
-          
+
           Log.info('⚠️ Invalid arguments for tool: ${toolCall.name}');
           Log.info('   Error: $errorMessage');
-          
+
           failedTools.add({
             'tool': toolCall.name,
             'reason': 'invalid_arguments',
           });
-          
+
           toolResults.add(AIMessage(
             role: 'tool',
             name: toolCall.name,
@@ -595,7 +676,7 @@ class AgentSystem {
               'error_code': 'INVALID_ARGUMENTS',
             }),
           ));
-          
+
           continue;
         }
 
@@ -616,12 +697,13 @@ class AgentSystem {
         );
 
         success = result['success'] == true;
-        final executionTime = DateTime.now().difference(toolStartTime).inMilliseconds;
-        
+        final executionTime =
+            DateTime.now().difference(toolStartTime).inMilliseconds;
+
         Log.info('✅ Tool executed: ${toolCall.name}');
         Log.info('   Execution time: ${executionTime}ms');
         Log.info('   Result: ${success ? 'success' : 'failure'}');
-        
+
         executedTools.add(toolCall.name);
 
         // Track successful execution
@@ -644,13 +726,13 @@ class AgentSystem {
           toolCallId: toolCall.id,
           content: jsonEncode(result),
         ));
-
       } catch (e, stackTrace) {
         errorMessage = e.toString();
-        
+
         Log.info('❌ Tool execution error: ${toolCall.name}');
         Log.info('   Error: $errorMessage');
-        session.log('Tool execution error: ${toolCall.name}', stackTrace: stackTrace);
+        session.log('Tool execution error: ${toolCall.name}',
+            stackTrace: stackTrace);
 
         failedTools.add({
           'tool': toolCall.name,
@@ -659,7 +741,8 @@ class AgentSystem {
         });
 
         // Track failed execution
-        final executionTime = DateTime.now().difference(toolStartTime).inMilliseconds;
+        final executionTime =
+            DateTime.now().difference(toolStartTime).inMilliseconds;
         await usageEndpoint.trackToolUsage(
           session: session,
           userId: user.id.uuid,
@@ -727,7 +810,7 @@ class AgentSystem {
 
     if (!finalResponse.success) {
       Log.info('❌ AI follow-up error: ${finalResponse.error}');
-      
+
       // If tools executed successfully, return manual summary
       if (executedTools.isNotEmpty) {
         return {
@@ -742,11 +825,12 @@ class AgentSystem {
           },
         };
       }
-      
+
       return {
         'success': false,
         'error': finalResponse.error,
-        'response': 'I completed the action but encountered an issue generating a response.',
+        'response':
+            'I completed the action but encountered an issue generating a response.',
       };
     }
 
@@ -811,8 +895,8 @@ class AgentSystem {
         responseTime: responseTimeMs / 1000, // Convert to seconds
       );
 
-      Log.info('📊 Tracked AI message: $totalTokens tokens, $toolCallsCount tool calls');
-
+      Log.info(
+          '📊 Tracked AI message: $totalTokens tokens, $toolCallsCount tool calls');
     } catch (e) {
       Log.info('⚠️ Error tracking AI message: $e');
     }
@@ -830,8 +914,9 @@ class AgentSystem {
 
       final tracker = await DailyUsageTracker.db.findFirstRow(
         session,
-        where: (t) => t.userId.equals(UuidValue.fromString(userId)) &
-                     t.date.equals(today),
+        where: (t) =>
+            t.userId.equals(UuidValue.fromString(userId)) &
+            t.date.equals(today),
       );
 
       if (tracker == null) {
@@ -848,13 +933,16 @@ class AgentSystem {
           'used': tracker.toolCallsCount,
           'limit': tracker.toolCallsLimit,
           'remaining': tracker.toolCallsLimit - tracker.toolCallsCount,
-          'percentage': ((tracker.toolCallsCount / tracker.toolCallsLimit) * 100).toInt(),
+          'percentage':
+              ((tracker.toolCallsCount / tracker.toolCallsLimit) * 100).toInt(),
         },
         'ai_messages': {
           'used': tracker.aiMessagesCount,
           'limit': tracker.aiMessagesLimit,
           'remaining': tracker.aiMessagesLimit - tracker.aiMessagesCount,
-          'percentage': ((tracker.aiMessagesCount / tracker.aiMessagesLimit) * 100).toInt(),
+          'percentage':
+              ((tracker.aiMessagesCount / tracker.aiMessagesLimit) * 100)
+                  .toInt(),
         },
       };
 
@@ -866,14 +954,14 @@ class AgentSystem {
           'remaining': tracker.gracePeriodLimit - tracker.gracePeriodUsed,
         };
 
-        summary['subscription_tier'] = tracker.subscriptionTier?.name ?? 'unknown';
+        summary['subscription_tier'] =
+            tracker.subscriptionTier?.name ?? 'unknown';
       }
 
       return {
         'found': true,
         'summary': summary,
       };
-
     } catch (e) {
       Log.info('⚠️ Error getting usage summary: $e');
       return {
@@ -886,39 +974,55 @@ class AgentSystem {
   /// Check if message is likely to trigger tool call
   bool _isToolCallLikely(String message) {
     final lower = message.toLowerCase();
-    
+
     final indicators = [
-      'create', 'add', 'update', 'delete', 'remove',
-      'buy', 'purchase', 'order', 'checkout',
-      'list', 'show', 'display', 'get', 'find', 'search',
-      'track', 'cancel', 'view my',
-      'how many', 'what are', 'which',
+      'create',
+      'add',
+      'update',
+      'delete',
+      'remove',
+      'buy',
+      'purchase',
+      'order',
+      'checkout',
+      'list',
+      'show',
+      'display',
+      'get',
+      'find',
+      'search',
+      'track',
+      'cancel',
+      'view my',
+      'how many',
+      'what are',
+      'which',
     ];
 
     return indicators.any((indicator) => lower.contains(indicator));
   }
 
- /// Generate manual summary when AI fails
+  /// Generate manual summary when AI fails
   String _generateToolSummary(
     List<String> executedTools,
     List<Map<String, dynamic>> failedTools,
   ) {
     final buffer = StringBuffer();
-    
+
     if (executedTools.isNotEmpty) {
       buffer.writeln('✅ Successfully completed:');
       for (var tool in executedTools) {
         buffer.writeln('  • ${_humanizeToolName(tool)}');
       }
     }
-    
+
     if (failedTools.isNotEmpty) {
       buffer.writeln('\n⚠️ Some actions could not be completed:');
       for (var failure in failedTools) {
         buffer.writeln('  • ${_humanizeToolName(failure['tool'])}');
       }
     }
-    
+
     return buffer.toString();
   }
 
@@ -993,7 +1097,8 @@ class AgentSystem {
         context['subscription_tier'] = vendor.subscriptionTier.name;
         context['total_products'] = vendor.totalProducts;
         context['product_limit'] = vendor.productLimit;
-        context['products_remaining'] = vendor.productLimit - vendor.currentProductCount;
+        context['products_remaining'] =
+            vendor.productLimit - vendor.currentProductCount;
         context['ai_descriptions_used'] = vendor.aiDescriptionsUsed;
         context['ai_descriptions_limit'] = vendor.aiDescriptionsLimit;
       }
@@ -1017,7 +1122,8 @@ class AgentSystem {
 
       if (pattern != null) {
         context['usage_class'] = pattern.usageClass.name;
-        context['average_daily_messages'] = pattern.averageDailyMessages.toInt();
+        context['average_daily_messages'] =
+            pattern.averageDailyMessages.toInt();
       }
     }
 
@@ -1087,7 +1193,7 @@ class AgentSystem {
       //   platform: conversation.platform.name,
       //   createdAt: DateTime.now(),
       // ));
-      
+
       Log.info('🔒 Security incident logged: $violationType ($severity)');
     } catch (e) {
       Log.info('⚠️ Failed to log security incident: $e');
@@ -1097,7 +1203,7 @@ class AgentSystem {
   /// Get system health status
   Map<String, dynamic> getHealthStatus() {
     final registryHealth = toolRegistry.checkHealth();
-    
+
     return {
       'provider': provider.providerName,
       'tools_registered': toolRegistry.getRegisteredToolCount(),

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -15,6 +16,7 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import '../order/cart.dart' as _i2;
 import '../product/product.dart' as _i3;
 import '../product/product_variant.dart' as _i4;
+import 'package:asami_server/src/generated/protocol.dart' as _i5;
 
 abstract class CartItem
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -32,9 +34,9 @@ abstract class CartItem
     this.customerNotes,
     DateTime? addedAt,
     DateTime? updatedAt,
-  })  : quantity = quantity ?? 1,
-        addedAt = addedAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : quantity = quantity ?? 1,
+       addedAt = addedAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CartItem({
     int? id,
@@ -58,28 +60,31 @@ abstract class CartItem
       cartId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['cartId']),
       cart: jsonSerialization['cart'] == null
           ? null
-          : _i2.Cart.fromJson(
-              (jsonSerialization['cart'] as Map<String, dynamic>)),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+          : _i5.Protocol().deserialize<_i2.Cart>(jsonSerialization['cart']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i3.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i3.Product>(
+              jsonSerialization['product'],
+            ),
       variantId: jsonSerialization['variantId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       variant: jsonSerialization['variant'] == null
           ? null
-          : _i4.ProductVariant.fromJson(
-              (jsonSerialization['variant'] as Map<String, dynamic>)),
+          : _i5.Protocol().deserialize<_i4.ProductVariant>(
+              jsonSerialization['variant'],
+            ),
       quantity: jsonSerialization['quantity'] as int,
       unitPrice: (jsonSerialization['unitPrice'] as num).toDouble(),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       customerNotes: jsonSerialization['customerNotes'] as String?,
       addedAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -138,6 +143,7 @@ abstract class CartItem
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CartItem',
       if (id != null) 'id': id,
       'cartId': cartId.toJson(),
       if (cart != null) 'cart': cart?.toJson(),
@@ -157,6 +163,7 @@ abstract class CartItem
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'CartItem',
       if (id != null) 'id': id,
       'cartId': cartId.toJson(),
       if (cart != null) 'cart': cart?.toJsonForProtocol(),
@@ -229,20 +236,20 @@ class _CartItemImpl extends CartItem {
     DateTime? addedAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          cartId: cartId,
-          cart: cart,
-          productId: productId,
-          product: product,
-          variantId: variantId,
-          variant: variant,
-          quantity: quantity,
-          unitPrice: unitPrice,
-          subtotal: subtotal,
-          customerNotes: customerNotes,
-          addedAt: addedAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         cartId: cartId,
+         cart: cart,
+         productId: productId,
+         product: product,
+         variantId: variantId,
+         variant: variant,
+         quantity: quantity,
+         unitPrice: unitPrice,
+         subtotal: subtotal,
+         customerNotes: customerNotes,
+         addedAt: addedAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CartItem]
   /// with some or all fields replaced by the given arguments.
@@ -270,21 +277,81 @@ class _CartItemImpl extends CartItem {
       productId: productId ?? this.productId,
       product: product is _i3.Product? ? product : this.product?.copyWith(),
       variantId: variantId is _i1.UuidValue? ? variantId : this.variantId,
-      variant:
-          variant is _i4.ProductVariant? ? variant : this.variant?.copyWith(),
+      variant: variant is _i4.ProductVariant?
+          ? variant
+          : this.variant?.copyWith(),
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
       subtotal: subtotal ?? this.subtotal,
-      customerNotes:
-          customerNotes is String? ? customerNotes : this.customerNotes,
+      customerNotes: customerNotes is String?
+          ? customerNotes
+          : this.customerNotes,
       addedAt: addedAt ?? this.addedAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }
 
+class CartItemUpdateTable extends _i1.UpdateTable<CartItemTable> {
+  CartItemUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> cartId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.cartId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> variantId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.variantId,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
+    table.quantity,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> unitPrice(double value) => _i1.ColumnValue(
+    table.unitPrice,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subtotal(double value) => _i1.ColumnValue(
+    table.subtotal,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> customerNotes(String? value) =>
+      _i1.ColumnValue(
+        table.customerNotes,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> addedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.addedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class CartItemTable extends _i1.Table<int?> {
   CartItemTable({super.tableRelation}) : super(tableName: 'cart_items') {
+    updateTable = CartItemUpdateTable(this);
     cartId = _i1.ColumnUuid(
       'cartId',
       this,
@@ -325,6 +392,8 @@ class CartItemTable extends _i1.Table<int?> {
       hasDefault: true,
     );
   }
+
+  late final CartItemUpdateTable updateTable;
 
   late final _i1.ColumnUuid cartId;
 
@@ -391,17 +460,17 @@ class CartItemTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        cartId,
-        productId,
-        variantId,
-        quantity,
-        unitPrice,
-        subtotal,
-        customerNotes,
-        addedAt,
-        updatedAt,
-      ];
+    id,
+    cartId,
+    productId,
+    variantId,
+    quantity,
+    unitPrice,
+    subtotal,
+    customerNotes,
+    addedAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -437,10 +506,10 @@ class CartItemInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'cart': _cart,
-        'product': _product,
-        'variant': _variant,
-      };
+    'cart': _cart,
+    'product': _product,
+    'variant': _variant,
+  };
 
   @override
   _i1.Table<int?> get table => CartItem.t;
@@ -635,6 +704,46 @@ class CartItemRepository {
     );
   }
 
+  /// Updates a single [CartItem] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<CartItem?> updateById(
+    _i1.Session session,
+    int id, {
+    required _i1.ColumnValueListBuilder<CartItemUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<CartItem>(
+      id,
+      columnValues: columnValues(CartItem.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [CartItem]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<CartItem>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<CartItemUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<CartItemTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<CartItemTable>? orderBy,
+    _i1.OrderByListBuilder<CartItemTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<CartItem>(
+      columnValues: columnValues(CartItem.t.updateTable),
+      where: where(CartItem.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(CartItem.t),
+      orderByList: orderByList?.call(CartItem.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [CartItem]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -772,16 +881,16 @@ class CartItemDetachRowRepository {
   /// the related record.
   Future<void> variant(
     _i1.Session session,
-    CartItem cartitem, {
+    CartItem cartItem, {
     _i1.Transaction? transaction,
   }) async {
-    if (cartitem.id == null) {
-      throw ArgumentError.notNull('cartitem.id');
+    if (cartItem.id == null) {
+      throw ArgumentError.notNull('cartItem.id');
     }
 
-    var $cartitem = cartitem.copyWith(variantId: null);
+    var $cartItem = cartItem.copyWith(variantId: null);
     await session.db.updateRow<CartItem>(
-      $cartitem,
+      $cartItem,
       columns: [CartItem.t.variantId],
       transaction: transaction,
     );

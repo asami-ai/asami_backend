@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../user/user.dart' as _i2;
 import '../messaging/platfom_type.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class Notification
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -38,13 +40,13 @@ abstract class Notification
     this.sentAt,
     this.deliveredAt,
     this.readAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isSent = isSent ?? false,
-        isDelivered = isDelivered ?? false,
-        isRead = isRead ?? false,
-        isFailed = isFailed ?? false,
-        priority = priority ?? 0,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isSent = isSent ?? false,
+       isDelivered = isDelivered ?? false,
+       isRead = isRead ?? false,
+       isFailed = isFailed ?? false,
+       priority = priority ?? 0,
+       createdAt = createdAt ?? DateTime.now();
 
   factory Notification({
     _i1.UuidValue? id,
@@ -75,14 +77,15 @@ abstract class Notification
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       title: jsonSerialization['title'] as String,
       message: jsonSerialization['message'] as String,
       type: jsonSerialization['type'] as String,
       platform: jsonSerialization['platform'] == null
           ? null
-          : _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i3.PlatformType.fromJson(
+              (jsonSerialization['platform'] as String),
+            ),
       actionUrl: jsonSerialization['actionUrl'] as String?,
       actionData: jsonSerialization['actionData'] as String?,
       isSent: jsonSerialization['isSent'] as bool,
@@ -94,16 +97,19 @@ abstract class Notification
       scheduledFor: jsonSerialization['scheduledFor'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['scheduledFor']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+              jsonSerialization['scheduledFor'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       sentAt: jsonSerialization['sentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['sentAt']),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['deliveredAt']),
+              jsonSerialization['deliveredAt'],
+            ),
       readAt: jsonSerialization['readAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['readAt']),
@@ -186,6 +192,7 @@ abstract class Notification
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Notification',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -212,6 +219,7 @@ abstract class Notification
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Notification',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJsonForProtocol(),
@@ -290,27 +298,27 @@ class _NotificationImpl extends Notification {
     DateTime? deliveredAt,
     DateTime? readAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          title: title,
-          message: message,
-          type: type,
-          platform: platform,
-          actionUrl: actionUrl,
-          actionData: actionData,
-          isSent: isSent,
-          isDelivered: isDelivered,
-          isRead: isRead,
-          isFailed: isFailed,
-          errorMessage: errorMessage,
-          priority: priority,
-          scheduledFor: scheduledFor,
-          createdAt: createdAt,
-          sentAt: sentAt,
-          deliveredAt: deliveredAt,
-          readAt: readAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         title: title,
+         message: message,
+         type: type,
+         platform: platform,
+         actionUrl: actionUrl,
+         actionData: actionData,
+         isSent: isSent,
+         isDelivered: isDelivered,
+         isRead: isRead,
+         isFailed: isFailed,
+         errorMessage: errorMessage,
+         priority: priority,
+         scheduledFor: scheduledFor,
+         createdAt: createdAt,
+         sentAt: sentAt,
+         deliveredAt: deliveredAt,
+         readAt: readAt,
+       );
 
   /// Returns a shallow copy of this [Notification]
   /// with some or all fields replaced by the given arguments.
@@ -354,8 +362,9 @@ class _NotificationImpl extends Notification {
       isFailed: isFailed ?? this.isFailed,
       errorMessage: errorMessage is String? ? errorMessage : this.errorMessage,
       priority: priority ?? this.priority,
-      scheduledFor:
-          scheduledFor is DateTime? ? scheduledFor : this.scheduledFor,
+      scheduledFor: scheduledFor is DateTime?
+          ? scheduledFor
+          : this.scheduledFor,
       createdAt: createdAt ?? this.createdAt,
       sentAt: sentAt is DateTime? ? sentAt : this.sentAt,
       deliveredAt: deliveredAt is DateTime? ? deliveredAt : this.deliveredAt,
@@ -364,8 +373,112 @@ class _NotificationImpl extends Notification {
   }
 }
 
+class NotificationUpdateTable extends _i1.UpdateTable<NotificationTable> {
+  NotificationUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> title(String value) => _i1.ColumnValue(
+    table.title,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> message(String value) => _i1.ColumnValue(
+    table.message,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> type(String value) => _i1.ColumnValue(
+    table.type,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.PlatformType, _i3.PlatformType> platform(
+    _i3.PlatformType? value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> actionUrl(String? value) => _i1.ColumnValue(
+    table.actionUrl,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> actionData(String? value) => _i1.ColumnValue(
+    table.actionData,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isSent(bool value) => _i1.ColumnValue(
+    table.isSent,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isDelivered(bool value) => _i1.ColumnValue(
+    table.isDelivered,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isRead(bool value) => _i1.ColumnValue(
+    table.isRead,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFailed(bool value) => _i1.ColumnValue(
+    table.isFailed,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> errorMessage(String? value) =>
+      _i1.ColumnValue(
+        table.errorMessage,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> priority(int value) => _i1.ColumnValue(
+    table.priority,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> scheduledFor(DateTime? value) =>
+      _i1.ColumnValue(
+        table.scheduledFor,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> sentAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.sentAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> deliveredAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.deliveredAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> readAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.readAt,
+        value,
+      );
+}
+
 class NotificationTable extends _i1.Table<_i1.UuidValue> {
   NotificationTable({super.tableRelation}) : super(tableName: 'notifications') {
+    updateTable = NotificationUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -385,7 +498,7 @@ class NotificationTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     actionUrl = _i1.ColumnString(
       'actionUrl',
@@ -447,6 +560,8 @@ class NotificationTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final NotificationUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   _i2.UserTable? _user;
@@ -500,26 +615,26 @@ class NotificationTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        title,
-        message,
-        type,
-        platform,
-        actionUrl,
-        actionData,
-        isSent,
-        isDelivered,
-        isRead,
-        isFailed,
-        errorMessage,
-        priority,
-        scheduledFor,
-        createdAt,
-        sentAt,
-        deliveredAt,
-        readAt,
-      ];
+    id,
+    userId,
+    title,
+    message,
+    type,
+    platform,
+    actionUrl,
+    actionData,
+    isSent,
+    isDelivered,
+    isRead,
+    isFailed,
+    errorMessage,
+    priority,
+    scheduledFor,
+    createdAt,
+    sentAt,
+    deliveredAt,
+    readAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -727,6 +842,46 @@ class NotificationRepository {
     return session.db.updateRow<Notification>(
       row,
       columns: columns?.call(Notification.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Notification] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Notification?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<NotificationUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Notification>(
+      id,
+      columnValues: columnValues(Notification.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Notification]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Notification>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<NotificationUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<NotificationTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<NotificationTable>? orderBy,
+    _i1.OrderByListBuilder<NotificationTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Notification>(
+      columnValues: columnValues(Notification.t.updateTable),
+      where: where(Notification.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Notification.t),
+      orderByList: orderByList?.call(Notification.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

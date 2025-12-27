@@ -3,8 +3,8 @@
 import 'dart:io';
 import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_response_types.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:serverpod/serverpod.dart';
+
 import '../../generated/protocol.dart';
 import '../messaging/whatsapp/whatsapp_service.dart';
 import '../messaging/telegram/telegram_service.dart';
@@ -58,7 +58,8 @@ class MediaService {
       }
       
       // Step 3: Save to temporary file
-      final tempDir = await getTemporaryDirectory();
+      // FIXED: Used Directory.systemTemp (Pure Dart) instead of getTemporaryDirectory (Flutter)
+      final tempDir = Directory.systemTemp;
       final fileName = '${mediaId}_${DateTime.now().millisecondsSinceEpoch}';
       final file = File('${tempDir.path}/$fileName.jpg');
       
@@ -83,11 +84,11 @@ class MediaService {
         return null;
       }
       
-      // Get file info
+      // Get file info from Telegram
       final fileInfo = await telegramService!.api.getFile(fileId);
       
-      // Download using Televerse's built-in download method
-      final tempDir = await getTemporaryDirectory();
+      // FIXED: Used Directory.systemTemp (Pure Dart)
+      final tempDir = Directory.systemTemp;
       final fileName = '${fileId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final savePath = '${tempDir.path}/$fileName';
       
@@ -120,18 +121,10 @@ class MediaService {
     }
   }
   
-  /// Upload file to cloud storage (S3, Firebase, etc.)
+  /// Upload file to cloud storage (Placeholder for actual S3/GCS implementation)
   Future<String?> uploadToCloudStorage(File file) async {
     try {
-      // TODO: Implement actual cloud storage upload
-      // For now, return a placeholder URL
-      
-      // Example with AWS S3:
-      // final s3 = S3Client(...);
-      // final result = await s3.putObject(...);
-      // return result.location;
-      
-      // Placeholder implementation
+      // TODO: Implement actual cloud storage upload (AWS S3, Google Cloud Storage, etc.)
       final fileName = file.path.split('/').last;
       final placeholderUrl = 'https://storage.asami.com/media/$fileName';
       
@@ -144,7 +137,7 @@ class MediaService {
     }
   }
   
-  /// Process product image with AI
+  /// Process product image with AI analysis
   Future<Map<String, dynamic>> processProductImage({
     required File imageFile,
     required String vendorId,
@@ -161,51 +154,16 @@ class MediaService {
         };
       }
       
-      // Step 2: Send to AI for analysis
-      // TODO: Integrate with actual AI service (OpenAI Vision, Claude, etc.)
-      
-      final aiPrompt = '''
-Analyze this product image and generate comprehensive product information.
-
-${additionalContext != null ? 'Additional context: $additionalContext\n' : ''}
-
-Provide the following in JSON format:
-{
-  "name": "Product name (concise, descriptive)",
-  "description": "Full product description (3-5 sentences)",
-  "short_description": "Brief 1-sentence description",
-  "category": "Primary category",
-  "sub_category": "Sub-category if applicable",
-  "suggested_price_min": "Minimum suggested price in NGN",
-  "suggested_price_max": "Maximum suggested price in NGN",
-  "features": ["Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"],
-  "tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
-  "colors": ["color1", "color2"] if visible,
-  "materials": ["material"] if identifiable,
-  "target_audience": "Who this product is for"
-}
-''';
-      
-      // Placeholder AI response (replace with actual AI call)
+      // Step 2: Placeholder AI response 
       final aiResponse = {
         'name': 'Sample Product',
-        'description': 'A high-quality product with excellent features and durable construction.',
+        'description': 'A high-quality product identified via AI analysis.',
         'short_description': 'Premium quality product',
         'category': 'General',
-        'sub_category': null,
         'suggested_price_min': 5000,
         'suggested_price_max': 15000,
-        'features': [
-          'High quality materials',
-          'Durable construction',
-          'Modern design',
-          'Easy to use',
-          'Great value'
-        ],
-        'tags': ['quality', 'durable', 'modern', 'premium', 'value'],
-        'colors': [],
-        'materials': [],
-        'target_audience': 'General consumers',
+        'features': ['High quality', 'Durable'],
+        'tags': ['premium', 'new'],
       };
       
       session.log('🤖 AI product analysis complete');
@@ -220,7 +178,7 @@ Provide the following in JSON format:
         vendor.aiDescriptionsUsed++;
         await VendorProfile.db.updateRow(session, vendor);
         
-        // Create usage record for pay-as-you-go vendors
+        // Handle logic for the restricted Three Tiers (Free, Pro, Enterprise)
         if (vendor.subscriptionTier == SubscriptionTier.pro) {
           final now = DateTime.now();
           final usageRecord = UsageRecord(
@@ -277,7 +235,7 @@ Provide the following in JSON format:
     }
   }
   
-  /// Delete temporary file
+  /// Delete temporary file to prevent server disk bloat
   Future<void> cleanupTempFile(File file) async {
     try {
       if (await file.exists()) {

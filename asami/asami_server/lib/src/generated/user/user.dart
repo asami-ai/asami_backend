@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -48,18 +49,18 @@ abstract class User
     DateTime? updatedAt,
     this.lastActiveAt,
     this.deletedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.UserStatus.active,
-        isPhoneVerified = isPhoneVerified ?? false,
-        language = language ?? 'en',
-        timezone = timezone ?? 'UTC',
-        emailVerified = emailVerified ?? false,
-        whatsappAuthenticated = whatsappAuthenticated ?? false,
-        telegramAuthenticated = telegramAuthenticated ?? false,
-        webAuthenticated = webAuthenticated ?? false,
-        verificationAttempts = verificationAttempts ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.UserStatus.active,
+       isPhoneVerified = isPhoneVerified ?? false,
+       language = language ?? 'en',
+       timezone = timezone ?? 'UTC',
+       emailVerified = emailVerified ?? false,
+       whatsappAuthenticated = whatsappAuthenticated ?? false,
+       telegramAuthenticated = telegramAuthenticated ?? false,
+       webAuthenticated = webAuthenticated ?? false,
+       verificationAttempts = verificationAttempts ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory User({
     _i1.UuidValue? id,
@@ -99,8 +100,10 @@ abstract class User
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      userType: _i3.UserType.fromJson((jsonSerialization['userType'] as int)),
-      status: _i2.UserStatus.fromJson((jsonSerialization['status'] as int)),
+      userType: _i3.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      status: _i2.UserStatus.fromJson((jsonSerialization['status'] as String)),
       email: jsonSerialization['email'] as String?,
       phoneNumber: jsonSerialization['phoneNumber'] as String,
       countryCode: jsonSerialization['countryCode'] as String,
@@ -119,37 +122,45 @@ abstract class User
       emailVerifiedAt: jsonSerialization['emailVerifiedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['emailVerifiedAt']),
+              jsonSerialization['emailVerifiedAt'],
+            ),
       whatsappAuthenticated: jsonSerialization['whatsappAuthenticated'] as bool,
       telegramAuthenticated: jsonSerialization['telegramAuthenticated'] as bool,
       webAuthenticated: jsonSerialization['webAuthenticated'] as bool,
       lastWhatsappLogin: jsonSerialization['lastWhatsappLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastWhatsappLogin']),
+              jsonSerialization['lastWhatsappLogin'],
+            ),
       lastTelegramLogin: jsonSerialization['lastTelegramLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastTelegramLogin']),
+              jsonSerialization['lastTelegramLogin'],
+            ),
       lastWebLogin: jsonSerialization['lastWebLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastWebLogin']),
+              jsonSerialization['lastWebLogin'],
+            ),
       verificationCode: jsonSerialization['verificationCode'] as String?,
       verificationCodeExpiry:
           jsonSerialization['verificationCodeExpiry'] == null
-              ? null
-              : _i1.DateTimeJsonExtension.fromJson(
-                  jsonSerialization['verificationCodeExpiry']),
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['verificationCodeExpiry'],
+            ),
       verificationAttempts: jsonSerialization['verificationAttempts'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       lastActiveAt: jsonSerialization['lastActiveAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastActiveAt']),
+              jsonSerialization['lastActiveAt'],
+            ),
       deletedAt: jsonSerialization['deletedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['deletedAt']),
@@ -268,6 +279,7 @@ abstract class User
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'User',
       'id': id.toJson(),
       'userType': userType.toJson(),
       'status': status.toJson(),
@@ -309,6 +321,7 @@ abstract class User
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'User',
       'id': id.toJson(),
       'userType': userType.toJson(),
       'status': status.toJson(),
@@ -414,39 +427,39 @@ class _UserImpl extends User {
     DateTime? lastActiveAt,
     DateTime? deletedAt,
   }) : super._(
-          id: id,
-          userType: userType,
-          status: status,
-          email: email,
-          phoneNumber: phoneNumber,
-          countryCode: countryCode,
-          isPhoneVerified: isPhoneVerified,
-          whatsappId: whatsappId,
-          telegramId: telegramId,
-          firstName: firstName,
-          lastName: lastName,
-          profileImageUrl: profileImageUrl,
-          language: language,
-          timezone: timezone,
-          city: city,
-          state: state,
-          country: country,
-          emailVerified: emailVerified,
-          emailVerifiedAt: emailVerifiedAt,
-          whatsappAuthenticated: whatsappAuthenticated,
-          telegramAuthenticated: telegramAuthenticated,
-          webAuthenticated: webAuthenticated,
-          lastWhatsappLogin: lastWhatsappLogin,
-          lastTelegramLogin: lastTelegramLogin,
-          lastWebLogin: lastWebLogin,
-          verificationCode: verificationCode,
-          verificationCodeExpiry: verificationCodeExpiry,
-          verificationAttempts: verificationAttempts,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          lastActiveAt: lastActiveAt,
-          deletedAt: deletedAt,
-        );
+         id: id,
+         userType: userType,
+         status: status,
+         email: email,
+         phoneNumber: phoneNumber,
+         countryCode: countryCode,
+         isPhoneVerified: isPhoneVerified,
+         whatsappId: whatsappId,
+         telegramId: telegramId,
+         firstName: firstName,
+         lastName: lastName,
+         profileImageUrl: profileImageUrl,
+         language: language,
+         timezone: timezone,
+         city: city,
+         state: state,
+         country: country,
+         emailVerified: emailVerified,
+         emailVerifiedAt: emailVerifiedAt,
+         whatsappAuthenticated: whatsappAuthenticated,
+         telegramAuthenticated: telegramAuthenticated,
+         webAuthenticated: webAuthenticated,
+         lastWhatsappLogin: lastWhatsappLogin,
+         lastTelegramLogin: lastTelegramLogin,
+         lastWebLogin: lastWebLogin,
+         verificationCode: verificationCode,
+         verificationCodeExpiry: verificationCodeExpiry,
+         verificationAttempts: verificationAttempts,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         lastActiveAt: lastActiveAt,
+         deletedAt: deletedAt,
+       );
 
   /// Returns a shallow copy of this [User]
   /// with some or all fields replaced by the given arguments.
@@ -498,16 +511,18 @@ class _UserImpl extends User {
       telegramId: telegramId is String? ? telegramId : this.telegramId,
       firstName: firstName is String? ? firstName : this.firstName,
       lastName: lastName is String? ? lastName : this.lastName,
-      profileImageUrl:
-          profileImageUrl is String? ? profileImageUrl : this.profileImageUrl,
+      profileImageUrl: profileImageUrl is String?
+          ? profileImageUrl
+          : this.profileImageUrl,
       language: language ?? this.language,
       timezone: timezone ?? this.timezone,
       city: city is String? ? city : this.city,
       state: state is String? ? state : this.state,
       country: country is String? ? country : this.country,
       emailVerified: emailVerified ?? this.emailVerified,
-      emailVerifiedAt:
-          emailVerifiedAt is DateTime? ? emailVerifiedAt : this.emailVerifiedAt,
+      emailVerifiedAt: emailVerifiedAt is DateTime?
+          ? emailVerifiedAt
+          : this.emailVerifiedAt,
       whatsappAuthenticated:
           whatsappAuthenticated ?? this.whatsappAuthenticated,
       telegramAuthenticated:
@@ -519,8 +534,9 @@ class _UserImpl extends User {
       lastTelegramLogin: lastTelegramLogin is DateTime?
           ? lastTelegramLogin
           : this.lastTelegramLogin,
-      lastWebLogin:
-          lastWebLogin is DateTime? ? lastWebLogin : this.lastWebLogin,
+      lastWebLogin: lastWebLogin is DateTime?
+          ? lastWebLogin
+          : this.lastWebLogin,
       verificationCode: verificationCode is String?
           ? verificationCode
           : this.verificationCode,
@@ -530,24 +546,201 @@ class _UserImpl extends User {
       verificationAttempts: verificationAttempts ?? this.verificationAttempts,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastActiveAt:
-          lastActiveAt is DateTime? ? lastActiveAt : this.lastActiveAt,
+      lastActiveAt: lastActiveAt is DateTime?
+          ? lastActiveAt
+          : this.lastActiveAt,
       deletedAt: deletedAt is DateTime? ? deletedAt : this.deletedAt,
     );
   }
 }
 
+class UserUpdateTable extends _i1.UpdateTable<UserTable> {
+  UserUpdateTable(super.table);
+
+  _i1.ColumnValue<_i3.UserType, _i3.UserType> userType(_i3.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.UserStatus, _i2.UserStatus> status(
+    _i2.UserStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> email(String? value) => _i1.ColumnValue(
+    table.email,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> phoneNumber(String value) => _i1.ColumnValue(
+    table.phoneNumber,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> countryCode(String value) => _i1.ColumnValue(
+    table.countryCode,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isPhoneVerified(bool value) => _i1.ColumnValue(
+    table.isPhoneVerified,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> whatsappId(String? value) => _i1.ColumnValue(
+    table.whatsappId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> telegramId(String? value) => _i1.ColumnValue(
+    table.telegramId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> firstName(String? value) => _i1.ColumnValue(
+    table.firstName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> lastName(String? value) => _i1.ColumnValue(
+    table.lastName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> profileImageUrl(String? value) =>
+      _i1.ColumnValue(
+        table.profileImageUrl,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> language(String value) => _i1.ColumnValue(
+    table.language,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> timezone(String value) => _i1.ColumnValue(
+    table.timezone,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> city(String? value) => _i1.ColumnValue(
+    table.city,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> state(String? value) => _i1.ColumnValue(
+    table.state,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> country(String? value) => _i1.ColumnValue(
+    table.country,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> emailVerified(bool value) => _i1.ColumnValue(
+    table.emailVerified,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> emailVerifiedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.emailVerifiedAt,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> whatsappAuthenticated(bool value) =>
+      _i1.ColumnValue(
+        table.whatsappAuthenticated,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> telegramAuthenticated(bool value) =>
+      _i1.ColumnValue(
+        table.telegramAuthenticated,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> webAuthenticated(bool value) => _i1.ColumnValue(
+    table.webAuthenticated,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> lastWhatsappLogin(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastWhatsappLogin,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> lastTelegramLogin(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastTelegramLogin,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> lastWebLogin(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastWebLogin,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> verificationCode(String? value) =>
+      _i1.ColumnValue(
+        table.verificationCode,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> verificationCodeExpiry(DateTime? value) =>
+      _i1.ColumnValue(
+        table.verificationCodeExpiry,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> verificationAttempts(int value) => _i1.ColumnValue(
+    table.verificationAttempts,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> lastActiveAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastActiveAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> deletedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.deletedAt,
+        value,
+      );
+}
+
 class UserTable extends _i1.Table<_i1.UuidValue> {
   UserTable({super.tableRelation}) : super(tableName: 'users') {
+    updateTable = UserUpdateTable(this);
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     status = _i1.ColumnEnum(
       'status',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
     email = _i1.ColumnString(
@@ -678,6 +871,8 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final UserUpdateTable updateTable;
+
   late final _i1.ColumnEnum<_i3.UserType> userType;
 
   late final _i1.ColumnEnum<_i2.UserStatus> status;
@@ -742,39 +937,39 @@ class UserTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userType,
-        status,
-        email,
-        phoneNumber,
-        countryCode,
-        isPhoneVerified,
-        whatsappId,
-        telegramId,
-        firstName,
-        lastName,
-        profileImageUrl,
-        language,
-        timezone,
-        city,
-        state,
-        country,
-        emailVerified,
-        emailVerifiedAt,
-        whatsappAuthenticated,
-        telegramAuthenticated,
-        webAuthenticated,
-        lastWhatsappLogin,
-        lastTelegramLogin,
-        lastWebLogin,
-        verificationCode,
-        verificationCodeExpiry,
-        verificationAttempts,
-        createdAt,
-        updatedAt,
-        lastActiveAt,
-        deletedAt,
-      ];
+    id,
+    userType,
+    status,
+    email,
+    phoneNumber,
+    countryCode,
+    isPhoneVerified,
+    whatsappId,
+    telegramId,
+    firstName,
+    lastName,
+    profileImageUrl,
+    language,
+    timezone,
+    city,
+    state,
+    country,
+    emailVerified,
+    emailVerifiedAt,
+    whatsappAuthenticated,
+    telegramAuthenticated,
+    webAuthenticated,
+    lastWhatsappLogin,
+    lastTelegramLogin,
+    lastWebLogin,
+    verificationCode,
+    verificationCodeExpiry,
+    verificationAttempts,
+    createdAt,
+    updatedAt,
+    lastActiveAt,
+    deletedAt,
+  ];
 }
 
 class UserInclude extends _i1.IncludeObject {
@@ -962,6 +1157,46 @@ class UserRepository {
     return session.db.updateRow<User>(
       row,
       columns: columns?.call(User.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [User] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<User?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<User>(
+      id,
+      columnValues: columnValues(User.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [User]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<User>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<UserUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<UserTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<UserTable>? orderBy,
+    _i1.OrderByListBuilder<UserTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<User>(
+      columnValues: columnValues(User.t.updateTable),
+      where: where(User.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(User.t),
+      orderByList: orderByList?.call(User.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

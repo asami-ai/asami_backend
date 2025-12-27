@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../messaging/platfom_type.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class TemplateMessage implements _i1.SerializableModel {
   TemplateMessage._({
@@ -31,13 +33,13 @@ abstract class TemplateMessage implements _i1.SerializableModel {
     this.lastUsedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        language = language ?? 'en',
-        isApproved = isApproved ?? false,
-        isActive = isActive ?? true,
-        usageCount = usageCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       language = language ?? 'en',
+       isApproved = isApproved ?? false,
+       isActive = isActive ?? true,
+       usageCount = usageCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory TemplateMessage({
     _i1.UuidValue? id,
@@ -68,12 +70,15 @@ abstract class TemplateMessage implements _i1.SerializableModel {
       header: jsonSerialization['header'] as String?,
       body: jsonSerialization['body'] as String,
       footer: jsonSerialization['footer'] as String?,
-      variables: (jsonSerialization['variables'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      variables: jsonSerialization['variables'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['variables'],
+            ),
       sampleValues: jsonSerialization['sampleValues'] as String?,
-      platform:
-          _i2.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+      platform: _i2.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformTemplateId: jsonSerialization['platformTemplateId'] as String?,
       isApproved: jsonSerialization['isApproved'] as bool,
       isActive: jsonSerialization['isActive'] as bool,
@@ -81,16 +86,16 @@ abstract class TemplateMessage implements _i1.SerializableModel {
       lastUsedAt: jsonSerialization['lastUsedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['lastUsedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   String name;
@@ -150,6 +155,7 @@ abstract class TemplateMessage implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'TemplateMessage',
       'id': id.toJson(),
       'name': name,
       'category': category,
@@ -198,24 +204,24 @@ class _TemplateMessageImpl extends TemplateMessage {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          name: name,
-          category: category,
-          language: language,
-          header: header,
-          body: body,
-          footer: footer,
-          variables: variables,
-          sampleValues: sampleValues,
-          platform: platform,
-          platformTemplateId: platformTemplateId,
-          isApproved: isApproved,
-          isActive: isActive,
-          usageCount: usageCount,
-          lastUsedAt: lastUsedAt,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         name: name,
+         category: category,
+         language: language,
+         header: header,
+         body: body,
+         footer: footer,
+         variables: variables,
+         sampleValues: sampleValues,
+         platform: platform,
+         platformTemplateId: platformTemplateId,
+         isApproved: isApproved,
+         isActive: isActive,
+         usageCount: usageCount,
+         lastUsedAt: lastUsedAt,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [TemplateMessage]
   /// with some or all fields replaced by the given arguments.

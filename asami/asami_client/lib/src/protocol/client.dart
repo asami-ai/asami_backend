@@ -7,38 +7,38 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:asami_client/src/protocol/analytics/vendor_analytics.dart'
     as _i3;
-import 'package:uuid/uuid_value.dart' as _i4;
 import 'package:asami_client/src/protocol/analytics/product_analytics.dart'
-    as _i5;
-import 'package:asami_client/src/protocol/product/product.dart' as _i6;
-import 'package:asami_client/src/protocol/user/user_type.dart' as _i7;
-import 'package:asami_client/src/protocol/messaging/platfom_type.dart' as _i8;
-import 'package:asami_client/src/protocol/messaging/message_type.dart' as _i9;
-import 'package:asami_client/src/protocol/order/order.dart' as _i10;
-import 'package:asami_client/src/protocol/order/order_item.dart' as _i11;
-import 'package:asami_client/src/protocol/order/cart.dart' as _i12;
-import 'package:asami_client/src/protocol/order/cart_item.dart' as _i13;
-import 'package:asami_client/src/protocol/order/payment_method.dart' as _i14;
-import 'package:asami_client/src/protocol/order/order_status.dart' as _i15;
-import 'package:asami_client/src/protocol/product/product_status.dart' as _i16;
+    as _i4;
+import 'package:asami_client/src/protocol/product/product.dart' as _i5;
+import 'package:asami_client/src/protocol/user/user_type.dart' as _i6;
+import 'package:asami_client/src/protocol/messaging/platfom_type.dart' as _i7;
+import 'package:asami_client/src/protocol/messaging/message_type.dart' as _i8;
+import 'package:asami_client/src/protocol/order/order.dart' as _i9;
+import 'package:asami_client/src/protocol/order/order_item.dart' as _i10;
+import 'package:asami_client/src/protocol/order/cart.dart' as _i11;
+import 'package:asami_client/src/protocol/order/cart_item.dart' as _i12;
+import 'package:asami_client/src/protocol/order/payment_method.dart' as _i13;
+import 'package:asami_client/src/protocol/order/order_status.dart' as _i14;
+import 'package:asami_client/src/protocol/product/product_status.dart' as _i15;
 import 'package:asami_client/src/protocol/subscription/subscription.dart'
-    as _i17;
-import 'package:asami_client/src/protocol/user/subscription_tier.dart' as _i18;
+    as _i16;
+import 'package:asami_client/src/protocol/user/subscription_tier.dart' as _i17;
 import 'package:asami_client/src/protocol/subscription/usage_record.dart'
-    as _i19;
+    as _i18;
 import 'package:asami_client/src/protocol/subscription/subscription_invoice.dart'
-    as _i20;
-import 'package:asami_client/src/protocol/user/user.dart' as _i21;
-import 'package:asami_client/src/protocol/user/customer_profile.dart' as _i22;
-import 'package:asami_client/src/protocol/user/vendor_profile.dart' as _i23;
-import 'package:asami_client/src/protocol/user/address.dart' as _i24;
-import 'protocol.dart' as _i25;
+    as _i19;
+import 'package:asami_client/src/protocol/user/user.dart' as _i20;
+import 'package:asami_client/src/protocol/user/customer_profile.dart' as _i21;
+import 'package:asami_client/src/protocol/user/vendor_profile.dart' as _i22;
+import 'package:asami_client/src/protocol/user/address.dart' as _i23;
+import 'protocol.dart' as _i24;
 
 /// {@category Endpoint}
 class EndpointAnalytics extends _i1.EndpointRef {
@@ -49,40 +49,38 @@ class EndpointAnalytics extends _i1.EndpointRef {
 
   /// Get vendor analytics for a specific period
   _i2.Future<_i3.VendorAnalytics?> getVendorAnalytics({
-    required _i4.UuidValue vendorId,
+    required _i1.UuidValue vendorId,
     required DateTime date,
     required String period,
-  }) =>
-      caller.callServerEndpoint<_i3.VendorAnalytics?>(
-        'analytics',
-        'getVendorAnalytics',
-        {
-          'vendorId': vendorId,
-          'date': date,
-          'period': period,
-        },
-      );
+  }) => caller.callServerEndpoint<_i3.VendorAnalytics?>(
+    'analytics',
+    'getVendorAnalytics',
+    {
+      'vendorId': vendorId,
+      'date': date,
+      'period': period,
+    },
+  );
 
   /// Get vendor analytics for date range
   _i2.Future<List<_i3.VendorAnalytics>> getVendorAnalyticsRange({
-    required _i4.UuidValue vendorId,
+    required _i1.UuidValue vendorId,
     required DateTime startDate,
     required DateTime endDate,
     required String period,
-  }) =>
-      caller.callServerEndpoint<List<_i3.VendorAnalytics>>(
-        'analytics',
-        'getVendorAnalyticsRange',
-        {
-          'vendorId': vendorId,
-          'startDate': startDate,
-          'endDate': endDate,
-          'period': period,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i3.VendorAnalytics>>(
+    'analytics',
+    'getVendorAnalyticsRange',
+    {
+      'vendorId': vendorId,
+      'startDate': startDate,
+      'endDate': endDate,
+      'period': period,
+    },
+  );
 
   /// Generate vendor dashboard summary
-  _i2.Future<Map<String, dynamic>> getVendorDashboard(_i4.UuidValue vendorId) =>
+  _i2.Future<Map<String, dynamic>> getVendorDashboard(_i1.UuidValue vendorId) =>
       caller.callServerEndpoint<Map<String, dynamic>>(
         'analytics',
         'getVendorDashboard',
@@ -90,50 +88,47 @@ class EndpointAnalytics extends _i1.EndpointRef {
       );
 
   /// Get product analytics
-  _i2.Future<List<_i5.ProductAnalytics>> getProductAnalytics({
-    required _i4.UuidValue productId,
+  _i2.Future<List<_i4.ProductAnalytics>> getProductAnalytics({
+    required _i1.UuidValue productId,
     required DateTime startDate,
     required DateTime endDate,
-  }) =>
-      caller.callServerEndpoint<List<_i5.ProductAnalytics>>(
-        'analytics',
-        'getProductAnalytics',
-        {
-          'productId': productId,
-          'startDate': startDate,
-          'endDate': endDate,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i4.ProductAnalytics>>(
+    'analytics',
+    'getProductAnalytics',
+    {
+      'productId': productId,
+      'startDate': startDate,
+      'endDate': endDate,
+    },
+  );
 
   /// Get top selling products for vendor
-  _i2.Future<List<_i6.Product>> getTopSellingProducts({
-    required _i4.UuidValue vendorId,
+  _i2.Future<List<_i5.Product>> getTopSellingProducts({
+    required _i1.UuidValue vendorId,
     required int limit,
-  }) =>
-      caller.callServerEndpoint<List<_i6.Product>>(
-        'analytics',
-        'getTopSellingProducts',
-        {
-          'vendorId': vendorId,
-          'limit': limit,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i5.Product>>(
+    'analytics',
+    'getTopSellingProducts',
+    {
+      'vendorId': vendorId,
+      'limit': limit,
+    },
+  );
 
   /// Get revenue breakdown by payment method
   _i2.Future<Map<String, double>> getPaymentMethodBreakdown({
-    required _i4.UuidValue vendorId,
+    required _i1.UuidValue vendorId,
     required DateTime startDate,
     required DateTime endDate,
-  }) =>
-      caller.callServerEndpoint<Map<String, double>>(
-        'analytics',
-        'getPaymentMethodBreakdown',
-        {
-          'vendorId': vendorId,
-          'startDate': startDate,
-          'endDate': endDate,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, double>>(
+    'analytics',
+    'getPaymentMethodBreakdown',
+    {
+      'vendorId': vendorId,
+      'startDate': startDate,
+      'endDate': endDate,
+    },
+  );
 
   /// Record daily analytics (should be run by a scheduled job)
   _i2.Future<void> recordDailyAnalytics(DateTime date) =>
@@ -154,44 +149,42 @@ class EndpointAuth extends _i1.EndpointRef {
   /// Initiate signup process
   _i2.Future<Map<String, dynamic>> initiateSignup({
     required String email,
-    required _i7.UserType userType,
+    required _i6.UserType userType,
     String? phoneNumber,
     String? firstName,
     String? lastName,
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String platformUserId,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'initiateSignup',
-        {
-          'email': email,
-          'userType': userType,
-          'phoneNumber': phoneNumber,
-          'firstName': firstName,
-          'lastName': lastName,
-          'platform': platform,
-          'platformUserId': platformUserId,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'initiateSignup',
+    {
+      'email': email,
+      'userType': userType,
+      'phoneNumber': phoneNumber,
+      'firstName': firstName,
+      'lastName': lastName,
+      'platform': platform,
+      'platformUserId': platformUserId,
+    },
+  );
 
   /// Verify signup code
   _i2.Future<Map<String, dynamic>> verifySignupCode({
     required String email,
     required String code,
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String platformUserId,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'verifySignupCode',
-        {
-          'email': email,
-          'code': code,
-          'platform': platform,
-          'platformUserId': platformUserId,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'verifySignupCode',
+    {
+      'email': email,
+      'code': code,
+      'platform': platform,
+      'platformUserId': platformUserId,
+    },
+  );
 
   /// Initiate login
   _i2.Future<Map<String, dynamic>> initiateLogin({required String email}) =>
@@ -205,47 +198,44 @@ class EndpointAuth extends _i1.EndpointRef {
   _i2.Future<Map<String, dynamic>> verifyLoginCode({
     required String email,
     required String code,
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String platformUserId,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'verifyLoginCode',
-        {
-          'email': email,
-          'code': code,
-          'platform': platform,
-          'platformUserId': platformUserId,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'verifyLoginCode',
+    {
+      'email': email,
+      'code': code,
+      'platform': platform,
+      'platformUserId': platformUserId,
+    },
+  );
 
   /// Check authentication status
   _i2.Future<Map<String, dynamic>> checkAuth({
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String platformUserId,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'checkAuth',
-        {
-          'platform': platform,
-          'platformUserId': platformUserId,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'checkAuth',
+    {
+      'platform': platform,
+      'platformUserId': platformUserId,
+    },
+  );
 
   /// Logout
   _i2.Future<Map<String, dynamic>> logout({
     required String userId,
-    required _i8.PlatformType platform,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'logout',
-        {
-          'userId': userId,
-          'platform': platform,
-        },
-      );
+    required _i7.PlatformType platform,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'logout',
+    {
+      'userId': userId,
+      'platform': platform,
+    },
+  );
 
   /// Resend verification code
   _i2.Future<Map<String, dynamic>> resendCode({required String email}) =>
@@ -260,16 +250,15 @@ class EndpointAuth extends _i1.EndpointRef {
     required String userId,
     required String businessName,
     required String businessCategory,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'auth',
-        'upgradeToVendor',
-        {
-          'userId': userId,
-          'businessName': businessName,
-          'businessCategory': businessCategory,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'auth',
+    'upgradeToVendor',
+    {
+      'userId': userId,
+      'businessName': businessName,
+      'businessCategory': businessCategory,
+    },
+  );
 
   _i2.Future<bool> deleteTempUser({required String email}) =>
       caller.callServerEndpoint<bool>(
@@ -289,76 +278,72 @@ class EndpointBot extends _i1.EndpointRef {
   /// Process incoming message from any platform
   _i2.Future<Map<String, dynamic>> processMessage({
     required String platformUserId,
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String messageContent,
-    required _i9.MessageType messageType,
+    required _i8.MessageType messageType,
     String? mediaUrl,
     String? platformMessageId,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'bot',
-        'processMessage',
-        {
-          'platformUserId': platformUserId,
-          'platform': platform,
-          'messageContent': messageContent,
-          'messageType': messageType,
-          'mediaUrl': mediaUrl,
-          'platformMessageId': platformMessageId,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'bot',
+    'processMessage',
+    {
+      'platformUserId': platformUserId,
+      'platform': platform,
+      'messageContent': messageContent,
+      'messageType': messageType,
+      'mediaUrl': mediaUrl,
+      'platformMessageId': platformMessageId,
+    },
+  );
 
   /// Send formatted message (for AI agent to use)
   _i2.Future<bool> sendFormattedMessage({
     required String platformUserId,
-    required _i8.PlatformType platform,
+    required _i7.PlatformType platform,
     required String message,
     Map<String, dynamic>? interactiveData,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'bot',
-        'sendFormattedMessage',
-        {
-          'platformUserId': platformUserId,
-          'platform': platform,
-          'message': message,
-          'interactiveData': interactiveData,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'bot',
+    'sendFormattedMessage',
+    {
+      'platformUserId': platformUserId,
+      'platform': platform,
+      'message': message,
+      'interactiveData': interactiveData,
+    },
+  );
 
   /// Send product list
   _i2.Future<bool> sendProductList({
     required String platformUserId,
-    required _i8.PlatformType platform,
-    required List<_i6.Product> products,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'bot',
-        'sendProductList',
-        {
-          'platformUserId': platformUserId,
-          'platform': platform,
-          'products': products,
-        },
-      );
+    required _i7.PlatformType platform,
+    required List<_i5.Product> products,
+  }) => caller.callServerEndpoint<bool>(
+    'bot',
+    'sendProductList',
+    {
+      'platformUserId': platformUserId,
+      'platform': platform,
+      'products': products,
+    },
+  );
 
   /// Send order confirmation
   _i2.Future<bool> sendOrderConfirmation({
     required String platformUserId,
-    required _i8.PlatformType platform,
-    required _i10.Order order,
-    required List<_i11.OrderItem> items,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'bot',
-        'sendOrderConfirmation',
-        {
-          'platformUserId': platformUserId,
-          'platform': platform,
-          'order': order,
-          'items': items,
-        },
-      );
+    required _i7.PlatformType platform,
+    required _i9.Order order,
+    required List<_i10.OrderItem> items,
+  }) => caller.callServerEndpoint<bool>(
+    'bot',
+    'sendOrderConfirmation',
+    {
+      'platformUserId': platformUserId,
+      'platform': platform,
+      'order': order,
+      'items': items,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -369,46 +354,44 @@ class EndpointCart extends _i1.EndpointRef {
   String get name => 'cart';
 
   /// Get or create cart for customer
-  _i2.Future<_i12.Cart?> getOrCreateCart(_i4.UuidValue customerId) =>
-      caller.callServerEndpoint<_i12.Cart?>(
+  _i2.Future<_i11.Cart?> getOrCreateCart(_i1.UuidValue customerId) =>
+      caller.callServerEndpoint<_i11.Cart?>(
         'cart',
         'getOrCreateCart',
         {'customerId': customerId},
       );
 
   /// Add item to cart
-  _i2.Future<_i13.CartItem?> addToCart({
-    required _i4.UuidValue customerId,
-    required _i4.UuidValue productId,
-    _i4.UuidValue? variantId,
+  _i2.Future<_i12.CartItem?> addToCart({
+    required _i1.UuidValue customerId,
+    required _i1.UuidValue productId,
+    _i1.UuidValue? variantId,
     required int quantity,
     String? customerNotes,
-  }) =>
-      caller.callServerEndpoint<_i13.CartItem?>(
-        'cart',
-        'addToCart',
-        {
-          'customerId': customerId,
-          'productId': productId,
-          'variantId': variantId,
-          'quantity': quantity,
-          'customerNotes': customerNotes,
-        },
-      );
+  }) => caller.callServerEndpoint<_i12.CartItem?>(
+    'cart',
+    'addToCart',
+    {
+      'customerId': customerId,
+      'productId': productId,
+      'variantId': variantId,
+      'quantity': quantity,
+      'customerNotes': customerNotes,
+    },
+  );
 
   /// Update cart item quantity
   _i2.Future<bool> updateCartItemQuantity({
     required int cartItemId,
     required int quantity,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'cart',
-        'updateCartItemQuantity',
-        {
-          'cartItemId': cartItemId,
-          'quantity': quantity,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'cart',
+    'updateCartItemQuantity',
+    {
+      'cartItemId': cartItemId,
+      'quantity': quantity,
+    },
+  );
 
   /// Remove item from cart
   _i2.Future<bool> removeFromCart(int cartItemId) =>
@@ -420,15 +403,15 @@ class EndpointCart extends _i1.EndpointRef {
 
   /// Get cart with items
   _i2.Future<Map<String, dynamic>?> getCartWithItems(
-          _i4.UuidValue customerId) =>
-      caller.callServerEndpoint<Map<String, dynamic>?>(
-        'cart',
-        'getCartWithItems',
-        {'customerId': customerId},
-      );
+    _i1.UuidValue customerId,
+  ) => caller.callServerEndpoint<Map<String, dynamic>?>(
+    'cart',
+    'getCartWithItems',
+    {'customerId': customerId},
+  );
 
   /// Clear cart
-  _i2.Future<bool> clearCart(_i4.UuidValue customerId) =>
+  _i2.Future<bool> clearCart(_i1.UuidValue customerId) =>
       caller.callServerEndpoint<bool>(
         'cart',
         'clearCart',
@@ -444,37 +427,36 @@ class EndpointOrder extends _i1.EndpointRef {
   String get name => 'order';
 
   /// Create order from cart
-  _i2.Future<_i10.Order?> createOrder({
-    required _i4.UuidValue customerId,
-    required _i4.UuidValue shippingAddressId,
-    required _i14.PaymentMethod paymentMethod,
+  _i2.Future<_i9.Order?> createOrder({
+    required _i1.UuidValue customerId,
+    required _i1.UuidValue shippingAddressId,
+    required _i13.PaymentMethod paymentMethod,
     String? customerNotes,
-    _i4.UuidValue? conversationId,
+    _i1.UuidValue? conversationId,
     required String orderSource,
-  }) =>
-      caller.callServerEndpoint<_i10.Order?>(
-        'order',
-        'createOrder',
-        {
-          'customerId': customerId,
-          'shippingAddressId': shippingAddressId,
-          'paymentMethod': paymentMethod,
-          'customerNotes': customerNotes,
-          'conversationId': conversationId,
-          'orderSource': orderSource,
-        },
-      );
+  }) => caller.callServerEndpoint<_i9.Order?>(
+    'order',
+    'createOrder',
+    {
+      'customerId': customerId,
+      'shippingAddressId': shippingAddressId,
+      'paymentMethod': paymentMethod,
+      'customerNotes': customerNotes,
+      'conversationId': conversationId,
+      'orderSource': orderSource,
+    },
+  );
 
   /// Get order by ID
-  _i2.Future<_i10.Order?> getOrder(_i4.UuidValue orderId) =>
-      caller.callServerEndpoint<_i10.Order?>(
+  _i2.Future<_i9.Order?> getOrder(_i1.UuidValue orderId) =>
+      caller.callServerEndpoint<_i9.Order?>(
         'order',
         'getOrder',
         {'orderId': orderId},
       );
 
   /// Get order with items
-  _i2.Future<Map<String, dynamic>?> getOrderWithItems(_i4.UuidValue orderId) =>
+  _i2.Future<Map<String, dynamic>?> getOrderWithItems(_i1.UuidValue orderId) =>
       caller.callServerEndpoint<Map<String, dynamic>?>(
         'order',
         'getOrderWithItems',
@@ -482,74 +464,70 @@ class EndpointOrder extends _i1.EndpointRef {
       );
 
   /// Get customer orders
-  _i2.Future<List<_i10.Order>> getCustomerOrders({
-    required _i4.UuidValue customerId,
-    _i15.OrderStatus? status,
+  _i2.Future<List<_i9.Order>> getCustomerOrders({
+    required _i1.UuidValue customerId,
+    _i14.OrderStatus? status,
     required int limit,
     required int offset,
-  }) =>
-      caller.callServerEndpoint<List<_i10.Order>>(
-        'order',
-        'getCustomerOrders',
-        {
-          'customerId': customerId,
-          'status': status,
-          'limit': limit,
-          'offset': offset,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i9.Order>>(
+    'order',
+    'getCustomerOrders',
+    {
+      'customerId': customerId,
+      'status': status,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
 
   /// Get vendor orders
-  _i2.Future<List<_i10.Order>> getVendorOrders({
-    required _i4.UuidValue vendorId,
-    _i15.OrderStatus? status,
+  _i2.Future<List<_i9.Order>> getVendorOrders({
+    required _i1.UuidValue vendorId,
+    _i14.OrderStatus? status,
     required int limit,
     required int offset,
-  }) =>
-      caller.callServerEndpoint<List<_i10.Order>>(
-        'order',
-        'getVendorOrders',
-        {
-          'vendorId': vendorId,
-          'status': status,
-          'limit': limit,
-          'offset': offset,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i9.Order>>(
+    'order',
+    'getVendorOrders',
+    {
+      'vendorId': vendorId,
+      'status': status,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
 
   /// Update order status
   _i2.Future<bool> updateOrderStatus({
-    required _i4.UuidValue orderId,
-    required _i15.OrderStatus status,
+    required _i1.UuidValue orderId,
+    required _i14.OrderStatus status,
     String? trackingNumber,
     String? vendorNotes,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'order',
-        'updateOrderStatus',
-        {
-          'orderId': orderId,
-          'status': status,
-          'trackingNumber': trackingNumber,
-          'vendorNotes': vendorNotes,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'order',
+    'updateOrderStatus',
+    {
+      'orderId': orderId,
+      'status': status,
+      'trackingNumber': trackingNumber,
+      'vendorNotes': vendorNotes,
+    },
+  );
 
   /// Cancel order
   _i2.Future<bool> cancelOrder({
-    required _i4.UuidValue orderId,
+    required _i1.UuidValue orderId,
     required String cancellationReason,
     required bool refund,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'order',
-        'cancelOrder',
-        {
-          'orderId': orderId,
-          'cancellationReason': cancellationReason,
-          'refund': refund,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'order',
+    'cancelOrder',
+    {
+      'orderId': orderId,
+      'cancellationReason': cancellationReason,
+      'refund': refund,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -560,8 +538,8 @@ class EndpointProduct extends _i1.EndpointRef {
   String get name => 'product';
 
   /// Create product (AI-assisted or manual)
-  _i2.Future<_i6.Product?> createProduct({
-    required _i4.UuidValue vendorId,
+  _i2.Future<_i5.Product?> createProduct({
+    required _i1.UuidValue vendorId,
     required String name,
     required String description,
     required String category,
@@ -581,37 +559,38 @@ class EndpointProduct extends _i1.EndpointRef {
     double? weight,
     String? weightUnit,
     required bool trackInventory,
-  }) =>
-      caller.callServerEndpoint<_i6.Product?>(
-        'product',
-        'createProduct',
-        {
-          'vendorId': vendorId,
-          'name': name,
-          'description': description,
-          'category': category,
-          'basePrice': basePrice,
-          'shortDescription': shortDescription,
-          'subCategory': subCategory,
-          'tags': tags,
-          'images': images,
-          'isAiGenerated': isAiGenerated,
-          'aiConfidenceScore': aiConfidenceScore,
-          'quantity': quantity,
-          'sku': sku,
-          'color': color,
-          'size': size,
-          'material': material,
-          'brand': brand,
-          'weight': weight,
-          'weightUnit': weightUnit,
-          'trackInventory': trackInventory,
-        },
-      );
+    required _i15.ProductStatus status,
+  }) => caller.callServerEndpoint<_i5.Product?>(
+    'product',
+    'createProduct',
+    {
+      'vendorId': vendorId,
+      'name': name,
+      'description': description,
+      'category': category,
+      'basePrice': basePrice,
+      'shortDescription': shortDescription,
+      'subCategory': subCategory,
+      'tags': tags,
+      'images': images,
+      'isAiGenerated': isAiGenerated,
+      'aiConfidenceScore': aiConfidenceScore,
+      'quantity': quantity,
+      'sku': sku,
+      'color': color,
+      'size': size,
+      'material': material,
+      'brand': brand,
+      'weight': weight,
+      'weightUnit': weightUnit,
+      'trackInventory': trackInventory,
+      'status': status,
+    },
+  );
 
   /// Update product
-  _i2.Future<_i6.Product?> updateProduct({
-    required _i4.UuidValue productId,
+  _i2.Future<_i5.Product?> updateProduct({
+    required _i1.UuidValue productId,
     String? name,
     String? description,
     String? shortDescription,
@@ -621,34 +600,41 @@ class EndpointProduct extends _i1.EndpointRef {
     double? basePrice,
     double? discountPrice,
     int? quantity,
-    _i16.ProductStatus? status,
+    _i15.ProductStatus? status,
     List<String>? images,
     bool? isActive,
     bool? isFeatured,
-  }) =>
-      caller.callServerEndpoint<_i6.Product?>(
+  }) => caller.callServerEndpoint<_i5.Product?>(
+    'product',
+    'updateProduct',
+    {
+      'productId': productId,
+      'name': name,
+      'description': description,
+      'shortDescription': shortDescription,
+      'category': category,
+      'subCategory': subCategory,
+      'tags': tags,
+      'basePrice': basePrice,
+      'discountPrice': discountPrice,
+      'quantity': quantity,
+      'status': status,
+      'images': images,
+      'isActive': isActive,
+      'isFeatured': isFeatured,
+    },
+  );
+
+  /// Delete/deactivate product
+  _i2.Future<bool> deleteProduct(_i1.UuidValue productId) =>
+      caller.callServerEndpoint<bool>(
         'product',
-        'updateProduct',
-        {
-          'productId': productId,
-          'name': name,
-          'description': description,
-          'shortDescription': shortDescription,
-          'category': category,
-          'subCategory': subCategory,
-          'tags': tags,
-          'basePrice': basePrice,
-          'discountPrice': discountPrice,
-          'quantity': quantity,
-          'status': status,
-          'images': images,
-          'isActive': isActive,
-          'isFeatured': isFeatured,
-        },
+        'deleteProduct',
+        {'productId': productId},
       );
 
   /// Publish product (change from draft to active)
-  _i2.Future<bool> publishProduct(_i4.UuidValue productId) =>
+  _i2.Future<bool> publishProduct(_i1.UuidValue productId) =>
       caller.callServerEndpoint<bool>(
         'product',
         'publishProduct',
@@ -656,35 +642,34 @@ class EndpointProduct extends _i1.EndpointRef {
       );
 
   /// Get product by ID
-  _i2.Future<_i6.Product?> getProduct(_i4.UuidValue productId) =>
-      caller.callServerEndpoint<_i6.Product?>(
+  _i2.Future<_i5.Product?> getProduct(_i1.UuidValue productId) =>
+      caller.callServerEndpoint<_i5.Product?>(
         'product',
         'getProduct',
         {'productId': productId},
       );
 
   /// Get vendor products
-  _i2.Future<List<_i6.Product>> getVendorProducts({
-    required _i4.UuidValue vendorId,
-    _i16.ProductStatus? status,
+  _i2.Future<List<_i5.Product>> getVendorProducts({
+    required _i1.UuidValue vendorId,
+    _i15.ProductStatus? status,
     bool? isActive,
     required int limit,
     required int offset,
-  }) =>
-      caller.callServerEndpoint<List<_i6.Product>>(
-        'product',
-        'getVendorProducts',
-        {
-          'vendorId': vendorId,
-          'status': status,
-          'isActive': isActive,
-          'limit': limit,
-          'offset': offset,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i5.Product>>(
+    'product',
+    'getVendorProducts',
+    {
+      'vendorId': vendorId,
+      'status': status,
+      'isActive': isActive,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
 
   /// Search products (for customer bot)
-  _i2.Future<List<_i6.Product>> searchProducts({
+  _i2.Future<List<_i5.Product>> searchProducts({
     String? query,
     String? category,
     double? minPrice,
@@ -694,76 +679,72 @@ class EndpointProduct extends _i1.EndpointRef {
     String? size,
     required int limit,
     required int offset,
-  }) =>
-      caller.callServerEndpoint<List<_i6.Product>>(
-        'product',
-        'searchProducts',
-        {
-          'query': query,
-          'category': category,
-          'minPrice': minPrice,
-          'maxPrice': maxPrice,
-          'tags': tags,
-          'color': color,
-          'size': size,
-          'limit': limit,
-          'offset': offset,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i5.Product>>(
+    'product',
+    'searchProducts',
+    {
+      'query': query,
+      'category': category,
+      'minPrice': minPrice,
+      'maxPrice': maxPrice,
+      'tags': tags,
+      'color': color,
+      'size': size,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
 
   /// Update inventory
   _i2.Future<bool> updateInventory({
-    required _i4.UuidValue productId,
+    required _i1.UuidValue productId,
     required int quantity,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'product',
-        'updateInventory',
-        {
-          'productId': productId,
-          'quantity': quantity,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'product',
+    'updateInventory',
+    {
+      'productId': productId,
+      'quantity': quantity,
+    },
+  );
 
   /// Decrement inventory (after order)
   _i2.Future<bool> decrementInventory({
-    required _i4.UuidValue productId,
+    required _i1.UuidValue productId,
     required int quantity,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'product',
-        'decrementInventory',
-        {
-          'productId': productId,
-          'quantity': quantity,
-        },
-      );
+  }) => caller.callServerEndpoint<bool>(
+    'product',
+    'decrementInventory',
+    {
+      'productId': productId,
+      'quantity': quantity,
+    },
+  );
 
   /// Get featured products
-  _i2.Future<List<_i6.Product>> getFeaturedProducts({required int limit}) =>
-      caller.callServerEndpoint<List<_i6.Product>>(
+  _i2.Future<List<_i5.Product>> getFeaturedProducts({required int limit}) =>
+      caller.callServerEndpoint<List<_i5.Product>>(
         'product',
         'getFeaturedProducts',
         {'limit': limit},
       );
 
   /// Get products by category
-  _i2.Future<List<_i6.Product>> getProductsByCategory({
+  _i2.Future<List<_i5.Product>> getProductsByCategory({
     required String category,
     String? subCategory,
     required int limit,
     required int offset,
-  }) =>
-      caller.callServerEndpoint<List<_i6.Product>>(
-        'product',
-        'getProductsByCategory',
-        {
-          'category': category,
-          'subCategory': subCategory,
-          'limit': limit,
-          'offset': offset,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i5.Product>>(
+    'product',
+    'getProductsByCategory',
+    {
+      'category': category,
+      'subCategory': subCategory,
+      'limit': limit,
+      'offset': offset,
+    },
+  );
 }
 
 /// {@category Endpoint}
@@ -774,62 +755,59 @@ class EndpointSubscription extends _i1.EndpointRef {
   String get name => 'subscription';
 
   /// Get vendor subscription
-  _i2.Future<_i17.Subscription?> getVendorSubscription(
-          _i4.UuidValue vendorId) =>
-      caller.callServerEndpoint<_i17.Subscription?>(
-        'subscription',
-        'getVendorSubscription',
-        {'vendorId': vendorId},
-      );
+  _i2.Future<_i16.Subscription?> getVendorSubscription(
+    _i1.UuidValue vendorId,
+  ) => caller.callServerEndpoint<_i16.Subscription?>(
+    'subscription',
+    'getVendorSubscription',
+    {'vendorId': vendorId},
+  );
 
   /// Upgrade/change subscription tier
-  _i2.Future<_i17.Subscription?> changeTier({
-    required _i4.UuidValue vendorId,
-    required _i18.SubscriptionTier newTier,
-  }) =>
-      caller.callServerEndpoint<_i17.Subscription?>(
-        'subscription',
-        'changeTier',
-        {
-          'vendorId': vendorId,
-          'newTier': newTier,
-        },
-      );
+  _i2.Future<_i16.Subscription?> changeTier({
+    required _i1.UuidValue vendorId,
+    required _i17.SubscriptionTier newTier,
+  }) => caller.callServerEndpoint<_i16.Subscription?>(
+    'subscription',
+    'changeTier',
+    {
+      'vendorId': vendorId,
+      'newTier': newTier,
+    },
+  );
 
   /// Get usage records for billing period
-  _i2.Future<List<_i19.UsageRecord>> getUsageRecords({
-    required _i4.UuidValue vendorId,
+  _i2.Future<List<_i18.UsageRecord>> getUsageRecords({
+    required _i1.UuidValue vendorId,
     required DateTime periodStart,
     required DateTime periodEnd,
-  }) =>
-      caller.callServerEndpoint<List<_i19.UsageRecord>>(
-        'subscription',
-        'getUsageRecords',
-        {
-          'vendorId': vendorId,
-          'periodStart': periodStart,
-          'periodEnd': periodEnd,
-        },
-      );
+  }) => caller.callServerEndpoint<List<_i18.UsageRecord>>(
+    'subscription',
+    'getUsageRecords',
+    {
+      'vendorId': vendorId,
+      'periodStart': periodStart,
+      'periodEnd': periodEnd,
+    },
+  );
 
   /// Generate invoice for subscription period
-  _i2.Future<_i20.SubscriptionInvoice?> generateInvoice({
-    required _i4.UuidValue subscriptionId,
+  _i2.Future<_i19.SubscriptionInvoice?> generateInvoice({
+    required _i1.UuidValue subscriptionId,
     required DateTime periodStart,
     required DateTime periodEnd,
-  }) =>
-      caller.callServerEndpoint<_i20.SubscriptionInvoice?>(
-        'subscription',
-        'generateInvoice',
-        {
-          'subscriptionId': subscriptionId,
-          'periodStart': periodStart,
-          'periodEnd': periodEnd,
-        },
-      );
+  }) => caller.callServerEndpoint<_i19.SubscriptionInvoice?>(
+    'subscription',
+    'generateInvoice',
+    {
+      'subscriptionId': subscriptionId,
+      'periodStart': periodStart,
+      'periodEnd': periodEnd,
+    },
+  );
 
   /// Check if vendor can perform action based on tier limits
-  _i2.Future<Map<String, dynamic>> checkTierLimits(_i4.UuidValue vendorId) =>
+  _i2.Future<Map<String, dynamic>> checkTierLimits(_i1.UuidValue vendorId) =>
       caller.callServerEndpoint<Map<String, dynamic>>(
         'subscription',
         'checkTierLimits',
@@ -846,12 +824,12 @@ class EndpointTelegramWebhook extends _i1.EndpointRef {
 
   /// Process webhook (POST request)
   _i2.Future<Map<String, dynamic>> processWebhook(
-          Map<String, dynamic> payload) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'telegramWebhook',
-        'processWebhook',
-        {'payload': payload},
-      );
+    Map<String, dynamic> payload,
+  ) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'telegramWebhook',
+    'processWebhook',
+    {'payload': payload},
+  );
 }
 
 /// Comprehensive usage tracking and billing service
@@ -863,10 +841,10 @@ class EndpointUsage extends _i1.EndpointRef {
   String get name => 'usage';
 
   _i2.Future<void> resetDailyLimits() => caller.callServerEndpoint<void>(
-        'usage',
-        'resetDailyLimits',
-        {},
-      );
+    'usage',
+    'resetDailyLimits',
+    {},
+  );
 }
 
 /// {@category Endpoint}
@@ -877,8 +855,8 @@ class EndpointUser extends _i1.EndpointRef {
   String get name => 'user';
 
   /// Update user profile
-  _i2.Future<_i21.User?> updateProfile({
-    required _i4.UuidValue userId,
+  _i2.Future<_i20.User?> updateProfile({
+    required _i1.UuidValue userId,
     String? firstName,
     String? lastName,
     String? email,
@@ -888,59 +866,57 @@ class EndpointUser extends _i1.EndpointRef {
     String? country,
     String? language,
     String? timezone,
-  }) =>
-      caller.callServerEndpoint<_i21.User?>(
-        'user',
-        'updateProfile',
-        {
-          'userId': userId,
-          'firstName': firstName,
-          'lastName': lastName,
-          'email': email,
-          'profileImageUrl': profileImageUrl,
-          'city': city,
-          'state': state,
-          'country': country,
-          'language': language,
-          'timezone': timezone,
-        },
-      );
+  }) => caller.callServerEndpoint<_i20.User?>(
+    'user',
+    'updateProfile',
+    {
+      'userId': userId,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'profileImageUrl': profileImageUrl,
+      'city': city,
+      'state': state,
+      'country': country,
+      'language': language,
+      'timezone': timezone,
+    },
+  );
 
   /// Get customer profile
-  _i2.Future<_i22.CustomerProfile?> getCustomerProfile(_i4.UuidValue userId) =>
-      caller.callServerEndpoint<_i22.CustomerProfile?>(
+  _i2.Future<_i21.CustomerProfile?> getCustomerProfile(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<_i21.CustomerProfile?>(
         'user',
         'getCustomerProfile',
         {'userId': userId},
       );
 
   /// Update customer profile
-  _i2.Future<_i22.CustomerProfile?> updateCustomerProfile({
-    required _i4.UuidValue userId,
+  _i2.Future<_i21.CustomerProfile?> updateCustomerProfile({
+    required _i1.UuidValue userId,
     String? preferredPaymentMethod,
     List<String>? favoriteVendors,
-  }) =>
-      caller.callServerEndpoint<_i22.CustomerProfile?>(
-        'user',
-        'updateCustomerProfile',
-        {
-          'userId': userId,
-          'preferredPaymentMethod': preferredPaymentMethod,
-          'favoriteVendors': favoriteVendors,
-        },
-      );
+  }) => caller.callServerEndpoint<_i21.CustomerProfile?>(
+    'user',
+    'updateCustomerProfile',
+    {
+      'userId': userId,
+      'preferredPaymentMethod': preferredPaymentMethod,
+      'favoriteVendors': favoriteVendors,
+    },
+  );
 
   /// Get vendor profile
-  _i2.Future<_i23.VendorProfile?> getVendorProfile(_i4.UuidValue userId) =>
-      caller.callServerEndpoint<_i23.VendorProfile?>(
+  _i2.Future<_i22.VendorProfile?> getVendorProfile(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<_i22.VendorProfile?>(
         'user',
         'getVendorProfile',
         {'userId': userId},
       );
 
   /// Update vendor profile
-  _i2.Future<_i23.VendorProfile?> updateVendorProfile({
-    required _i4.UuidValue userId,
+  _i2.Future<_i22.VendorProfile?> updateVendorProfile({
+    required _i1.UuidValue userId,
     String? businessName,
     String? businessDescription,
     String? businessCategory,
@@ -948,25 +924,24 @@ class EndpointUser extends _i1.EndpointRef {
     String? businessBannerUrl,
     String? supportEmail,
     String? supportPhone,
-  }) =>
-      caller.callServerEndpoint<_i23.VendorProfile?>(
-        'user',
-        'updateVendorProfile',
-        {
-          'userId': userId,
-          'businessName': businessName,
-          'businessDescription': businessDescription,
-          'businessCategory': businessCategory,
-          'businessLogoUrl': businessLogoUrl,
-          'businessBannerUrl': businessBannerUrl,
-          'supportEmail': supportEmail,
-          'supportPhone': supportPhone,
-        },
-      );
+  }) => caller.callServerEndpoint<_i22.VendorProfile?>(
+    'user',
+    'updateVendorProfile',
+    {
+      'userId': userId,
+      'businessName': businessName,
+      'businessDescription': businessDescription,
+      'businessCategory': businessCategory,
+      'businessLogoUrl': businessLogoUrl,
+      'businessBannerUrl': businessBannerUrl,
+      'supportEmail': supportEmail,
+      'supportPhone': supportPhone,
+    },
+  );
 
   /// Add address
-  _i2.Future<_i24.Address?> addAddress({
-    required _i4.UuidValue userId,
+  _i2.Future<_i23.Address?> addAddress({
+    required _i1.UuidValue userId,
     required String label,
     required String recipientName,
     required String phoneNumber,
@@ -980,31 +955,30 @@ class EndpointUser extends _i1.EndpointRef {
     required bool isDefault,
     double? latitude,
     double? longitude,
-  }) =>
-      caller.callServerEndpoint<_i24.Address?>(
-        'user',
-        'addAddress',
-        {
-          'userId': userId,
-          'label': label,
-          'recipientName': recipientName,
-          'phoneNumber': phoneNumber,
-          'addressLine1': addressLine1,
-          'addressLine2': addressLine2,
-          'city': city,
-          'state': state,
-          'country': country,
-          'postalCode': postalCode,
-          'landmark': landmark,
-          'isDefault': isDefault,
-          'latitude': latitude,
-          'longitude': longitude,
-        },
-      );
+  }) => caller.callServerEndpoint<_i23.Address?>(
+    'user',
+    'addAddress',
+    {
+      'userId': userId,
+      'label': label,
+      'recipientName': recipientName,
+      'phoneNumber': phoneNumber,
+      'addressLine1': addressLine1,
+      'addressLine2': addressLine2,
+      'city': city,
+      'state': state,
+      'country': country,
+      'postalCode': postalCode,
+      'landmark': landmark,
+      'isDefault': isDefault,
+      'latitude': latitude,
+      'longitude': longitude,
+    },
+  );
 
   /// Get user addresses
-  _i2.Future<List<_i24.Address>> getUserAddresses(_i4.UuidValue userId) =>
-      caller.callServerEndpoint<List<_i24.Address>>(
+  _i2.Future<List<_i23.Address>> getUserAddresses(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<List<_i23.Address>>(
         'user',
         'getUserAddresses',
         {'userId': userId},
@@ -1012,17 +986,16 @@ class EndpointUser extends _i1.EndpointRef {
 
   /// Set default address
   _i2.Future<bool> setDefaultAddress({
-    required _i4.UuidValue userId,
-    required _i4.UuidValue addressId,
-  }) =>
-      caller.callServerEndpoint<bool>(
-        'user',
-        'setDefaultAddress',
-        {
-          'userId': userId,
-          'addressId': addressId,
-        },
-      );
+    required _i1.UuidValue userId,
+    required _i1.UuidValue addressId,
+  }) => caller.callServerEndpoint<bool>(
+    'user',
+    'setDefaultAddress',
+    {
+      'userId': userId,
+      'addressId': addressId,
+    },
+  );
 }
 
 /// Endpoint to handle WhatsApp webhook callbacks
@@ -1040,54 +1013,56 @@ class EndpointWhatsAppWebhook extends _i1.EndpointRef {
     String? mode,
     String? token,
     String? challenge,
-  }) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'whatsAppWebhook',
-        'verifyWebhook',
-        {
-          'mode': mode,
-          'token': token,
-          'challenge': challenge,
-        },
-      );
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'whatsAppWebhook',
+    'verifyWebhook',
+    {
+      'mode': mode,
+      'token': token,
+      'challenge': challenge,
+    },
+  );
 
   /// Handle incoming webhook (POST request)
   /// Called from WhatsAppWebhookRoute
   _i2.Future<Map<String, dynamic>> processWebhook(
-          Map<String, dynamic> payload) =>
-      caller.callServerEndpoint<Map<String, dynamic>>(
-        'whatsAppWebhook',
-        'processWebhook',
-        {'payload': payload},
-      );
+    Map<String, dynamic> payload,
+  ) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'whatsAppWebhook',
+    'processWebhook',
+    {'payload': payload},
+  );
 }
 
 class Client extends _i1.ServerpodClientShared {
   Client(
     String host, {
     dynamic securityContext,
-    _i1.AuthenticationKeyManager? authenticationKeyManager,
+    @Deprecated(
+      'Use authKeyProvider instead. This will be removed in future releases.',
+    )
+    super.authenticationKeyManager,
     Duration? streamingConnectionTimeout,
     Duration? connectionTimeout,
     Function(
       _i1.MethodCallContext,
       Object,
       StackTrace,
-    )? onFailedCall,
+    )?
+    onFailedCall,
     Function(_i1.MethodCallContext)? onSucceededCall,
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
-          host,
-          _i25.Protocol(),
-          securityContext: securityContext,
-          authenticationKeyManager: authenticationKeyManager,
-          streamingConnectionTimeout: streamingConnectionTimeout,
-          connectionTimeout: connectionTimeout,
-          onFailedCall: onFailedCall,
-          onSucceededCall: onSucceededCall,
-          disconnectStreamsOnLostInternetConnection:
-              disconnectStreamsOnLostInternetConnection,
-        ) {
+         host,
+         _i24.Protocol(),
+         securityContext: securityContext,
+         streamingConnectionTimeout: streamingConnectionTimeout,
+         connectionTimeout: connectionTimeout,
+         onFailedCall: onFailedCall,
+         onSucceededCall: onSucceededCall,
+         disconnectStreamsOnLostInternetConnection:
+             disconnectStreamsOnLostInternetConnection,
+       ) {
     analytics = EndpointAnalytics(this);
     auth = EndpointAuth(this);
     bot = EndpointBot(this);
@@ -1125,18 +1100,18 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
-        'analytics': analytics,
-        'auth': auth,
-        'bot': bot,
-        'cart': cart,
-        'order': order,
-        'product': product,
-        'subscription': subscription,
-        'telegramWebhook': telegramWebhook,
-        'usage': usage,
-        'user': user,
-        'whatsAppWebhook': whatsAppWebhook,
-      };
+    'analytics': analytics,
+    'auth': auth,
+    'bot': bot,
+    'cart': cart,
+    'order': order,
+    'product': product,
+    'subscription': subscription,
+    'telegramWebhook': telegramWebhook,
+    'usage': usage,
+    'user': user,
+    'whatsAppWebhook': whatsAppWebhook,
+  };
 
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};

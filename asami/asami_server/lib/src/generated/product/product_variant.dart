@@ -7,12 +7,14 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../product/product.dart' as _i2;
+import 'package:asami_server/src/generated/protocol.dart' as _i3;
 
 abstract class ProductVariant
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -37,12 +39,12 @@ abstract class ProductVariant
     bool? isDefault,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        quantity = quantity ?? 0,
-        isActive = isActive ?? true,
-        isDefault = isDefault ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       quantity = quantity ?? 0,
+       isActive = isActive ?? true,
+       isDefault = isDefault ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory ProductVariant({
     _i1.UuidValue? id,
@@ -70,12 +72,14 @@ abstract class ProductVariant
   factory ProductVariant.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductVariant(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
       name: jsonSerialization['name'] as String,
       sku: jsonSerialization['sku'] as String?,
       barcode: jsonSerialization['barcode'] as String?,
@@ -88,15 +92,19 @@ abstract class ProductVariant
       discountPrice: (jsonSerialization['discountPrice'] as num?)?.toDouble(),
       quantity: jsonSerialization['quantity'] as int,
       imageUrl: jsonSerialization['imageUrl'] as String?,
-      images: (jsonSerialization['images'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      images: jsonSerialization['images'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['images'],
+            ),
       isActive: jsonSerialization['isActive'] as bool,
       isDefault: jsonSerialization['isDefault'] as bool,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -176,6 +184,7 @@ abstract class ProductVariant
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductVariant',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -202,6 +211,7 @@ abstract class ProductVariant
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'ProductVariant',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJsonForProtocol(),
@@ -280,27 +290,27 @@ class _ProductVariantImpl extends ProductVariant {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          name: name,
-          sku: sku,
-          barcode: barcode,
-          color: color,
-          size: size,
-          material: material,
-          style: style,
-          customAttributes: customAttributes,
-          price: price,
-          discountPrice: discountPrice,
-          quantity: quantity,
-          imageUrl: imageUrl,
-          images: images,
-          isActive: isActive,
-          isDefault: isDefault,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         name: name,
+         sku: sku,
+         barcode: barcode,
+         color: color,
+         size: size,
+         material: material,
+         style: style,
+         customAttributes: customAttributes,
+         price: price,
+         discountPrice: discountPrice,
+         quantity: quantity,
+         imageUrl: imageUrl,
+         images: images,
+         isActive: isActive,
+         isDefault: isDefault,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [ProductVariant]
   /// with some or all fields replaced by the given arguments.
@@ -343,8 +353,9 @@ class _ProductVariantImpl extends ProductVariant {
           ? customAttributes
           : this.customAttributes,
       price: price ?? this.price,
-      discountPrice:
-          discountPrice is double? ? discountPrice : this.discountPrice,
+      discountPrice: discountPrice is double?
+          ? discountPrice
+          : this.discountPrice,
       quantity: quantity ?? this.quantity,
       imageUrl: imageUrl is String? ? imageUrl : this.imageUrl,
       images: images is List<String>?
@@ -358,9 +369,111 @@ class _ProductVariantImpl extends ProductVariant {
   }
 }
 
+class ProductVariantUpdateTable extends _i1.UpdateTable<ProductVariantTable> {
+  ProductVariantUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
+    table.name,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> sku(String? value) => _i1.ColumnValue(
+    table.sku,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> barcode(String? value) => _i1.ColumnValue(
+    table.barcode,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> color(String? value) => _i1.ColumnValue(
+    table.color,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> size(String? value) => _i1.ColumnValue(
+    table.size,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> material(String? value) => _i1.ColumnValue(
+    table.material,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> style(String? value) => _i1.ColumnValue(
+    table.style,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> customAttributes(String? value) =>
+      _i1.ColumnValue(
+        table.customAttributes,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> price(double value) => _i1.ColumnValue(
+    table.price,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discountPrice(double? value) =>
+      _i1.ColumnValue(
+        table.discountPrice,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> quantity(int value) => _i1.ColumnValue(
+    table.quantity,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> imageUrl(String? value) => _i1.ColumnValue(
+    table.imageUrl,
+    value,
+  );
+
+  _i1.ColumnValue<List<String>, List<String>> images(List<String>? value) =>
+      _i1.ColumnValue(
+        table.images,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isActive(bool value) => _i1.ColumnValue(
+    table.isActive,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isDefault(bool value) => _i1.ColumnValue(
+    table.isDefault,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class ProductVariantTable extends _i1.Table<_i1.UuidValue> {
   ProductVariantTable({super.tableRelation})
-      : super(tableName: 'product_variants') {
+    : super(tableName: 'product_variants') {
+    updateTable = ProductVariantUpdateTable(this);
     productId = _i1.ColumnUuid(
       'productId',
       this,
@@ -414,7 +527,7 @@ class ProductVariantTable extends _i1.Table<_i1.UuidValue> {
       'imageUrl',
       this,
     );
-    images = _i1.ColumnSerializable(
+    images = _i1.ColumnSerializable<List<String>>(
       'images',
       this,
     );
@@ -439,6 +552,8 @@ class ProductVariantTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final ProductVariantUpdateTable updateTable;
 
   late final _i1.ColumnUuid productId;
 
@@ -468,7 +583,7 @@ class ProductVariantTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnString imageUrl;
 
-  late final _i1.ColumnSerializable images;
+  late final _i1.ColumnSerializable<List<String>> images;
 
   late final _i1.ColumnBool isActive;
 
@@ -493,26 +608,26 @@ class ProductVariantTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        productId,
-        name,
-        sku,
-        barcode,
-        color,
-        size,
-        material,
-        style,
-        customAttributes,
-        price,
-        discountPrice,
-        quantity,
-        imageUrl,
-        images,
-        isActive,
-        isDefault,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    productId,
+    name,
+    sku,
+    barcode,
+    color,
+    size,
+    material,
+    style,
+    customAttributes,
+    price,
+    discountPrice,
+    quantity,
+    imageUrl,
+    images,
+    isActive,
+    isDefault,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -720,6 +835,46 @@ class ProductVariantRepository {
     return session.db.updateRow<ProductVariant>(
       row,
       columns: columns?.call(ProductVariant.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [ProductVariant] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<ProductVariant?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ProductVariantUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<ProductVariant>(
+      id,
+      columnValues: columnValues(ProductVariant.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [ProductVariant]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<ProductVariant>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ProductVariantUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<ProductVariantTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ProductVariantTable>? orderBy,
+    _i1.OrderByListBuilder<ProductVariantTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<ProductVariant>(
+      columnValues: columnValues(ProductVariant.t.updateTable),
+      where: where(ProductVariant.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(ProductVariant.t),
+      orderByList: orderByList?.call(ProductVariant.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

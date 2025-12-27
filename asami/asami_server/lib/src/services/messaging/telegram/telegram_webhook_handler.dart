@@ -1,7 +1,7 @@
 // File: server/lib/src/services/messaging/telegram/telegram_webhook_handler.dart
 
 import 'package:asami_server/utils/logger/asami_logger.dart';
-import 'package:serverpod/serverpod.dart' hide Order;
+import 'package:serverpod/serverpod.dart' hide Order, Message;
 import 'package:televerse/telegram.dart';
 import 'package:televerse/televerse.dart';
 import '../../../endpoints/bot_endpoint.dart';

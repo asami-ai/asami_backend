@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -16,6 +17,7 @@ import '../messaging/conversation.dart' as _i2;
 import '../messaging/platfom_type.dart' as _i3;
 import '../messaging/message_type.dart' as _i4;
 import '../messaging/message.dart' as _i5;
+import 'package:asami_server/src/generated/protocol.dart' as _i6;
 
 abstract class Message
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -52,14 +54,14 @@ abstract class Message
     DateTime? createdAt,
     this.deliveredAt,
     this.readAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isFromBot = isFromBot ?? false,
-        isFromUser = isFromUser ?? true,
-        isProcessedByAi = isProcessedByAi ?? false,
-        isDelivered = isDelivered ?? false,
-        isRead = isRead ?? false,
-        isFailed = isFailed ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isFromBot = isFromBot ?? false,
+       isFromUser = isFromUser ?? true,
+       isProcessedByAi = isProcessedByAi ?? false,
+       isDelivered = isDelivered ?? false,
+       isRead = isRead ?? false,
+       isFailed = isFailed ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory Message({
     _i1.UuidValue? id,
@@ -100,16 +102,20 @@ abstract class Message
     return Message(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['conversationId']),
+        jsonSerialization['conversationId'],
+      ),
       conversation: jsonSerialization['conversation'] == null
           ? null
-          : _i2.Conversation.fromJson(
-              (jsonSerialization['conversation'] as Map<String, dynamic>)),
-      platform:
-          _i3.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i6.Protocol().deserialize<_i2.Conversation>(
+              jsonSerialization['conversation'],
+            ),
+      platform: _i3.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformMessageId: jsonSerialization['platformMessageId'] as String?,
-      messageType:
-          _i4.MessageType.fromJson((jsonSerialization['messageType'] as int)),
+      messageType: _i4.MessageType.fromJson(
+        (jsonSerialization['messageType'] as String),
+      ),
       content: jsonSerialization['content'] as String,
       mediaUrl: jsonSerialization['mediaUrl'] as String?,
       mediaType: jsonSerialization['mediaType'] as String?,
@@ -135,18 +141,22 @@ abstract class Message
       replyToMessageId: jsonSerialization['replyToMessageId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['replyToMessageId']),
+              jsonSerialization['replyToMessageId'],
+            ),
       replyToMessage: jsonSerialization['replyToMessage'] == null
           ? null
-          : _i5.Message.fromJson(
-              (jsonSerialization['replyToMessage'] as Map<String, dynamic>)),
+          : _i6.Protocol().deserialize<_i5.Message>(
+              jsonSerialization['replyToMessage'],
+            ),
       metadata: jsonSerialization['metadata'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['deliveredAt']),
+              jsonSerialization['deliveredAt'],
+            ),
       readAt: jsonSerialization['readAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['readAt']),
@@ -265,6 +275,7 @@ abstract class Message
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Message',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null) 'conversation': conversation?.toJson(),
@@ -304,6 +315,7 @@ abstract class Message
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'Message',
       'id': id.toJson(),
       'conversationId': conversationId.toJson(),
       if (conversation != null)
@@ -415,39 +427,39 @@ class _MessageImpl extends Message {
     DateTime? deliveredAt,
     DateTime? readAt,
   }) : super._(
-          id: id,
-          conversationId: conversationId,
-          conversation: conversation,
-          platform: platform,
-          platformMessageId: platformMessageId,
-          messageType: messageType,
-          content: content,
-          mediaUrl: mediaUrl,
-          mediaType: mediaType,
-          thumbnailUrl: thumbnailUrl,
-          isFromBot: isFromBot,
-          isFromUser: isFromUser,
-          senderId: senderId,
-          isProcessedByAi: isProcessedByAi,
-          aiIntent: aiIntent,
-          aiEntities: aiEntities,
-          aiConfidence: aiConfidence,
-          aiResponse: aiResponse,
-          processingTime: processingTime,
-          functionCalled: functionCalled,
-          functionParams: functionParams,
-          functionResult: functionResult,
-          isDelivered: isDelivered,
-          isRead: isRead,
-          isFailed: isFailed,
-          errorMessage: errorMessage,
-          replyToMessageId: replyToMessageId,
-          replyToMessage: replyToMessage,
-          metadata: metadata,
-          createdAt: createdAt,
-          deliveredAt: deliveredAt,
-          readAt: readAt,
-        );
+         id: id,
+         conversationId: conversationId,
+         conversation: conversation,
+         platform: platform,
+         platformMessageId: platformMessageId,
+         messageType: messageType,
+         content: content,
+         mediaUrl: mediaUrl,
+         mediaType: mediaType,
+         thumbnailUrl: thumbnailUrl,
+         isFromBot: isFromBot,
+         isFromUser: isFromUser,
+         senderId: senderId,
+         isProcessedByAi: isProcessedByAi,
+         aiIntent: aiIntent,
+         aiEntities: aiEntities,
+         aiConfidence: aiConfidence,
+         aiResponse: aiResponse,
+         processingTime: processingTime,
+         functionCalled: functionCalled,
+         functionParams: functionParams,
+         functionResult: functionResult,
+         isDelivered: isDelivered,
+         isRead: isRead,
+         isFailed: isFailed,
+         errorMessage: errorMessage,
+         replyToMessageId: replyToMessageId,
+         replyToMessage: replyToMessage,
+         metadata: metadata,
+         createdAt: createdAt,
+         deliveredAt: deliveredAt,
+         readAt: readAt,
+       );
 
   /// Returns a shallow copy of this [Message]
   /// with some or all fields replaced by the given arguments.
@@ -510,14 +522,18 @@ class _MessageImpl extends Message {
       aiEntities: aiEntities is String? ? aiEntities : this.aiEntities,
       aiConfidence: aiConfidence is double? ? aiConfidence : this.aiConfidence,
       aiResponse: aiResponse is String? ? aiResponse : this.aiResponse,
-      processingTime:
-          processingTime is int? ? processingTime : this.processingTime,
-      functionCalled:
-          functionCalled is String? ? functionCalled : this.functionCalled,
-      functionParams:
-          functionParams is String? ? functionParams : this.functionParams,
-      functionResult:
-          functionResult is String? ? functionResult : this.functionResult,
+      processingTime: processingTime is int?
+          ? processingTime
+          : this.processingTime,
+      functionCalled: functionCalled is String?
+          ? functionCalled
+          : this.functionCalled,
+      functionParams: functionParams is String?
+          ? functionParams
+          : this.functionParams,
+      functionResult: functionResult is String?
+          ? functionResult
+          : this.functionResult,
       isDelivered: isDelivered ?? this.isDelivered,
       isRead: isRead ?? this.isRead,
       isFailed: isFailed ?? this.isFailed,
@@ -536,8 +552,178 @@ class _MessageImpl extends Message {
   }
 }
 
+class MessageUpdateTable extends _i1.UpdateTable<MessageTable> {
+  MessageUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.PlatformType, _i3.PlatformType> platform(
+    _i3.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> platformMessageId(String? value) =>
+      _i1.ColumnValue(
+        table.platformMessageId,
+        value,
+      );
+
+  _i1.ColumnValue<_i4.MessageType, _i4.MessageType> messageType(
+    _i4.MessageType value,
+  ) => _i1.ColumnValue(
+    table.messageType,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> content(String value) => _i1.ColumnValue(
+    table.content,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> mediaUrl(String? value) => _i1.ColumnValue(
+    table.mediaUrl,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> mediaType(String? value) => _i1.ColumnValue(
+    table.mediaType,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> thumbnailUrl(String? value) =>
+      _i1.ColumnValue(
+        table.thumbnailUrl,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isFromBot(bool value) => _i1.ColumnValue(
+    table.isFromBot,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFromUser(bool value) => _i1.ColumnValue(
+    table.isFromUser,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> senderId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.senderId,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isProcessedByAi(bool value) => _i1.ColumnValue(
+    table.isProcessedByAi,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> aiIntent(String? value) => _i1.ColumnValue(
+    table.aiIntent,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> aiEntities(String? value) => _i1.ColumnValue(
+    table.aiEntities,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> aiConfidence(double? value) =>
+      _i1.ColumnValue(
+        table.aiConfidence,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> aiResponse(String? value) => _i1.ColumnValue(
+    table.aiResponse,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> processingTime(int? value) => _i1.ColumnValue(
+    table.processingTime,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> functionCalled(String? value) =>
+      _i1.ColumnValue(
+        table.functionCalled,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> functionParams(String? value) =>
+      _i1.ColumnValue(
+        table.functionParams,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> functionResult(String? value) =>
+      _i1.ColumnValue(
+        table.functionResult,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isDelivered(bool value) => _i1.ColumnValue(
+    table.isDelivered,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isRead(bool value) => _i1.ColumnValue(
+    table.isRead,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFailed(bool value) => _i1.ColumnValue(
+    table.isFailed,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> errorMessage(String? value) =>
+      _i1.ColumnValue(
+        table.errorMessage,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> replyToMessageId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.replyToMessageId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> metadata(String? value) => _i1.ColumnValue(
+    table.metadata,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> deliveredAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.deliveredAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> readAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.readAt,
+        value,
+      );
+}
+
 class MessageTable extends _i1.Table<_i1.UuidValue> {
   MessageTable({super.tableRelation}) : super(tableName: 'messages') {
+    updateTable = MessageUpdateTable(this);
     conversationId = _i1.ColumnUuid(
       'conversationId',
       this,
@@ -545,7 +731,7 @@ class MessageTable extends _i1.Table<_i1.UuidValue> {
     platform = _i1.ColumnEnum(
       'platform',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     platformMessageId = _i1.ColumnString(
       'platformMessageId',
@@ -554,7 +740,7 @@ class MessageTable extends _i1.Table<_i1.UuidValue> {
     messageType = _i1.ColumnEnum(
       'messageType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     content = _i1.ColumnString(
       'content',
@@ -665,6 +851,8 @@ class MessageTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final MessageUpdateTable updateTable;
+
   late final _i1.ColumnUuid conversationId;
 
   _i2.ConversationTable? _conversation;
@@ -755,37 +943,37 @@ class MessageTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        conversationId,
-        platform,
-        platformMessageId,
-        messageType,
-        content,
-        mediaUrl,
-        mediaType,
-        thumbnailUrl,
-        isFromBot,
-        isFromUser,
-        senderId,
-        isProcessedByAi,
-        aiIntent,
-        aiEntities,
-        aiConfidence,
-        aiResponse,
-        processingTime,
-        functionCalled,
-        functionParams,
-        functionResult,
-        isDelivered,
-        isRead,
-        isFailed,
-        errorMessage,
-        replyToMessageId,
-        metadata,
-        createdAt,
-        deliveredAt,
-        readAt,
-      ];
+    id,
+    conversationId,
+    platform,
+    platformMessageId,
+    messageType,
+    content,
+    mediaUrl,
+    mediaType,
+    thumbnailUrl,
+    isFromBot,
+    isFromUser,
+    senderId,
+    isProcessedByAi,
+    aiIntent,
+    aiEntities,
+    aiConfidence,
+    aiResponse,
+    processingTime,
+    functionCalled,
+    functionParams,
+    functionResult,
+    isDelivered,
+    isRead,
+    isFailed,
+    errorMessage,
+    replyToMessageId,
+    metadata,
+    createdAt,
+    deliveredAt,
+    readAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -814,9 +1002,9 @@ class MessageInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'conversation': _conversation,
-        'replyToMessage': _replyToMessage,
-      };
+    'conversation': _conversation,
+    'replyToMessage': _replyToMessage,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => Message.t;
@@ -1007,6 +1195,46 @@ class MessageRepository {
     return session.db.updateRow<Message>(
       row,
       columns: columns?.call(Message.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [Message] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<Message?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<MessageUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<Message>(
+      id,
+      columnValues: columnValues(Message.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [Message]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<Message>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<MessageUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<MessageTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<MessageTable>? orderBy,
+    _i1.OrderByListBuilder<MessageTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<Message>(
+      columnValues: columnValues(Message.t.updateTable),
+      where: where(Message.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(Message.t),
+      orderByList: orderByList?.call(Message.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

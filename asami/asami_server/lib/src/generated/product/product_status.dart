@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -18,26 +19,27 @@ enum ProductStatus implements _i1.SerializableModel {
   discontinued,
   under_review;
 
-  static ProductStatus fromJson(int index) {
-    switch (index) {
-      case 0:
+  static ProductStatus fromJson(String name) {
+    switch (name) {
+      case 'draft':
         return ProductStatus.draft;
-      case 1:
+      case 'active':
         return ProductStatus.active;
-      case 2:
+      case 'out_of_stock':
         return ProductStatus.out_of_stock;
-      case 3:
+      case 'discontinued':
         return ProductStatus.discontinued;
-      case 4:
+      case 'under_review':
         return ProductStatus.under_review;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "ProductStatus"');
+          'Value "$name" cannot be converted to "ProductStatus"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

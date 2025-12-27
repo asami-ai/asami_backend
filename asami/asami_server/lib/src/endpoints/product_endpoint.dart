@@ -1,5 +1,6 @@
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
+import '../services/catalog/product_sync_service.dart';
 
 class ProductEndpoint extends Endpoint {
   /// Create product (AI-assisted or manual)
@@ -25,6 +26,7 @@ class ProductEndpoint extends Endpoint {
     double? weight,
     String? weightUnit,
     bool trackInventory = true,
+    ProductStatus status = ProductStatus.active,
   }) async {
     try {
       // Check vendor tier limits
@@ -73,6 +75,11 @@ class ProductEndpoint extends Endpoint {
       if (isAiGenerated) {
         await _trackAiUsage(session, vendorId, 'product_description');
       }
+
+
+      // ========== SYNC TO PLATFORMS (BACKGROUND) ==========
+      _syncProductInBackground(session, created, action: 'create');
+
 
       return created;
     } catch (e) {
@@ -126,10 +133,48 @@ class ProductEndpoint extends Endpoint {
 
       product.updatedAt = DateTime.now();
 
-      return await Product.db.updateRow(session, product);
+      final updated = await Product.db.updateRow(session, product);
+
+      // ========== SYNC UPDATE TO PLATFORMS (BACKGROUND) ==========
+      _syncProductInBackground(session, updated, action: 'update');
+
+
+      return updated;
     } catch (e) {
       session.log('Update product error: $e');
       return null;
+    }
+  }
+
+
+  /// Delete/deactivate product
+  Future<bool> deleteProduct(
+    Session session,
+    UuidValue productId,
+  ) async {
+    try {
+      final product = await Product.db.findFirstRow(
+        session,
+        where: (t) => t.id.equals(productId),
+      );
+
+      if (product == null) return false;
+
+      // Soft delete
+      product.isActive = false;
+      product.status = ProductStatus.discontinued;
+      product.deletedAt = DateTime.now();
+      product.updatedAt = DateTime.now();
+
+      await Product.db.updateRow(session, product);
+
+      // ========== SYNC DELETION TO PLATFORMS (BACKGROUND) ==========
+      _syncProductInBackground(session, product, action: 'delete');
+
+      return true;
+    } catch (e) {
+      session.log('Delete product error: $e');
+      return false;
     }
   }
 
@@ -148,6 +193,10 @@ class ProductEndpoint extends Endpoint {
     product.updatedAt = DateTime.now();
 
     await Product.db.updateRow(session, product);
+
+
+    // ========== SYNC PUBLISH TO PLATFORMS (BACKGROUND) ==========
+    _syncProductInBackground(session, product, action: 'create');
     return true;
   }
 
@@ -220,7 +269,7 @@ class ProductEndpoint extends Endpoint {
     if (query != null && query.isNotEmpty) {
       // Search in name, description, and tags
       whereClause = (t) => where(t) & 
-          (t.name.like('%$query%') | t.description.like('%$query%'));
+          (t.name.ilike('%$query%') | t.description.ilike('%$query%'));
     }
 
     if (category != null) {
@@ -423,5 +472,34 @@ class ProductEndpoint extends Endpoint {
     );
 
     await UsageRecord.db.insertRow(session, usage);
+  }
+
+
+  // ========== BACKGROUND SYNC HELPER ==========
+  
+  void _syncProductInBackground(
+    Session session,
+    Product product, {
+    required String action,
+  }) {
+    Future(() async {
+      try {
+        final syncService = ProductSyncService(session);
+        
+        switch (action) {
+          case 'create':
+            await syncService.syncProductCreate(product);
+            break;
+          case 'update':
+            await syncService.syncProductUpdate(product);
+            break;
+          case 'delete':
+            await syncService.syncProductDelete(product);
+            break;
+        }
+      } catch (e) {
+        session.log('Background sync error: $e');
+      }
+    });
   }
 }

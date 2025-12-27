@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -17,24 +18,25 @@ enum BreachSeverity implements _i1.SerializableModel {
   soft,
   hard;
 
-  static BreachSeverity fromJson(int index) {
-    switch (index) {
-      case 0:
+  static BreachSeverity fromJson(String name) {
+    switch (name) {
+      case 'info':
         return BreachSeverity.info;
-      case 1:
+      case 'warning':
         return BreachSeverity.warning;
-      case 2:
+      case 'soft':
         return BreachSeverity.soft;
-      case 3:
+      case 'hard':
         return BreachSeverity.hard;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "BreachSeverity"');
+          'Value "$name" cannot be converted to "BreachSeverity"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

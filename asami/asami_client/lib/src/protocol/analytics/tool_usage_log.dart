@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -35,14 +36,14 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
     this.ipAddress,
     this.userAgent,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        success = success ?? true,
-        costIncurred = costIncurred ?? 0.0,
-        isBillable = isBillable ?? false,
-        wasWithinLimit = wasWithinLimit ?? true,
-        usedGracePeriod = usedGracePeriod ?? false,
-        deniedDueToLimit = deniedDueToLimit ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       success = success ?? true,
+       costIncurred = costIncurred ?? 0.0,
+       isBillable = isBillable ?? false,
+       wasWithinLimit = wasWithinLimit ?? true,
+       usedGracePeriod = usedGracePeriod ?? false,
+       deniedDueToLimit = deniedDueToLimit ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ToolUsageLog({
     _i1.UuidValue? id,
@@ -72,11 +73,14 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
     return ToolUsageLog(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       toolName: jsonSerialization['toolName'] as String,
       toolCategory: jsonSerialization['toolCategory'] as String?,
       arguments: jsonSerialization['arguments'] as String?,
@@ -88,25 +92,26 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
       billingPeriodStart: jsonSerialization['billingPeriodStart'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['billingPeriodStart']),
+              jsonSerialization['billingPeriodStart'],
+            ),
       billingPeriodEnd: jsonSerialization['billingPeriodEnd'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['billingPeriodEnd']),
+              jsonSerialization['billingPeriodEnd'],
+            ),
       wasWithinLimit: jsonSerialization['wasWithinLimit'] as bool,
       usedGracePeriod: jsonSerialization['usedGracePeriod'] as bool,
       deniedDueToLimit: jsonSerialization['deniedDueToLimit'] as bool,
       platform: jsonSerialization['platform'] as String?,
       ipAddress: jsonSerialization['ipAddress'] as String?,
       userAgent: jsonSerialization['userAgent'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -178,6 +183,7 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ToolUsageLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -236,28 +242,28 @@ class _ToolUsageLogImpl extends ToolUsageLog {
     String? userAgent,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          conversationId: conversationId,
-          toolName: toolName,
-          toolCategory: toolCategory,
-          arguments: arguments,
-          success: success,
-          executionTimeMs: executionTimeMs,
-          errorMessage: errorMessage,
-          costIncurred: costIncurred,
-          isBillable: isBillable,
-          billingPeriodStart: billingPeriodStart,
-          billingPeriodEnd: billingPeriodEnd,
-          wasWithinLimit: wasWithinLimit,
-          usedGracePeriod: usedGracePeriod,
-          deniedDueToLimit: deniedDueToLimit,
-          platform: platform,
-          ipAddress: ipAddress,
-          userAgent: userAgent,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         conversationId: conversationId,
+         toolName: toolName,
+         toolCategory: toolCategory,
+         arguments: arguments,
+         success: success,
+         executionTimeMs: executionTimeMs,
+         errorMessage: errorMessage,
+         costIncurred: costIncurred,
+         isBillable: isBillable,
+         billingPeriodStart: billingPeriodStart,
+         billingPeriodEnd: billingPeriodEnd,
+         wasWithinLimit: wasWithinLimit,
+         usedGracePeriod: usedGracePeriod,
+         deniedDueToLimit: deniedDueToLimit,
+         platform: platform,
+         ipAddress: ipAddress,
+         userAgent: userAgent,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ToolUsageLog]
   /// with some or all fields replaced by the given arguments.

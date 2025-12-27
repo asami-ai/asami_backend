@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -36,14 +37,14 @@ abstract class ToolUsageLog
     this.ipAddress,
     this.userAgent,
     DateTime? createdAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        success = success ?? true,
-        costIncurred = costIncurred ?? 0.0,
-        isBillable = isBillable ?? false,
-        wasWithinLimit = wasWithinLimit ?? true,
-        usedGracePeriod = usedGracePeriod ?? false,
-        deniedDueToLimit = deniedDueToLimit ?? false,
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       success = success ?? true,
+       costIncurred = costIncurred ?? 0.0,
+       isBillable = isBillable ?? false,
+       wasWithinLimit = wasWithinLimit ?? true,
+       usedGracePeriod = usedGracePeriod ?? false,
+       deniedDueToLimit = deniedDueToLimit ?? false,
+       createdAt = createdAt ?? DateTime.now();
 
   factory ToolUsageLog({
     _i1.UuidValue? id,
@@ -73,11 +74,14 @@ abstract class ToolUsageLog
     return ToolUsageLog(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      userType: _i2.UserType.fromJson((jsonSerialization['userType'] as int)),
+      userType: _i2.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['conversationId']),
+              jsonSerialization['conversationId'],
+            ),
       toolName: jsonSerialization['toolName'] as String,
       toolCategory: jsonSerialization['toolCategory'] as String?,
       arguments: jsonSerialization['arguments'] as String?,
@@ -89,19 +93,22 @@ abstract class ToolUsageLog
       billingPeriodStart: jsonSerialization['billingPeriodStart'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['billingPeriodStart']),
+              jsonSerialization['billingPeriodStart'],
+            ),
       billingPeriodEnd: jsonSerialization['billingPeriodEnd'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['billingPeriodEnd']),
+              jsonSerialization['billingPeriodEnd'],
+            ),
       wasWithinLimit: jsonSerialization['wasWithinLimit'] as bool,
       usedGracePeriod: jsonSerialization['usedGracePeriod'] as bool,
       deniedDueToLimit: jsonSerialization['deniedDueToLimit'] as bool,
       platform: jsonSerialization['platform'] as String?,
       ipAddress: jsonSerialization['ipAddress'] as String?,
       userAgent: jsonSerialization['userAgent'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
     );
   }
 
@@ -184,6 +191,7 @@ abstract class ToolUsageLog
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ToolUsageLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -213,6 +221,7 @@ abstract class ToolUsageLog
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'ToolUsageLog',
       'id': id.toJson(),
       'userId': userId.toJson(),
       'userType': userType.toJson(),
@@ -295,28 +304,28 @@ class _ToolUsageLogImpl extends ToolUsageLog {
     String? userAgent,
     DateTime? createdAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          userType: userType,
-          conversationId: conversationId,
-          toolName: toolName,
-          toolCategory: toolCategory,
-          arguments: arguments,
-          success: success,
-          executionTimeMs: executionTimeMs,
-          errorMessage: errorMessage,
-          costIncurred: costIncurred,
-          isBillable: isBillable,
-          billingPeriodStart: billingPeriodStart,
-          billingPeriodEnd: billingPeriodEnd,
-          wasWithinLimit: wasWithinLimit,
-          usedGracePeriod: usedGracePeriod,
-          deniedDueToLimit: deniedDueToLimit,
-          platform: platform,
-          ipAddress: ipAddress,
-          userAgent: userAgent,
-          createdAt: createdAt,
-        );
+         id: id,
+         userId: userId,
+         userType: userType,
+         conversationId: conversationId,
+         toolName: toolName,
+         toolCategory: toolCategory,
+         arguments: arguments,
+         success: success,
+         executionTimeMs: executionTimeMs,
+         errorMessage: errorMessage,
+         costIncurred: costIncurred,
+         isBillable: isBillable,
+         billingPeriodStart: billingPeriodStart,
+         billingPeriodEnd: billingPeriodEnd,
+         wasWithinLimit: wasWithinLimit,
+         usedGracePeriod: usedGracePeriod,
+         deniedDueToLimit: deniedDueToLimit,
+         platform: platform,
+         ipAddress: ipAddress,
+         userAgent: userAgent,
+         createdAt: createdAt,
+       );
 
   /// Returns a shallow copy of this [ToolUsageLog]
   /// with some or all fields replaced by the given arguments.
@@ -377,9 +386,123 @@ class _ToolUsageLogImpl extends ToolUsageLog {
   }
 }
 
+class ToolUsageLogUpdateTable extends _i1.UpdateTable<ToolUsageLogTable> {
+  ToolUsageLogUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.UserType, _i2.UserType> userType(_i2.UserType value) =>
+      _i1.ColumnValue(
+        table.userType,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> toolName(String value) => _i1.ColumnValue(
+    table.toolName,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> toolCategory(String? value) =>
+      _i1.ColumnValue(
+        table.toolCategory,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> arguments(String? value) => _i1.ColumnValue(
+    table.arguments,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> success(bool value) => _i1.ColumnValue(
+    table.success,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> executionTimeMs(int value) => _i1.ColumnValue(
+    table.executionTimeMs,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> errorMessage(String? value) =>
+      _i1.ColumnValue(
+        table.errorMessage,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> costIncurred(double value) => _i1.ColumnValue(
+    table.costIncurred,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isBillable(bool value) => _i1.ColumnValue(
+    table.isBillable,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> billingPeriodStart(DateTime? value) =>
+      _i1.ColumnValue(
+        table.billingPeriodStart,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> billingPeriodEnd(DateTime? value) =>
+      _i1.ColumnValue(
+        table.billingPeriodEnd,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> wasWithinLimit(bool value) => _i1.ColumnValue(
+    table.wasWithinLimit,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> usedGracePeriod(bool value) => _i1.ColumnValue(
+    table.usedGracePeriod,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> deniedDueToLimit(bool value) => _i1.ColumnValue(
+    table.deniedDueToLimit,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> platform(String? value) => _i1.ColumnValue(
+    table.platform,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> ipAddress(String? value) => _i1.ColumnValue(
+    table.ipAddress,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> userAgent(String? value) => _i1.ColumnValue(
+    table.userAgent,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+}
+
 class ToolUsageLogTable extends _i1.Table<_i1.UuidValue> {
   ToolUsageLogTable({super.tableRelation})
-      : super(tableName: 'tool_usage_logs') {
+    : super(tableName: 'tool_usage_logs') {
+    updateTable = ToolUsageLogUpdateTable(this);
     userId = _i1.ColumnUuid(
       'userId',
       this,
@@ -387,7 +510,7 @@ class ToolUsageLogTable extends _i1.Table<_i1.UuidValue> {
     userType = _i1.ColumnEnum(
       'userType',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     conversationId = _i1.ColumnUuid(
       'conversationId',
@@ -470,6 +593,8 @@ class ToolUsageLogTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final ToolUsageLogUpdateTable updateTable;
+
   late final _i1.ColumnUuid userId;
 
   late final _i1.ColumnEnum<_i2.UserType> userType;
@@ -512,28 +637,28 @@ class ToolUsageLogTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        userId,
-        userType,
-        conversationId,
-        toolName,
-        toolCategory,
-        arguments,
-        success,
-        executionTimeMs,
-        errorMessage,
-        costIncurred,
-        isBillable,
-        billingPeriodStart,
-        billingPeriodEnd,
-        wasWithinLimit,
-        usedGracePeriod,
-        deniedDueToLimit,
-        platform,
-        ipAddress,
-        userAgent,
-        createdAt,
-      ];
+    id,
+    userId,
+    userType,
+    conversationId,
+    toolName,
+    toolCategory,
+    arguments,
+    success,
+    executionTimeMs,
+    errorMessage,
+    costIncurred,
+    isBillable,
+    billingPeriodStart,
+    billingPeriodEnd,
+    wasWithinLimit,
+    usedGracePeriod,
+    deniedDueToLimit,
+    platform,
+    ipAddress,
+    userAgent,
+    createdAt,
+  ];
 }
 
 class ToolUsageLogInclude extends _i1.IncludeObject {
@@ -721,6 +846,46 @@ class ToolUsageLogRepository {
     return session.db.updateRow<ToolUsageLog>(
       row,
       columns: columns?.call(ToolUsageLog.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [ToolUsageLog] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<ToolUsageLog?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ToolUsageLogUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<ToolUsageLog>(
+      id,
+      columnValues: columnValues(ToolUsageLog.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [ToolUsageLog]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<ToolUsageLog>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ToolUsageLogUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<ToolUsageLogTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ToolUsageLogTable>? orderBy,
+    _i1.OrderByListBuilder<ToolUsageLogTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<ToolUsageLog>(
+      columnValues: columnValues(ToolUsageLog.t.updateTable),
+      where: where(ToolUsageLog.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(ToolUsageLog.t),
+      orderByList: orderByList?.call(ToolUsageLog.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

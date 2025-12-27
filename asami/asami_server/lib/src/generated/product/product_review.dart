@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../product/product.dart' as _i2;
 import '../user/user.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class ProductReview
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -39,14 +41,14 @@ abstract class ProductReview
     this.vendorRespondedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        isVerifiedPurchase = isVerifiedPurchase ?? false,
-        isApproved = isApproved ?? false,
-        isFlagged = isFlagged ?? false,
-        helpfulCount = helpfulCount ?? 0,
-        reportCount = reportCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       isVerifiedPurchase = isVerifiedPurchase ?? false,
+       isApproved = isApproved ?? false,
+       isFlagged = isFlagged ?? false,
+       helpfulCount = helpfulCount ?? 0,
+       reportCount = reportCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory ProductReview({
     _i1.UuidValue? id,
@@ -75,27 +77,31 @@ abstract class ProductReview
   factory ProductReview.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductReview(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      productId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['productId']),
+      productId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['productId'],
+      ),
       product: jsonSerialization['product'] == null
           ? null
-          : _i2.Product.fromJson(
-              (jsonSerialization['product'] as Map<String, dynamic>)),
-      customerId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['customerId']),
+          : _i4.Protocol().deserialize<_i2.Product>(
+              jsonSerialization['product'],
+            ),
+      customerId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['customerId'],
+      ),
       customer: jsonSerialization['customer'] == null
           ? null
-          : _i3.User.fromJson(
-              (jsonSerialization['customer'] as Map<String, dynamic>)),
+          : _i4.Protocol().deserialize<_i3.User>(jsonSerialization['customer']),
       orderId: jsonSerialization['orderId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
       rating: jsonSerialization['rating'] as int,
       title: jsonSerialization['title'] as String?,
       comment: jsonSerialization['comment'] as String,
-      images: (jsonSerialization['images'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      images: jsonSerialization['images'] == null
+          ? null
+          : _i4.Protocol().deserialize<List<String>>(
+              jsonSerialization['images'],
+            ),
       isVerifiedPurchase: jsonSerialization['isVerifiedPurchase'] as bool,
       isApproved: jsonSerialization['isApproved'] as bool,
       isFlagged: jsonSerialization['isFlagged'] as bool,
@@ -103,18 +109,22 @@ abstract class ProductReview
       moderatedAt: jsonSerialization['moderatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['moderatedAt']),
+              jsonSerialization['moderatedAt'],
+            ),
       helpfulCount: jsonSerialization['helpfulCount'] as int,
       reportCount: jsonSerialization['reportCount'] as int,
       vendorResponse: jsonSerialization['vendorResponse'] as String?,
       vendorRespondedAt: jsonSerialization['vendorRespondedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['vendorRespondedAt']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+              jsonSerialization['vendorRespondedAt'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -197,6 +207,7 @@ abstract class ProductReview
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'ProductReview',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJson(),
@@ -225,6 +236,7 @@ abstract class ProductReview
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'ProductReview',
       'id': id.toJson(),
       'productId': productId.toJson(),
       if (product != null) 'product': product?.toJsonForProtocol(),
@@ -312,28 +324,28 @@ class _ProductReviewImpl extends ProductReview {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          productId: productId,
-          product: product,
-          customerId: customerId,
-          customer: customer,
-          orderId: orderId,
-          rating: rating,
-          title: title,
-          comment: comment,
-          images: images,
-          isVerifiedPurchase: isVerifiedPurchase,
-          isApproved: isApproved,
-          isFlagged: isFlagged,
-          moderatedBy: moderatedBy,
-          moderatedAt: moderatedAt,
-          helpfulCount: helpfulCount,
-          reportCount: reportCount,
-          vendorResponse: vendorResponse,
-          vendorRespondedAt: vendorRespondedAt,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         productId: productId,
+         product: product,
+         customerId: customerId,
+         customer: customer,
+         orderId: orderId,
+         rating: rating,
+         title: title,
+         comment: comment,
+         images: images,
+         isVerifiedPurchase: isVerifiedPurchase,
+         isApproved: isApproved,
+         isFlagged: isFlagged,
+         moderatedBy: moderatedBy,
+         moderatedAt: moderatedAt,
+         helpfulCount: helpfulCount,
+         reportCount: reportCount,
+         vendorResponse: vendorResponse,
+         vendorRespondedAt: vendorRespondedAt,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [ProductReview]
   /// with some or all fields replaced by the given arguments.
@@ -382,8 +394,9 @@ class _ProductReviewImpl extends ProductReview {
       moderatedAt: moderatedAt is DateTime? ? moderatedAt : this.moderatedAt,
       helpfulCount: helpfulCount ?? this.helpfulCount,
       reportCount: reportCount ?? this.reportCount,
-      vendorResponse:
-          vendorResponse is String? ? vendorResponse : this.vendorResponse,
+      vendorResponse: vendorResponse is String?
+          ? vendorResponse
+          : this.vendorResponse,
       vendorRespondedAt: vendorRespondedAt is DateTime?
           ? vendorRespondedAt
           : this.vendorRespondedAt,
@@ -393,9 +406,115 @@ class _ProductReviewImpl extends ProductReview {
   }
 }
 
+class ProductReviewUpdateTable extends _i1.UpdateTable<ProductReviewTable> {
+  ProductReviewUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> productId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.productId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> customerId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.customerId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> orderId(_i1.UuidValue? value) =>
+      _i1.ColumnValue(
+        table.orderId,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> rating(int value) => _i1.ColumnValue(
+    table.rating,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> title(String? value) => _i1.ColumnValue(
+    table.title,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> comment(String value) => _i1.ColumnValue(
+    table.comment,
+    value,
+  );
+
+  _i1.ColumnValue<List<String>, List<String>> images(List<String>? value) =>
+      _i1.ColumnValue(
+        table.images,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isVerifiedPurchase(bool value) => _i1.ColumnValue(
+    table.isVerifiedPurchase,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isApproved(bool value) => _i1.ColumnValue(
+    table.isApproved,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isFlagged(bool value) => _i1.ColumnValue(
+    table.isFlagged,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> moderatedBy(String? value) => _i1.ColumnValue(
+    table.moderatedBy,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> moderatedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.moderatedAt,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> helpfulCount(int value) => _i1.ColumnValue(
+    table.helpfulCount,
+    value,
+  );
+
+  _i1.ColumnValue<int, int> reportCount(int value) => _i1.ColumnValue(
+    table.reportCount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> vendorResponse(String? value) =>
+      _i1.ColumnValue(
+        table.vendorResponse,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> vendorRespondedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.vendorRespondedAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class ProductReviewTable extends _i1.Table<_i1.UuidValue> {
   ProductReviewTable({super.tableRelation})
-      : super(tableName: 'product_reviews') {
+    : super(tableName: 'product_reviews') {
+    updateTable = ProductReviewUpdateTable(this);
     productId = _i1.ColumnUuid(
       'productId',
       this,
@@ -420,7 +539,7 @@ class ProductReviewTable extends _i1.Table<_i1.UuidValue> {
       'comment',
       this,
     );
-    images = _i1.ColumnSerializable(
+    images = _i1.ColumnSerializable<List<String>>(
       'images',
       this,
     );
@@ -477,6 +596,8 @@ class ProductReviewTable extends _i1.Table<_i1.UuidValue> {
     );
   }
 
+  late final ProductReviewUpdateTable updateTable;
+
   late final _i1.ColumnUuid productId;
 
   _i2.ProductTable? _product;
@@ -493,7 +614,7 @@ class ProductReviewTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnString comment;
 
-  late final _i1.ColumnSerializable images;
+  late final _i1.ColumnSerializable<List<String>> images;
 
   late final _i1.ColumnBool isVerifiedPurchase;
 
@@ -545,26 +666,26 @@ class ProductReviewTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        productId,
-        customerId,
-        orderId,
-        rating,
-        title,
-        comment,
-        images,
-        isVerifiedPurchase,
-        isApproved,
-        isFlagged,
-        moderatedBy,
-        moderatedAt,
-        helpfulCount,
-        reportCount,
-        vendorResponse,
-        vendorRespondedAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    productId,
+    customerId,
+    orderId,
+    rating,
+    title,
+    comment,
+    images,
+    isVerifiedPurchase,
+    isApproved,
+    isFlagged,
+    moderatedBy,
+    moderatedAt,
+    helpfulCount,
+    reportCount,
+    vendorResponse,
+    vendorRespondedAt,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -593,9 +714,9 @@ class ProductReviewInclude extends _i1.IncludeObject {
 
   @override
   Map<String, _i1.Include?> get includes => {
-        'product': _product,
-        'customer': _customer,
-      };
+    'product': _product,
+    'customer': _customer,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => ProductReview.t;
@@ -784,6 +905,46 @@ class ProductReviewRepository {
     return session.db.updateRow<ProductReview>(
       row,
       columns: columns?.call(ProductReview.t),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates a single [ProductReview] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<ProductReview?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<ProductReviewUpdateTable> columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<ProductReview>(
+      id,
+      columnValues: columnValues(ProductReview.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [ProductReview]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<ProductReview>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<ProductReviewUpdateTable> columnValues,
+    required _i1.WhereExpressionBuilder<ProductReviewTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<ProductReviewTable>? orderBy,
+    _i1.OrderByListBuilder<ProductReviewTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<ProductReview>(
+      columnValues: columnValues(ProductReview.t.updateTable),
+      where: where(ProductReview.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(ProductReview.t),
+      orderByList: orderByList?.call(ProductReview.t),
+      orderDescending: orderDescending,
       transaction: transaction,
     );
   }

@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -21,32 +22,33 @@ enum PaymentStatus implements _i1.SerializableModel {
   in_escrow,
   released;
 
-  static PaymentStatus fromJson(int index) {
-    switch (index) {
-      case 0:
+  static PaymentStatus fromJson(String name) {
+    switch (name) {
+      case 'pending':
         return PaymentStatus.pending;
-      case 1:
+      case 'processing':
         return PaymentStatus.processing;
-      case 2:
+      case 'completed':
         return PaymentStatus.completed;
-      case 3:
+      case 'failed':
         return PaymentStatus.failed;
-      case 4:
+      case 'refunded':
         return PaymentStatus.refunded;
-      case 5:
+      case 'partially_refunded':
         return PaymentStatus.partially_refunded;
-      case 6:
+      case 'in_escrow':
         return PaymentStatus.in_escrow;
-      case 7:
+      case 'released':
         return PaymentStatus.released;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "PaymentStatus"');
+          'Value "$name" cannot be converted to "PaymentStatus"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

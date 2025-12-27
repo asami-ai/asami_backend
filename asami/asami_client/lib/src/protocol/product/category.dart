@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../product/category.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class Category implements _i1.SerializableModel {
   Category._({
@@ -27,12 +29,12 @@ abstract class Category implements _i1.SerializableModel {
     int? productCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        displayOrder = displayOrder ?? 0,
-        isActive = isActive ?? true,
-        productCount = productCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       displayOrder = displayOrder ?? 0,
+       isActive = isActive ?? true,
+       productCount = productCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Category({
     _i1.UuidValue? id,
@@ -59,26 +61,28 @@ abstract class Category implements _i1.SerializableModel {
       parentCategoryId: jsonSerialization['parentCategoryId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
-              jsonSerialization['parentCategoryId']),
+              jsonSerialization['parentCategoryId'],
+            ),
       parentCategory: jsonSerialization['parentCategory'] == null
           ? null
-          : _i2.Category.fromJson(
-              (jsonSerialization['parentCategory'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.Category>(
+              jsonSerialization['parentCategory'],
+            ),
       iconUrl: jsonSerialization['iconUrl'] as String?,
       imageUrl: jsonSerialization['imageUrl'] as String?,
       displayOrder: jsonSerialization['displayOrder'] as int,
       isActive: jsonSerialization['isActive'] as bool,
       productCount: jsonSerialization['productCount'] as int,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   String name;
@@ -126,6 +130,7 @@ abstract class Category implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Category',
       'id': id.toJson(),
       'name': name,
       'slug': slug,
@@ -167,20 +172,20 @@ class _CategoryImpl extends Category {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          name: name,
-          slug: slug,
-          description: description,
-          parentCategoryId: parentCategoryId,
-          parentCategory: parentCategory,
-          iconUrl: iconUrl,
-          imageUrl: imageUrl,
-          displayOrder: displayOrder,
-          isActive: isActive,
-          productCount: productCount,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         name: name,
+         slug: slug,
+         description: description,
+         parentCategoryId: parentCategoryId,
+         parentCategory: parentCategory,
+         iconUrl: iconUrl,
+         imageUrl: imageUrl,
+         displayOrder: displayOrder,
+         isActive: isActive,
+         productCount: productCount,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [Category]
   /// with some or all fields replaced by the given arguments.

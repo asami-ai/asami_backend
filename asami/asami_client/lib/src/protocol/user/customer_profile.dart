@@ -7,10 +7,12 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import '../user/user.dart' as _i2;
+import 'package:asami_client/src/protocol/protocol.dart' as _i3;
 
 abstract class CustomerProfile implements _i1.SerializableModel {
   CustomerProfile._({
@@ -32,15 +34,15 @@ abstract class CustomerProfile implements _i1.SerializableModel {
     this.preferredCategories,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        totalOrders = totalOrders ?? 0,
-        totalSpent = totalSpent ?? 0.0,
-        averageOrderValue = averageOrderValue ?? 0.0,
-        wishlistCount = wishlistCount ?? 0,
-        reviewsGiven = reviewsGiven ?? 0,
-        averageRating = averageRating ?? 0.0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       totalOrders = totalOrders ?? 0,
+       totalSpent = totalSpent ?? 0.0,
+       averageOrderValue = averageOrderValue ?? 0.0,
+       wishlistCount = wishlistCount ?? 0,
+       reviewsGiven = reviewsGiven ?? 0,
+       averageRating = averageRating ?? 0.0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory CustomerProfile({
     _i1.UuidValue? id,
@@ -69,46 +71,56 @@ abstract class CustomerProfile implements _i1.SerializableModel {
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i2.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
+          : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['user']),
       preferredPaymentMethod:
           jsonSerialization['preferredPaymentMethod'] as String?,
-      savedAddresses: (jsonSerialization['savedAddresses'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
-      favoriteVendors: (jsonSerialization['favoriteVendors'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
+      savedAddresses: jsonSerialization['savedAddresses'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['savedAddresses'],
+            ),
+      favoriteVendors: jsonSerialization['favoriteVendors'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['favoriteVendors'],
+            ),
       totalOrders: jsonSerialization['totalOrders'] as int,
       totalSpent: (jsonSerialization['totalSpent'] as num).toDouble(),
-      averageOrderValue:
-          (jsonSerialization['averageOrderValue'] as num).toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
+          .toDouble(),
       lastOrderAt: jsonSerialization['lastOrderAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastOrderAt']),
+              jsonSerialization['lastOrderAt'],
+            ),
       wishlistCount: jsonSerialization['wishlistCount'] as int,
       reviewsGiven: jsonSerialization['reviewsGiven'] as int,
       averageRating: (jsonSerialization['averageRating'] as num?)?.toDouble(),
-      searchHistory: (jsonSerialization['searchHistory'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
-      viewedProducts: (jsonSerialization['viewedProducts'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
-      preferredCategories: (jsonSerialization['preferredCategories'] as List?)
-          ?.map((e) => e as String)
-          .toList(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      searchHistory: jsonSerialization['searchHistory'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['searchHistory'],
+            ),
+      viewedProducts: jsonSerialization['viewedProducts'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['viewedProducts'],
+            ),
+      preferredCategories: jsonSerialization['preferredCategories'] == null
+          ? null
+          : _i3.Protocol().deserialize<List<String>>(
+              jsonSerialization['preferredCategories'],
+            ),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue userId;
@@ -171,6 +183,7 @@ abstract class CustomerProfile implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'CustomerProfile',
       'id': id.toJson(),
       'userId': userId.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -223,25 +236,25 @@ class _CustomerProfileImpl extends CustomerProfile {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          preferredPaymentMethod: preferredPaymentMethod,
-          savedAddresses: savedAddresses,
-          favoriteVendors: favoriteVendors,
-          totalOrders: totalOrders,
-          totalSpent: totalSpent,
-          averageOrderValue: averageOrderValue,
-          lastOrderAt: lastOrderAt,
-          wishlistCount: wishlistCount,
-          reviewsGiven: reviewsGiven,
-          averageRating: averageRating,
-          searchHistory: searchHistory,
-          viewedProducts: viewedProducts,
-          preferredCategories: preferredCategories,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         preferredPaymentMethod: preferredPaymentMethod,
+         savedAddresses: savedAddresses,
+         favoriteVendors: favoriteVendors,
+         totalOrders: totalOrders,
+         totalSpent: totalSpent,
+         averageOrderValue: averageOrderValue,
+         lastOrderAt: lastOrderAt,
+         wishlistCount: wishlistCount,
+         reviewsGiven: reviewsGiven,
+         averageRating: averageRating,
+         searchHistory: searchHistory,
+         viewedProducts: viewedProducts,
+         preferredCategories: preferredCategories,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [CustomerProfile]
   /// with some or all fields replaced by the given arguments.
@@ -286,8 +299,9 @@ class _CustomerProfileImpl extends CustomerProfile {
       lastOrderAt: lastOrderAt is DateTime? ? lastOrderAt : this.lastOrderAt,
       wishlistCount: wishlistCount ?? this.wishlistCount,
       reviewsGiven: reviewsGiven ?? this.reviewsGiven,
-      averageRating:
-          averageRating is double? ? averageRating : this.averageRating,
+      averageRating: averageRating is double?
+          ? averageRating
+          : this.averageRating,
       searchHistory: searchHistory is List<String>?
           ? searchHistory
           : this.searchHistory?.map((e0) => e0).toList(),

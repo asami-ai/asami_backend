@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../subscription/subscription.dart' as _i2;
 import '../user/subscription_tier.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class SubscriptionEvent
     implements _i1.TableRow<int?>, _i1.ProtocolSerialization {
@@ -46,27 +48,35 @@ abstract class SubscriptionEvent
   factory SubscriptionEvent.fromJson(Map<String, dynamic> jsonSerialization) {
     return SubscriptionEvent(
       id: jsonSerialization['id'] as int?,
-      eventId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['eventId']),
+      eventId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['eventId'],
+      ),
       subscriptionId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['subscriptionId']),
+        jsonSerialization['subscriptionId'],
+      ),
       subscription: jsonSerialization['subscription'] == null
           ? null
-          : _i2.Subscription.fromJson(
-              (jsonSerialization['subscription'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i4.Protocol().deserialize<_i2.Subscription>(
+              jsonSerialization['subscription'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       eventType: jsonSerialization['eventType'] as String,
       eventData: jsonSerialization['eventData'] as String?,
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
       tier: jsonSerialization['tier'] == null
           ? null
-          : _i3.SubscriptionTier.fromJson((jsonSerialization['tier'] as int)),
+          : _i3.SubscriptionTier.fromJson(
+              (jsonSerialization['tier'] as String),
+            ),
       previousTier: jsonSerialization['previousTier'] == null
           ? null
           : _i3.SubscriptionTier.fromJson(
-              (jsonSerialization['previousTier'] as int)),
+              (jsonSerialization['previousTier'] as String),
+            ),
     );
   }
 
@@ -116,6 +126,7 @@ abstract class SubscriptionEvent
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SubscriptionEvent',
       if (id != null) 'id': id,
       'eventId': eventId.toJson(),
       'subscriptionId': subscriptionId.toJson(),
@@ -132,6 +143,7 @@ abstract class SubscriptionEvent
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'SubscriptionEvent',
       if (id != null) 'id': id,
       'eventId': eventId.toJson(),
       'subscriptionId': subscriptionId.toJson(),
@@ -146,8 +158,9 @@ abstract class SubscriptionEvent
     };
   }
 
-  static SubscriptionEventInclude include(
-      {_i2.SubscriptionInclude? subscription}) {
+  static SubscriptionEventInclude include({
+    _i2.SubscriptionInclude? subscription,
+  }) {
     return SubscriptionEventInclude._(subscription: subscription);
   }
 
@@ -192,17 +205,17 @@ class _SubscriptionEventImpl extends SubscriptionEvent {
     _i3.SubscriptionTier? tier,
     _i3.SubscriptionTier? previousTier,
   }) : super._(
-          id: id,
-          eventId: eventId,
-          subscriptionId: subscriptionId,
-          subscription: subscription,
-          vendorId: vendorId,
-          eventType: eventType,
-          eventData: eventData,
-          createdAt: createdAt,
-          tier: tier,
-          previousTier: previousTier,
-        );
+         id: id,
+         eventId: eventId,
+         subscriptionId: subscriptionId,
+         subscription: subscription,
+         vendorId: vendorId,
+         eventType: eventType,
+         eventData: eventData,
+         createdAt: createdAt,
+         tier: tier,
+         previousTier: previousTier,
+       );
 
   /// Returns a shallow copy of this [SubscriptionEvent]
   /// with some or all fields replaced by the given arguments.
@@ -239,9 +252,64 @@ class _SubscriptionEventImpl extends SubscriptionEvent {
   }
 }
 
+class SubscriptionEventUpdateTable
+    extends _i1.UpdateTable<SubscriptionEventTable> {
+  SubscriptionEventUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> eventId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.eventId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> subscriptionId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.subscriptionId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> eventType(String value) => _i1.ColumnValue(
+    table.eventType,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> eventData(String? value) => _i1.ColumnValue(
+    table.eventData,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<_i3.SubscriptionTier, _i3.SubscriptionTier> tier(
+    _i3.SubscriptionTier? value,
+  ) => _i1.ColumnValue(
+    table.tier,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.SubscriptionTier, _i3.SubscriptionTier> previousTier(
+    _i3.SubscriptionTier? value,
+  ) => _i1.ColumnValue(
+    table.previousTier,
+    value,
+  );
+}
+
 class SubscriptionEventTable extends _i1.Table<int?> {
   SubscriptionEventTable({super.tableRelation})
-      : super(tableName: 'subscription_events') {
+    : super(tableName: 'subscription_events') {
+    updateTable = SubscriptionEventUpdateTable(this);
     eventId = _i1.ColumnUuid(
       'eventId',
       this,
@@ -269,14 +337,16 @@ class SubscriptionEventTable extends _i1.Table<int?> {
     tier = _i1.ColumnEnum(
       'tier',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     previousTier = _i1.ColumnEnum(
       'previousTier',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
   }
+
+  late final SubscriptionEventUpdateTable updateTable;
 
   late final _i1.ColumnUuid eventId;
 
@@ -311,16 +381,16 @@ class SubscriptionEventTable extends _i1.Table<int?> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        eventId,
-        subscriptionId,
-        vendorId,
-        eventType,
-        eventData,
-        createdAt,
-        tier,
-        previousTier,
-      ];
+    id,
+    eventId,
+    subscriptionId,
+    vendorId,
+    eventType,
+    eventData,
+    createdAt,
+    tier,
+    previousTier,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -532,6 +602,48 @@ class SubscriptionEventRepository {
     );
   }
 
+  /// Updates a single [SubscriptionEvent] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<SubscriptionEvent?> updateById(
+    _i1.Session session,
+    int id, {
+    required _i1.ColumnValueListBuilder<SubscriptionEventUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<SubscriptionEvent>(
+      id,
+      columnValues: columnValues(SubscriptionEvent.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [SubscriptionEvent]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<SubscriptionEvent>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<SubscriptionEventUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<SubscriptionEventTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<SubscriptionEventTable>? orderBy,
+    _i1.OrderByListBuilder<SubscriptionEventTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<SubscriptionEvent>(
+      columnValues: columnValues(SubscriptionEvent.t.updateTable),
+      where: where(SubscriptionEvent.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(SubscriptionEvent.t),
+      orderByList: orderByList?.call(SubscriptionEvent.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [SubscriptionEvent]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -604,8 +716,9 @@ class SubscriptionEventAttachRowRepository {
       throw ArgumentError.notNull('subscription.id');
     }
 
-    var $subscriptionEvent =
-        subscriptionEvent.copyWith(subscriptionId: subscription.id);
+    var $subscriptionEvent = subscriptionEvent.copyWith(
+      subscriptionId: subscription.id,
+    );
     await session.db.updateRow<SubscriptionEvent>(
       $subscriptionEvent,
       columns: [SubscriptionEvent.t.subscriptionId],

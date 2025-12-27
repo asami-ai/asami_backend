@@ -1,5 +1,7 @@
 import 'package:asami_server/src/endpoints/usage_endpoint.dart';
 import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_webhook_handler.dart';
+import 'package:asami_server/src/services/product/product_creation_handler.dart';
+import 'package:asami_server/src/services/product/product_creation_state.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:serverpod/serverpod.dart';
@@ -21,6 +23,8 @@ import 'ai_services/tools/tool_registry.dart';
 import 'ai_services/tools/customer_tools.dart';
 import 'ai_services/tools/vendor_tools.dart';
 import 'auth/auth_state_manager.dart';
+import 'catalog/meta_catalog_service.dart';
+import 'media/enanced_media_services.dart';
 import 'messaging/messaging_service_factory.dart';
 import 'messaging/telegram/telegram_callback_handler.dart';
 import 'messaging/telegram/telegram_webhook_handler.dart';
@@ -43,6 +47,8 @@ Future<void> setupDependencyInjection({
   String? claudeApiKey,
   String? geminiApiKey,
   String? grokApiKey,
+  String? metaAccessToken,
+  String? metaCatalogId,
 }) async {
   Log.info('🔧 Setting up dependency injection...');
 
@@ -66,6 +72,10 @@ Future<void> setupDependencyInjection({
     telegramBotToken: telegramBotToken,
     telegramWebhookUrl: telegramWebhookUrl,
   );
+
+  await _initializeMetaService(metaAccessToken ?? '', metaCatalogId ??'');
+
+  await _setupProductCreationHandler();
 
   Log.info('\n✅ Dependency injection setup complete!\n');
 }
@@ -322,6 +332,50 @@ Future<void> _setupTelegram({
   }
 }
 
+Future<void> _initializeMetaService(
+    String metaAccessToken, String metaCatalogId) async {
+  try {
+    // Add Meta Catalog Service
+    final metaCatalogService = MetaCatalogService(
+      accessToken: metaAccessToken,
+      catalogId: metaCatalogId,
+    );
+
+    final enhancedMediaService = EnhancedMediaService(
+      whatsappService: getIt<WhatsAppService>(),
+      telegramService: getIt<TelegramService>(),
+    );
+    getIt.registerLazySingleton<MetaCatalogService>(() => metaCatalogService);
+    getIt.registerLazySingleton<EnhancedMediaService>(
+        () => enhancedMediaService);
+  } catch (e, stack) {
+    Log.error('Error during tier initialization', error: e, stackTrace: stack);
+  } finally {}
+}
+
+// ==================== PRODUCT CREATION HANDLER SETUP (NEW) ====================
+
+Future<void> _setupProductCreationHandler() async {
+  try {
+    Log.info('\n🏭 Setting up Product Creation Handler...');
+
+    final stateManager =
+        getIt.registerLazySingleton<ProductCreationStateManager>(
+            () => ProductCreationStateManager());
+
+    final productCreationHandler = ProductCreationHandler(
+        mediaService: getIt<EnhancedMediaService>(),
+        stateManager: getIt<ProductCreationStateManager>());
+
+    getIt.registerLazySingleton<ProductCreationHandler>(
+        () => productCreationHandler);
+
+    Log.info('   ✅ Product creation handler factory ready');
+  } catch (e, stack) {
+    Log.error('Error during tier initialization', error: e, stackTrace: stack);
+  } finally {}
+}
+
 void _initializeMessagingFactory() {
   Log.info('\n🏭 Initializing Messaging Service Factory...');
 
@@ -341,97 +395,116 @@ void _initializeMessagingFactory() {
 
 // In a setup endpoint or initialization script
 Future<void> initializeTierFeatures() async {
-  final tiers = [
-    TierFeature(
-      id: Uuid().v4obj(),
-      tier: SubscriptionTier.freemium,
-      dailyToolCallLimit: 15,
-      monthlyToolCallLimit: 300,
-      dailyAIMessageLimit: 100,
-      monthlyAIMessageLimit: 2000,
-      productLimit: 20,
-      aiDescriptionLimit: 50,
-      allowBulkOperations: false,
-      allowAdvancedAnalytics: false,
-      allowAPIAccess: false,
-      allowWhiteLabel: false,
-      supportPriority: 'standard',
-      supportResponseTime: 24,
-      monthlyPrice: 0.0,
-      yearlyPrice: 0.0,
-      platformTransactionFee: 0.05,
-      overageToolCallPrice: 0.01,
-      overageAIMessagePrice: 0.001,
-      overageProductPrice: 1.0,
-      overageAIDescriptionPrice: 0.1,
-      isActive: true,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    TierFeature(
-      id: Uuid().v4obj(),
-      tier: SubscriptionTier.pro,
-      dailyToolCallLimit: 50,
-      monthlyToolCallLimit: 1200,
-      dailyAIMessageLimit: 200,
-      monthlyAIMessageLimit: 5000,
-      productLimit: 100,
-      aiDescriptionLimit: 200,
-      allowBulkOperations: true,
-      allowAdvancedAnalytics: true,
-      allowAPIAccess: false,
-      allowWhiteLabel: false,
-      supportPriority: 'priority',
-      supportResponseTime: 12,
-      monthlyPrice: 29.99,
-      yearlyPrice: 299.99,
-      platformTransactionFee: 0.03,
-      overageToolCallPrice: 0.008,
-      overageAIMessagePrice: 0.0008,
-      overageProductPrice: 0.5,
-      overageAIDescriptionPrice: 0.08,
-      isActive: true,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    TierFeature(
-      id: Uuid().v4obj(),
-      tier: SubscriptionTier.pro_max,
-      dailyToolCallLimit: 100,
-      monthlyToolCallLimit: 2500,
-      dailyAIMessageLimit: 500,
-      monthlyAIMessageLimit: 12000,
-      productLimit: -1, // Unlimited
-      aiDescriptionLimit: 500,
-      allowBulkOperations: true,
-      allowAdvancedAnalytics: true,
-      allowAPIAccess: true,
-      allowWhiteLabel: true,
-      supportPriority: 'premium',
-      supportResponseTime: 4,
-      monthlyPrice: 99.99,
-      yearlyPrice: 999.99,
-      platformTransactionFee: 0.02,
-      overageToolCallPrice: 0.005,
-      overageAIMessagePrice: 0.0005,
-      overageProductPrice: 0.0,
-      overageAIDescriptionPrice: 0.05,
-      isActive: true,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  ];
   var session = await Serverpod.instance.createSession();
 
   try {
-    for (var tier in tiers) {
-      await TierFeature.db.insertRow(session, tier);
+    // 1. Fetch all existing tiers from the database
+    final existingTiers = await TierFeature.db.find(session);
+
+    // 2. Map them to a set of tiers for easy lookup
+    final existingTierTypes = existingTiers.map((t) => t.tier).toSet();
+
+    final tiersToCreate = [
+      TierFeature(
+        id: Uuid().v4obj(),
+        tier: SubscriptionTier.freemium,
+        dailyToolCallLimit: 15,
+        monthlyToolCallLimit: 300,
+        dailyAIMessageLimit: 100,
+        monthlyAIMessageLimit: 2000,
+        productLimit: 20,
+        aiDescriptionLimit: 50,
+        allowBulkOperations: false,
+        allowAdvancedAnalytics: false,
+        allowAPIAccess: false,
+        allowWhiteLabel: false,
+        supportPriority: 'standard',
+        supportResponseTime: 24,
+        monthlyPrice: 0.0,
+        yearlyPrice: 0.0,
+        platformTransactionFee: 0.05,
+        overageToolCallPrice: 0.01,
+        overageAIMessagePrice: 0.001,
+        overageProductPrice: 1.0,
+        overageAIDescriptionPrice: 0.1,
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      TierFeature(
+        id: Uuid().v4obj(),
+        tier: SubscriptionTier.pro,
+        dailyToolCallLimit: 50,
+        monthlyToolCallLimit: 1200,
+        dailyAIMessageLimit: 200,
+        monthlyAIMessageLimit: 5000,
+        productLimit: 100,
+        aiDescriptionLimit: 200,
+        allowBulkOperations: true,
+        allowAdvancedAnalytics: true,
+        allowAPIAccess: false,
+        allowWhiteLabel: false,
+        supportPriority: 'priority',
+        supportResponseTime: 12,
+        monthlyPrice: 29.99,
+        yearlyPrice: 299.99,
+        platformTransactionFee: 0.03,
+        overageToolCallPrice: 0.008,
+        overageAIMessagePrice: 0.0008,
+        overageProductPrice: 0.5,
+        overageAIDescriptionPrice: 0.08,
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+      TierFeature(
+        id: Uuid().v4obj(),
+        tier: SubscriptionTier.pro_max,
+        dailyToolCallLimit: 100,
+        monthlyToolCallLimit: 2500,
+        dailyAIMessageLimit: 500,
+        monthlyAIMessageLimit: 12000,
+        productLimit: -1, // Unlimited
+        aiDescriptionLimit: 500,
+        allowBulkOperations: true,
+        allowAdvancedAnalytics: true,
+        allowAPIAccess: true,
+        allowWhiteLabel: true,
+        supportPriority: 'premium',
+        supportResponseTime: 4,
+        monthlyPrice: 99.99,
+        yearlyPrice: 999.99,
+        platformTransactionFee: 0.02,
+        overageToolCallPrice: 0.005,
+        overageAIMessagePrice: 0.0005,
+        overageProductPrice: 0.0,
+        overageAIDescriptionPrice: 0.05,
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+    ];
+
+    int createdCount = 0;
+
+    // 3. Loop through our desired tiers and only insert if missing
+    for (var tier in tiersToCreate) {
+      if (!existingTierTypes.contains(tier.tier)) {
+        await TierFeature.db.insertRow(session, tier);
+        createdCount++;
+        Log.info('Created tier: ${tier.tier.name}');
+      }
     }
-  } catch (e) {
-    print(e);
+
+    if (createdCount == 0) {
+      Log.info('All tier features already exist. Skipping initialization.');
+    } else {
+      Log.success('Initialized $createdCount new tier features.');
+    }
+  } catch (e, stack) {
+    Log.error('Error during tier initialization', error: e, stackTrace: stack);
   } finally {
-    await session.close(); // Must close manually!
-    print('✅ Tier features initialized');
+    await session.close();
   }
 }
 

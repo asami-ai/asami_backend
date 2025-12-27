@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: unnecessary_null_comparison
 
@@ -14,6 +15,7 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../subscription/subscription.dart' as _i2;
 import '../order/payment_method.dart' as _i3;
+import 'package:asami_server/src/generated/protocol.dart' as _i4;
 
 abstract class SubscriptionInvoice
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
@@ -39,16 +41,16 @@ abstract class SubscriptionInvoice
     required this.dueDate,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        currency = currency ?? 'USD',
-        subscriptionAmount = subscriptionAmount ?? 0.0,
-        usageCharges = usageCharges ?? 0.0,
-        taxAmount = taxAmount ?? 0.0,
-        discountAmount = discountAmount ?? 0.0,
-        status = status ?? 'pending',
-        isPaid = isPaid ?? false,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       currency = currency ?? 'USD',
+       subscriptionAmount = subscriptionAmount ?? 0.0,
+       usageCharges = usageCharges ?? 0.0,
+       taxAmount = taxAmount ?? 0.0,
+       discountAmount = discountAmount ?? 0.0,
+       status = status ?? 'pending',
+       isPaid = isPaid ?? false,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory SubscriptionInvoice({
     _i1.UuidValue? id,
@@ -78,18 +80,21 @@ abstract class SubscriptionInvoice
     return SubscriptionInvoice(
       id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       subscriptionId: _i1.UuidValueJsonExtension.fromJson(
-          jsonSerialization['subscriptionId']),
+        jsonSerialization['subscriptionId'],
+      ),
       subscription: jsonSerialization['subscription'] == null
           ? null
-          : _i2.Subscription.fromJson(
-              (jsonSerialization['subscription'] as Map<String, dynamic>)),
-      vendorId:
-          _i1.UuidValueJsonExtension.fromJson(jsonSerialization['vendorId']),
+          : _i4.Protocol().deserialize<_i2.Subscription>(
+              jsonSerialization['subscription'],
+            ),
+      vendorId: _i1.UuidValueJsonExtension.fromJson(
+        jsonSerialization['vendorId'],
+      ),
       invoiceNumber: jsonSerialization['invoiceNumber'] as String,
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String,
-      subscriptionAmount:
-          (jsonSerialization['subscriptionAmount'] as num).toDouble(),
+      subscriptionAmount: (jsonSerialization['subscriptionAmount'] as num)
+          .toDouble(),
       usageCharges: (jsonSerialization['usageCharges'] as num).toDouble(),
       taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
       discountAmount: (jsonSerialization['discountAmount'] as num).toDouble(),
@@ -98,21 +103,26 @@ abstract class SubscriptionInvoice
       paymentMethod: jsonSerialization['paymentMethod'] == null
           ? null
           : _i3.PaymentMethod.fromJson(
-              (jsonSerialization['paymentMethod'] as int)),
+              (jsonSerialization['paymentMethod'] as String),
+            ),
       paymentTransactionId:
           jsonSerialization['paymentTransactionId'] as String?,
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
-      periodStart:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodStart']),
-      periodEnd:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['periodEnd']),
+      periodStart: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodStart'],
+      ),
+      periodEnd: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['periodEnd'],
+      ),
       dueDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dueDate']),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
     );
   }
 
@@ -195,6 +205,7 @@ abstract class SubscriptionInvoice
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'SubscriptionInvoice',
       'id': id.toJson(),
       'subscriptionId': subscriptionId.toJson(),
       if (subscription != null) 'subscription': subscription?.toJson(),
@@ -223,6 +234,7 @@ abstract class SubscriptionInvoice
   @override
   Map<String, dynamic> toJsonForProtocol() {
     return {
+      '__className__': 'SubscriptionInvoice',
       'id': id.toJson(),
       'subscriptionId': subscriptionId.toJson(),
       if (subscription != null)
@@ -249,8 +261,9 @@ abstract class SubscriptionInvoice
     };
   }
 
-  static SubscriptionInvoiceInclude include(
-      {_i2.SubscriptionInclude? subscription}) {
+  static SubscriptionInvoiceInclude include({
+    _i2.SubscriptionInclude? subscription,
+  }) {
     return SubscriptionInvoiceInclude._(subscription: subscription);
   }
 
@@ -306,28 +319,28 @@ class _SubscriptionInvoiceImpl extends SubscriptionInvoice {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) : super._(
-          id: id,
-          subscriptionId: subscriptionId,
-          subscription: subscription,
-          vendorId: vendorId,
-          invoiceNumber: invoiceNumber,
-          amount: amount,
-          currency: currency,
-          subscriptionAmount: subscriptionAmount,
-          usageCharges: usageCharges,
-          taxAmount: taxAmount,
-          discountAmount: discountAmount,
-          status: status,
-          isPaid: isPaid,
-          paymentMethod: paymentMethod,
-          paymentTransactionId: paymentTransactionId,
-          paidAt: paidAt,
-          periodStart: periodStart,
-          periodEnd: periodEnd,
-          dueDate: dueDate,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+         id: id,
+         subscriptionId: subscriptionId,
+         subscription: subscription,
+         vendorId: vendorId,
+         invoiceNumber: invoiceNumber,
+         amount: amount,
+         currency: currency,
+         subscriptionAmount: subscriptionAmount,
+         usageCharges: usageCharges,
+         taxAmount: taxAmount,
+         discountAmount: discountAmount,
+         status: status,
+         isPaid: isPaid,
+         paymentMethod: paymentMethod,
+         paymentTransactionId: paymentTransactionId,
+         paidAt: paidAt,
+         periodStart: periodStart,
+         periodEnd: periodEnd,
+         dueDate: dueDate,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+       );
 
   /// Returns a shallow copy of this [SubscriptionInvoice]
   /// with some or all fields replaced by the given arguments.
@@ -388,9 +401,125 @@ class _SubscriptionInvoiceImpl extends SubscriptionInvoice {
   }
 }
 
+class SubscriptionInvoiceUpdateTable
+    extends _i1.UpdateTable<SubscriptionInvoiceTable> {
+  SubscriptionInvoiceUpdateTable(super.table);
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> subscriptionId(
+    _i1.UuidValue value,
+  ) => _i1.ColumnValue(
+    table.subscriptionId,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> vendorId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.vendorId,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> invoiceNumber(String value) =>
+      _i1.ColumnValue(
+        table.invoiceNumber,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> amount(double value) => _i1.ColumnValue(
+    table.amount,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> currency(String value) => _i1.ColumnValue(
+    table.currency,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> subscriptionAmount(double value) =>
+      _i1.ColumnValue(
+        table.subscriptionAmount,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> usageCharges(double value) => _i1.ColumnValue(
+    table.usageCharges,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> taxAmount(double value) => _i1.ColumnValue(
+    table.taxAmount,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> discountAmount(double value) =>
+      _i1.ColumnValue(
+        table.discountAmount,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> status(String value) => _i1.ColumnValue(
+    table.status,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isPaid(bool value) => _i1.ColumnValue(
+    table.isPaid,
+    value,
+  );
+
+  _i1.ColumnValue<_i3.PaymentMethod, _i3.PaymentMethod> paymentMethod(
+    _i3.PaymentMethod? value,
+  ) => _i1.ColumnValue(
+    table.paymentMethod,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> paymentTransactionId(String? value) =>
+      _i1.ColumnValue(
+        table.paymentTransactionId,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> paidAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.paidAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> periodStart(DateTime value) =>
+      _i1.ColumnValue(
+        table.periodStart,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> periodEnd(DateTime value) =>
+      _i1.ColumnValue(
+        table.periodEnd,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> dueDate(DateTime value) =>
+      _i1.ColumnValue(
+        table.dueDate,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> createdAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.createdAt,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> updatedAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.updatedAt,
+        value,
+      );
+}
+
 class SubscriptionInvoiceTable extends _i1.Table<_i1.UuidValue> {
   SubscriptionInvoiceTable({super.tableRelation})
-      : super(tableName: 'subscription_invoices') {
+    : super(tableName: 'subscription_invoices') {
+    updateTable = SubscriptionInvoiceUpdateTable(this);
     subscriptionId = _i1.ColumnUuid(
       'subscriptionId',
       this,
@@ -445,7 +574,7 @@ class SubscriptionInvoiceTable extends _i1.Table<_i1.UuidValue> {
     paymentMethod = _i1.ColumnEnum(
       'paymentMethod',
       this,
-      _i1.EnumSerialization.byIndex,
+      _i1.EnumSerialization.byName,
     );
     paymentTransactionId = _i1.ColumnString(
       'paymentTransactionId',
@@ -478,6 +607,8 @@ class SubscriptionInvoiceTable extends _i1.Table<_i1.UuidValue> {
       hasDefault: true,
     );
   }
+
+  late final SubscriptionInvoiceUpdateTable updateTable;
 
   late final _i1.ColumnUuid subscriptionId;
 
@@ -534,27 +665,27 @@ class SubscriptionInvoiceTable extends _i1.Table<_i1.UuidValue> {
 
   @override
   List<_i1.Column> get columns => [
-        id,
-        subscriptionId,
-        vendorId,
-        invoiceNumber,
-        amount,
-        currency,
-        subscriptionAmount,
-        usageCharges,
-        taxAmount,
-        discountAmount,
-        status,
-        isPaid,
-        paymentMethod,
-        paymentTransactionId,
-        paidAt,
-        periodStart,
-        periodEnd,
-        dueDate,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    subscriptionId,
+    vendorId,
+    invoiceNumber,
+    amount,
+    currency,
+    subscriptionAmount,
+    usageCharges,
+    taxAmount,
+    discountAmount,
+    status,
+    isPaid,
+    paymentMethod,
+    paymentTransactionId,
+    paidAt,
+    periodStart,
+    periodEnd,
+    dueDate,
+    createdAt,
+    updatedAt,
+  ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
@@ -766,6 +897,48 @@ class SubscriptionInvoiceRepository {
     );
   }
 
+  /// Updates a single [SubscriptionInvoice] by its [id] with the specified [columnValues].
+  /// Returns the updated row or null if no row with the given id exists.
+  Future<SubscriptionInvoice?> updateById(
+    _i1.Session session,
+    _i1.UuidValue id, {
+    required _i1.ColumnValueListBuilder<SubscriptionInvoiceUpdateTable>
+    columnValues,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateById<SubscriptionInvoice>(
+      id,
+      columnValues: columnValues(SubscriptionInvoice.t.updateTable),
+      transaction: transaction,
+    );
+  }
+
+  /// Updates all [SubscriptionInvoice]s matching the [where] expression with the specified [columnValues].
+  /// Returns the list of updated rows.
+  Future<List<SubscriptionInvoice>> updateWhere(
+    _i1.Session session, {
+    required _i1.ColumnValueListBuilder<SubscriptionInvoiceUpdateTable>
+    columnValues,
+    required _i1.WhereExpressionBuilder<SubscriptionInvoiceTable> where,
+    int? limit,
+    int? offset,
+    _i1.OrderByBuilder<SubscriptionInvoiceTable>? orderBy,
+    _i1.OrderByListBuilder<SubscriptionInvoiceTable>? orderByList,
+    bool orderDescending = false,
+    _i1.Transaction? transaction,
+  }) async {
+    return session.db.updateWhere<SubscriptionInvoice>(
+      columnValues: columnValues(SubscriptionInvoice.t.updateTable),
+      where: where(SubscriptionInvoice.t),
+      limit: limit,
+      offset: offset,
+      orderBy: orderBy?.call(SubscriptionInvoice.t),
+      orderByList: orderByList?.call(SubscriptionInvoice.t),
+      orderDescending: orderDescending,
+      transaction: transaction,
+    );
+  }
+
   /// Deletes all [SubscriptionInvoice]s in the list and returns the deleted rows.
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
@@ -838,8 +1011,9 @@ class SubscriptionInvoiceAttachRowRepository {
       throw ArgumentError.notNull('subscription.id');
     }
 
-    var $subscriptionInvoice =
-        subscriptionInvoice.copyWith(subscriptionId: subscription.id);
+    var $subscriptionInvoice = subscriptionInvoice.copyWith(
+      subscriptionId: subscription.id,
+    );
     await session.db.updateRow<SubscriptionInvoice>(
       $subscriptionInvoice,
       columns: [SubscriptionInvoice.t.subscriptionId],

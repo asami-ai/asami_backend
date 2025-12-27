@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:asami_server/src/services/auth/auth_state_manager.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
-import 'package:serverpod/serverpod.dart' hide Order;
+import 'package:serverpod/serverpod.dart' hide Order, Message;
 import '../generated/protocol.dart';
 import '../services/ai_services/core/agent_system.dart';
 import '../services/dependency_injection.dart';

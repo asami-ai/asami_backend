@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -18,26 +19,27 @@ enum UsageClass implements _i1.SerializableModel {
   power_user,
   excessive;
 
-  static UsageClass fromJson(int index) {
-    switch (index) {
-      case 0:
+  static UsageClass fromJson(String name) {
+    switch (name) {
+      case 'light':
         return UsageClass.light;
-      case 1:
+      case 'moderate':
         return UsageClass.moderate;
-      case 2:
+      case 'heavy':
         return UsageClass.heavy;
-      case 3:
+      case 'power_user':
         return UsageClass.power_user;
-      case 4:
+      case 'excessive':
         return UsageClass.excessive;
       default:
         throw ArgumentError(
-            'Value "$index" cannot be converted to "UsageClass"');
+          'Value "$name" cannot be converted to "UsageClass"',
+        );
     }
   }
 
   @override
-  int toJson() => index;
+  String toJson() => name;
 
   @override
   String toString() => name;

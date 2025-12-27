@@ -7,6 +7,7 @@
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
+// ignore_for_file: invalid_use_of_internal_member
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
@@ -14,6 +15,7 @@ import '../messaging/conversation_status.dart' as _i2;
 import '../user/user.dart' as _i3;
 import '../messaging/platfom_type.dart' as _i4;
 import '../user/user_type.dart' as _i5;
+import 'package:asami_client/src/protocol/protocol.dart' as _i6;
 
 abstract class Conversation implements _i1.SerializableModel {
   Conversation._({
@@ -46,13 +48,13 @@ abstract class Conversation implements _i1.SerializableModel {
     this.lastMessageAt,
     this.resolvedAt,
     this.archivedAt,
-  })  : id = id ?? _i1.Uuid().v4obj(),
-        status = status ?? _i2.ConversationStatus.active,
-        isEscalated = isEscalated ?? false,
-        messageCount = messageCount ?? 0,
-        botResponseCount = botResponseCount ?? 0,
-        createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+  }) : id = id ?? _i1.Uuid().v4obj(),
+       status = status ?? _i2.ConversationStatus.active,
+       isEscalated = isEscalated ?? false,
+       messageCount = messageCount ?? 0,
+       botResponseCount = botResponseCount ?? 0,
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Conversation({
     _i1.UuidValue? id,
@@ -94,15 +96,18 @@ abstract class Conversation implements _i1.SerializableModel {
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
-          : _i3.User.fromJson(
-              (jsonSerialization['user'] as Map<String, dynamic>)),
-      platform:
-          _i4.PlatformType.fromJson((jsonSerialization['platform'] as int)),
+          : _i6.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
+      platform: _i4.PlatformType.fromJson(
+        (jsonSerialization['platform'] as String),
+      ),
       platformUserId: jsonSerialization['platformUserId'] as String,
       platformUsername: jsonSerialization['platformUsername'] as String?,
-      userType: _i5.UserType.fromJson((jsonSerialization['userType'] as int)),
-      status:
-          _i2.ConversationStatus.fromJson((jsonSerialization['status'] as int)),
+      userType: _i5.UserType.fromJson(
+        (jsonSerialization['userType'] as String),
+      ),
+      status: _i2.ConversationStatus.fromJson(
+        (jsonSerialization['status'] as String),
+      ),
       sessionData: jsonSerialization['sessionData'] as String?,
       contextData: jsonSerialization['contextData'] as String?,
       activeCartId: jsonSerialization['activeCartId'] as String?,
@@ -117,20 +122,24 @@ abstract class Conversation implements _i1.SerializableModel {
       escalatedAt: jsonSerialization['escalatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['escalatedAt']),
+              jsonSerialization['escalatedAt'],
+            ),
       escalationReason: jsonSerialization['escalationReason'] as String?,
       messageCount: jsonSerialization['messageCount'] as int,
       botResponseCount: jsonSerialization['botResponseCount'] as int,
-      averageResponseTime:
-          (jsonSerialization['averageResponseTime'] as num?)?.toDouble(),
-      createdAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
-      updatedAt:
-          _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
+      averageResponseTime: (jsonSerialization['averageResponseTime'] as num?)
+          ?.toDouble(),
+      createdAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['createdAt'],
+      ),
+      updatedAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['updatedAt'],
+      ),
       lastMessageAt: jsonSerialization['lastMessageAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['lastMessageAt']),
+              jsonSerialization['lastMessageAt'],
+            ),
       resolvedAt: jsonSerialization['resolvedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['resolvedAt']),
@@ -140,9 +149,7 @@ abstract class Conversation implements _i1.SerializableModel {
     );
   }
 
-  /// The database id, set if the object has been inserted into the
-  /// database or if it has been fetched from the database. Otherwise,
-  /// the id will be null.
+  /// The id of the object.
   _i1.UuidValue id;
 
   _i1.UuidValue? userId;
@@ -238,6 +245,7 @@ abstract class Conversation implements _i1.SerializableModel {
   @override
   Map<String, dynamic> toJson() {
     return {
+      '__className__': 'Conversation',
       'id': id.toJson(),
       if (userId != null) 'userId': userId?.toJson(),
       if (user != null) 'user': user?.toJson(),
@@ -312,36 +320,36 @@ class _ConversationImpl extends Conversation {
     DateTime? resolvedAt,
     DateTime? archivedAt,
   }) : super._(
-          id: id,
-          userId: userId,
-          user: user,
-          platform: platform,
-          platformUserId: platformUserId,
-          platformUsername: platformUsername,
-          userType: userType,
-          status: status,
-          sessionData: sessionData,
-          contextData: contextData,
-          activeCartId: activeCartId,
-          currentProductId: currentProductId,
-          currentVendorId: currentVendorId,
-          lastIntent: lastIntent,
-          lastEntities: lastEntities,
-          agentState: agentState,
-          conversationSummary: conversationSummary,
-          isEscalated: isEscalated,
-          escalatedTo: escalatedTo,
-          escalatedAt: escalatedAt,
-          escalationReason: escalationReason,
-          messageCount: messageCount,
-          botResponseCount: botResponseCount,
-          averageResponseTime: averageResponseTime,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          lastMessageAt: lastMessageAt,
-          resolvedAt: resolvedAt,
-          archivedAt: archivedAt,
-        );
+         id: id,
+         userId: userId,
+         user: user,
+         platform: platform,
+         platformUserId: platformUserId,
+         platformUsername: platformUsername,
+         userType: userType,
+         status: status,
+         sessionData: sessionData,
+         contextData: contextData,
+         activeCartId: activeCartId,
+         currentProductId: currentProductId,
+         currentVendorId: currentVendorId,
+         lastIntent: lastIntent,
+         lastEntities: lastEntities,
+         agentState: agentState,
+         conversationSummary: conversationSummary,
+         isEscalated: isEscalated,
+         escalatedTo: escalatedTo,
+         escalatedAt: escalatedAt,
+         escalationReason: escalationReason,
+         messageCount: messageCount,
+         botResponseCount: botResponseCount,
+         averageResponseTime: averageResponseTime,
+         createdAt: createdAt,
+         updatedAt: updatedAt,
+         lastMessageAt: lastMessageAt,
+         resolvedAt: resolvedAt,
+         archivedAt: archivedAt,
+       );
 
   /// Returns a shallow copy of this [Conversation]
   /// with some or all fields replaced by the given arguments.
@@ -395,8 +403,9 @@ class _ConversationImpl extends Conversation {
       currentProductId: currentProductId is String?
           ? currentProductId
           : this.currentProductId,
-      currentVendorId:
-          currentVendorId is String? ? currentVendorId : this.currentVendorId,
+      currentVendorId: currentVendorId is String?
+          ? currentVendorId
+          : this.currentVendorId,
       lastIntent: lastIntent is String? ? lastIntent : this.lastIntent,
       lastEntities: lastEntities is String? ? lastEntities : this.lastEntities,
       agentState: agentState is String? ? agentState : this.agentState,
@@ -416,8 +425,9 @@ class _ConversationImpl extends Conversation {
           : this.averageResponseTime,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      lastMessageAt:
-          lastMessageAt is DateTime? ? lastMessageAt : this.lastMessageAt,
+      lastMessageAt: lastMessageAt is DateTime?
+          ? lastMessageAt
+          : this.lastMessageAt,
       resolvedAt: resolvedAt is DateTime? ? resolvedAt : this.resolvedAt,
       archivedAt: archivedAt is DateTime? ? archivedAt : this.archivedAt,
     );

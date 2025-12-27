@@ -1,9 +1,18 @@
+import 'dart:async';
+
+import 'package:asami_server/src/services/product/product_creation_handler.dart';
+import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/analytics_endpoint.dart';
 import '../../../endpoints/order_endpoint.dart';
 import '../../../endpoints/product_endpoint.dart';
 import '../../../endpoints/subscription_endpoint.dart';
 import '../../../generated/protocol.dart';
+import '../../catalog/meta_catalog_service.dart';
+import '../../dependency_injection.dart';
+import '../../media/enanced_media_services.dart';
+import '../../messaging/telegram/telegram_service.dart';
+import '../../messaging/whatsapp/whatsapp_service.dart';
 import 'tool_definition.dart';
 import 'tool_registry.dart';
 
@@ -102,7 +111,8 @@ class VendorTools {
   static ToolDefinition _createProductTool() {
     return ToolDefinition(
       name: 'create_product',
-      description: 'Create a new product listing. Can use AI to generate descriptions from images/text.',
+      description:
+          'Create a new product listing. Can use AI to generate descriptions from images/text.',
       parameters: {
         'name': ToolParameter(
           type: 'string',
@@ -141,8 +151,27 @@ class VendorTools {
         ),
         'use_ai_description': ToolParameter(
           type: 'boolean',
-          description: 'Whether AI was used to generate the description (for billing)',
+          description:
+              'Whether AI was used to generate the description (for billing)',
           defaultValue: false,
+        ),
+        'images': ToolParameter(
+          type: 'array',
+          description: 'Array of image media IDs from WhatsApp/Telegram',
+          items: ToolParameter(type: 'string'),
+        ),
+        'video_media_id': ToolParameter(
+          type: 'string',
+          description: 'Video media ID (Pro/Pro Max only)',
+        ),
+        'platform': ToolParameter(
+          type: 'string',
+          description: 'Platform where media was sent (whatsapp/telegram)',
+          enumValues: ['whatsapp', 'telegram'],
+        ),
+        'use_ai_image_generation': ToolParameter(
+          type: 'boolean',
+          description: 'Generate images with AI (Pro Max only)',
         ),
       },
       requiredParameters: ['name', 'description', 'category', 'base_price'],
@@ -159,11 +188,15 @@ class VendorTools {
           description: 'Product ID to update',
         ),
         'name': ToolParameter(type: 'string', description: 'New product name'),
-        'description': ToolParameter(type: 'string', description: 'New description'),
+        'description':
+            ToolParameter(type: 'string', description: 'New description'),
         'base_price': ToolParameter(type: 'number', description: 'New price'),
-        'discount_price': ToolParameter(type: 'number', description: 'Discount price'),
-        'quantity': ToolParameter(type: 'number', description: 'New stock quantity'),
-        'is_active': ToolParameter(type: 'boolean', description: 'Active status'),
+        'discount_price':
+            ToolParameter(type: 'number', description: 'Discount price'),
+        'quantity':
+            ToolParameter(type: 'number', description: 'New stock quantity'),
+        'is_active':
+            ToolParameter(type: 'boolean', description: 'Active status'),
       },
       requiredParameters: ['product_id'],
     );
@@ -266,7 +299,13 @@ class VendorTools {
         'status': ToolParameter(
           type: 'string',
           description: 'New order status',
-          enumValues: ['confirmed', 'processing', 'packed', 'shipped', 'delivered'],
+          enumValues: [
+            'confirmed',
+            'processing',
+            'packed',
+            'shipped',
+            'delivered'
+          ],
         ),
         'tracking_number': ToolParameter(
           type: 'string',
@@ -335,55 +374,96 @@ class VendorTools {
   ) async {
     try {
       final session = context.session!;
-      final name = arguments['name'] as String;
-      final description = arguments['description'] as String;
-      final shortDescription = arguments['short_description'] as String?;
-      final category = arguments['category'] as String;
-      
-      // FIX: Use num first, then convert to double/int
-      final basePrice = (arguments['base_price'] as num).toDouble();
-      final quantity = (arguments['quantity'] as num?)?.toInt() ?? 0;
-      
-      final color = (arguments['color'] as List?)?.cast<String>();
-      final size = (arguments['size'] as List?)?.cast<String>();
-      final useAi = arguments['use_ai_description'] as bool? ?? false;
 
-      final product = await ProductEndpoint().createProduct(
-        session,
-        vendorId: UuidValue.fromString(context.userId),
-        name: name,
-        description: description,
-        shortDescription: shortDescription,
-        category: category,
-        basePrice: basePrice,
-        quantity: quantity,
-        color: color,
-        size: size,
-        isAiGenerated: useAi,
-      );
+      // Get user
+      final user =
+          await User.db.findById(session, UuidValue.fromString(context.userId));
 
-      if (product == null) {
+      if (user == null) {
         return {
           'success': false,
-          'error': 'Failed to create product. You may have reached your product limit.',
+          'error': 'User not found',
         };
+      }
+
+      // Get conversation
+      final conversation = await Conversation.db.findById(
+        session,
+        UuidValue.fromString(context.conversationId),
+      );
+
+      if (conversation == null) {
+        return {
+          'success': false,
+          'error': 'Conversation not found',
+        };
+      }
+
+      // Get platform
+      final platform = PlatformType.values.firstWhere(
+        (p) => p.name == context.platform,
+        orElse: () => PlatformType.whatsapp,
+      );
+
+      // Initialize product creation handler
+      final productHandler = getIt<ProductCreationHandler>();
+
+      // Check if already in creation flow
+      if (await productHandler.isInCreationFlow(session, conversation.id.uuid)) {
+        return {
+          'success': false,
+          'error':
+              'You are already creating a product. Type "/cancel" to start over.',
+          'in_creation_flow': true,
+        };
+      }
+
+      // Initiate creation
+      final result = await productHandler.initiateCreation(
+        session,
+        user: user,
+        conversation: conversation,
+        platform: platform,
+      );
+
+      if (!result['success']) {
+        return result;
       }
 
       return {
         'success': true,
-        'message': 'Product created successfully!',
-        'product': {
-          'id': product.id.uuid,
-          'name': product.name,
-          'price': product.basePrice,
-          'status': product.status.name,
-        },
+        'message': result['message'],
+        'in_creation_flow': true,
+        'state': 'awaiting_images',
       };
-    } catch (e) {
+    } catch (e, stackTrace) {
+      Log.info('❌ Create product error: $e');
+      Log.error(e.toString(), stackTrace: stackTrace);
       return {
         'success': false,
-        'error': 'Failed to create product: ${e.toString()}',
+        'error': 'Failed to initiate product creation: ${e.toString()}',
       };
+    }
+  }
+
+// Remove _pushToMetaCatalog - now handled by ProductSyncService
+
+  // Background job
+  static Future<void> _pushToMetaCatalog(
+      Session session, Product product) async {
+    try {
+      final metaService = getIt<MetaCatalogService>();
+
+      // Wait for CDN upload to complete
+      await Future.delayed(Duration(seconds: 5));
+
+      // Reload product to get CDN URLs
+      final updatedProduct = await Product.db.findById(session, product.id);
+      if (updatedProduct == null) return;
+
+      await metaService.pushProduct(session, updatedProduct);
+    } catch (e) {
+      session.log('Failed to push to Meta: $e');
     }
   }
 
@@ -419,9 +499,12 @@ class VendorTools {
         };
       }
 
+      // Sync is handled automatically by ProductEndpoint
+
       return {
         'success': true,
-        'message': 'Product updated successfully!',
+        'message':
+            'Product updated successfully! Changes synced to Meta Catalog.',
       };
     } catch (e) {
       return {
@@ -439,23 +522,23 @@ class VendorTools {
       final session = context.session!;
       final productId = arguments['product_id'] as String;
 
-      // Soft delete by setting isActive to false
-      final product = await ProductEndpoint().updateProduct(
+      final success = await ProductEndpoint().deleteProduct(
         session,
-        productId: UuidValue.fromString(productId),
-        isActive: false,
+        UuidValue.fromString(productId),
       );
 
-      if (product == null) {
+      if (!success) {
         return {
           'success': false,
           'error': 'Failed to delete product',
         };
       }
 
+      // Sync is handled automatically by ProductEndpoint
+
       return {
         'success': true,
-        'message': 'Product deleted successfully',
+        'message': 'Product deleted successfully! Removed from all platforms.',
       };
     } catch (e) {
       return {
@@ -488,16 +571,18 @@ class VendorTools {
 
       return {
         'success': true,
-        'products': products.map((p) => {
-          'id': p.id.uuid,
-          'name': p.name,
-          'price': p.basePrice,
-          'quantity': p.quantity,
-          'status': p.status.name,
-          'views': p.viewCount,
-          'orders': p.orderCount,
-          'is_active': p.isActive,
-        }).toList(),
+        'products': products
+            .map((p) => {
+                  'id': p.id.uuid,
+                  'name': p.name,
+                  'price': p.basePrice,
+                  'quantity': p.quantity,
+                  'status': p.status.name,
+                  'views': p.viewCount,
+                  'orders': p.orderCount,
+                  'is_active': p.isActive,
+                })
+            .toList(),
         'count': products.length,
       };
     } catch (e) {
@@ -621,17 +706,19 @@ class VendorTools {
 
       return {
         'success': true,
-        'orders': orders.map((order) => {
-          'order_id': order.id.uuid,
-          'order_number': order.orderNumber,
-          'customer_name': order.customerName,
-          'customer_phone': order.customerPhone,
-          'status': order.status.name,
-          'total_amount': order.totalAmount,
-          'currency': order.currency,
-          'created_at': order.createdAt.toIso8601String(),
-          'payment_status': order.paymentStatus.name,
-        }).toList(),
+        'orders': orders
+            .map((order) => {
+                  'order_id': order.id.uuid,
+                  'order_number': order.orderNumber,
+                  'customer_name': order.customerName,
+                  'customer_phone': order.customerPhone,
+                  'status': order.status.name,
+                  'total_amount': order.totalAmount,
+                  'currency': order.currency,
+                  'created_at': order.createdAt.toIso8601String(),
+                  'payment_status': order.paymentStatus.name,
+                })
+            .toList(),
         'count': orders.length,
       };
     } catch (e) {
@@ -722,12 +809,14 @@ class VendorTools {
           'currency': order.currency,
           'customer_notes': order.customerNotes,
           'created_at': order.createdAt.toIso8601String(),
-          'items': items.map((item) => {
-            'product_name': item.productName,
-            'quantity': item.quantity,
-            'unit_price': item.unitPrice,
-            'total': item.totalAmount,
-          }).toList(),
+          'items': items
+              .map((item) => {
+                    'product_name': item.productName,
+                    'quantity': item.quantity,
+                    'unit_price': item.unitPrice,
+                    'total': item.totalAmount,
+                  })
+              .toList(),
         },
       };
     } catch (e) {
@@ -823,14 +912,16 @@ class VendorTools {
 
       return {
         'success': true,
-        'products': products.map((p) => {
-          'id': p.id.uuid,
-          'name': p.name,
-          'price': p.basePrice,
-          'orders': p.orderCount,
-          'views': p.viewCount,
-          'revenue': p.basePrice * p.orderCount,
-        }).toList(),
+        'products': products
+            .map((p) => {
+                  'id': p.id.uuid,
+                  'name': p.name,
+                  'price': p.basePrice,
+                  'orders': p.orderCount,
+                  'views': p.viewCount,
+                  'revenue': p.basePrice * p.orderCount,
+                })
+            .toList(),
         'count': products.length,
       };
     } catch (e) {
@@ -844,25 +935,39 @@ class VendorTools {
   // Helper methods
   static ProductStatus _parseProductStatus(String status) {
     switch (status.toLowerCase()) {
-      case 'draft': return ProductStatus.draft;
-      case 'active': return ProductStatus.active;
-      case 'out_of_stock': return ProductStatus.out_of_stock;
-      case 'discontinued': return ProductStatus.discontinued;
-      default: return ProductStatus.active;
+      case 'draft':
+        return ProductStatus.draft;
+      case 'active':
+        return ProductStatus.active;
+      case 'out_of_stock':
+        return ProductStatus.out_of_stock;
+      case 'discontinued':
+        return ProductStatus.discontinued;
+      default:
+        return ProductStatus.active;
     }
   }
 
   static OrderStatus _parseOrderStatus(String status) {
     switch (status.toLowerCase()) {
-      case 'pending': return OrderStatus.pending;
-      case 'confirmed': return OrderStatus.confirmed;
-      case 'processing': return OrderStatus.processing;
-      case 'packed': return OrderStatus.packed;
-      case 'shipped': return OrderStatus.shipped;
-      case 'out_for_delivery': return OrderStatus.out_for_delivery;
-      case 'delivered': return OrderStatus.delivered;
-      case 'cancelled': return OrderStatus.cancelled;
-      default: return OrderStatus.pending;
+      case 'pending':
+        return OrderStatus.pending;
+      case 'confirmed':
+        return OrderStatus.confirmed;
+      case 'processing':
+        return OrderStatus.processing;
+      case 'packed':
+        return OrderStatus.packed;
+      case 'shipped':
+        return OrderStatus.shipped;
+      case 'out_for_delivery':
+        return OrderStatus.out_for_delivery;
+      case 'delivered':
+        return OrderStatus.delivered;
+      case 'cancelled':
+        return OrderStatus.cancelled;
+      default:
+        return OrderStatus.pending;
     }
   }
 }
