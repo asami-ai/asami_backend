@@ -111,7 +111,9 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
 
   factory VendorAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return VendorAnalytics(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       vendorId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['vendorId'],
       ),
@@ -122,40 +124,41 @@ abstract class VendorAnalytics implements _i1.SerializableModel {
             ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
-      totalOrders: jsonSerialization['totalOrders'] as int,
-      completedOrders: jsonSerialization['completedOrders'] as int,
-      cancelledOrders: jsonSerialization['cancelledOrders'] as int,
-      totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
-          .toDouble(),
-      totalProducts: jsonSerialization['totalProducts'] as int,
-      activeProducts: jsonSerialization['activeProducts'] as int,
-      outOfStockProducts: jsonSerialization['outOfStockProducts'] as int,
-      newProductsAdded: jsonSerialization['newProductsAdded'] as int,
-      totalCustomers: jsonSerialization['totalCustomers'] as int,
-      newCustomers: jsonSerialization['newCustomers'] as int,
-      returningCustomers: jsonSerialization['returningCustomers'] as int,
-      productViews: jsonSerialization['productViews'] as int,
-      wishlistAdds: jsonSerialization['wishlistAdds'] as int,
-      cartAdds: jsonSerialization['cartAdds'] as int,
-      conversionRate: (jsonSerialization['conversionRate'] as num).toDouble(),
+      totalOrders: jsonSerialization['totalOrders'] as int?,
+      completedOrders: jsonSerialization['completedOrders'] as int?,
+      cancelledOrders: jsonSerialization['cancelledOrders'] as int?,
+      totalRevenue: (jsonSerialization['totalRevenue'] as num?)?.toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num?)
+          ?.toDouble(),
+      totalProducts: jsonSerialization['totalProducts'] as int?,
+      activeProducts: jsonSerialization['activeProducts'] as int?,
+      outOfStockProducts: jsonSerialization['outOfStockProducts'] as int?,
+      newProductsAdded: jsonSerialization['newProductsAdded'] as int?,
+      totalCustomers: jsonSerialization['totalCustomers'] as int?,
+      newCustomers: jsonSerialization['newCustomers'] as int?,
+      returningCustomers: jsonSerialization['returningCustomers'] as int?,
+      productViews: jsonSerialization['productViews'] as int?,
+      wishlistAdds: jsonSerialization['wishlistAdds'] as int?,
+      cartAdds: jsonSerialization['cartAdds'] as int?,
+      conversionRate: (jsonSerialization['conversionRate'] as num?)?.toDouble(),
       aiDescriptionsGenerated:
-          jsonSerialization['aiDescriptionsGenerated'] as int,
-      aiQueriesProcessed: jsonSerialization['aiQueriesProcessed'] as int,
-      aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num).toDouble(),
-      fiatPayments: (jsonSerialization['fiatPayments'] as num).toDouble(),
-      cryptoPayments: (jsonSerialization['cryptoPayments'] as num).toDouble(),
-      platformFeesCollected: (jsonSerialization['platformFeesCollected'] as num)
-          .toDouble(),
-      newReviews: jsonSerialization['newReviews'] as int,
-      averageRatingPeriod: (jsonSerialization['averageRatingPeriod'] as num)
-          .toDouble(),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+          jsonSerialization['aiDescriptionsGenerated'] as int?,
+      aiQueriesProcessed: jsonSerialization['aiQueriesProcessed'] as int?,
+      aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num?)
+          ?.toDouble(),
+      fiatPayments: (jsonSerialization['fiatPayments'] as num?)?.toDouble(),
+      cryptoPayments: (jsonSerialization['cryptoPayments'] as num?)?.toDouble(),
+      platformFeesCollected:
+          (jsonSerialization['platformFeesCollected'] as num?)?.toDouble(),
+      newReviews: jsonSerialization['newReviews'] as int?,
+      averageRatingPeriod: (jsonSerialization['averageRatingPeriod'] as num?)
+          ?.toDouble(),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

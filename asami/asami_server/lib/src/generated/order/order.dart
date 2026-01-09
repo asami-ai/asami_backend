@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -126,7 +125,9 @@ abstract class Order
 
   factory Order.fromJson(Map<String, dynamic> jsonSerialization) {
     return Order(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       customerId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['customerId'],
       ),
@@ -142,14 +143,16 @@ abstract class Order
               jsonSerialization['vendor'],
             ),
       orderNumber: jsonSerialization['orderNumber'] as String,
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
-      taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
-      shippingCost: (jsonSerialization['shippingCost'] as num).toDouble(),
-      discountAmount: (jsonSerialization['discountAmount'] as num).toDouble(),
-      platformFee: (jsonSerialization['platformFee'] as num).toDouble(),
+      taxAmount: (jsonSerialization['taxAmount'] as num?)?.toDouble(),
+      shippingCost: (jsonSerialization['shippingCost'] as num?)?.toDouble(),
+      discountAmount: (jsonSerialization['discountAmount'] as num?)?.toDouble(),
+      platformFee: (jsonSerialization['platformFee'] as num?)?.toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       shippingAddressId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['shippingAddressId'],
       ),
@@ -178,30 +181,32 @@ abstract class Order
       paymentMethod: _i7.PaymentMethod.fromJson(
         (jsonSerialization['paymentMethod'] as String),
       ),
-      paymentStatus: _i3.PaymentStatus.fromJson(
-        (jsonSerialization['paymentStatus'] as String),
-      ),
+      paymentStatus: jsonSerialization['paymentStatus'] == null
+          ? null
+          : _i3.PaymentStatus.fromJson(
+              (jsonSerialization['paymentStatus'] as String),
+            ),
       paidAt: jsonSerialization['paidAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
       customerNotes: jsonSerialization['customerNotes'] as String?,
       vendorNotes: jsonSerialization['vendorNotes'] as String?,
       cancellationReason: jsonSerialization['cancellationReason'] as String?,
-      orderSource: jsonSerialization['orderSource'] as String,
+      orderSource: jsonSerialization['orderSource'] as String?,
       conversationId: jsonSerialization['conversationId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(
               jsonSerialization['conversationId'],
             ),
-      isGift: jsonSerialization['isGift'] as bool,
-      requiresSignature: jsonSerialization['requiresSignature'] as bool,
-      isPriority: jsonSerialization['isPriority'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      isGift: jsonSerialization['isGift'] as bool?,
+      requiresSignature: jsonSerialization['requiresSignature'] as bool?,
+      isPriority: jsonSerialization['isPriority'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       confirmedAt: jsonSerialization['confirmedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

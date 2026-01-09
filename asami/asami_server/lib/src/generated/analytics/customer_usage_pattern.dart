@@ -76,40 +76,43 @@ abstract class CustomerUsagePattern
     Map<String, dynamic> jsonSerialization,
   ) {
     return CustomerUsagePattern(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
-      averageDailyMessages: (jsonSerialization['averageDailyMessages'] as num)
-          .toDouble(),
-      averageDailyToolCalls: (jsonSerialization['averageDailyToolCalls'] as num)
-          .toDouble(),
+      averageDailyMessages: (jsonSerialization['averageDailyMessages'] as num?)
+          ?.toDouble(),
+      averageDailyToolCalls:
+          (jsonSerialization['averageDailyToolCalls'] as num?)?.toDouble(),
       peakUsageHour: jsonSerialization['peakUsageHour'] as int?,
       usageClass: _i2.UsageClass.fromJson(
         (jsonSerialization['usageClass'] as String),
       ),
-      isAbuser: jsonSerialization['isAbuser'] as bool,
-      abuseScore: (jsonSerialization['abuseScore'] as num).toDouble(),
-      toolSuccessRate: (jsonSerialization['toolSuccessRate'] as num).toDouble(),
+      isAbuser: jsonSerialization['isAbuser'] as bool?,
+      abuseScore: (jsonSerialization['abuseScore'] as num?)?.toDouble(),
+      toolSuccessRate: (jsonSerialization['toolSuccessRate'] as num?)
+          ?.toDouble(),
       averageToolExecutionTime:
-          (jsonSerialization['averageToolExecutionTime'] as num).toDouble(),
+          (jsonSerialization['averageToolExecutionTime'] as num?)?.toDouble(),
       averageConversationLength:
-          (jsonSerialization['averageConversationLength'] as num).toDouble(),
-      repetitiveQueryScore: (jsonSerialization['repetitiveQueryScore'] as num)
-          .toDouble(),
-      shouldThrottle: jsonSerialization['shouldThrottle'] as bool,
+          (jsonSerialization['averageConversationLength'] as num?)?.toDouble(),
+      repetitiveQueryScore: (jsonSerialization['repetitiveQueryScore'] as num?)
+          ?.toDouble(),
+      shouldThrottle: jsonSerialization['shouldThrottle'] as bool?,
       throttleReason: jsonSerialization['throttleReason'] as String?,
-      currentThrottleDelay: jsonSerialization['currentThrottleDelay'] as int,
+      currentThrottleDelay: jsonSerialization['currentThrottleDelay'] as int?,
       lastAnalyzedAt: jsonSerialization['lastAnalyzedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['lastAnalyzedAt'],
             ),
-      analysisCount: jsonSerialization['analysisCount'] as int,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      analysisCount: jsonSerialization['analysisCount'] as int?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

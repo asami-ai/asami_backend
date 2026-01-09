@@ -65,7 +65,9 @@ abstract class Address implements _i1.SerializableModel {
 
   factory Address.fromJson(Map<String, dynamic> jsonSerialization) {
     return Address(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -80,16 +82,16 @@ abstract class Address implements _i1.SerializableModel {
       country: jsonSerialization['country'] as String,
       postalCode: jsonSerialization['postalCode'] as String,
       landmark: jsonSerialization['landmark'] as String?,
-      isDefault: jsonSerialization['isDefault'] as bool,
-      isActive: jsonSerialization['isActive'] as bool,
+      isDefault: jsonSerialization['isDefault'] as bool?,
+      isActive: jsonSerialization['isActive'] as bool?,
       latitude: (jsonSerialization['latitude'] as num?)?.toDouble(),
       longitude: (jsonSerialization['longitude'] as num?)?.toDouble(),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

@@ -1,7 +1,6 @@
 // File: server/lib/src/endpoints/bot_endpoint.dart
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:asami_server/src/services/auth/auth_state_manager.dart';
 import 'package:asami_server/utils/logger/asami_logger.dart';
@@ -10,7 +9,6 @@ import '../generated/protocol.dart';
 import '../services/ai_services/core/agent_system.dart';
 import '../services/dependency_injection.dart';
 import '../services/messaging/messaging_service_factory.dart';
-import '../services/messaging/messaging_service_interface.dart';
 import '../services/messaging/whatsapp/whatsapp_message_formatter.dart';
 import 'auth_endpoint.dart';
 
@@ -839,7 +837,6 @@ What would you like to do today?
     String platformUserId,
     String? userEmail,
   ) async {
-    final messagingService = MessagingServiceFactory.getService(platform);
 
     final message = '''
 👋 Welcome back!

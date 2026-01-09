@@ -112,7 +112,9 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
 
   factory BillingCycleSummary.fromJson(Map<String, dynamic> jsonSerialization) {
     return BillingCycleSummary(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       vendorId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['vendorId'],
       ),
@@ -132,33 +134,33 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
         (jsonSerialization['subscriptionTier'] as String),
       ),
       baseSubscriptionAmount:
-          (jsonSerialization['baseSubscriptionAmount'] as num).toDouble(),
-      totalToolCalls: jsonSerialization['totalToolCalls'] as int,
-      toolCallsIncluded: jsonSerialization['toolCallsIncluded'] as int,
-      toolCallsOverage: jsonSerialization['toolCallsOverage'] as int,
-      toolCallsOverageCost: (jsonSerialization['toolCallsOverageCost'] as num)
-          .toDouble(),
-      totalAIMessages: jsonSerialization['totalAIMessages'] as int,
-      aiMessagesIncluded: jsonSerialization['aiMessagesIncluded'] as int,
-      aiMessagesOverage: jsonSerialization['aiMessagesOverage'] as int,
-      aiMessagesOverageCost: (jsonSerialization['aiMessagesOverageCost'] as num)
-          .toDouble(),
-      totalProducts: jsonSerialization['totalProducts'] as int,
-      productsIncluded: jsonSerialization['productsIncluded'] as int,
-      productsOverage: jsonSerialization['productsOverage'] as int,
-      productsOverageCost: (jsonSerialization['productsOverageCost'] as num)
-          .toDouble(),
-      totalAIDescriptions: jsonSerialization['totalAIDescriptions'] as int,
+          (jsonSerialization['baseSubscriptionAmount'] as num?)?.toDouble(),
+      totalToolCalls: jsonSerialization['totalToolCalls'] as int?,
+      toolCallsIncluded: jsonSerialization['toolCallsIncluded'] as int?,
+      toolCallsOverage: jsonSerialization['toolCallsOverage'] as int?,
+      toolCallsOverageCost: (jsonSerialization['toolCallsOverageCost'] as num?)
+          ?.toDouble(),
+      totalAIMessages: jsonSerialization['totalAIMessages'] as int?,
+      aiMessagesIncluded: jsonSerialization['aiMessagesIncluded'] as int?,
+      aiMessagesOverage: jsonSerialization['aiMessagesOverage'] as int?,
+      aiMessagesOverageCost:
+          (jsonSerialization['aiMessagesOverageCost'] as num?)?.toDouble(),
+      totalProducts: jsonSerialization['totalProducts'] as int?,
+      productsIncluded: jsonSerialization['productsIncluded'] as int?,
+      productsOverage: jsonSerialization['productsOverage'] as int?,
+      productsOverageCost: (jsonSerialization['productsOverageCost'] as num?)
+          ?.toDouble(),
+      totalAIDescriptions: jsonSerialization['totalAIDescriptions'] as int?,
       aiDescriptionsIncluded:
-          jsonSerialization['aiDescriptionsIncluded'] as int,
-      aiDescriptionsOverage: jsonSerialization['aiDescriptionsOverage'] as int,
+          jsonSerialization['aiDescriptionsIncluded'] as int?,
+      aiDescriptionsOverage: jsonSerialization['aiDescriptionsOverage'] as int?,
       aiDescriptionsOverageCost:
-          (jsonSerialization['aiDescriptionsOverageCost'] as num).toDouble(),
-      totalTransactionFees: (jsonSerialization['totalTransactionFees'] as num)
-          .toDouble(),
-      totalUsageCost: (jsonSerialization['totalUsageCost'] as num).toDouble(),
-      totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      status: jsonSerialization['status'] as String,
+          (jsonSerialization['aiDescriptionsOverageCost'] as num?)?.toDouble(),
+      totalTransactionFees: (jsonSerialization['totalTransactionFees'] as num?)
+          ?.toDouble(),
+      totalUsageCost: (jsonSerialization['totalUsageCost'] as num?)?.toDouble(),
+      totalAmount: (jsonSerialization['totalAmount'] as num?)?.toDouble(),
+      status: jsonSerialization['status'] as String?,
       invoiceId: jsonSerialization['invoiceId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['invoiceId']),
@@ -167,12 +169,12 @@ abstract class BillingCycleSummary implements _i1.SerializableModel {
           : _i5.Protocol().deserialize<_i4.SubscriptionInvoice>(
               jsonSerialization['invoice'],
             ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

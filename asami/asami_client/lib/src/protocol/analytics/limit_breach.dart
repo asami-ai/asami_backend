@@ -53,7 +53,9 @@ abstract class LimitBreachLog implements _i1.SerializableModel {
 
   factory LimitBreachLog.fromJson(Map<String, dynamic> jsonSerialization) {
     return LimitBreachLog(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userType: _i2.UserType.fromJson(
         (jsonSerialization['userType'] as String),
@@ -75,13 +77,13 @@ abstract class LimitBreachLog implements _i1.SerializableModel {
               jsonSerialization['conversationId'],
             ),
       actionTaken: jsonSerialization['actionTaken'] as String,
-      userNotified: jsonSerialization['userNotified'] as bool,
+      userNotified: jsonSerialization['userNotified'] as bool?,
       severity: _i5.BreachSeverity.fromJson(
         (jsonSerialization['severity'] as String),
       ),
-      breachedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['breachedAt'],
-      ),
+      breachedAt: jsonSerialization['breachedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['breachedAt']),
     );
   }
 

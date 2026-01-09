@@ -116,7 +116,9 @@ abstract class VendorProfile implements _i1.SerializableModel {
 
   factory VendorProfile.fromJson(Map<String, dynamic> jsonSerialization) {
     return VendorProfile(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -129,13 +131,15 @@ abstract class VendorProfile implements _i1.SerializableModel {
       businessRegistrationNumber:
           jsonSerialization['businessRegistrationNumber'] as String?,
       taxId: jsonSerialization['taxId'] as String?,
-      isVerified: jsonSerialization['isVerified'] as bool,
+      isVerified: jsonSerialization['isVerified'] as bool?,
       verifiedAt: jsonSerialization['verifiedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['verifiedAt']),
-      subscriptionTier: _i2.SubscriptionTier.fromJson(
-        (jsonSerialization['subscriptionTier'] as String),
-      ),
+      subscriptionTier: jsonSerialization['subscriptionTier'] == null
+          ? null
+          : _i2.SubscriptionTier.fromJson(
+              (jsonSerialization['subscriptionTier'] as String),
+            ),
       subscriptionStartDate: jsonSerialization['subscriptionStartDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -146,37 +150,37 @@ abstract class VendorProfile implements _i1.SerializableModel {
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['subscriptionEndDate'],
             ),
-      autoRenew: jsonSerialization['autoRenew'] as bool,
-      productLimit: jsonSerialization['productLimit'] as int,
-      currentProductCount: jsonSerialization['currentProductCount'] as int,
-      aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int,
-      aiDescriptionsUsed: jsonSerialization['aiDescriptionsUsed'] as int,
+      autoRenew: jsonSerialization['autoRenew'] as bool?,
+      productLimit: jsonSerialization['productLimit'] as int?,
+      currentProductCount: jsonSerialization['currentProductCount'] as int?,
+      aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int?,
+      aiDescriptionsUsed: jsonSerialization['aiDescriptionsUsed'] as int?,
       monthlyResetDate: jsonSerialization['monthlyResetDate'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['monthlyResetDate'],
             ),
-      totalProducts: jsonSerialization['totalProducts'] as int,
-      activeProducts: jsonSerialization['activeProducts'] as int,
-      totalOrders: jsonSerialization['totalOrders'] as int,
-      totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageRating: (jsonSerialization['averageRating'] as num).toDouble(),
-      totalReviews: jsonSerialization['totalReviews'] as int,
+      totalProducts: jsonSerialization['totalProducts'] as int?,
+      activeProducts: jsonSerialization['activeProducts'] as int?,
+      totalOrders: jsonSerialization['totalOrders'] as int?,
+      totalRevenue: (jsonSerialization['totalRevenue'] as num?)?.toDouble(),
+      averageRating: (jsonSerialization['averageRating'] as num?)?.toDouble(),
+      totalReviews: jsonSerialization['totalReviews'] as int?,
       platformTransactionFee:
-          (jsonSerialization['platformTransactionFee'] as num).toDouble(),
-      totalPlatformFees: (jsonSerialization['totalPlatformFees'] as num)
-          .toDouble(),
-      pendingPayouts: (jsonSerialization['pendingPayouts'] as num).toDouble(),
-      totalPayouts: (jsonSerialization['totalPayouts'] as num).toDouble(),
+          (jsonSerialization['platformTransactionFee'] as num?)?.toDouble(),
+      totalPlatformFees: (jsonSerialization['totalPlatformFees'] as num?)
+          ?.toDouble(),
+      pendingPayouts: (jsonSerialization['pendingPayouts'] as num?)?.toDouble(),
+      totalPayouts: (jsonSerialization['totalPayouts'] as num?)?.toDouble(),
       supportEmail: jsonSerialization['supportEmail'] as String?,
       supportPhone: jsonSerialization['supportPhone'] as String?,
       responseTime: jsonSerialization['responseTime'] as int?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

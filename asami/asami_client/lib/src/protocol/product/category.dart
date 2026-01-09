@@ -54,7 +54,9 @@ abstract class Category implements _i1.SerializableModel {
 
   factory Category.fromJson(Map<String, dynamic> jsonSerialization) {
     return Category(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       slug: jsonSerialization['slug'] as String,
       description: jsonSerialization['description'] as String?,
@@ -70,15 +72,15 @@ abstract class Category implements _i1.SerializableModel {
             ),
       iconUrl: jsonSerialization['iconUrl'] as String?,
       imageUrl: jsonSerialization['imageUrl'] as String?,
-      displayOrder: jsonSerialization['displayOrder'] as int,
-      isActive: jsonSerialization['isActive'] as bool,
-      productCount: jsonSerialization['productCount'] as int,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      displayOrder: jsonSerialization['displayOrder'] as int?,
+      isActive: jsonSerialization['isActive'] as bool?,
+      productCount: jsonSerialization['productCount'] as int?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

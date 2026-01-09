@@ -1,9 +1,10 @@
-// File: server/lib/src/services/product_creation/product_creation_handler.dart
+// File: server/lib/src/services/product/product_creation_handler.dart
 
 import 'dart:convert';
 import 'package:serverpod/serverpod.dart' hide Message;
 import '../../generated/protocol.dart';
 import '../../endpoints/product_endpoint.dart';
+import '../catalog/category_classification_service.dart';
 import '../catalog/meta_catalog_service.dart';
 import '../dependency_injection.dart';
 import '../media/enanced_media_services.dart';
@@ -11,13 +12,15 @@ import 'product_creation_state.dart';
 
 /// Configuration for product creation feature
 class ProductCreationConfig {
-  static bool useCDN = false; // Toggle: true for CDN, false for DB storage
+  static bool useCDN = false;
   static const int maxImages = 5;
-  static const int minImages = 2;
+  static const int minImages = 1;
   static const int sessionTimeoutMinutes = 30;
+  static const int maxRetries = 3;
+  static const int retryDelaySeconds = 2;
 }
 
-/// Handles the complete product creation flow with strict state enforcement
+/// ✅ ENHANCED: Product creation with pre-classification and retry mechanism
 class ProductCreationHandler {
   final ProductCreationStateManager stateManager;
   final EnhancedMediaService? mediaService;
@@ -27,7 +30,6 @@ class ProductCreationHandler {
     required this.stateManager,
   });
 
-  /// Check if user is in product creation flow
   Future<bool> isInCreationFlow(Session session, String conversationId) async {
     final creationSession =
         await stateManager.getCurrentSession(session, conversationId);
@@ -36,7 +38,6 @@ class ProductCreationHandler {
         creationSession.state != ProductCreationState.COMPLETED;
   }
 
-  /// Initiate product creation
   Future<Map<String, dynamic>> initiateCreation(
     Session session, {
     required User user,
@@ -44,40 +45,24 @@ class ProductCreationHandler {
     required PlatformType platform,
   }) async {
     try {
-      // Check if already in flow
-      if (await isInCreationFlow(session, conversation.id.uuid)) {
-        return {
-          'success': false,
-          'error': 'Already in product creation. Type "/cancel" to start over.',
-        };
-      }
-
-      // Get vendor profile for tier info
       final vendor = await VendorProfile.db.findFirstRow(
         session,
         where: (t) => t.userId.equals(user.id),
       );
 
       if (vendor == null) {
-        return {
-          'success': false,
-          'error': 'Vendor profile not found',
-        };
+        return {'success': false, 'error': 'Vendor profile not found'};
       }
 
-      // Check product limit
       if (vendor.currentProductCount >= vendor.productLimit &&
           vendor.productLimit != -1) {
         return {
           'success': false,
-          'error':
-              'Product limit reached for your tier. Please upgrade to add more products.',
+          'error': 'Product limit reached. Upgrade to add more products.',
           'limit_reached': true,
-          'upgrade_needed': true,
         };
       }
 
-      // Start creation session
       final creationSession = await stateManager.startProductCreation(
         session,
         userId: user.id.uuid,
@@ -89,20 +74,21 @@ class ProductCreationHandler {
       return {
         'success': true,
         'state': 'awaiting_images',
-        'in_creation_flow': true,
-        'message': await _getInitialPrompt(vendor.subscriptionTier),
+        'message': '''
+📸 **New Product Upload**
+
+Send 1-5 product images to get started!
+
+${vendor.subscriptionTier != SubscriptionTier.freemium ? '✨ ${vendor.subscriptionTier.name.toUpperCase()} feature: AI can generate descriptions from your images!\n' : ''}
+💡 Type "/cancel" anytime to exit.
+''',
       };
     } catch (e, stackTrace) {
       session.log('Initiate creation error: $e', stackTrace: stackTrace);
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 
-  /// Process message during product creation flow
-  /// This enforces strict state-based input validation
   Future<Map<String, dynamic>> processCreationMessage(
     Session session, {
     required User user,
@@ -111,7 +97,6 @@ class ProductCreationHandler {
     required PlatformType platform,
   }) async {
     try {
-      // Get current session
       final creationSession = await stateManager.getCurrentSession(
         session,
         conversation.id.uuid,
@@ -125,152 +110,39 @@ class ProductCreationHandler {
         };
       }
 
-      // Check for timeout
-      if (_isSessionExpired(creationSession)) {
-        await _handleTimeout(
-            session, conversation.id.uuid, creationSession, user);
-        return {
-          'success': false,
-          'in_creation_flow': false,
-          'error': 'Product creation session expired. Progress saved as draft.',
-          'session_expired': true,
-        };
-      }
-
-      // Check for cancel command (always allowed)
       if (_isCancelCommand(message.content)) {
         return await _handleCancellation(
-          session,
-          conversation.id.uuid,
-          creationSession,
-          user,
-          platform,
-        );
+            session, conversation.id.uuid, creationSession, user);
       }
 
-      // Route to state-specific handler
-      return await _handleStateMessage(
-        session,
-        user: user,
-        conversation: conversation,
-        message: message,
-        creationSession: creationSession,
-        platform: platform,
-      );
+      switch (creationSession.state) {
+        case ProductCreationState.AWAITING_IMAGES:
+          return await _handleImagesState(
+              session, user, conversation, message, creationSession, platform);
+
+        case ProductCreationState.AWAITING_DETAILS:
+          return await _handleDetailsState(
+              session, user, conversation, message, creationSession);
+
+        case ProductCreationState.PROCESSING:
+          return {
+            'success': false,
+            'blocked': true,
+            'message': '⚙️ Product is being created. Please wait...',
+          };
+
+        default:
+          return {'success': false, 'error': 'Invalid state'};
+      }
     } catch (e, stackTrace) {
       session.log('Process creation message error: $e', stackTrace: stackTrace);
       return {
         'success': false,
-        'in_creation_flow': true,
-        'error': 'An error occurred. Type "/cancel" to exit or try again.',
+        'error': 'An error occurred. Type "/cancel" to exit.',
       };
     }
   }
 
-  // ==================== STATE-SPECIFIC HANDLERS ====================
-
-  Future<Map<String, dynamic>> _handleStateMessage(
-    Session session, {
-    required User user,
-    required Conversation conversation,
-    required Message message,
-    required ProductCreationSession creationSession,
-    required PlatformType platform,
-  }) async {
-    switch (creationSession.state) {
-      case ProductCreationState.AWAITING_IMAGES:
-        return await _handleImagesState(
-          session,
-          user,
-          conversation,
-          message,
-          creationSession,
-          platform,
-        );
-
-      case ProductCreationState.AWAITING_VIDEO:
-        return await _handleVideoState(
-          session,
-          user,
-          conversation,
-          message,
-          creationSession,
-          platform,
-        );
-
-      case ProductCreationState.AWAITING_NAME:
-        return await _handleNameState(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_DESCRIPTION:
-        return await _handleDescriptionState(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_PRICE:
-        return await _handlePriceState(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_CATEGORY:
-        return await _handleCategoryState(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_AI_DESCRIPTION_CHOICE:
-        return await _handleAiDescriptionChoice(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_AI_IMAGE_CHOICE:
-        return await _handleAiImageChoice(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.AWAITING_OPTIONAL_DETAILS:
-        return await _handleOptionalDetails(
-          session,
-          conversation,
-          message,
-          creationSession,
-        );
-
-      case ProductCreationState.PROCESSING:
-        return {
-          'success': false,
-          'in_creation_flow': true,
-          'blocked': true,
-          'message': '⚙️ Product is being created. Please wait...',
-        };
-
-      default:
-        return {
-          'success': false,
-          'error': 'Invalid state',
-        };
-    }
-  }
-
-  /// Handle AWAITING_IMAGES state - STRICT: Only images or "done" allowed
   Future<Map<String, dynamic>> _handleImagesState(
     Session session,
     User user,
@@ -281,1006 +153,624 @@ class ProductCreationHandler {
   ) async {
     final content = message.content.toLowerCase().trim();
 
-    // Allow "done" only if minimum images met
-    if (content == 'done' || content == 'next' || content == 'continue') {
+    if (content == 'done' || content == 'next') {
       if (!creationSession.hasMinimumImages) {
         return {
           'success': false,
-          'in_creation_flow': true,
           'blocked': true,
-          'state': 'awaiting_images',
-          'message': '''
-❌ You need at least ${ProductCreationConfig.minImages} image to continue.
-
-📸 Please send product images first.
-
-Type "/cancel" to exit.
-''',
+          'message': '❌ Send at least 1 image before continuing.',
         };
       }
 
-      return await _proceedToNextState(
-        session,
-        conversation.id.uuid,
-        creationSession,
-        user,
-      );
+      creationSession.state = ProductCreationState.AWAITING_DETAILS;
+      await _saveSession(session, conversation, creationSession);
+
+      return {
+        'success': true,
+        'state': 'awaiting_details',
+        'message': _getDetailsPrompt(creationSession.tier),
+      };
     }
 
-    // REJECT all non-image inputs
     if (message.messageType != MessageType.image || message.mediaUrl == null) {
       return {
         'success': false,
-        'in_creation_flow': true,
         'blocked': true,
-        'state': 'awaiting_images',
-        'requires_image': true,
         'message': '''
-📸 **Product Images Required** (${creationSession.imageCount}/${ProductCreationConfig.maxImages})
+📸 **Images Required** (${creationSession.imageCount}/5)
 
-❌ Only image uploads are accepted right now.
+❌ Only image uploads accepted right now.
 
-${creationSession.hasMinimumImages ? '✅ You have enough images. Type "done" to continue.\n   Or send more images (up to ${ProductCreationConfig.maxImages} total).' : '⚠️  Send at least ${ProductCreationConfig.minImages} image to proceed.'}
+${creationSession.hasMinimumImages ? '✅ You have enough. Type "done" to continue.\n   Or send more (up to 5 total).' : '⚠️  Send at least 1 image to proceed.'}
 
-💡 Type "/cancel" to exit product creation.
+Type "/cancel" to exit.
 ''',
       };
     }
 
-    // Process image
-    final mediaId = message.platformMessageId ?? message.mediaUrl!;
+    String mediaId;
+    if (platform == PlatformType.whatsapp) {
+      mediaId = message.mediaUrl!;
+    } else {
+      mediaId = message.platformMessageId ?? message.mediaUrl!;
+    }
 
-    // Add to session
+    // ✅ Just store the media ID, don't process yet
     creationSession.imageMediaIds.add(mediaId);
     creationSession.lastUpdatedAt = DateTime.now();
-
     await _saveSession(session, conversation, creationSession);
 
-    // Download and process image (background)
-    if (mediaService != null) {
-      _processMediaInBackground(
-        session,
-        mediaId: mediaId,
-        platform: platform,
-        vendorId: user.id,
-        isVideo: false,
-      );
+    session.log('📸 Stored media ID: $mediaId (${creationSession.imageCount}/5)');
+
+    if (creationSession.imageCount >= 5) {
+      creationSession.state = ProductCreationState.AWAITING_DETAILS;
+      await _saveSession(session, conversation, creationSession);
+
+      return {
+        'success': true,
+        'state': 'awaiting_details',
+        'message': '''
+✅ Maximum 5 images received!
+
+${_getDetailsPrompt(creationSession.tier)}
+''',
+      };
     }
 
-    // Check if reached maximum
-    if (creationSession.imageCount >= ProductCreationConfig.maxImages) {
-      // Auto-proceed
-      return await _proceedToNextState(
-        session,
-        conversation.id.uuid,
-        creationSession,
-        user,
-      );
-    }
-
-    // Prompt for more or continue
     return {
       'success': true,
-      'in_creation_flow': true,
       'state': 'awaiting_images',
       'images_collected': creationSession.imageCount,
       'message': '''
-✅ Image ${creationSession.imageCount}/${ProductCreationConfig.maxImages} received!
+✅ Image ${creationSession.imageCount}/5 received!
 
-${creationSession.canAddMoreImages ? '📸 Send more images or type "done" to continue.' : '✅ Maximum ${ProductCreationConfig.maxImages} images reached. Type "done" to continue.'}
+📸 Send more images or type "done" to continue.
 ''',
     };
   }
 
-  /// Handle AWAITING_VIDEO state (Pro+ only) - STRICT: Only video or "skip"
-  Future<Map<String, dynamic>> _handleVideoState(
+  Future<Map<String, dynamic>> _handleDetailsState(
     Session session,
     User user,
     Conversation conversation,
     Message message,
     ProductCreationSession creationSession,
-    PlatformType platform,
-  ) async {
-    final content = message.content.toLowerCase().trim();
-
-    // Allow skip
-    if (content == 'skip' || content == 'no' || content == 'next') {
-      return await _proceedToNextState(
-        session,
-        conversation.id.uuid,
-        creationSession,
-        user,
-      );
-    }
-
-    // Accept video only
-    if (message.messageType == MessageType.video && message.mediaUrl != null) {
-      final mediaId = message.platformMessageId ?? message.mediaUrl!;
-      creationSession.videoMediaId = mediaId;
-      creationSession.lastUpdatedAt = DateTime.now();
-
-      await _saveSession(session, conversation, creationSession);
-
-      // Process video in background
-      if (mediaService != null) {
-        _processMediaInBackground(
-          session,
-          mediaId: mediaId,
-          platform: platform,
-          vendorId: user.id,
-          isVideo: true,
-        );
-      }
-
-      return await _proceedToNextState(
-        session,
-        conversation.id.uuid,
-        creationSession,
-        user,
-      );
-    }
-
-    // REJECT other inputs
-    return {
-      'success': false,
-      'in_creation_flow': true,
-      'blocked': true,
-      'state': 'awaiting_video',
-      'requires_video_or_skip': true,
-      'message': '''
-🎥 **Product Video** (Optional)
-
-❌ Only video uploads or "skip" are accepted.
-
-📹 Send a video to showcase your product
-   OR
-⏭️  Type "skip" to continue without video
-
-💡 Type "/cancel" to exit product creation.
-''',
-    };
-  }
-
-  /// Handle AWAITING_NAME state - STRICT: Text only
-  Future<Map<String, dynamic>> _handleNameState(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    // Only accept text
-    if (message.messageType != MessageType.text) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_name',
-        'message': '''
-🏷️ **Product Name Required**
-
-❌ Please send a text message with the product name.
-
-No images or other media accepted here.
-
-💡 Type "/cancel" to exit.
-''',
-      };
-    }
-
-    final name = message.content.trim();
-
-    // Validate name
-    if (name.length < 3) {
-      creationSession.attemptCount++;
-      await _saveSession(session, conversation, creationSession);
-
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_name',
-        'message': '''
-❌ Product name must be at least 3 characters.
-
-Please try again (Attempt ${creationSession.attemptCount}/5)
-
-${creationSession.attemptCount >= 3 ? '\n💡 Type "/cancel" to exit and save as draft.' : ''}
-''',
-      };
-    }
-
-    if (name.length > 200) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_name',
-        'message':
-            '❌ Product name is too long (max 200 characters). Please shorten it.',
-      };
-    }
-
-    creationSession.name = name;
-    creationSession.attemptCount = 0;
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle AWAITING_DESCRIPTION state - STRICT: Text only
-  Future<Map<String, dynamic>> _handleDescriptionState(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
   ) async {
     if (message.messageType != MessageType.text) {
       return {
         'success': false,
-        'in_creation_flow': true,
         'blocked': true,
-        'state': 'awaiting_description',
+        'message': '📝 Please send text with product details.',
+      };
+    }
+
+    final content = message.content;
+    final parsed = _parseProductDetails(content, creationSession.tier);
+
+    if (!parsed['valid']) {
+      return {
+        'success': false,
         'message': '''
-📝 **Product Description Required**
+❌ ${parsed['error']}
 
-❌ Please send a text description.
+Please provide:
+• Product name
+• Description  
+• Price (₦)
+• Category
+• Quantity (optional, default: 1)
 
-No images or other media accepted here.
-
-💡 Type "/cancel" to exit.
+Example:
+"Samsung Galaxy S24
+Flagship smartphone with 256GB storage
+Price: 450,000
+Category: Electronics
+Quantity: 10"
 ''',
       };
     }
 
-    final description = message.content.trim();
+    creationSession.name = parsed['name'];
+    creationSession.description = parsed['description'];
+    creationSession.shortDescription = parsed['short_description'];
+    creationSession.price = parsed['price'];
+    creationSession.category = parsed['category'];
+    creationSession.quantity = parsed['quantity'] ?? 1;
+    creationSession.colors = parsed['colors'];
+    creationSession.sizes = parsed['sizes'];
+    creationSession.brand = parsed['brand'];
 
-    if (description.length < 10) {
-      creationSession.attemptCount++;
-      await _saveSession(session, conversation, creationSession);
-
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_description',
-        'message': '''
-❌ Description must be at least 10 characters.
-
-Please provide more details (Attempt ${creationSession.attemptCount}/5)
-
-${creationSession.attemptCount >= 3 ? '\n💡 Type "/cancel" to exit and save as draft.' : ''}
-''',
-      };
-    }
-
-    creationSession.description = description;
-    creationSession.attemptCount = 0;
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle AWAITING_PRICE state - STRICT: Number only
-  Future<Map<String, dynamic>> _handlePriceState(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    if (message.messageType != MessageType.text) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_price',
-        'message': '''
-💰 **Price Required**
-
-❌ Please send the price as a number.
-
-Examples: 5000, 15000.50, 25,000
-
-💡 Type "/cancel" to exit.
-''',
-      };
-    }
-
-    // Extract number
-    final priceMatch = RegExp(r'[\d,]+\.?\d*').firstMatch(message.content);
-
-    if (priceMatch == null) {
-      creationSession.attemptCount++;
-      await _saveSession(session, conversation, creationSession);
-
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_price',
-        'message': '''
-❌ I couldn't understand the price.
-
-Please enter a valid number:
-• 5000
-• 15000.50
-• 25,000
-
-Attempt ${creationSession.attemptCount}/5
-
-${creationSession.attemptCount >= 3 ? '\n💡 Type "/cancel" to exit and save as draft.' : ''}
-''',
-      };
-    }
-
-    final priceStr = priceMatch.group(0)!.replaceAll(',', '');
-    final price = double.tryParse(priceStr);
-
-    if (price == null || price <= 0) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_price',
-        'message': '❌ Price must be greater than 0. Please try again.',
-      };
-    }
-
-    if (price > 10000000) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_price',
-        'message': '❌ Price seems too high (max ₦10,000,000). Please verify.',
-      };
-    }
-
-    creationSession.price = price;
-    creationSession.attemptCount = 0;
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle AWAITING_CATEGORY state - STRICT: Text only
-  Future<Map<String, dynamic>> _handleCategoryState(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    if (message.messageType != MessageType.text) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_category',
-        'message': '''
-📂 **Category Required**
-
-❌ Please send a text message with the category.
-
-Examples: Electronics, Fashion, Home & Garden
-
-💡 Type "/cancel" to exit.
-''',
-      };
-    }
-
-    final category = message.content.trim();
-
-    if (category.length < 2) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'state': 'awaiting_category',
-        'message':
-            '❌ Please enter a valid category (e.g., Electronics, Fashion, etc.)',
-      };
-    }
-
-    creationSession.category = category;
-    creationSession.attemptCount = 0;
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle AI description choice - STRICT: Yes/No only
-  Future<Map<String, dynamic>> _handleAiDescriptionChoice(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    if (message.messageType != MessageType.text) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_ai_description_choice',
-        'message': '❌ Please reply with text: "yes" or "no".',
-      };
-    }
-
-    final content = message.content.toLowerCase().trim();
-
-    if (content == 'yes' || content == 'y') {
-      creationSession.useAiDescription = true;
-    } else if (content == 'no' || content == 'n' || content == 'skip') {
-      creationSession.useAiDescription = false;
-    } else {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_ai_description_choice',
-        'message': '❌ Please reply "yes" or "no".',
-      };
-    }
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle AI image choice - STRICT: Yes/No only
-  Future<Map<String, dynamic>> _handleAiImageChoice(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    if (message.messageType != MessageType.text) {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_ai_image_choice',
-        'message': '❌ Please reply with text: "yes" or "no".',
-      };
-    }
-
-    final content = message.content.toLowerCase().trim();
-
-    if (content == 'yes' || content == 'y') {
-      creationSession.useAiImages = true;
-    } else if (content == 'no' || content == 'n' || content == 'skip') {
-      creationSession.useAiImages = false;
-    } else {
-      return {
-        'success': false,
-        'in_creation_flow': true,
-        'blocked': true,
-        'state': 'awaiting_ai_image_choice',
-        'message': '❌ Please reply "yes" or "no".',
-      };
-    }
-
-    return await _proceedToNextState(
-      session,
-      conversation.id.uuid,
-      creationSession,
-      null,
-    );
-  }
-
-  /// Handle optional details - FLEXIBLE: Can skip
-  Future<Map<String, dynamic>> _handleOptionalDetails(
-    Session session,
-    Conversation conversation,
-    Message message,
-    ProductCreationSession creationSession,
-  ) async {
-    final content = message.content.toLowerCase().trim();
-
-    if (content == 'skip' || content == 'done' || content == 'finish') {
-      return await _proceedToNextState(
-        session,
-        conversation.id.uuid,
-        creationSession,
-        null,
-      );
-    }
-
-    // Parse optional details
-    _parseOptionalDetails(message.content, creationSession);
+    creationSession.state = ProductCreationState.PROCESSING;
     await _saveSession(session, conversation, creationSession);
 
     return {
       'success': true,
-      'in_creation_flow': true,
-      'state': 'awaiting_optional_details',
-      'message': '''
-✅ Details saved!
-
-Add more details or type "done" to finish.
-''',
+      'state': 'processing',
+      'ready_to_create': true,
+      'session_data': creationSession.toJson(),
+      'message': '⚙️ Creating your product...',
     };
   }
 
-  // ==================== STATE TRANSITIONS ====================
+  Map<String, dynamic> _parseProductDetails(
+      String content, SubscriptionTier tier) {
+    final lines = content
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
 
-  Future<Map<String, dynamic>> _proceedToNextState(
-    Session session,
-    String conversationId,
-    ProductCreationSession creationSession,
-    User? user,
-  ) async {
-    final conversation = await _getConversation(session, conversationId);
+    String? name;
+    String? description;
+    String? shortDescription;
+    double? price;
+    String? category;
+    int? quantity;
+    List<String>? colors;
+    List<String>? sizes;
+    String? brand;
 
-    switch (creationSession.state) {
-      case ProductCreationState.AWAITING_IMAGES:
-        // Check tier for video option
-        if (creationSession.tier != SubscriptionTier.freemium) {
-          creationSession.state = ProductCreationState.AWAITING_VIDEO;
-          await _saveSession(session, conversation, creationSession);
+    for (var line in lines) {
+      final lower = line.toLowerCase();
 
-          return {
-            'success': true,
-            'in_creation_flow': true,
-            'state': 'awaiting_video',
-            'message': '''
-🎥 Would you like to add a product video? (Optional - ${creationSession.tier.name} feature)
-
-Videos help customers see your product in action!
-
-📹 Send a video OR type "skip" to continue.
-''',
-          };
+      if (lower.contains('price') || lower.contains('₦')) {
+        final priceMatch = RegExp(r'[\d,]+(?:\.\d+)?').firstMatch(line);
+        if (priceMatch != null) {
+          price = double.tryParse(priceMatch.group(0)!.replaceAll(',', ''));
         }
-        // Freemium: skip video
-        creationSession.state = ProductCreationState.AWAITING_NAME;
-        await _saveSession(session, conversation, creationSession);
-        return _getNextStateMessage(creationSession);
-
-      case ProductCreationState.AWAITING_VIDEO:
-        // Check for AI options
-        if (creationSession.tier != SubscriptionTier.freemium) {
-          creationSession.state =
-              ProductCreationState.AWAITING_AI_DESCRIPTION_CHOICE;
-          await _saveSession(session, conversation, creationSession);
-          return _getNextStateMessage(creationSession);
+      } else if (lower.contains('quantity') || lower.contains('stock')) {
+        final qtyMatch = RegExp(r'\d+').firstMatch(line);
+        if (qtyMatch != null) {
+          quantity = int.tryParse(qtyMatch.group(0)!);
         }
-        creationSession.state = ProductCreationState.AWAITING_NAME;
-        await _saveSession(session, conversation, creationSession);
-        return _getNextStateMessage(creationSession);
-
-      case ProductCreationState.AWAITING_AI_DESCRIPTION_CHOICE:
-        // Pro Max: offer AI images
-        if (creationSession.tier == SubscriptionTier.pro_max) {
-          creationSession.state = ProductCreationState.AWAITING_AI_IMAGE_CHOICE;
-          await _saveSession(session, conversation, creationSession);
-          return _getNextStateMessage(creationSession);
-        }
-        creationSession.state = ProductCreationState.AWAITING_NAME;
-        await _saveSession(session, conversation, creationSession);
-        return _getNextStateMessage(creationSession);
-
-      case ProductCreationState.AWAITING_AI_IMAGE_CHOICE:
-      case ProductCreationState.AWAITING_NAME:
-      case ProductCreationState.AWAITING_DESCRIPTION:
-      case ProductCreationState.AWAITING_PRICE:
-      case ProductCreationState.AWAITING_CATEGORY:
-        creationSession.state = _getNextRequiredState(creationSession.state);
-        await _saveSession(session, conversation, creationSession);
-        return _getNextStateMessage(creationSession);
-
-      case ProductCreationState.AWAITING_OPTIONAL_DETAILS:
-        // Ready to create
-        creationSession.state = ProductCreationState.PROCESSING;
-        await _saveSession(session, conversation, creationSession);
-
-        return {
-          'success': true,
-          'in_creation_flow': true,
-          'state': 'processing',
-          'ready_to_create': true,
-          'session_data': creationSession.toJson(),
-          'message': '⚙️ Creating your product...',
-        };
-
-      default:
-        return {
-          'success': false,
-          'error': 'Invalid state transition',
-        };
-    }
-  }
-
-  ProductCreationState _getNextRequiredState(ProductCreationState current) {
-    final stateOrder = [
-      ProductCreationState.AWAITING_AI_IMAGE_CHOICE,
-      ProductCreationState.AWAITING_NAME,
-      ProductCreationState.AWAITING_DESCRIPTION,
-      ProductCreationState.AWAITING_PRICE,
-      ProductCreationState.AWAITING_CATEGORY,
-      ProductCreationState.AWAITING_OPTIONAL_DETAILS,
-    ];
-
-    final currentIndex = stateOrder.indexOf(current);
-    if (currentIndex >= 0 && currentIndex < stateOrder.length - 1) {
-      return stateOrder[currentIndex + 1];
+      } else if (lower.contains('category')) {
+        category = line.split(':').last.trim();
+      } else if (lower.contains('color')) {
+        final colorStr = line.split(':').last;
+        colors = colorStr
+            .split(RegExp(r'[,;]'))
+            .map((c) => c.trim())
+            .where((c) => c.isNotEmpty)
+            .toList();
+      } else if (lower.contains('size')) {
+        final sizeStr = line.split(':').last;
+        sizes = sizeStr
+            .split(RegExp(r'[,;]'))
+            .map((s) => s.trim())
+            .where((s) => s.isNotEmpty)
+            .toList();
+      } else if (lower.contains('brand')) {
+        brand = line.split(':').last.trim();
+      } else if (name == null && !lower.contains(':')) {
+        name = line;
+      } else if (line.length > 20 && description == null) {
+        description = line;
+      }
     }
 
-    return ProductCreationState.AWAITING_OPTIONAL_DETAILS;
-  }
+    if (description != null && shortDescription == null) {
+      shortDescription = description.length > 100
+          ? description.substring(0, 97) + '...'
+          : description;
+    }
 
-  Map<String, dynamic> _getNextStateMessage(ProductCreationSession session) {
-    final messages = {
-      ProductCreationState.AWAITING_AI_DESCRIPTION_CHOICE: '''
-✨ **${session.tier.name.toUpperCase()} Feature**
-
-Use AI to enhance your product description?
-
-AI can make your description more professional and appealing!
-
-Reply "yes" or "no".
-''',
-      ProductCreationState.AWAITING_AI_IMAGE_CHOICE: '''
-✨ **PRO MAX Feature**
-
-Generate additional AI product images?
-
-This can help showcase your product from multiple angles!
-
-Reply "yes" or "no".
-''',
-      ProductCreationState.AWAITING_NAME: '''
-🏷️ **Product Name**
-
-Enter a clear, descriptive name for your product.
-
-Example: "Samsung Galaxy S24 - 256GB"
-''',
-      ProductCreationState.AWAITING_DESCRIPTION: '''
-📝 **Product Description**
-
-Describe your product in detail:
-• Features
-• Benefits  
-• Materials
-• What makes it special
-
-${session.useAiDescription ? '\n✨ AI will enhance this description!' : ''}
-''',
-      ProductCreationState.AWAITING_PRICE: '''
-💰 **Selling Price**
-
-Enter the price in Nigerian Naira (₦)
-
-Examples: 5000, 15000.50, 25,000
-''',
-      ProductCreationState.AWAITING_CATEGORY: '''
-📂 **Product Category**
-
-What category does this product belong to?
-
-Examples: 
-• Electronics
-• Fashion  
-• Home & Garden
-• Beauty & Personal Care
-• Sports & Outdoors
-''',
-      ProductCreationState.AWAITING_OPTIONAL_DETAILS: '''
-✨ **Optional Details** (or type "done")
-
-You can add:
-• Colors: "Available in Red, Blue, Green"
-• Sizes: "Sizes: S, M, L, XL"
-• Brand name
-• Stock quantity
-• Weight
-
-Type "done" to finish and create the product.
-''',
-    };
+    if (name == null || name.length < 3) {
+      return {
+        'valid': false,
+        'error': 'Product name is required (min 3 characters)'
+      };
+    }
+    if (description == null || description.length < 10) {
+      return {
+        'valid': false,
+        'error': 'Description is required (min 10 characters)'
+      };
+    }
+    if (price == null || price <= 0) {
+      return {'valid': false, 'error': 'Valid price is required'};
+    }
+    if (category == null || category.length < 2) {
+      return {'valid': false, 'error': 'Category is required'};
+    }
 
     return {
-      'success': true,
-      'in_creation_flow': true,
-      'state': session.state.name.toLowerCase(),
-      'message': messages[session.state] ?? 'Continue...',
+      'valid': true,
+      'name': name,
+      'description': description,
+      'short_description': shortDescription,
+      'price': price,
+      'category': category,
+      'quantity': quantity,
+      'colors': colors,
+      'sizes': sizes,
+      'brand': brand,
     };
   }
 
-  /// Handle cancellation with draft save
+  String _getDetailsPrompt(SubscriptionTier tier) {
+    return '''
+📝 **Product Details**
+
+Please send ALL details in one message:
+
+✅ Required:
+• Name
+• Description
+• Price (₦)
+• Category
+
+📦 Optional:
+• Quantity (default: 1)
+• Colors
+• Sizes
+• Brand
+
+${tier != SubscriptionTier.freemium ? '\n✨ AI will enhance your description automatically!\n' : ''}
+
+**Example:**
+Blue Cotton T-Shirt
+Comfortable 100% cotton shirt perfect for casual wear
+Price: 3500
+Category: Fashion
+Quantity: 50
+Colors: Blue, Red, Green
+Sizes: S, M, L, XL
+Brand: Zara
+''';
+  }
+
+  /// ✅ COMPLETE: Product creation with classification, media processing & retry
+  Future<Map<String, dynamic>> completeProductCreation(
+    Session session, {
+    required User user,
+    required ProductCreationSession creationSession,
+    required Conversation conversation,
+  }) async {
+    try {
+      final vendor = await VendorProfile.db.findFirstRow(
+        session,
+        where: (t) => t.userId.equals(user.id),
+      );
+
+      if (vendor == null) throw Exception('Vendor profile not found');
+
+      session.log('🤖 Classifying product before creation...');
+      session.log('   Name: ${creationSession.name}');
+      session.log('   Description: ${creationSession.description}');
+      session.log('   User Category: ${creationSession.category}');
+      
+      // ✅ STEP 1: Classify BEFORE creating product
+      final classificationService = CategoryClassificationService(session);
+      final classification = await classificationService.classifyProduct(
+        productName: creationSession.name!,
+        description: creationSession.description!,
+        userSelectedCategory: creationSession.category,
+      );
+
+      // ✅ STEP 2: Extract classification results
+      String? facebookCategoryId;
+      String? facebookCategoryName;
+      int? googleTaxonomyId;
+      String? googleTaxonomyPath;
+      List<String> suggestedTags = [];
+      String finalCategory = creationSession.category!;
+
+      if (classification['success'] == true) {
+        facebookCategoryId = classification['facebook_category_id'] as String?;
+        facebookCategoryName = classification['facebook_category_name'] as String?;
+        googleTaxonomyId = classification['google_taxonomy_id'] as int?;
+        googleTaxonomyPath = classification['google_taxonomy_path'] as String?;
+        suggestedTags = (classification['suggested_tags'] as List?)?.cast<String>() ?? [];
+        finalCategory = classification['simple_category'] as String? ?? creationSession.category!;
+
+        session.log('✅ Classification complete:');
+        session.log('   Final Category: $finalCategory');
+        session.log('   Facebook: $facebookCategoryName (ID: $facebookCategoryId)');
+        session.log('   Google: $googleTaxonomyPath (ID: $googleTaxonomyId)');
+        session.log('   Tags: ${suggestedTags.join(", ")}');
+      } else {
+        session.log('⚠️ Classification failed, using user category: ${classification['error']}');
+      }
+
+      // ✅ STEP 3: Create product with ALL classification data
+      final product = await ProductEndpoint().createProduct(
+        session,
+        vendorId: user.id,
+        name: creationSession.name!,
+        description: creationSession.description!,
+        shortDescription: creationSession.shortDescription,
+        category: finalCategory,
+        basePrice: creationSession.price!,
+        quantity: creationSession.quantity,
+        images: [],
+        whatsappMediaIds: creationSession.platform == PlatformType.whatsapp
+            ? creationSession.imageMediaIds
+            : null,
+        telegramFileIds: creationSession.platform == PlatformType.telegram
+            ? creationSession.imageMediaIds
+            : null,
+        color: creationSession.colors,
+        size: creationSession.sizes,
+        brand: creationSession.brand,
+        isAiGenerated: creationSession.useAiDescription,
+        status: ProductStatus.active,
+        facebookCategory: facebookCategoryName,
+        facebookCategoryId: facebookCategoryId,
+        googleCategory: googleTaxonomyPath,
+        googleCategoryId: googleTaxonomyId?.toString(),
+        tags: suggestedTags.isNotEmpty ? suggestedTags : null,
+        searchKeywords: suggestedTags.isNotEmpty ? suggestedTags : null,
+      );
+
+      if (product == null) throw Exception('Failed to create product');
+
+      session.log('✅ Product created with full categorization: ${product.id.uuid}');
+
+      // ✅ STEP 4: Process media in background with NEW session
+      if (mediaService != null && creationSession.imageMediaIds.isNotEmpty) {
+        _processAllMediaWithRetry(
+          mediaIds: creationSession.imageMediaIds,
+          platform: creationSession.platform,
+          vendorId: user.id,
+          productId: product.id,
+        );
+      }
+
+      // ✅ STEP 5: Push to Meta AFTER media processing
+      _pushToMetaCatalogBackground(
+        productId: product.id,
+      );
+
+      // Clear session
+      creationSession.state = ProductCreationState.COMPLETED;
+      await _saveSession(session, conversation, creationSession);
+
+      Future.delayed(Duration(seconds: 5), () async {
+        final tempSession = await Serverpod.instance.createSession();
+        try {
+          await stateManager.cancelCreation(tempSession, conversation.id.uuid);
+        } finally {
+          await tempSession.close();
+        }
+      });
+
+      return {
+        'success': true,
+        'product_id': product.id.uuid,
+        'message': '''
+✅ **Product Created!**
+
+📦 **${product.name}**
+💰 Price: ₦${product.basePrice.toStringAsFixed(2)}
+📂 Category: ${product.category}
+${suggestedTags.isNotEmpty ? '🏷️ Tags: ${suggestedTags.take(5).join(", ")}\n' : ''}📦 Stock: ${product.quantity}
+📸 Images: ${creationSession.imageCount}
+
+Your product is now live!
+
+🔄 Syncing to Meta Catalog...
+✨ Images processing in background
+
+What's next?
+• /myproducts - View all products
+• /analytics - Check your stats
+''',
+      };
+    } catch (e, stackTrace) {
+      session.log('Complete product creation error: $e',
+          stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': 'Failed to create product: ${e.toString()}',
+      };
+    }
+  }
+
+  // ========================================================================
+  // ✅ FIXED: MEDIA PROCESSING WITH NEW SESSION
+  // ========================================================================
+
+  /// Process all media with retry mechanism using NEW session
+  void _processAllMediaWithRetry({
+    required List<String> mediaIds,
+    required PlatformType platform,
+    required UuidValue vendorId,
+    required UuidValue productId,
+  }) {
+    if (mediaService == null) return;
+
+    Future(() async {
+      // ✅ CREATE NEW SESSION for background task
+      final session = await Serverpod.instance.createSession();
+      
+      try {
+        session.log('📸 Starting batch media processing for product ${productId.uuid}');
+        session.log('   Total media files: ${mediaIds.length}');
+
+        final results = <String, Map<String, dynamic>>{};
+        final failedMedia = <String>[];
+
+        // Process each media file
+        for (var i = 0; i < mediaIds.length; i++) {
+          final mediaId = mediaIds[i];
+          final success = await _processMediaWithRetry(
+            session,
+            mediaId: mediaId,
+            platform: platform,
+            vendorId: vendorId,
+            productId: productId,
+            attemptNumber: i + 1,
+            totalFiles: mediaIds.length,
+          );
+
+          if (success) {
+            results[mediaId] = {'status': 'success', 'attempts': 1};
+          } else {
+            failedMedia.add(mediaId);
+            results[mediaId] = {'status': 'failed', 'attempts': ProductCreationConfig.maxRetries};
+          }
+
+          // Small delay between uploads
+          if (i < mediaIds.length - 1) {
+            await Future.delayed(Duration(milliseconds: 500));
+          }
+        }
+
+        // Log final summary
+        final successCount = results.values.where((r) => r['status'] == 'success').length;
+        final failedCount = failedMedia.length;
+
+        session.log('');
+        session.log('📊 Media Processing Summary:');
+        session.log('   ✅ Successful: $successCount/${mediaIds.length}');
+        session.log('   ❌ Failed: $failedCount/${mediaIds.length}');
+        
+        if (failedMedia.isNotEmpty) {
+          session.log('   ⚠️ Failed media IDs: ${failedMedia.join(", ")}');
+        }
+
+        session.log('✅ Batch media processing complete for product ${productId.uuid}');
+      } catch (e, stackTrace) {
+        session.log('❌ Batch processing error: $e');
+        session.log('Stack trace: $stackTrace');
+      } finally {
+        // ✅ IMPORTANT: Close the session
+        await session.close();
+      }
+    });
+  }
+
+  /// Process single media file with retry mechanism
+  Future<bool> _processMediaWithRetry(
+    Session session, {
+    required String mediaId,
+    required PlatformType platform,
+    required UuidValue vendorId,
+    required UuidValue productId,
+    required int attemptNumber,
+    required int totalFiles,
+  }) async {
+    session.log('📸 Processing media [$attemptNumber/$totalFiles]: $mediaId');
+
+    for (var attempt = 1; attempt <= ProductCreationConfig.maxRetries; attempt++) {
+      try {
+        session.log('   Attempt $attempt/${ProductCreationConfig.maxRetries}...');
+
+        final result = await mediaService!.processProductMedia(
+          mediaId: mediaId,
+          platform: platform,
+          vendorId: vendorId,
+          productId: productId,
+          isVideo: false,
+        );
+
+        if (result['success'] == true) {
+          session.log('   ✅ Media processed successfully on attempt $attempt');
+          return true;
+        } else {
+          session.log('   ⚠️ Attempt $attempt failed: ${result['error']}');
+          
+          if (attempt < ProductCreationConfig.maxRetries) {
+            final delay = ProductCreationConfig.retryDelaySeconds * attempt;
+            session.log('   ⏳ Retrying in ${delay}s...');
+            await Future.delayed(Duration(seconds: delay));
+          }
+        }
+      } catch (e, stackTrace) {
+        session.log('   ❌ Attempt $attempt error: $e');
+        
+        if (attempt < ProductCreationConfig.maxRetries) {
+          final delay = ProductCreationConfig.retryDelaySeconds * attempt;
+          session.log('   ⏳ Retrying in ${delay}s...');
+          await Future.delayed(Duration(seconds: delay));
+        } else {
+          session.log('   ❌ All retry attempts exhausted for $mediaId');
+          session.log('Stack trace: $stackTrace');
+        }
+      }
+    }
+
+    session.log('   ❌ Failed to process media $mediaId after ${ProductCreationConfig.maxRetries} attempts');
+    return false;
+  }
+
+  // ========================================================================
+  // HELPER METHODS
+  // ========================================================================
+
+  bool _isCancelCommand(String message) {
+    final content = message.toLowerCase().trim();
+    return content == '/cancel' || content == 'cancel' || content == 'exit';
+  }
+
   Future<Map<String, dynamic>> _handleCancellation(
     Session session,
     String conversationId,
     ProductCreationSession creationSession,
     User user,
-    PlatformType platform,
   ) async {
-    // Save as draft if has minimum data
-    Product? draftProduct;
-
-    if (creationSession.hasMinimumImages) {
-      draftProduct = await _saveToDraft(session, user, creationSession);
-    }
-
-    // Clear session
     await stateManager.cancelCreation(session, conversationId);
-
-    if (draftProduct != null) {
-      return {
-        'success': true,
-        'cancelled': true,
-        'in_creation_flow': false,
-        'saved_to_draft': true,
-        'draft_id': draftProduct.id.uuid,
-        'message': '''
-❌ **Product Creation Cancelled**
-
-✅ Your progress has been saved as a draft:
-   "${draftProduct.name}"
-
-You can resume later by editing this draft or start a new product.
-''',
-      };
-    }
-
     return {
       'success': true,
       'cancelled': true,
-      'in_creation_flow': false,
       'message': '''
 ❌ **Product Creation Cancelled**
 
-No progress was saved (insufficient data).
+Progress was not saved.
 
 Type "add product" to start over.
 ''',
     };
   }
 
-  /// Handle session timeout with auto-save
-  Future<void> _handleTimeout(
-    Session session,
-    String conversationId,
-    ProductCreationSession creationSession,
-    User user,
-  ) async {
-    // Auto-save as draft
-    if (creationSession.hasMinimumImages) {
-      await _saveToDraft(session, user, creationSession);
-    }
-
-    // Clear session
-    await stateManager.cancelCreation(session, conversationId);
-  }
-
-  /// Save incomplete product as draft
-  Future<Product?> _saveToDraft(
-    Session session,
-    User user,
-    ProductCreationSession productSession,
-  ) async {
-    try {
-      final productId = Uuid().v4obj();
-
-      final product = Product(
-        id: productId,
-        vendorId: user.id,
-        name: productSession.name ??
-            'Draft Product ${DateTime.now().day}/${DateTime.now().month}',
-        description: productSession.description ?? 'Product in progress',
-        category: productSession.category ?? 'Uncategorized',
-        basePrice: productSession.price ?? 0,
-        quantity: productSession.quantity ?? 0,
-        images: [], // Will be populated after media processing
-        status: ProductStatus.draft,
-        isActive: false,
-        whatsappMediaIds: productSession.platform == PlatformType.whatsapp
-            ? productSession.imageMediaIds
-            : null,
-        telegramFileIds: productSession.platform == PlatformType.telegram
-            ? productSession.imageMediaIds
-            : null,
-        cdnUploadStatus:
-            ProductCreationConfig.useCDN ? 'pending' : 'not_required',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      return await Product.db.insertRow(session, product);
-    } catch (e) {
-      session.log('Save to draft error: $e');
-      return null;
-    }
-  }
-
-  // ==================== MEDIA PROCESSING ====================
-
-  /// Process media in background (non-blocking)
-  // In _processMediaInBackground()
-
-  void _processMediaInBackground(
-    Session session, {
-    required String mediaId,
-    required PlatformType platform,
-    required UuidValue vendorId,
-    required bool isVideo,
-    String? productId,
+  void _pushToMetaCatalogBackground({
+    required UuidValue productId,
   }) {
-    if (mediaService == null) {
-      session.log('⚠️ Media service not available');
-      return;
-    }
-
     Future(() async {
+      // ✅ CREATE NEW SESSION for background task
+      final session = await Serverpod.instance.createSession();
+      
       try {
-        session.log('📸 Processing media: $mediaId (video: $isVideo)');
+        // Wait longer for media processing to complete
+        await Future.delayed(Duration(seconds: 15));
 
-        if (ProductCreationConfig.useCDN) {
-          // CDN MODE: Upload to cloud storage
-          final result = await mediaService!.processProductMedia(
-            session,
-            mediaId: mediaId,
-            platform: platform,
-            vendorId: vendorId,
-            productId: productId != null
-                ? UuidValue.fromString(productId)
-                : Uuid().v4obj(),
-            isVideo: isVideo,
-          );
+        session.log('📤 Pushing to Meta Catalog: $productId');
 
-          if (result['success']) {
-            session.log('✅ Media uploaded to CDN: ${result['cdn_url']}');
-          } else {
-            session.log('❌ CDN upload failed: ${result['error']}');
-          }
+        final metaService = getIt<MetaCatalogService>();
+        final updatedProduct = await Product.db.findById(session, productId);
+
+        if (updatedProduct == null) {
+          session.log('⚠️ Product not found for Meta sync');
+          return;
+        }
+
+        // Check if CDN images are ready
+        if (updatedProduct.images.isEmpty || 
+            !updatedProduct.images.first.startsWith('http')) {
+          session.log('⚠️ CDN images not ready yet, skipping Meta sync');
+          session.log('   Images: ${updatedProduct.images}');
+          return;
+        }
+
+        final result = await metaService.pushProduct(
+          session,  
+          updatedProduct,
+          autoClassify: false,
+        );
+
+        if (result['success']) {
+          session.log('✅ Pushed to Meta: ${result['meta_product_id']}');
         } else {
-          // DATABASE MODE: Store media ID reference
-          session.log('💾 Media ID stored for database: $mediaId');
-          // The platform media ID will be stored in Product table
-          // and fetched on-demand when needed
+          session.log('❌ Meta push failed: ${result['error']}');
         }
       } catch (e, stackTrace) {
-        session.log('❌ Background media processing error: $e');
-        session.log('Stack trace', stackTrace: stackTrace);
+        session.log('❌ Meta push error: $e');
+        session.log('Stack trace: $stackTrace');
+      } finally {
+        // ✅ IMPORTANT: Close the session
+        await session.close();
       }
     });
-  }
-
-  // ==================== HELPERS ====================
-
-  Future<String> _getInitialPrompt(SubscriptionTier tier) async {
-    return '''
-🎨 **Start Product Creation**
-
-Let's create your product listing!
-
-📸 **Step 1: Product Images**
-
-Send ${ProductCreationConfig.minImages}-${ProductCreationConfig.maxImages} product images.
-
-${tier != SubscriptionTier.freemium ? '✨ ${tier.name.toUpperCase()} features available:\n   • Video upload\n   • AI-enhanced descriptions\n${tier == SubscriptionTier.pro_max ? '   • AI-generated images\n' : ''}' : ''}
-
-💡 You can type "/cancel" anytime to save progress and exit.
-
-Send your first image now! 📸
-''';
-  }
-
-  bool _isCancelCommand(String message) {
-    final content = message.toLowerCase().trim();
-    return content == '/cancel' ||
-        content == 'cancel' ||
-        content == 'exit' ||
-        content == 'stop' ||
-        content == 'quit';
-  }
-
-  bool _isSessionExpired(ProductCreationSession session) {
-    final now = DateTime.now();
-    final elapsed = now.difference(session.lastUpdatedAt);
-    return elapsed.inMinutes > ProductCreationConfig.sessionTimeoutMinutes;
-  }
-
-  void _parseOptionalDetails(String message, ProductCreationSession session) {
-    final content = message.toLowerCase();
-
-    // Extract colors
-    if (content.contains('color') || content.contains('available in')) {
-      final colorMatch = RegExp(r'(?:color|available in)[:\s]+(.+?)(?:\n|$)',
-              caseSensitive: false)
-          .firstMatch(message);
-      if (colorMatch != null) {
-        final colorsStr = colorMatch.group(1)!;
-        session.colors = colorsStr
-            .split(RegExp(r'[,;]'))
-            .map((c) => c.trim())
-            .where((c) => c.isNotEmpty)
-            .toList();
-      }
-    }
-
-    // Extract sizes
-    if (content.contains('size')) {
-      final sizeMatch =
-          RegExp(r'size[s]?[:\s]+(.+?)(?:\n|$)', caseSensitive: false)
-              .firstMatch(message);
-      if (sizeMatch != null) {
-        final sizesStr = sizeMatch.group(1)!;
-        session.sizes = sizesStr
-            .split(RegExp(r'[,;]'))
-            .map((s) => s.trim())
-            .where((s) => s.isNotEmpty)
-            .toList();
-      }
-    }
-
-    // Extract brand
-    if (content.contains('brand')) {
-      final brandMatch = RegExp(r'brand[:\s]+([^\n]+)', caseSensitive: false)
-          .firstMatch(message);
-      if (brandMatch != null) {
-        session.brand = brandMatch.group(1)!.trim();
-      }
-    }
-
-    // Extract quantity
-    if (content.contains('stock') || content.contains('quantity')) {
-      final qtyMatch =
-          RegExp(r'(?:stock|quantity)[:\s]+(\d+)', caseSensitive: false)
-              .firstMatch(message);
-      if (qtyMatch != null) {
-        session.quantity = int.tryParse(qtyMatch.group(1)!);
-      }
-    }
-
-    // Extract weight
-    if (content.contains('weight')) {
-      final weightMatch =
-          RegExp(r'weight[:\s]+([\d.]+)\s*([a-z]*)', caseSensitive: false)
-              .firstMatch(message);
-      if (weightMatch != null) {
-        session.weight = double.tryParse(weightMatch.group(1)!);
-        final unit = weightMatch.group(2);
-        if (unit != null && unit.isNotEmpty) {
-          // session.weightUnit = unit;
-        }
-      }
-    }
-
-    // Extract SKU
-    if (content.contains('sku') || content.contains('code')) {
-      final skuMatch =
-          RegExp(r'(?:sku|code)[:\s]+([^\n]+)', caseSensitive: false)
-              .firstMatch(message);
-      if (skuMatch != null) {
-        session.sku = skuMatch.group(1)!.trim();
-      }
-    }
-  }
-
-  Future<Conversation> _getConversation(
-      Session session, String conversationId) async {
-    final conversation = await Conversation.db.findById(
-      session,
-      UuidValue.fromString(conversationId),
-    );
-
-    if (conversation == null) {
-      throw Exception('Conversation not found');
-    }
-
-    return conversation;
   }
 
   Future<void> _saveSession(
@@ -1297,245 +787,5 @@ Send your first image now! 📸
     conversation.updatedAt = DateTime.now();
 
     await Conversation.db.updateRow(session, conversation);
-  }
-
-  /// Complete product creation
-  Future<Map<String, dynamic>> completeProductCreation(
-    Session session, {
-    required User user,
-    required ProductCreationSession creationSession,
-    required Conversation conversation,
-  }) async {
-    try {
-      final vendor = await VendorProfile.db.findFirstRow(
-        session,
-        where: (t) => t.userId.equals(user.id),
-      );
-
-      if (vendor == null) {
-        throw Exception('Vendor profile not found');
-      }
-
-      List<String> processedImages = [];
-      String? processedVideo;
-
-      if (ProductCreationConfig.useCDN) {
-        // CDN MODE: Use CDN URLs
-        processedImages = await _getCDNUrls(
-          creationSession.imageMediaIds,
-          user.id,
-        );
-
-        if (creationSession.videoMediaId != null) {
-          final videoUrls = await _getCDNUrls(
-            [creationSession.videoMediaId!],
-            user.id,
-          );
-          processedVideo = videoUrls.isNotEmpty ? videoUrls.first : null;
-        }
-      } else {
-        // DATABASE MODE: Store platform media IDs
-        processedImages = creationSession.imageMediaIds;
-        processedVideo = creationSession.videoMediaId;
-      }
-
-      // Create product with appropriate media references
-      final product = await ProductEndpoint().createProduct(
-        session,
-        vendorId: user.id,
-        name: creationSession.name!,
-        description: creationSession.description!,
-        category: creationSession.category!,
-        basePrice: creationSession.price!,
-        quantity: creationSession.quantity ?? 0,
-        images: ProductCreationConfig.useCDN ? processedImages : [],
-        // whatsappMediaIds: !ProductCreationConfig.useCDN &&
-        //         creationSession.platform == PlatformType.whatsapp
-        //     ? processedImages
-        //     : null,
-        // telegramFileIds: !ProductCreationConfig.useCDN &&
-        //         creationSession.platform == PlatformType.telegram
-        //     ? processedImages
-        //     : null,
-        color: creationSession.colors,
-        size: creationSession.sizes,
-        brand: creationSession.brand,
-        material: creationSession.material,
-        weight: creationSession.weight,
-        sku: creationSession.sku,
-        isAiGenerated: creationSession.useAiDescription,
-        status: ProductStatus.active,
-      );
-
-      if (product == null) {
-        throw Exception('Failed to create product');
-      }
-
-      // ========== PUSH TO META CATALOG (BACKGROUND) ==========
-      _pushToMetaCatalogBackground(session, product, vendor);
-
-      // Mark as completed
-      creationSession.state = ProductCreationState.COMPLETED;
-      await _saveSession(session, conversation, creationSession);
-
-      // Clear session after delay
-      Future.delayed(Duration(seconds: 5), () async {
-        await stateManager.cancelCreation(session, conversation.id.uuid);
-      });
-
-      return {
-        'success': true,
-        'product_id': product.id.uuid,
-        'product': product,
-        'message': _buildSuccessMessage(product, creationSession),
-      };
-    } catch (e, stackTrace) {
-      session.log('❌ Complete product creation error: $e',
-          stackTrace: stackTrace);
-
-      return {
-        'success': false,
-        'error': 'Failed to create product: ${e.toString()}',
-        'message': '''
-❌ **Product Creation Failed**
-
-An error occurred while creating your product.
-
-Your progress has been saved. Please try again or contact support.
-''',
-      };
-    }
-  }
-
-// Helper to get CDN URLs (placeholder - implement based on your CDN)
-  Future<List<String>> _getCDNUrls(
-    List<String> mediaIds,
-    UuidValue vendorId,
-  ) async {
-    // Query products or cache to get CDN URLs
-    // This is a simplified version
-    return mediaIds
-        .map((id) => 'https://cdn.asami.com/products/${vendorId.uuid}/$id')
-        .toList();
-  }
-
-  String _buildSuccessMessage(
-    Product product,
-    ProductCreationSession session,
-  ) {
-    return '''
-✅ **Product Created Successfully!**
-
-📦 **${product.name}**
-💰 Price: ₦${product.basePrice.toStringAsFixed(2)}
-📂 Category: ${product.category}
-📸 Images: ${session.imageCount}
-${product.videoUrl != null ? '🎥 Video: Added\n' : ''}
-${session.useAiDescription ? '✨ AI-Enhanced Description\n' : ''}
-
-Storage: ${ProductCreationConfig.useCDN ? '☁️ CDN' : '💾 Database'}
-
-Your product is now ${product.status.name} and visible to customers!
-
-What's next?
-- Add more products
-- View your inventory (/myproducts)
-- Check analytics (/analytics)
-''';
-  }
-
-  // ========== META CATALOG PUSH (BACKGROUND) ==========
-
-  void _pushToMetaCatalogBackground(
-    Session session,
-    Product product,
-    VendorProfile vendor,
-  ) {
-    Future(() async {
-      try {
-        session.log('🔄 Initiating Meta Catalog push for: ${product.name}');
-
-        if (ProductCreationConfig.useCDN) {
-          // Wait for CDN upload to complete
-          await _waitForCDNUpload(session, product.id);
-        }
-
-        // Get Meta service
-        final metaService = getIt<MetaCatalogService>();
-
-        // Reload product to get latest data
-        final updatedProduct = await Product.db.findById(session, product.id);
-        if (updatedProduct == null) {
-          session.log('⚠️ Product not found for Meta push');
-          return;
-        }
-
-        // Check if product has required fields
-        if (!_canPushToMeta(updatedProduct)) {
-          session.log('⚠️ Product missing required fields for Meta Catalog');
-          await _updateMetaStatus(session, product.id, 'failed',
-              error: 'Missing required fields (images, description)');
-          return;
-        }
-
-        // Push to Meta
-        final result = await metaService.pushProduct(session, updatedProduct);
-
-        if (result['success']) {
-          session.log(
-              '✅ Product pushed to Meta Catalog: ${result['meta_product_id']}');
-        } else {
-          session.log('❌ Meta Catalog push failed: ${result['error']}');
-        }
-      } catch (e, stackTrace) {
-        session.log('❌ Meta Catalog push error: $e', stackTrace: stackTrace);
-        await _updateMetaStatus(session, product.id, 'failed',
-            error: e.toString());
-      }
-    });
-  }
-
-// Wait for CDN upload to complete
-  Future<void> _waitForCDNUpload(Session session, UuidValue productId) async {
-    for (int i = 0; i < 10; i++) {
-      await Future.delayed(Duration(seconds: 2));
-
-      final product = await Product.db.findById(session, productId);
-      if (product?.cdnUploadStatus == 'completed') {
-        return;
-      }
-    }
-
-    session.log('⚠️ CDN upload timeout - proceeding anyway');
-  }
-
-// Check if product can be pushed to Meta
-  bool _canPushToMeta(Product product) {
-    return product.images.isNotEmpty ||
-        product.whatsappMediaIds?.isNotEmpty == true ||
-        product.telegramFileIds?.isNotEmpty == true;
-  }
-
-// Update Meta sync status
-  Future<void> _updateMetaStatus(
-    Session session,
-    UuidValue productId,
-    String status, {
-    String? error,
-  }) async {
-    try {
-      final product = await Product.db.findById(session, productId);
-      if (product == null) return;
-
-      product.metaSyncStatus = status;
-      product.metaSyncedAt = DateTime.now();
-      if (error != null) {
-        product.metaSyncError = error;
-      }
-
-      await Product.db.updateRow(session, product);
-    } catch (e) {
-      session.log('Failed to update Meta status: $e');
-    }
   }
 }

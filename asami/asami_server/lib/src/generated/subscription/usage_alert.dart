@@ -63,7 +63,9 @@ abstract class UsageAlert
 
   factory UsageAlert.fromJson(Map<String, dynamic> jsonSerialization) {
     return UsageAlert(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userType: _i2.UserType.fromJson(
         (jsonSerialization['userType'] as String),
@@ -79,17 +81,17 @@ abstract class UsageAlert
       limitValue: jsonSerialization['limitValue'] as int,
       title: jsonSerialization['title'] as String,
       message: jsonSerialization['message'] as String,
-      actionRequired: jsonSerialization['actionRequired'] as bool,
+      actionRequired: jsonSerialization['actionRequired'] as bool?,
       actionUrl: jsonSerialization['actionUrl'] as String?,
-      isRead: jsonSerialization['isRead'] as bool,
-      isDismissed: jsonSerialization['isDismissed'] as bool,
+      isRead: jsonSerialization['isRead'] as bool?,
+      isDismissed: jsonSerialization['isDismissed'] as bool?,
       deliveryMethod: jsonSerialization['deliveryMethod'] as String?,
       sentAt: jsonSerialization['sentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['sentAt']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

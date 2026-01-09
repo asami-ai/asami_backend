@@ -97,7 +97,9 @@ abstract class Message implements _i1.SerializableModel {
 
   factory Message.fromJson(Map<String, dynamic> jsonSerialization) {
     return Message(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['conversationId'],
       ),
@@ -117,12 +119,12 @@ abstract class Message implements _i1.SerializableModel {
       mediaUrl: jsonSerialization['mediaUrl'] as String?,
       mediaType: jsonSerialization['mediaType'] as String?,
       thumbnailUrl: jsonSerialization['thumbnailUrl'] as String?,
-      isFromBot: jsonSerialization['isFromBot'] as bool,
-      isFromUser: jsonSerialization['isFromUser'] as bool,
+      isFromBot: jsonSerialization['isFromBot'] as bool?,
+      isFromUser: jsonSerialization['isFromUser'] as bool?,
       senderId: jsonSerialization['senderId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['senderId']),
-      isProcessedByAi: jsonSerialization['isProcessedByAi'] as bool,
+      isProcessedByAi: jsonSerialization['isProcessedByAi'] as bool?,
       aiIntent: jsonSerialization['aiIntent'] as String?,
       aiEntities: jsonSerialization['aiEntities'] as String?,
       aiConfidence: (jsonSerialization['aiConfidence'] as num?)?.toDouble(),
@@ -131,9 +133,9 @@ abstract class Message implements _i1.SerializableModel {
       functionCalled: jsonSerialization['functionCalled'] as String?,
       functionParams: jsonSerialization['functionParams'] as String?,
       functionResult: jsonSerialization['functionResult'] as String?,
-      isDelivered: jsonSerialization['isDelivered'] as bool,
-      isRead: jsonSerialization['isRead'] as bool,
-      isFailed: jsonSerialization['isFailed'] as bool,
+      isDelivered: jsonSerialization['isDelivered'] as bool?,
+      isRead: jsonSerialization['isRead'] as bool?,
+      isFailed: jsonSerialization['isFailed'] as bool?,
       errorMessage: jsonSerialization['errorMessage'] as String?,
       replyToMessageId: jsonSerialization['replyToMessageId'] == null
           ? null
@@ -146,9 +148,9 @@ abstract class Message implements _i1.SerializableModel {
               jsonSerialization['replyToMessage'],
             ),
       metadata: jsonSerialization['metadata'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

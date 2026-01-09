@@ -55,7 +55,9 @@ abstract class AuthSession implements _i1.SerializableModel {
 
   factory AuthSession.fromJson(Map<String, dynamic> jsonSerialization) {
     return AuthSession(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -64,8 +66,10 @@ abstract class AuthSession implements _i1.SerializableModel {
         (jsonSerialization['platform'] as String),
       ),
       platformUserId: jsonSerialization['platformUserId'] as String,
-      isActive: jsonSerialization['isActive'] as bool,
-      loginAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['loginAt']),
+      isActive: jsonSerialization['isActive'] as bool?,
+      loginAt: jsonSerialization['loginAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['loginAt']),
       logoutAt: jsonSerialization['logoutAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['logoutAt']),
@@ -80,9 +84,9 @@ abstract class AuthSession implements _i1.SerializableModel {
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['lastActivityAt'],
             ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

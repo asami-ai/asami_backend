@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -90,7 +89,9 @@ abstract class PaymentTransaction
 
   factory PaymentTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
     return PaymentTransaction(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       orderId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['orderId'],
       ),
@@ -98,7 +99,7 @@ abstract class PaymentTransaction
           ? null
           : _i5.Protocol().deserialize<_i2.Order>(jsonSerialization['order']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       paymentMethod: _i3.PaymentMethod.fromJson(
         (jsonSerialization['paymentMethod'] as String),
       ),
@@ -115,19 +116,19 @@ abstract class PaymentTransaction
       transactionHash: jsonSerialization['transactionHash'] as String?,
       blockchainNetwork: jsonSerialization['blockchainNetwork'] as String?,
       conversionRate: (jsonSerialization['conversionRate'] as num?)?.toDouble(),
-      platformFee: (jsonSerialization['platformFee'] as num).toDouble(),
-      gatewayFee: (jsonSerialization['gatewayFee'] as num).toDouble(),
-      isPending: jsonSerialization['isPending'] as bool,
-      isCompleted: jsonSerialization['isCompleted'] as bool,
-      isFailed: jsonSerialization['isFailed'] as bool,
+      platformFee: (jsonSerialization['platformFee'] as num?)?.toDouble(),
+      gatewayFee: (jsonSerialization['gatewayFee'] as num?)?.toDouble(),
+      isPending: jsonSerialization['isPending'] as bool?,
+      isCompleted: jsonSerialization['isCompleted'] as bool?,
+      isFailed: jsonSerialization['isFailed'] as bool?,
       metadata: jsonSerialization['metadata'] as String?,
       failureReason: jsonSerialization['failureReason'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       completedAt: jsonSerialization['completedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

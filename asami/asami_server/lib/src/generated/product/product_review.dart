@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -76,7 +75,9 @@ abstract class ProductReview
 
   factory ProductReview.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductReview(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       productId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['productId'],
       ),
@@ -102,29 +103,29 @@ abstract class ProductReview
           : _i4.Protocol().deserialize<List<String>>(
               jsonSerialization['images'],
             ),
-      isVerifiedPurchase: jsonSerialization['isVerifiedPurchase'] as bool,
-      isApproved: jsonSerialization['isApproved'] as bool,
-      isFlagged: jsonSerialization['isFlagged'] as bool,
+      isVerifiedPurchase: jsonSerialization['isVerifiedPurchase'] as bool?,
+      isApproved: jsonSerialization['isApproved'] as bool?,
+      isFlagged: jsonSerialization['isFlagged'] as bool?,
       moderatedBy: jsonSerialization['moderatedBy'] as String?,
       moderatedAt: jsonSerialization['moderatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['moderatedAt'],
             ),
-      helpfulCount: jsonSerialization['helpfulCount'] as int,
-      reportCount: jsonSerialization['reportCount'] as int,
+      helpfulCount: jsonSerialization['helpfulCount'] as int?,
+      reportCount: jsonSerialization['reportCount'] as int?,
       vendorResponse: jsonSerialization['vendorResponse'] as String?,
       vendorRespondedAt: jsonSerialization['vendorRespondedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['vendorRespondedAt'],
             ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

@@ -61,30 +61,32 @@ abstract class AIConversationUsage
 
   factory AIConversationUsage.fromJson(Map<String, dynamic> jsonSerialization) {
     return AIConversationUsage(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['conversationId'],
       ),
-      messageCount: jsonSerialization['messageCount'] as int,
-      totalTokens: jsonSerialization['totalTokens'] as int,
-      inputTokens: jsonSerialization['inputTokens'] as int,
-      outputTokens: jsonSerialization['outputTokens'] as int,
+      messageCount: jsonSerialization['messageCount'] as int?,
+      totalTokens: jsonSerialization['totalTokens'] as int?,
+      inputTokens: jsonSerialization['inputTokens'] as int?,
+      outputTokens: jsonSerialization['outputTokens'] as int?,
       toolCallsInConversation:
-          jsonSerialization['toolCallsInConversation'] as int,
+          jsonSerialization['toolCallsInConversation'] as int?,
       uniqueToolsUsed: jsonSerialization['uniqueToolsUsed'] as String?,
-      estimatedCost: (jsonSerialization['estimatedCost'] as num).toDouble(),
-      averageResponseTime: (jsonSerialization['averageResponseTime'] as num)
-          .toDouble(),
+      estimatedCost: (jsonSerialization['estimatedCost'] as num?)?.toDouble(),
+      averageResponseTime: (jsonSerialization['averageResponseTime'] as num?)
+          ?.toDouble(),
       userSatisfactionRating:
           (jsonSerialization['userSatisfactionRating'] as num?)?.toDouble(),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

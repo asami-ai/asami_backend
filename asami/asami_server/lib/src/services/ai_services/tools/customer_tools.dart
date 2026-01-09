@@ -7,6 +7,7 @@ import '../../../endpoints/cart_endpoint.dart';
 import '../../../endpoints/order_endpoint.dart';
 import '../../../endpoints/product_endpoint.dart';
 import '../../../generated/protocol.dart';
+import '../../search/product_search_services.dart';
 import 'tool_definition.dart';
 import 'tool_registry.dart';
 
@@ -96,6 +97,41 @@ class CustomerTools {
       handler: _handleGetVendorInfo,
       allowedRoles: ['customer'],
     );
+
+    // 13. Track Order By Number
+    registry.register(
+      definition: _trackOrderByNumberTool(),
+      handler: _handleTrackOrderByNumber,
+      allowedRoles: ['customer'],
+    );
+
+    // 14. Get Recent Orders
+    registry.register(
+      definition: _getRecentOrdersTool(),
+      handler: _handleGetRecentOrders,
+      allowedRoles: ['customer'],
+    );
+
+    // 15. Request Order Cancellation
+    registry.register(
+      definition: _requestOrderCancellationTool(),
+      handler: _handleRequestOrderCancellation,
+      allowedRoles: ['customer'],
+    );
+
+    // 16. Get Cart Statistics
+    registry.register(
+      definition: _getCartStatisticsTool(),
+      handler: _handleGetCartStatistics,
+      allowedRoles: ['customer'],
+    );
+
+    // 17. Compare Products
+    registry.register(
+      definition: _compareProductsTool(),
+      handler: _handleCompareProducts,
+      allowedRoles: ['customer'],
+    );
   }
 
   // ========================================================================
@@ -105,7 +141,8 @@ class CustomerTools {
   static ToolDefinition _searchProductsTool() {
     return ToolDefinition(
       name: 'search_products',
-      description: 'Search for products across all vendors by name, category, price range, color, size, and other attributes',
+      description:
+          'Search for products across all vendors by name, category, price range, color, size, and other attributes',
       parameters: {
         'query': ToolParameter(
           type: 'string',
@@ -171,7 +208,8 @@ class CustomerTools {
         ),
         'variant_id': ToolParameter(
           type: 'string',
-          description: 'Product variant ID if applicable (for size/color variations)',
+          description:
+              'Product variant ID if applicable (for size/color variations)',
         ),
         'notes': ToolParameter(
           type: 'string',
@@ -242,7 +280,15 @@ class CustomerTools {
         'payment_method': ToolParameter(
           type: 'string',
           description: 'Payment method',
-          enumValues: ['credit_card', 'debit_card', 'bank_transfer', 'mobile_money', 'bitcoin', 'ethereum', 'usdt'],
+          enumValues: [
+            'credit_card',
+            'debit_card',
+            'bank_transfer',
+            'mobile_money',
+            'bitcoin',
+            'ethereum',
+            'usdt'
+          ],
         ),
         'customer_notes': ToolParameter(
           type: 'string',
@@ -280,7 +326,13 @@ class CustomerTools {
         'status': ToolParameter(
           type: 'string',
           description: 'Filter by order status',
-          enumValues: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+          enumValues: [
+            'pending',
+            'confirmed',
+            'shipped',
+            'delivered',
+            'cancelled'
+          ],
         ),
       },
     );
@@ -318,6 +370,80 @@ class CustomerTools {
     );
   }
 
+  static ToolDefinition _trackOrderByNumberTool() {
+    return ToolDefinition(
+      name: 'track_order_by_number',
+      description: 'Track order status by order number (e.g., ORDER-12345)',
+      parameters: {
+        'order_number': ToolParameter(
+          type: 'string',
+          description: 'Order number to track',
+        ),
+      },
+      requiredParameters: ['order_number'],
+    );
+  }
+
+  static ToolDefinition _getRecentOrdersTool() {
+    return ToolDefinition(
+      name: 'get_recent_orders',
+      description: 'Get customer\'s recent orders with optional filters',
+      parameters: {
+        'limit': ToolParameter(
+          type: 'number',
+          description: 'Number of orders to return',
+          defaultValue: 5,
+        ),
+        'status': ToolParameter(
+          type: 'string',
+          description: 'Filter by status',
+          enumValues: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+        ),
+      },
+    );
+  }
+
+  static ToolDefinition _requestOrderCancellationTool() {
+    return ToolDefinition(
+      name: 'request_order_cancellation',
+      description: 'Request to cancel an order',
+      parameters: {
+        'order_number': ToolParameter(
+          type: 'string',
+          description: 'Order number to cancel',
+        ),
+        'reason': ToolParameter(
+          type: 'string',
+          description: 'Reason for cancellation',
+        ),
+      },
+      requiredParameters: ['order_number', 'reason'],
+    );
+  }
+
+  static ToolDefinition _getCartStatisticsTool() {
+    return ToolDefinition(
+      name: 'get_cart_statistics',
+      description: 'Get detailed cart statistics and recommendations',
+      parameters: {},
+    );
+  }
+
+  static ToolDefinition _compareProductsTool() {
+    return ToolDefinition(
+      name: 'compare_products',
+      description: 'Compare multiple products by their IDs',
+      parameters: {
+        'product_ids': ToolParameter(
+          type: 'array',
+          description: 'Array of product IDs to compare',
+          items: ToolParameter(type: 'string'),
+        ),
+      },
+      requiredParameters: ['product_ids'],
+    );
+  }
+
   // ========================================================================
   // TOOL HANDLERS
   // ========================================================================
@@ -328,19 +454,15 @@ class CustomerTools {
   ) async {
     try {
       final session = context.session!;
-      final query = arguments['query'] as String?;
+      final query = arguments['query'] as String;
       final category = arguments['category'] as String?;
-      
-      // FIX: Use num first, then convert to double
       final minPrice = (arguments['min_price'] as num?)?.toDouble();
       final maxPrice = (arguments['max_price'] as num?)?.toDouble();
-      
-      final color = arguments['color'] as String?;
-      final size = arguments['size'] as String?;
-      final limit = (arguments['limit'] as num?)?.toInt() ?? 10;
+      final limit = (arguments['limit'] as num?)?.toInt() ?? 20;
 
-      final products = await ProductEndpoint().searchProducts(
-        session,
+      // ✅ Use new search service
+      final searchService = ProductSearchService(session);
+      final products = await searchService.search(
         query: query,
         category: category,
         minPrice: minPrice,
@@ -348,52 +470,38 @@ class CustomerTools {
         limit: limit,
       );
 
-      // Further filter by color/size if specified
-      var filteredProducts = products;
-      if (color != null) {
-        filteredProducts = filteredProducts.where((p) => 
-          p.color?.any((c) => c.toLowerCase().contains(color.toLowerCase())) ?? false
-        ).toList();
-      }
-      if (size != null) {
-        filteredProducts = filteredProducts.where((p) => 
-          p.size?.any((s) => s.toLowerCase().contains(size.toLowerCase())) ?? false
-        ).toList();
-      }
-
-      if (filteredProducts.isEmpty) {
+      if (products.isEmpty) {
         return {
           'success': true,
-          'message': 'No products found matching your criteria. Try different search terms or filters.',
           'products': [],
-          'count': 0,
+          'message':
+              'No products found matching "$query". Try different keywords or filters.',
         };
       }
 
       return {
         'success': true,
-        'message': 'Found ${filteredProducts.length} products',
-        'products': filteredProducts.map((p) => {
-          'id': p.id.uuid,
-          'name': p.name,
-          'description': p.shortDescription ?? p.description,
-          'price': p.basePrice,
-          'discount_price': p.discountPrice,
-          'currency': p.currency,
-          'image': p.thumbnailUrl,
-          'vendor_id': p.vendorId.uuid,
-          'in_stock': p.quantity > 0,
-          'quantity_available': p.quantity,
-          'category': p.category,
-          'rating': p.averageRating,
-          'reviews': p.totalReviews,
-        }).toList(),
-        'count': filteredProducts.length,
+        'products': products
+            .map((p) => {
+                  'id': p.id.uuid,
+                  'name': p.name,
+                  'description':
+                      p.shortDescription ?? p.description.substring(0, 100),
+                  'price': p.basePrice,
+                  'currency': p.currency,
+                  'category': p.category,
+                  'image': p.thumbnailUrl ?? p.images.firstOrNull,
+                  'quantity': p.quantity,
+                  'vendor_name': p.vendor?.businessName,
+                })
+            .toList(),
+        'count': products.length,
+        'query': query,
       };
     } catch (e) {
       return {
         'success': false,
-        'error': 'Failed to search products: ${e.toString()}',
+        'error': 'Search failed: ${e.toString()}',
       };
     }
   }
@@ -564,14 +672,16 @@ class CustomerTools {
 
       return {
         'success': true,
-        'items': items.map((item) => {
-          'cart_item_id': item.id,
-          'product_id': item.productId.uuid,
-          'quantity': item.quantity,
-          'unit_price': item.unitPrice,
-          'subtotal': item.subtotal,
-          'notes': item.customerNotes,
-        }).toList(),
+        'items': items
+            .map((item) => {
+                  'cart_item_id': item.id,
+                  'product_id': item.productId.uuid,
+                  'quantity': item.quantity,
+                  'unit_price': item.unitPrice,
+                  'subtotal': item.subtotal,
+                  'notes': item.customerNotes,
+                })
+            .toList(),
         'total_items': cart.itemCount,
         'subtotal': cart.subtotal,
       };
@@ -773,15 +883,17 @@ class CustomerTools {
 
       return {
         'success': true,
-        'orders': orders.map((order) => {
-          'order_id': order.id.uuid,
-          'order_number': order.orderNumber,
-          'status': order.status.name,
-          'total_amount': order.totalAmount,
-          'currency': order.currency,
-          'created_at': order.createdAt.toIso8601String(),
-          'delivered_at': order.deliveredAt?.toIso8601String(),
-        }).toList(),
+        'orders': orders
+            .map((order) => {
+                  'order_id': order.id.uuid,
+                  'order_number': order.orderNumber,
+                  'status': order.status.name,
+                  'total_amount': order.totalAmount,
+                  'currency': order.currency,
+                  'created_at': order.createdAt.toIso8601String(),
+                  'delivered_at': order.deliveredAt?.toIso8601String(),
+                })
+            .toList(),
         'count': orders.length,
       };
     } catch (e) {
@@ -869,28 +981,284 @@ class CustomerTools {
     }
   }
 
+  static Future<Map<String, dynamic>> _handleTrackOrderByNumber(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final orderNumber = arguments['order_number'] as String;
+
+    final order = await Order.db.findFirstRow(
+      session,
+      where: (t) => t.orderNumber.equals(orderNumber),
+    );
+
+    if (order == null) {
+      return {
+        'success': false,
+        'error': 'Order not found: $orderNumber',
+      };
+    }
+
+    return {
+      'success': true,
+      'order': {
+        'order_number': order.orderNumber,
+        'status': order.status.name,
+        'status_description': _getStatusDescription(order.status),
+        'total_amount': order.totalAmount,
+        'currency': order.currency,
+        'created_at': order.createdAt.toIso8601String(),
+        'estimated_delivery': order.estimatedDeliveryDate?.toIso8601String(),
+        'tracking_number': order.trackingNumber,
+        'shipping_provider': order.shippingProvider,
+        'customer_notes': order.customerNotes,
+      },
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleGetRecentOrders(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final limit = (arguments['limit'] as num?)?.toInt() ?? 5;
+    final statusStr = arguments['status'] as String?;
+
+    OrderStatus? status;
+    if (statusStr != null) {
+      status = _parseOrderStatus(statusStr);
+    }
+
+    final orders = await OrderEndpoint().getCustomerOrders(
+      session,
+      customerId: UuidValue.fromString(context.userId),
+      status: status,
+      limit: limit,
+    );
+
+    return {
+      'success': true,
+      'orders': orders.map((o) => {
+        'order_number': o.orderNumber,
+        'status': o.status.name,
+        'total': o.totalAmount,
+        'currency': o.currency,
+        'date': o.createdAt.toIso8601String(),
+        'items_count': 1, // You might want to query this
+      }).toList(),
+      'count': orders.length,
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleRequestOrderCancellation(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final orderNumber = arguments['order_number'] as String;
+    final reason = arguments['reason'] as String;
+
+    final order = await Order.db.findFirstRow(
+      session,
+      where: (t) => t.orderNumber.equals(orderNumber),
+    );
+
+    if (order == null) {
+      return {
+        'success': false,
+        'error': 'Order not found',
+      };
+    }
+
+    // Check if cancellable
+    if (order.status == OrderStatus.shipped || 
+        order.status == OrderStatus.delivered) {
+      return {
+        'success': false,
+        'error': 'Cannot cancel order that has been shipped or delivered',
+        'status': order.status.name,
+      };
+    }
+
+    final success = await OrderEndpoint().cancelOrder(
+      session,
+      orderId: order.id,
+      cancellationReason: reason,
+    );
+
+    if (success) {
+      return {
+        'success': true,
+        'message': 'Order cancelled successfully',
+        'order_number': order.orderNumber,
+        'refund_info': 'Refund will be processed within 3-5 business days',
+      };
+    }
+
+    return {
+      'success': false,
+      'error': 'Failed to cancel order',
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleGetCartStatistics(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final cartData = await CartEndpoint().getCartWithItems(
+      session,
+      UuidValue.fromString(context.userId),
+    );
+
+    if (cartData == null) {
+      return {
+        'success': true,
+        'cart_empty': true,
+        'message': 'Cart is empty',
+      };
+    }
+
+    final cart = cartData['cart'] as Cart;
+    final items = cartData['items'] as List<CartItem>;
+
+    // Calculate statistics
+    double totalSavings = 0;
+    int uniqueVendors = 0;
+    
+    return {
+      'success': true,
+      'statistics': {
+        'item_count': cart.itemCount,
+        'subtotal': cart.subtotal,
+        'total_savings': totalSavings,
+        'unique_vendors': uniqueVendors,
+        'average_item_price': cart.subtotal / cart.itemCount,
+      },
+      'items': items.map((i) => {
+        'quantity': i.quantity,
+        'unit_price': i.unitPrice,
+        'subtotal': i.subtotal,
+      }).toList(),
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleCompareProducts(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final productIds = (arguments['product_ids'] as List).cast<String>();
+
+    if (productIds.length < 2) {
+      return {
+        'success': false,
+        'error': 'At least 2 products required for comparison',
+      };
+    }
+
+    if (productIds.length > 5) {
+      return {
+        'success': false,
+        'error': 'Maximum 5 products can be compared at once',
+      };
+    }
+
+    final products = <Product>[];
+    for (var id in productIds) {
+      final product = await ProductEndpoint().getProduct(
+        session,
+        UuidValue.fromString(id),
+      );
+      if (product != null) {
+        products.add(product);
+      }
+    }
+
+    if (products.isEmpty) {
+      return {
+        'success': false,
+        'error': 'No valid products found',
+      };
+    }
+
+    return {
+      'success': true,
+      'comparison': products.map((p) => {
+        'id': p.id.uuid,
+        'name': p.name,
+        'price': p.basePrice,
+        'discount_price': p.discountPrice,
+        'rating': p.averageRating,
+        'reviews': p.totalReviews,
+        'in_stock': p.quantity > 0,
+        'free_shipping': p.freeShipping,
+        'estimated_delivery_days': p.estimatedDeliveryDays,
+      }).toList(),
+      'recommendations': {
+        'best_price': products.reduce((a, b) => 
+          (a.discountPrice ?? a.basePrice) < (b.discountPrice ?? b.basePrice) ? a : b
+        ).name,
+        'best_rated': products.reduce((a, b) => 
+          a.averageRating > b.averageRating ? a : b
+        ).name,
+      },
+    };
+  }
+
   // Helper methods
   static PaymentMethod _parsePaymentMethod(String method) {
     switch (method.toLowerCase()) {
-      case 'credit_card': return PaymentMethod.credit_card;
-      case 'debit_card': return PaymentMethod.debit_card;
-      case 'bank_transfer': return PaymentMethod.bank_transfer;
-      case 'mobile_money': return PaymentMethod.mobile_money;
-      case 'bitcoin': return PaymentMethod.bitcoin;
-      case 'ethereum': return PaymentMethod.ethereum;
-      case 'usdt': return PaymentMethod.usdt;
-      default: return PaymentMethod.credit_card;
+      case 'credit_card':
+        return PaymentMethod.credit_card;
+      case 'debit_card':
+        return PaymentMethod.debit_card;
+      case 'bank_transfer':
+        return PaymentMethod.bank_transfer;
+      case 'mobile_money':
+        return PaymentMethod.mobile_money;
+      case 'bitcoin':
+        return PaymentMethod.bitcoin;
+      case 'ethereum':
+        return PaymentMethod.ethereum;
+      case 'usdt':
+        return PaymentMethod.usdt;
+      default:
+        return PaymentMethod.credit_card;
     }
   }
 
   static OrderStatus _parseOrderStatus(String status) {
     switch (status.toLowerCase()) {
-      case 'pending': return OrderStatus.pending;
-      case 'confirmed': return OrderStatus.confirmed;
-      case 'shipped': return OrderStatus.shipped;
-      case 'delivered': return OrderStatus.delivered;
-      case 'cancelled': return OrderStatus.cancelled;
-      default: return OrderStatus.pending;
+      case 'pending':
+        return OrderStatus.pending;
+      case 'confirmed':
+        return OrderStatus.confirmed;
+      case 'shipped':
+        return OrderStatus.shipped;
+      case 'delivered':
+        return OrderStatus.delivered;
+      case 'cancelled':
+        return OrderStatus.cancelled;
+      default:
+        return OrderStatus.pending;
     }
+  }
+
+  static String _getStatusDescription(OrderStatus status) {
+    final descriptions = {
+      OrderStatus.pending: 'Order received, awaiting confirmation',
+      OrderStatus.confirmed: 'Order confirmed by vendor',
+      OrderStatus.processing: 'Order is being prepared',
+      OrderStatus.packed: 'Order is packed and ready for shipping',
+      OrderStatus.shipped: 'Order has been shipped',
+      OrderStatus.out_for_delivery: 'Order is out for delivery',
+      OrderStatus.delivered: 'Order has been delivered',
+      OrderStatus.cancelled: 'Order has been cancelled',
+      OrderStatus.refunded: 'Order has been refunded',
+      OrderStatus.failed: 'Order processing failed',
+    };
+    return descriptions[status] ?? 'Unknown status';
   }
 }

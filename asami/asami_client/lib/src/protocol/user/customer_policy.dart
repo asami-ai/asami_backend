@@ -68,31 +68,34 @@ abstract class CustomerAIPolicy implements _i1.SerializableModel {
 
   factory CustomerAIPolicy.fromJson(Map<String, dynamic> jsonSerialization) {
     return CustomerAIPolicy(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       policyName: jsonSerialization['policyName'] as String,
       description: jsonSerialization['description'] as String?,
-      dailyMessageLimit: jsonSerialization['dailyMessageLimit'] as int,
-      dailyToolCallLimit: jsonSerialization['dailyToolCallLimit'] as int,
-      requireExplicitIntent: jsonSerialization['requireExplicitIntent'] as bool,
+      dailyMessageLimit: jsonSerialization['dailyMessageLimit'] as int?,
+      dailyToolCallLimit: jsonSerialization['dailyToolCallLimit'] as int?,
+      requireExplicitIntent:
+          jsonSerialization['requireExplicitIntent'] as bool?,
       minimumConfidenceScore:
-          (jsonSerialization['minimumConfidenceScore'] as num).toDouble(),
-      throttleAfterCount: jsonSerialization['throttleAfterCount'] as int,
-      throttleDelaySeconds: jsonSerialization['throttleDelaySeconds'] as int,
+          (jsonSerialization['minimumConfidenceScore'] as num?)?.toDouble(),
+      throttleAfterCount: jsonSerialization['throttleAfterCount'] as int?,
+      throttleDelaySeconds: jsonSerialization['throttleDelaySeconds'] as int?,
       enableProgressiveRestrictions:
-          jsonSerialization['enableProgressiveRestrictions'] as bool,
+          jsonSerialization['enableProgressiveRestrictions'] as bool?,
       restrictionThresholds:
           jsonSerialization['restrictionThresholds'] as String?,
-      maxDailyCost: (jsonSerialization['maxDailyCost'] as num).toDouble(),
-      warnAtCostPercentage: (jsonSerialization['warnAtCostPercentage'] as num)
-          .toDouble(),
-      isActive: jsonSerialization['isActive'] as bool,
-      isDefault: jsonSerialization['isDefault'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      maxDailyCost: (jsonSerialization['maxDailyCost'] as num?)?.toDouble(),
+      warnAtCostPercentage: (jsonSerialization['warnAtCostPercentage'] as num?)
+          ?.toDouble(),
+      isActive: jsonSerialization['isActive'] as bool?,
+      isDefault: jsonSerialization['isDefault'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

@@ -27,6 +27,7 @@ class WhatsAppService {
   final WhatsApp _whatsapp;
   final String? webhookVerifyToken;
 
+
   // ==================== BASIC MESSAGING ====================
 
   /// Generate WhatsApp direct link

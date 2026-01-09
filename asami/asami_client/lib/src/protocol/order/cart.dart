@@ -50,7 +50,9 @@ abstract class Cart implements _i1.SerializableModel {
 
   factory Cart.fromJson(Map<String, dynamic> jsonSerialization) {
     return Cart(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       customerId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['customerId'],
       ),
@@ -58,16 +60,16 @@ abstract class Cart implements _i1.SerializableModel {
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['customer']),
       sessionId: jsonSerialization['sessionId'] as String?,
-      isActive: jsonSerialization['isActive'] as bool,
-      itemCount: jsonSerialization['itemCount'] as int,
-      subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
+      isActive: jsonSerialization['isActive'] as bool?,
+      itemCount: jsonSerialization['itemCount'] as int?,
+      subtotal: (jsonSerialization['subtotal'] as num?)?.toDouble(),
       convertedToOrderId: jsonSerialization['convertedToOrderId'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       expiresAt: jsonSerialization['expiresAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['expiresAt']),

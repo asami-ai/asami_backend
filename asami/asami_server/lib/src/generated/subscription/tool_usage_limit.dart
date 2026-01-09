@@ -56,7 +56,9 @@ abstract class ToolUsageLimit
 
   factory ToolUsageLimit.fromJson(Map<String, dynamic> jsonSerialization) {
     return ToolUsageLimit(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       tier: _i2.SubscriptionTier.fromJson(
         (jsonSerialization['tier'] as String),
       ),
@@ -65,19 +67,19 @@ abstract class ToolUsageLimit
       ),
       dailyLimit: jsonSerialization['dailyLimit'] as int,
       monthlyLimit: jsonSerialization['monthlyLimit'] as int?,
-      allowGracePeriod: jsonSerialization['allowGracePeriod'] as bool,
-      gracePeriodActions: jsonSerialization['gracePeriodActions'] as int,
+      allowGracePeriod: jsonSerialization['allowGracePeriod'] as bool?,
+      gracePeriodActions: jsonSerialization['gracePeriodActions'] as int?,
       restrictedTools: jsonSerialization['restrictedTools'] as String?,
       allowedToolsAfterLimit:
           jsonSerialization['allowedToolsAfterLimit'] as String?,
-      costPerUsage: (jsonSerialization['costPerUsage'] as num).toDouble(),
-      isActive: jsonSerialization['isActive'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      costPerUsage: (jsonSerialization['costPerUsage'] as num?)?.toDouble(),
+      isActive: jsonSerialization['isActive'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

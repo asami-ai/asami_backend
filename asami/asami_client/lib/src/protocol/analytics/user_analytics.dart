@@ -72,7 +72,9 @@ abstract class UserActivity implements _i1.SerializableModel {
 
   factory UserActivity.fromJson(Map<String, dynamic> jsonSerialization) {
     return UserActivity(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -117,9 +119,9 @@ abstract class UserActivity implements _i1.SerializableModel {
       sessionId: jsonSerialization['sessionId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       durationSeconds: jsonSerialization['durationSeconds'] as int?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

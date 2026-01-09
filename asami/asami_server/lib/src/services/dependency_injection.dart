@@ -25,6 +25,7 @@ import 'ai_services/tools/vendor_tools.dart';
 import 'auth/auth_state_manager.dart';
 import 'catalog/meta_catalog_service.dart';
 import 'media/enanced_media_services.dart';
+import 'media/imagekit_service.dart';
 import 'messaging/messaging_service_factory.dart';
 import 'messaging/telegram/telegram_callback_handler.dart';
 import 'messaging/telegram/telegram_webhook_handler.dart';
@@ -49,6 +50,9 @@ Future<void> setupDependencyInjection({
   String? grokApiKey,
   String? metaAccessToken,
   String? metaCatalogId,
+  String? imagekitPublicKey,
+  String? imagekitPrivateKey,
+  String? imagekitUrlEndpoint,
 }) async {
   Log.info('🔧 Setting up dependency injection...');
 
@@ -73,7 +77,13 @@ Future<void> setupDependencyInjection({
     telegramWebhookUrl: telegramWebhookUrl,
   );
 
-  await _initializeMetaService(metaAccessToken ?? '', metaCatalogId ??'');
+  await _initializeMetaService(metaAccessToken ?? '', metaCatalogId ?? '');
+
+  await _setupImageKitService(
+    publicKey: imagekitPublicKey,
+    privateKey: imagekitPrivateKey,
+    urlEndpoint: imagekitUrlEndpoint,
+  );
 
   await _setupProductCreationHandler();
 
@@ -191,7 +201,7 @@ Future<void> _setupCommandProcessor() async {
   Log.info('\n⌨️  Setting up Command Processor...');
 
   final commandProcessor = CommandProcessor();
-  registerAllCommands(commandProcessor);
+  registerEnhancedCommands(commandProcessor);
 
   getIt.registerSingleton<CommandProcessor>(commandProcessor);
   Log.info('   ✅ All commands registered');
@@ -332,6 +342,48 @@ Future<void> _setupTelegram({
   }
 }
 
+Future<void> _setupImageKitService({
+  String? publicKey,
+  String? privateKey,
+  String? urlEndpoint,
+}) async {
+  Log.info('\n☁️ Setting up ImageKit CDN...');
+
+  if (publicKey == null || privateKey == null || urlEndpoint == null) {
+    Log.info('   ⚠️ ImageKit credentials not provided');
+    Log.info('   📦 Products will be stored locally only');
+    return;
+  }
+
+  try {
+    final imageKitService = ImageKitService(
+      publicKey: publicKey,
+      privateKey: privateKey,
+      urlEndpoint: urlEndpoint,
+    );
+
+    // Register the service
+    getIt.registerSingleton<ImageKitService>(imageKitService);
+
+    Log.info('   ✅ ImageKit service initialized');
+    Log.info('   📎 Endpoint: $urlEndpoint');
+
+
+    final enhancedMediaService = EnhancedMediaService(
+      whatsappService: getIt<WhatsAppService>(),
+      telegramService: getIt<TelegramService>(),
+      imageKitService: imageKitService, // Now includes ImageKit
+    );
+
+    getIt.registerSingleton<EnhancedMediaService>(enhancedMediaService);
+    Log.info('   ✅ Enhanced Media Service updated with ImageKit');
+  } catch (e, stack) {
+    Log.error('Error during ImageKit initialization',
+        error: e, stackTrace: stack);
+    Log.info('   ⚠️ Falling back to local storage only');
+  }
+}
+
 Future<void> _initializeMetaService(
     String metaAccessToken, String metaCatalogId) async {
   try {
@@ -341,13 +393,7 @@ Future<void> _initializeMetaService(
       catalogId: metaCatalogId,
     );
 
-    final enhancedMediaService = EnhancedMediaService(
-      whatsappService: getIt<WhatsAppService>(),
-      telegramService: getIt<TelegramService>(),
-    );
     getIt.registerLazySingleton<MetaCatalogService>(() => metaCatalogService);
-    getIt.registerLazySingleton<EnhancedMediaService>(
-        () => enhancedMediaService);
   } catch (e, stack) {
     Log.error('Error during tier initialization', error: e, stackTrace: stack);
   } finally {}
@@ -359,11 +405,11 @@ Future<void> _setupProductCreationHandler() async {
   try {
     Log.info('\n🏭 Setting up Product Creation Handler...');
 
-    final stateManager =
-        getIt.registerLazySingleton<ProductCreationStateManager>(
-            () => ProductCreationStateManager());
+    getIt.registerLazySingleton<ProductCreationStateManager>(
+        () => ProductCreationStateManager());
 
     final productCreationHandler = ProductCreationHandler(
+
         mediaService: getIt<EnhancedMediaService>(),
         stateManager: getIt<ProductCreationStateManager>());
 
@@ -511,6 +557,7 @@ Future<void> initializeTierFeatures() async {
 // ==================== CLEANUP ====================
 
 /// Cleanup all dependencies
+// Update the disposeDependencies function:
 void disposeDependencies() {
   if (getIt.isRegistered<WhatsAppService>()) {
     getIt<WhatsAppService>().dispose();
@@ -518,6 +565,10 @@ void disposeDependencies() {
 
   if (getIt.isRegistered<TelegramService>()) {
     getIt<TelegramService>().dispose();
+  }
+
+  if (getIt.isRegistered<ImageKitService>()) {
+    getIt<ImageKitService>().dispose();
   }
 
   MessagingServiceFactory.disposeAll();

@@ -31,7 +31,11 @@ import 'package:asami_server/src/generated/order/order_item.dart' as _i18;
 import 'package:asami_server/src/generated/order/payment_method.dart' as _i19;
 import 'package:asami_server/src/generated/order/order_status.dart' as _i20;
 import 'package:asami_server/src/generated/product/product_status.dart' as _i21;
-import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i22;
+import 'package:asami_server/src/generated/product/product_condition.dart'
+    as _i22;
+import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i23;
+import 'package:asami_server/src/generated/future_calls.dart' as _i24;
+export 'future_calls.dart' show ServerpodFutureCallsGetter;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -1154,28 +1158,43 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<List<String>?>(),
               nullable: true,
             ),
+            'currency': _i1.ParameterDescription(
+              name: 'currency',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'quantity': _i1.ParameterDescription(
+              name: 'quantity',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
             'images': _i1.ParameterDescription(
               name: 'images',
               type: _i1.getType<List<String>?>(),
               nullable: true,
             ),
-            'isAiGenerated': _i1.ParameterDescription(
-              name: 'isAiGenerated',
-              type: _i1.getType<bool>(),
-              nullable: false,
-            ),
-            'aiConfidenceScore': _i1.ParameterDescription(
-              name: 'aiConfidenceScore',
-              type: _i1.getType<double?>(),
+            'whatsappMediaIds': _i1.ParameterDescription(
+              name: 'whatsappMediaIds',
+              type: _i1.getType<List<String>?>(),
               nullable: true,
             ),
-            'quantity': _i1.ParameterDescription(
-              name: 'quantity',
-              type: _i1.getType<int>(),
-              nullable: false,
+            'telegramFileIds': _i1.ParameterDescription(
+              name: 'telegramFileIds',
+              type: _i1.getType<List<String>?>(),
+              nullable: true,
             ),
-            'sku': _i1.ParameterDescription(
-              name: 'sku',
+            'thumbnailUrl': _i1.ParameterDescription(
+              name: 'thumbnailUrl',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'videoUrl': _i1.ParameterDescription(
+              name: 'videoUrl',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'videoThumbnailUrl': _i1.ParameterDescription(
+              name: 'videoThumbnailUrl',
               type: _i1.getType<String?>(),
               nullable: true,
             ),
@@ -1209,15 +1228,80 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
-            'trackInventory': _i1.ParameterDescription(
-              name: 'trackInventory',
-              type: _i1.getType<bool>(),
-              nullable: false,
+            'dimensions': _i1.ParameterDescription(
+              name: 'dimensions',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'sku': _i1.ParameterDescription(
+              name: 'sku',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'barcode': _i1.ParameterDescription(
+              name: 'barcode',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'isAiGenerated': _i1.ParameterDescription(
+              name: 'isAiGenerated',
+              type: _i1.getType<bool?>(),
+              nullable: true,
             ),
             'status': _i1.ParameterDescription(
               name: 'status',
-              type: _i1.getType<_i21.ProductStatus>(),
-              nullable: false,
+              type: _i1.getType<_i21.ProductStatus?>(),
+              nullable: true,
+            ),
+            'condition': _i1.ParameterDescription(
+              name: 'condition',
+              type: _i1.getType<_i22.ProductCondition?>(),
+              nullable: true,
+            ),
+            'facebookCategory': _i1.ParameterDescription(
+              name: 'facebookCategory',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'googleCategory': _i1.ParameterDescription(
+              name: 'googleCategory',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'shippingRequired': _i1.ParameterDescription(
+              name: 'shippingRequired',
+              type: _i1.getType<bool?>(),
+              nullable: true,
+            ),
+            'estimatedDeliveryDays': _i1.ParameterDescription(
+              name: 'estimatedDeliveryDays',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+            'freeShipping': _i1.ParameterDescription(
+              name: 'freeShipping',
+              type: _i1.getType<bool?>(),
+              nullable: true,
+            ),
+            'shippingCost': _i1.ParameterDescription(
+              name: 'shippingCost',
+              type: _i1.getType<double?>(),
+              nullable: true,
+            ),
+            'facebookCategoryId': _i1.ParameterDescription(
+              name: 'facebookCategoryId',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'googleCategoryId': _i1.ParameterDescription(
+              name: 'googleCategoryId',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'searchKeywords': _i1.ParameterDescription(
+              name: 'searchKeywords',
+              type: _i1.getType<List<String>?>(),
+              nullable: true,
             ),
           },
           call:
@@ -1235,19 +1319,35 @@ class Endpoints extends _i1.EndpointDispatch {
                     shortDescription: params['shortDescription'],
                     subCategory: params['subCategory'],
                     tags: params['tags'],
-                    images: params['images'],
-                    isAiGenerated: params['isAiGenerated'],
-                    aiConfidenceScore: params['aiConfidenceScore'],
+                    currency: params['currency'],
                     quantity: params['quantity'],
-                    sku: params['sku'],
+                    images: params['images'],
+                    whatsappMediaIds: params['whatsappMediaIds'],
+                    telegramFileIds: params['telegramFileIds'],
+                    thumbnailUrl: params['thumbnailUrl'],
+                    videoUrl: params['videoUrl'],
+                    videoThumbnailUrl: params['videoThumbnailUrl'],
                     color: params['color'],
                     size: params['size'],
                     material: params['material'],
                     brand: params['brand'],
                     weight: params['weight'],
                     weightUnit: params['weightUnit'],
-                    trackInventory: params['trackInventory'],
+                    dimensions: params['dimensions'],
+                    sku: params['sku'],
+                    barcode: params['barcode'],
+                    isAiGenerated: params['isAiGenerated'],
                     status: params['status'],
+                    condition: params['condition'],
+                    facebookCategory: params['facebookCategory'],
+                    googleCategory: params['googleCategory'],
+                    shippingRequired: params['shippingRequired'],
+                    estimatedDeliveryDays: params['estimatedDeliveryDays'],
+                    freeShipping: params['freeShipping'],
+                    shippingCost: params['shippingCost'],
+                    facebookCategoryId: params['facebookCategoryId'],
+                    googleCategoryId: params['googleCategoryId'],
+                    searchKeywords: params['searchKeywords'],
                   ),
         ),
         'updateProduct': _i1.MethodConnector(
@@ -1283,11 +1383,6 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String?>(),
               nullable: true,
             ),
-            'tags': _i1.ParameterDescription(
-              name: 'tags',
-              type: _i1.getType<List<String>?>(),
-              nullable: true,
-            ),
             'basePrice': _i1.ParameterDescription(
               name: 'basePrice',
               type: _i1.getType<double?>(),
@@ -1303,14 +1398,24 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int?>(),
               nullable: true,
             ),
-            'status': _i1.ParameterDescription(
-              name: 'status',
-              type: _i1.getType<_i21.ProductStatus?>(),
+            'color': _i1.ParameterDescription(
+              name: 'color',
+              type: _i1.getType<List<String>?>(),
               nullable: true,
             ),
-            'images': _i1.ParameterDescription(
-              name: 'images',
+            'size': _i1.ParameterDescription(
+              name: 'size',
               type: _i1.getType<List<String>?>(),
+              nullable: true,
+            ),
+            'material': _i1.ParameterDescription(
+              name: 'material',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'brand': _i1.ParameterDescription(
+              name: 'brand',
+              type: _i1.getType<String?>(),
               nullable: true,
             ),
             'isActive': _i1.ParameterDescription(
@@ -1318,9 +1423,19 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<bool?>(),
               nullable: true,
             ),
-            'isFeatured': _i1.ParameterDescription(
-              name: 'isFeatured',
-              type: _i1.getType<bool?>(),
+            'status': _i1.ParameterDescription(
+              name: 'status',
+              type: _i1.getType<_i21.ProductStatus?>(),
+              nullable: true,
+            ),
+            'thumbnailUrl': _i1.ParameterDescription(
+              name: 'thumbnailUrl',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+            'images': _i1.ParameterDescription(
+              name: 'images',
+              type: _i1.getType<List<String>?>(),
               nullable: true,
             ),
           },
@@ -1337,14 +1452,17 @@ class Endpoints extends _i1.EndpointDispatch {
                     shortDescription: params['shortDescription'],
                     category: params['category'],
                     subCategory: params['subCategory'],
-                    tags: params['tags'],
                     basePrice: params['basePrice'],
                     discountPrice: params['discountPrice'],
                     quantity: params['quantity'],
-                    status: params['status'],
-                    images: params['images'],
+                    color: params['color'],
+                    size: params['size'],
+                    material: params['material'],
+                    brand: params['brand'],
                     isActive: params['isActive'],
-                    isFeatured: params['isFeatured'],
+                    status: params['status'],
+                    thumbnailUrl: params['thumbnailUrl'],
+                    images: params['images'],
                   ),
         ),
         'deleteProduct': _i1.MethodConnector(
@@ -1655,7 +1773,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'newTier': _i1.ParameterDescription(
               name: 'newTier',
-              type: _i1.getType<_i22.SubscriptionTier>(),
+              type: _i1.getType<_i23.SubscriptionTier>(),
               nullable: false,
             ),
           },
@@ -2201,5 +2319,10 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+  }
+
+  @override
+  _i1.FutureCallDispatch? get futureCalls {
+    return _i24.FutureCalls();
   }
 }

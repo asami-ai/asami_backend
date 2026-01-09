@@ -67,7 +67,9 @@ abstract class CustomerProfile implements _i1.SerializableModel {
 
   factory CustomerProfile.fromJson(Map<String, dynamic> jsonSerialization) {
     return CustomerProfile(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -84,17 +86,17 @@ abstract class CustomerProfile implements _i1.SerializableModel {
           : _i3.Protocol().deserialize<List<String>>(
               jsonSerialization['favoriteVendors'],
             ),
-      totalOrders: jsonSerialization['totalOrders'] as int,
-      totalSpent: (jsonSerialization['totalSpent'] as num).toDouble(),
-      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
-          .toDouble(),
+      totalOrders: jsonSerialization['totalOrders'] as int?,
+      totalSpent: (jsonSerialization['totalSpent'] as num?)?.toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num?)
+          ?.toDouble(),
       lastOrderAt: jsonSerialization['lastOrderAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['lastOrderAt'],
             ),
-      wishlistCount: jsonSerialization['wishlistCount'] as int,
-      reviewsGiven: jsonSerialization['reviewsGiven'] as int,
+      wishlistCount: jsonSerialization['wishlistCount'] as int?,
+      reviewsGiven: jsonSerialization['reviewsGiven'] as int?,
       averageRating: (jsonSerialization['averageRating'] as num?)?.toDouble(),
       searchHistory: jsonSerialization['searchHistory'] == null
           ? null
@@ -111,12 +113,12 @@ abstract class CustomerProfile implements _i1.SerializableModel {
           : _i3.Protocol().deserialize<List<String>>(
               jsonSerialization['preferredCategories'],
             ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

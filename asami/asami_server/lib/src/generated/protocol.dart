@@ -42,44 +42,46 @@ import 'order/payment_status.dart' as _i29;
 import 'order/payment_transaction.dart' as _i30;
 import 'order/refund.dart' as _i31;
 import 'product/category.dart' as _i32;
-import 'product/product.dart' as _i33;
-import 'product/product_condition.dart' as _i34;
-import 'product/product_review.dart' as _i35;
-import 'product/product_status.dart' as _i36;
-import 'product/product_variant.dart' as _i37;
-import 'product/wishlist.dart' as _i38;
-import 'product/wishlist_item.dart' as _i39;
-import 'subscription/alert_type.dart' as _i40;
-import 'subscription/billing_cycle_summary.dart' as _i41;
-import 'subscription/daily_usage_tracker.dart' as _i42;
-import 'subscription/limit_type.dart' as _i43;
-import 'subscription/subscription.dart' as _i44;
-import 'subscription/subscription_event.dart' as _i45;
-import 'subscription/subscription_invoice.dart' as _i46;
-import 'subscription/tier_featur.dart' as _i47;
-import 'subscription/tool_usage_limit.dart' as _i48;
-import 'subscription/usage_alert.dart' as _i49;
-import 'subscription/usage_class.dart' as _i50;
-import 'subscription/usage_record.dart' as _i51;
-import 'user/address.dart' as _i52;
-import 'user/auth_session.dart' as _i53;
-import 'user/customer_policy.dart' as _i54;
-import 'user/customer_profile.dart' as _i55;
-import 'user/subscription_tier.dart' as _i56;
-import 'user/user.dart' as _i57;
-import 'user/user_status.dart' as _i58;
-import 'user/user_type.dart' as _i59;
-import 'user/vendor_profile.dart' as _i60;
+import 'product/category_mapping.dart' as _i33;
+import 'product/product.dart' as _i34;
+import 'product/product_category.dart' as _i35;
+import 'product/product_condition.dart' as _i36;
+import 'product/product_review.dart' as _i37;
+import 'product/product_status.dart' as _i38;
+import 'product/product_variant.dart' as _i39;
+import 'product/wishlist.dart' as _i40;
+import 'product/wishlist_item.dart' as _i41;
+import 'subscription/alert_type.dart' as _i42;
+import 'subscription/billing_cycle_summary.dart' as _i43;
+import 'subscription/daily_usage_tracker.dart' as _i44;
+import 'subscription/limit_type.dart' as _i45;
+import 'subscription/subscription.dart' as _i46;
+import 'subscription/subscription_event.dart' as _i47;
+import 'subscription/subscription_invoice.dart' as _i48;
+import 'subscription/tier_featur.dart' as _i49;
+import 'subscription/tool_usage_limit.dart' as _i50;
+import 'subscription/usage_alert.dart' as _i51;
+import 'subscription/usage_class.dart' as _i52;
+import 'subscription/usage_record.dart' as _i53;
+import 'user/address.dart' as _i54;
+import 'user/auth_session.dart' as _i55;
+import 'user/customer_policy.dart' as _i56;
+import 'user/customer_profile.dart' as _i57;
+import 'user/subscription_tier.dart' as _i58;
+import 'user/user.dart' as _i59;
+import 'user/user_status.dart' as _i60;
+import 'user/user_type.dart' as _i61;
+import 'user/vendor_profile.dart' as _i62;
 import 'package:asami_server/src/generated/analytics/vendor_analytics.dart'
-    as _i61;
+    as _i63;
 import 'package:asami_server/src/generated/analytics/product_analytics.dart'
-    as _i62;
-import 'package:asami_server/src/generated/product/product.dart' as _i63;
-import 'package:asami_server/src/generated/order/order_item.dart' as _i64;
-import 'package:asami_server/src/generated/order/order.dart' as _i65;
+    as _i64;
+import 'package:asami_server/src/generated/product/product.dart' as _i65;
+import 'package:asami_server/src/generated/order/order_item.dart' as _i66;
+import 'package:asami_server/src/generated/order/order.dart' as _i67;
 import 'package:asami_server/src/generated/subscription/usage_record.dart'
-    as _i66;
-import 'package:asami_server/src/generated/user/address.dart' as _i67;
+    as _i68;
+import 'package:asami_server/src/generated/user/address.dart' as _i69;
 export 'analytics/ai_conversation_usage.dart';
 export 'analytics/breach_severity.dart';
 export 'analytics/customer_usage_pattern.dart';
@@ -110,7 +112,9 @@ export 'order/payment_status.dart';
 export 'order/payment_transaction.dart';
 export 'order/refund.dart';
 export 'product/category.dart';
+export 'product/category_mapping.dart';
 export 'product/product.dart';
+export 'product/product_category.dart';
 export 'product/product_condition.dart';
 export 'product/product_review.dart';
 export 'product/product_status.dart';
@@ -1637,6 +1641,144 @@ class Protocol extends _i1.SerializationManagerServer {
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'displayOrder',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'category_mappings',
+      dartName: 'CategoryMapping',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'simpleCategoryId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productNamePattern',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productDescriptionPattern',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'facebookCategoryId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'facebookCategoryName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'googleTaxonomyId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'googleTaxonomyPath',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'confidence',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '1.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'matchCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastUsedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'category_mappings_fk_0',
+          columns: ['simpleCategoryId'],
+          referenceTable: 'product_categories',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'category_mappings_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'simple_category_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'simpleCategoryId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'facebook_cat_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'facebookCategoryId',
             ),
           ],
           type: 'btree',
@@ -4656,6 +4798,240 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'product_categories',
+      dartName: 'ProductCategory',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'name',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'slug',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'icon',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'parentId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'level',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'facebookCategoryId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'facebookCategoryName',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'googleTaxonomyId',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'googleTaxonomyPath',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'displayOrder',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isFeatured',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'keywords',
+          columnType: _i2.ColumnType.json,
+          isNullable: true,
+          dartType: 'List<String>?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'product_categories_fk_0',
+          columns: ['parentId'],
+          referenceTable: 'product_categories',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'product_categories_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'name_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'name',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'slug_cat_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'slug',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'parent_cat_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'parentId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'facebook_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'facebookCategoryId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'google_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'googleTaxonomyId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'active_cat_order_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'displayOrder',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'product_reviews',
       dartName: 'ProductReview',
       schema: 'public',
@@ -5287,32 +5663,6 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String?',
         ),
         _i2.ColumnDefinition(
-          name: 'isAiGenerated',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
-        ),
-        _i2.ColumnDefinition(
-          name: 'aiGeneratedAt',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
-        ),
-        _i2.ColumnDefinition(
-          name: 'aiConfidenceScore',
-          columnType: _i2.ColumnType.doublePrecision,
-          isNullable: true,
-          dartType: 'double?',
-        ),
-        _i2.ColumnDefinition(
-          name: 'hasAiGeneratedImages',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
-        ),
-        _i2.ColumnDefinition(
           name: 'basePrice',
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: false,
@@ -5366,7 +5716,7 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
           dartType: 'int',
-          columnDefault: '0',
+          columnDefault: '1',
         ),
         _i2.ColumnDefinition(
           name: 'lowStockThreshold',
@@ -5383,6 +5733,34 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'true',
         ),
         _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:ProductStatus',
+          columnDefault: '\'draft\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isFeatured',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'condition',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:ProductCondition',
+          columnDefault: '\'newItem\'::text',
+        ),
+        _i2.ColumnDefinition(
           name: 'weight',
           columnType: _i2.ColumnType.doublePrecision,
           isNullable: true,
@@ -5393,6 +5771,7 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+          columnDefault: '\'kg\'::text',
         ),
         _i2.ColumnDefinition(
           name: 'dimensions',
@@ -5423,34 +5802,6 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
-        ),
-        _i2.ColumnDefinition(
-          name: 'status',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:ProductStatus',
-          columnDefault: '\'draft\'::text',
-        ),
-        _i2.ColumnDefinition(
-          name: 'isActive',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'true',
-        ),
-        _i2.ColumnDefinition(
-          name: 'isFeatured',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
-        ),
-        _i2.ColumnDefinition(
-          name: 'condition',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:ProductCondition',
-          columnDefault: '\'newItem\'::text',
         ),
         _i2.ColumnDefinition(
           name: 'images',
@@ -5520,6 +5871,12 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String?',
         ),
         _i2.ColumnDefinition(
+          name: 'metaRetailerId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
           name: 'metaSyncStatus',
           columnType: _i2.ColumnType.text,
           isNullable: false,
@@ -5537,6 +5894,45 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'metaSyncAttempts',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isAiGenerated',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiGeneratedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'aiConfidenceScore',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'hasAiGeneratedImages',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
         ),
         _i2.ColumnDefinition(
           name: 'shippingRequired',
@@ -5779,6 +6175,32 @@ class Protocol extends _i1.SerializationManagerServer {
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'cdnUploadStatus',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'meta_retailer_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'metaRetailerId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'quantity_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'quantity',
             ),
           ],
           type: 'btree',
@@ -9318,89 +9740,95 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i32.Category) {
       return _i32.Category.fromJson(data) as T;
     }
-    if (t == _i33.Product) {
-      return _i33.Product.fromJson(data) as T;
+    if (t == _i33.CategoryMapping) {
+      return _i33.CategoryMapping.fromJson(data) as T;
     }
-    if (t == _i34.ProductCondition) {
-      return _i34.ProductCondition.fromJson(data) as T;
+    if (t == _i34.Product) {
+      return _i34.Product.fromJson(data) as T;
     }
-    if (t == _i35.ProductReview) {
-      return _i35.ProductReview.fromJson(data) as T;
+    if (t == _i35.ProductCategory) {
+      return _i35.ProductCategory.fromJson(data) as T;
     }
-    if (t == _i36.ProductStatus) {
-      return _i36.ProductStatus.fromJson(data) as T;
+    if (t == _i36.ProductCondition) {
+      return _i36.ProductCondition.fromJson(data) as T;
     }
-    if (t == _i37.ProductVariant) {
-      return _i37.ProductVariant.fromJson(data) as T;
+    if (t == _i37.ProductReview) {
+      return _i37.ProductReview.fromJson(data) as T;
     }
-    if (t == _i38.Wishlist) {
-      return _i38.Wishlist.fromJson(data) as T;
+    if (t == _i38.ProductStatus) {
+      return _i38.ProductStatus.fromJson(data) as T;
     }
-    if (t == _i39.WishlistItem) {
-      return _i39.WishlistItem.fromJson(data) as T;
+    if (t == _i39.ProductVariant) {
+      return _i39.ProductVariant.fromJson(data) as T;
     }
-    if (t == _i40.AlertType) {
-      return _i40.AlertType.fromJson(data) as T;
+    if (t == _i40.Wishlist) {
+      return _i40.Wishlist.fromJson(data) as T;
     }
-    if (t == _i41.BillingCycleSummary) {
-      return _i41.BillingCycleSummary.fromJson(data) as T;
+    if (t == _i41.WishlistItem) {
+      return _i41.WishlistItem.fromJson(data) as T;
     }
-    if (t == _i42.DailyUsageTracker) {
-      return _i42.DailyUsageTracker.fromJson(data) as T;
+    if (t == _i42.AlertType) {
+      return _i42.AlertType.fromJson(data) as T;
     }
-    if (t == _i43.LimitType) {
-      return _i43.LimitType.fromJson(data) as T;
+    if (t == _i43.BillingCycleSummary) {
+      return _i43.BillingCycleSummary.fromJson(data) as T;
     }
-    if (t == _i44.Subscription) {
-      return _i44.Subscription.fromJson(data) as T;
+    if (t == _i44.DailyUsageTracker) {
+      return _i44.DailyUsageTracker.fromJson(data) as T;
     }
-    if (t == _i45.SubscriptionEvent) {
-      return _i45.SubscriptionEvent.fromJson(data) as T;
+    if (t == _i45.LimitType) {
+      return _i45.LimitType.fromJson(data) as T;
     }
-    if (t == _i46.SubscriptionInvoice) {
-      return _i46.SubscriptionInvoice.fromJson(data) as T;
+    if (t == _i46.Subscription) {
+      return _i46.Subscription.fromJson(data) as T;
     }
-    if (t == _i47.TierFeature) {
-      return _i47.TierFeature.fromJson(data) as T;
+    if (t == _i47.SubscriptionEvent) {
+      return _i47.SubscriptionEvent.fromJson(data) as T;
     }
-    if (t == _i48.ToolUsageLimit) {
-      return _i48.ToolUsageLimit.fromJson(data) as T;
+    if (t == _i48.SubscriptionInvoice) {
+      return _i48.SubscriptionInvoice.fromJson(data) as T;
     }
-    if (t == _i49.UsageAlert) {
-      return _i49.UsageAlert.fromJson(data) as T;
+    if (t == _i49.TierFeature) {
+      return _i49.TierFeature.fromJson(data) as T;
     }
-    if (t == _i50.UsageClass) {
-      return _i50.UsageClass.fromJson(data) as T;
+    if (t == _i50.ToolUsageLimit) {
+      return _i50.ToolUsageLimit.fromJson(data) as T;
     }
-    if (t == _i51.UsageRecord) {
-      return _i51.UsageRecord.fromJson(data) as T;
+    if (t == _i51.UsageAlert) {
+      return _i51.UsageAlert.fromJson(data) as T;
     }
-    if (t == _i52.Address) {
-      return _i52.Address.fromJson(data) as T;
+    if (t == _i52.UsageClass) {
+      return _i52.UsageClass.fromJson(data) as T;
     }
-    if (t == _i53.AuthSession) {
-      return _i53.AuthSession.fromJson(data) as T;
+    if (t == _i53.UsageRecord) {
+      return _i53.UsageRecord.fromJson(data) as T;
     }
-    if (t == _i54.CustomerAIPolicy) {
-      return _i54.CustomerAIPolicy.fromJson(data) as T;
+    if (t == _i54.Address) {
+      return _i54.Address.fromJson(data) as T;
     }
-    if (t == _i55.CustomerProfile) {
-      return _i55.CustomerProfile.fromJson(data) as T;
+    if (t == _i55.AuthSession) {
+      return _i55.AuthSession.fromJson(data) as T;
     }
-    if (t == _i56.SubscriptionTier) {
-      return _i56.SubscriptionTier.fromJson(data) as T;
+    if (t == _i56.CustomerAIPolicy) {
+      return _i56.CustomerAIPolicy.fromJson(data) as T;
     }
-    if (t == _i57.User) {
-      return _i57.User.fromJson(data) as T;
+    if (t == _i57.CustomerProfile) {
+      return _i57.CustomerProfile.fromJson(data) as T;
     }
-    if (t == _i58.UserStatus) {
-      return _i58.UserStatus.fromJson(data) as T;
+    if (t == _i58.SubscriptionTier) {
+      return _i58.SubscriptionTier.fromJson(data) as T;
     }
-    if (t == _i59.UserType) {
-      return _i59.UserType.fromJson(data) as T;
+    if (t == _i59.User) {
+      return _i59.User.fromJson(data) as T;
     }
-    if (t == _i60.VendorProfile) {
-      return _i60.VendorProfile.fromJson(data) as T;
+    if (t == _i60.UserStatus) {
+      return _i60.UserStatus.fromJson(data) as T;
+    }
+    if (t == _i61.UserType) {
+      return _i61.UserType.fromJson(data) as T;
+    }
+    if (t == _i62.VendorProfile) {
+      return _i62.VendorProfile.fromJson(data) as T;
     }
     if (t == _i1.getType<_i3.AIConversationUsage?>()) {
       return (data != null ? _i3.AIConversationUsage.fromJson(data) : null)
@@ -9496,91 +9924,97 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i32.Category?>()) {
       return (data != null ? _i32.Category.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.Product?>()) {
-      return (data != null ? _i33.Product.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.CategoryMapping?>()) {
+      return (data != null ? _i33.CategoryMapping.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i34.ProductCondition?>()) {
-      return (data != null ? _i34.ProductCondition.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i34.Product?>()) {
+      return (data != null ? _i34.Product.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i35.ProductReview?>()) {
-      return (data != null ? _i35.ProductReview.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i35.ProductCategory?>()) {
+      return (data != null ? _i35.ProductCategory.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i36.ProductStatus?>()) {
-      return (data != null ? _i36.ProductStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.ProductCondition?>()) {
+      return (data != null ? _i36.ProductCondition.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i37.ProductVariant?>()) {
-      return (data != null ? _i37.ProductVariant.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.ProductReview?>()) {
+      return (data != null ? _i37.ProductReview.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i38.Wishlist?>()) {
-      return (data != null ? _i38.Wishlist.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i38.ProductStatus?>()) {
+      return (data != null ? _i38.ProductStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i39.WishlistItem?>()) {
-      return (data != null ? _i39.WishlistItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i39.ProductVariant?>()) {
+      return (data != null ? _i39.ProductVariant.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i40.AlertType?>()) {
-      return (data != null ? _i40.AlertType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i40.Wishlist?>()) {
+      return (data != null ? _i40.Wishlist.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i41.BillingCycleSummary?>()) {
-      return (data != null ? _i41.BillingCycleSummary.fromJson(data) : null)
+    if (t == _i1.getType<_i41.WishlistItem?>()) {
+      return (data != null ? _i41.WishlistItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i42.AlertType?>()) {
+      return (data != null ? _i42.AlertType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i43.BillingCycleSummary?>()) {
+      return (data != null ? _i43.BillingCycleSummary.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i42.DailyUsageTracker?>()) {
-      return (data != null ? _i42.DailyUsageTracker.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i44.DailyUsageTracker?>()) {
+      return (data != null ? _i44.DailyUsageTracker.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i43.LimitType?>()) {
-      return (data != null ? _i43.LimitType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i45.LimitType?>()) {
+      return (data != null ? _i45.LimitType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i44.Subscription?>()) {
-      return (data != null ? _i44.Subscription.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i46.Subscription?>()) {
+      return (data != null ? _i46.Subscription.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i45.SubscriptionEvent?>()) {
-      return (data != null ? _i45.SubscriptionEvent.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i47.SubscriptionEvent?>()) {
+      return (data != null ? _i47.SubscriptionEvent.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i46.SubscriptionInvoice?>()) {
-      return (data != null ? _i46.SubscriptionInvoice.fromJson(data) : null)
+    if (t == _i1.getType<_i48.SubscriptionInvoice?>()) {
+      return (data != null ? _i48.SubscriptionInvoice.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i47.TierFeature?>()) {
-      return (data != null ? _i47.TierFeature.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i49.TierFeature?>()) {
+      return (data != null ? _i49.TierFeature.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i48.ToolUsageLimit?>()) {
-      return (data != null ? _i48.ToolUsageLimit.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i50.ToolUsageLimit?>()) {
+      return (data != null ? _i50.ToolUsageLimit.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i49.UsageAlert?>()) {
-      return (data != null ? _i49.UsageAlert.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i51.UsageAlert?>()) {
+      return (data != null ? _i51.UsageAlert.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i50.UsageClass?>()) {
-      return (data != null ? _i50.UsageClass.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i52.UsageClass?>()) {
+      return (data != null ? _i52.UsageClass.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i51.UsageRecord?>()) {
-      return (data != null ? _i51.UsageRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i53.UsageRecord?>()) {
+      return (data != null ? _i53.UsageRecord.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i52.Address?>()) {
-      return (data != null ? _i52.Address.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i54.Address?>()) {
+      return (data != null ? _i54.Address.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i53.AuthSession?>()) {
-      return (data != null ? _i53.AuthSession.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i55.AuthSession?>()) {
+      return (data != null ? _i55.AuthSession.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i54.CustomerAIPolicy?>()) {
-      return (data != null ? _i54.CustomerAIPolicy.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i56.CustomerAIPolicy?>()) {
+      return (data != null ? _i56.CustomerAIPolicy.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i55.CustomerProfile?>()) {
-      return (data != null ? _i55.CustomerProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i57.CustomerProfile?>()) {
+      return (data != null ? _i57.CustomerProfile.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i56.SubscriptionTier?>()) {
-      return (data != null ? _i56.SubscriptionTier.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i58.SubscriptionTier?>()) {
+      return (data != null ? _i58.SubscriptionTier.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i57.User?>()) {
-      return (data != null ? _i57.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i59.User?>()) {
+      return (data != null ? _i59.User.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i58.UserStatus?>()) {
-      return (data != null ? _i58.UserStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i60.UserStatus?>()) {
+      return (data != null ? _i60.UserStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.UserType?>()) {
-      return (data != null ? _i59.UserType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i61.UserType?>()) {
+      return (data != null ? _i61.UserType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i60.VendorProfile?>()) {
-      return (data != null ? _i60.VendorProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i62.VendorProfile?>()) {
+      return (data != null ? _i62.VendorProfile.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
@@ -9591,9 +10025,9 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i61.VendorAnalytics>) {
+    if (t == List<_i63.VendorAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i61.VendorAnalytics>(e))
+              .map((e) => deserialize<_i63.VendorAnalytics>(e))
               .toList()
           as T;
     }
@@ -9603,14 +10037,14 @@ class Protocol extends _i1.SerializationManagerServer {
           )
           as T;
     }
-    if (t == List<_i62.ProductAnalytics>) {
+    if (t == List<_i64.ProductAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i62.ProductAnalytics>(e))
+              .map((e) => deserialize<_i64.ProductAnalytics>(e))
               .toList()
           as T;
     }
-    if (t == List<_i63.Product>) {
-      return (data as List).map((e) => deserialize<_i63.Product>(e)).toList()
+    if (t == List<_i65.Product>) {
+      return (data as List).map((e) => deserialize<_i65.Product>(e)).toList()
           as T;
     }
     if (t == Map<String, double>) {
@@ -9628,12 +10062,12 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i64.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i64.OrderItem>(e)).toList()
+    if (t == List<_i66.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i66.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<_i65.Order>) {
-      return (data as List).map((e) => deserialize<_i65.Order>(e)).toList()
+    if (t == List<_i67.Order>) {
+      return (data as List).map((e) => deserialize<_i67.Order>(e)).toList()
           as T;
     }
     if (t == List<String>) {
@@ -9645,14 +10079,14 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i66.UsageRecord>) {
+    if (t == List<_i68.UsageRecord>) {
       return (data as List)
-              .map((e) => deserialize<_i66.UsageRecord>(e))
+              .map((e) => deserialize<_i68.UsageRecord>(e))
               .toList()
           as T;
     }
-    if (t == List<_i67.Address>) {
-      return (data as List).map((e) => deserialize<_i67.Address>(e)).toList()
+    if (t == List<_i69.Address>) {
+      return (data as List).map((e) => deserialize<_i69.Address>(e)).toList()
           as T;
     }
     try {
@@ -9693,34 +10127,36 @@ class Protocol extends _i1.SerializationManagerServer {
       _i30.PaymentTransaction => 'PaymentTransaction',
       _i31.Refund => 'Refund',
       _i32.Category => 'Category',
-      _i33.Product => 'Product',
-      _i34.ProductCondition => 'ProductCondition',
-      _i35.ProductReview => 'ProductReview',
-      _i36.ProductStatus => 'ProductStatus',
-      _i37.ProductVariant => 'ProductVariant',
-      _i38.Wishlist => 'Wishlist',
-      _i39.WishlistItem => 'WishlistItem',
-      _i40.AlertType => 'AlertType',
-      _i41.BillingCycleSummary => 'BillingCycleSummary',
-      _i42.DailyUsageTracker => 'DailyUsageTracker',
-      _i43.LimitType => 'LimitType',
-      _i44.Subscription => 'Subscription',
-      _i45.SubscriptionEvent => 'SubscriptionEvent',
-      _i46.SubscriptionInvoice => 'SubscriptionInvoice',
-      _i47.TierFeature => 'TierFeature',
-      _i48.ToolUsageLimit => 'ToolUsageLimit',
-      _i49.UsageAlert => 'UsageAlert',
-      _i50.UsageClass => 'UsageClass',
-      _i51.UsageRecord => 'UsageRecord',
-      _i52.Address => 'Address',
-      _i53.AuthSession => 'AuthSession',
-      _i54.CustomerAIPolicy => 'CustomerAIPolicy',
-      _i55.CustomerProfile => 'CustomerProfile',
-      _i56.SubscriptionTier => 'SubscriptionTier',
-      _i57.User => 'User',
-      _i58.UserStatus => 'UserStatus',
-      _i59.UserType => 'UserType',
-      _i60.VendorProfile => 'VendorProfile',
+      _i33.CategoryMapping => 'CategoryMapping',
+      _i34.Product => 'Product',
+      _i35.ProductCategory => 'ProductCategory',
+      _i36.ProductCondition => 'ProductCondition',
+      _i37.ProductReview => 'ProductReview',
+      _i38.ProductStatus => 'ProductStatus',
+      _i39.ProductVariant => 'ProductVariant',
+      _i40.Wishlist => 'Wishlist',
+      _i41.WishlistItem => 'WishlistItem',
+      _i42.AlertType => 'AlertType',
+      _i43.BillingCycleSummary => 'BillingCycleSummary',
+      _i44.DailyUsageTracker => 'DailyUsageTracker',
+      _i45.LimitType => 'LimitType',
+      _i46.Subscription => 'Subscription',
+      _i47.SubscriptionEvent => 'SubscriptionEvent',
+      _i48.SubscriptionInvoice => 'SubscriptionInvoice',
+      _i49.TierFeature => 'TierFeature',
+      _i50.ToolUsageLimit => 'ToolUsageLimit',
+      _i51.UsageAlert => 'UsageAlert',
+      _i52.UsageClass => 'UsageClass',
+      _i53.UsageRecord => 'UsageRecord',
+      _i54.Address => 'Address',
+      _i55.AuthSession => 'AuthSession',
+      _i56.CustomerAIPolicy => 'CustomerAIPolicy',
+      _i57.CustomerProfile => 'CustomerProfile',
+      _i58.SubscriptionTier => 'SubscriptionTier',
+      _i59.User => 'User',
+      _i60.UserStatus => 'UserStatus',
+      _i61.UserType => 'UserType',
+      _i62.VendorProfile => 'VendorProfile',
       _ => null,
     };
   }
@@ -9795,61 +10231,65 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Refund';
       case _i32.Category():
         return 'Category';
-      case _i33.Product():
+      case _i33.CategoryMapping():
+        return 'CategoryMapping';
+      case _i34.Product():
         return 'Product';
-      case _i34.ProductCondition():
+      case _i35.ProductCategory():
+        return 'ProductCategory';
+      case _i36.ProductCondition():
         return 'ProductCondition';
-      case _i35.ProductReview():
+      case _i37.ProductReview():
         return 'ProductReview';
-      case _i36.ProductStatus():
+      case _i38.ProductStatus():
         return 'ProductStatus';
-      case _i37.ProductVariant():
+      case _i39.ProductVariant():
         return 'ProductVariant';
-      case _i38.Wishlist():
+      case _i40.Wishlist():
         return 'Wishlist';
-      case _i39.WishlistItem():
+      case _i41.WishlistItem():
         return 'WishlistItem';
-      case _i40.AlertType():
+      case _i42.AlertType():
         return 'AlertType';
-      case _i41.BillingCycleSummary():
+      case _i43.BillingCycleSummary():
         return 'BillingCycleSummary';
-      case _i42.DailyUsageTracker():
+      case _i44.DailyUsageTracker():
         return 'DailyUsageTracker';
-      case _i43.LimitType():
+      case _i45.LimitType():
         return 'LimitType';
-      case _i44.Subscription():
+      case _i46.Subscription():
         return 'Subscription';
-      case _i45.SubscriptionEvent():
+      case _i47.SubscriptionEvent():
         return 'SubscriptionEvent';
-      case _i46.SubscriptionInvoice():
+      case _i48.SubscriptionInvoice():
         return 'SubscriptionInvoice';
-      case _i47.TierFeature():
+      case _i49.TierFeature():
         return 'TierFeature';
-      case _i48.ToolUsageLimit():
+      case _i50.ToolUsageLimit():
         return 'ToolUsageLimit';
-      case _i49.UsageAlert():
+      case _i51.UsageAlert():
         return 'UsageAlert';
-      case _i50.UsageClass():
+      case _i52.UsageClass():
         return 'UsageClass';
-      case _i51.UsageRecord():
+      case _i53.UsageRecord():
         return 'UsageRecord';
-      case _i52.Address():
+      case _i54.Address():
         return 'Address';
-      case _i53.AuthSession():
+      case _i55.AuthSession():
         return 'AuthSession';
-      case _i54.CustomerAIPolicy():
+      case _i56.CustomerAIPolicy():
         return 'CustomerAIPolicy';
-      case _i55.CustomerProfile():
+      case _i57.CustomerProfile():
         return 'CustomerProfile';
-      case _i56.SubscriptionTier():
+      case _i58.SubscriptionTier():
         return 'SubscriptionTier';
-      case _i57.User():
+      case _i59.User():
         return 'User';
-      case _i58.UserStatus():
+      case _i60.UserStatus():
         return 'UserStatus';
-      case _i59.UserType():
+      case _i61.UserType():
         return 'UserType';
-      case _i60.VendorProfile():
+      case _i62.VendorProfile():
         return 'VendorProfile';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -9955,89 +10395,95 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Category') {
       return deserialize<_i32.Category>(data['data']);
     }
+    if (dataClassName == 'CategoryMapping') {
+      return deserialize<_i33.CategoryMapping>(data['data']);
+    }
     if (dataClassName == 'Product') {
-      return deserialize<_i33.Product>(data['data']);
+      return deserialize<_i34.Product>(data['data']);
+    }
+    if (dataClassName == 'ProductCategory') {
+      return deserialize<_i35.ProductCategory>(data['data']);
     }
     if (dataClassName == 'ProductCondition') {
-      return deserialize<_i34.ProductCondition>(data['data']);
+      return deserialize<_i36.ProductCondition>(data['data']);
     }
     if (dataClassName == 'ProductReview') {
-      return deserialize<_i35.ProductReview>(data['data']);
+      return deserialize<_i37.ProductReview>(data['data']);
     }
     if (dataClassName == 'ProductStatus') {
-      return deserialize<_i36.ProductStatus>(data['data']);
+      return deserialize<_i38.ProductStatus>(data['data']);
     }
     if (dataClassName == 'ProductVariant') {
-      return deserialize<_i37.ProductVariant>(data['data']);
+      return deserialize<_i39.ProductVariant>(data['data']);
     }
     if (dataClassName == 'Wishlist') {
-      return deserialize<_i38.Wishlist>(data['data']);
+      return deserialize<_i40.Wishlist>(data['data']);
     }
     if (dataClassName == 'WishlistItem') {
-      return deserialize<_i39.WishlistItem>(data['data']);
+      return deserialize<_i41.WishlistItem>(data['data']);
     }
     if (dataClassName == 'AlertType') {
-      return deserialize<_i40.AlertType>(data['data']);
+      return deserialize<_i42.AlertType>(data['data']);
     }
     if (dataClassName == 'BillingCycleSummary') {
-      return deserialize<_i41.BillingCycleSummary>(data['data']);
+      return deserialize<_i43.BillingCycleSummary>(data['data']);
     }
     if (dataClassName == 'DailyUsageTracker') {
-      return deserialize<_i42.DailyUsageTracker>(data['data']);
+      return deserialize<_i44.DailyUsageTracker>(data['data']);
     }
     if (dataClassName == 'LimitType') {
-      return deserialize<_i43.LimitType>(data['data']);
+      return deserialize<_i45.LimitType>(data['data']);
     }
     if (dataClassName == 'Subscription') {
-      return deserialize<_i44.Subscription>(data['data']);
+      return deserialize<_i46.Subscription>(data['data']);
     }
     if (dataClassName == 'SubscriptionEvent') {
-      return deserialize<_i45.SubscriptionEvent>(data['data']);
+      return deserialize<_i47.SubscriptionEvent>(data['data']);
     }
     if (dataClassName == 'SubscriptionInvoice') {
-      return deserialize<_i46.SubscriptionInvoice>(data['data']);
+      return deserialize<_i48.SubscriptionInvoice>(data['data']);
     }
     if (dataClassName == 'TierFeature') {
-      return deserialize<_i47.TierFeature>(data['data']);
+      return deserialize<_i49.TierFeature>(data['data']);
     }
     if (dataClassName == 'ToolUsageLimit') {
-      return deserialize<_i48.ToolUsageLimit>(data['data']);
+      return deserialize<_i50.ToolUsageLimit>(data['data']);
     }
     if (dataClassName == 'UsageAlert') {
-      return deserialize<_i49.UsageAlert>(data['data']);
+      return deserialize<_i51.UsageAlert>(data['data']);
     }
     if (dataClassName == 'UsageClass') {
-      return deserialize<_i50.UsageClass>(data['data']);
+      return deserialize<_i52.UsageClass>(data['data']);
     }
     if (dataClassName == 'UsageRecord') {
-      return deserialize<_i51.UsageRecord>(data['data']);
+      return deserialize<_i53.UsageRecord>(data['data']);
     }
     if (dataClassName == 'Address') {
-      return deserialize<_i52.Address>(data['data']);
+      return deserialize<_i54.Address>(data['data']);
     }
     if (dataClassName == 'AuthSession') {
-      return deserialize<_i53.AuthSession>(data['data']);
+      return deserialize<_i55.AuthSession>(data['data']);
     }
     if (dataClassName == 'CustomerAIPolicy') {
-      return deserialize<_i54.CustomerAIPolicy>(data['data']);
+      return deserialize<_i56.CustomerAIPolicy>(data['data']);
     }
     if (dataClassName == 'CustomerProfile') {
-      return deserialize<_i55.CustomerProfile>(data['data']);
+      return deserialize<_i57.CustomerProfile>(data['data']);
     }
     if (dataClassName == 'SubscriptionTier') {
-      return deserialize<_i56.SubscriptionTier>(data['data']);
+      return deserialize<_i58.SubscriptionTier>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i57.User>(data['data']);
+      return deserialize<_i59.User>(data['data']);
     }
     if (dataClassName == 'UserStatus') {
-      return deserialize<_i58.UserStatus>(data['data']);
+      return deserialize<_i60.UserStatus>(data['data']);
     }
     if (dataClassName == 'UserType') {
-      return deserialize<_i59.UserType>(data['data']);
+      return deserialize<_i61.UserType>(data['data']);
     }
     if (dataClassName == 'VendorProfile') {
-      return deserialize<_i60.VendorProfile>(data['data']);
+      return deserialize<_i62.VendorProfile>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -10099,46 +10545,50 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i31.Refund.t;
       case _i32.Category:
         return _i32.Category.t;
-      case _i33.Product:
-        return _i33.Product.t;
-      case _i35.ProductReview:
-        return _i35.ProductReview.t;
-      case _i37.ProductVariant:
-        return _i37.ProductVariant.t;
-      case _i38.Wishlist:
-        return _i38.Wishlist.t;
-      case _i39.WishlistItem:
-        return _i39.WishlistItem.t;
-      case _i41.BillingCycleSummary:
-        return _i41.BillingCycleSummary.t;
-      case _i42.DailyUsageTracker:
-        return _i42.DailyUsageTracker.t;
-      case _i44.Subscription:
-        return _i44.Subscription.t;
-      case _i45.SubscriptionEvent:
-        return _i45.SubscriptionEvent.t;
-      case _i46.SubscriptionInvoice:
-        return _i46.SubscriptionInvoice.t;
-      case _i47.TierFeature:
-        return _i47.TierFeature.t;
-      case _i48.ToolUsageLimit:
-        return _i48.ToolUsageLimit.t;
-      case _i49.UsageAlert:
-        return _i49.UsageAlert.t;
-      case _i51.UsageRecord:
-        return _i51.UsageRecord.t;
-      case _i52.Address:
-        return _i52.Address.t;
-      case _i53.AuthSession:
-        return _i53.AuthSession.t;
-      case _i54.CustomerAIPolicy:
-        return _i54.CustomerAIPolicy.t;
-      case _i55.CustomerProfile:
-        return _i55.CustomerProfile.t;
-      case _i57.User:
-        return _i57.User.t;
-      case _i60.VendorProfile:
-        return _i60.VendorProfile.t;
+      case _i33.CategoryMapping:
+        return _i33.CategoryMapping.t;
+      case _i34.Product:
+        return _i34.Product.t;
+      case _i35.ProductCategory:
+        return _i35.ProductCategory.t;
+      case _i37.ProductReview:
+        return _i37.ProductReview.t;
+      case _i39.ProductVariant:
+        return _i39.ProductVariant.t;
+      case _i40.Wishlist:
+        return _i40.Wishlist.t;
+      case _i41.WishlistItem:
+        return _i41.WishlistItem.t;
+      case _i43.BillingCycleSummary:
+        return _i43.BillingCycleSummary.t;
+      case _i44.DailyUsageTracker:
+        return _i44.DailyUsageTracker.t;
+      case _i46.Subscription:
+        return _i46.Subscription.t;
+      case _i47.SubscriptionEvent:
+        return _i47.SubscriptionEvent.t;
+      case _i48.SubscriptionInvoice:
+        return _i48.SubscriptionInvoice.t;
+      case _i49.TierFeature:
+        return _i49.TierFeature.t;
+      case _i50.ToolUsageLimit:
+        return _i50.ToolUsageLimit.t;
+      case _i51.UsageAlert:
+        return _i51.UsageAlert.t;
+      case _i53.UsageRecord:
+        return _i53.UsageRecord.t;
+      case _i54.Address:
+        return _i54.Address.t;
+      case _i55.AuthSession:
+        return _i55.AuthSession.t;
+      case _i56.CustomerAIPolicy:
+        return _i56.CustomerAIPolicy.t;
+      case _i57.CustomerProfile:
+        return _i57.CustomerProfile.t;
+      case _i59.User:
+        return _i59.User.t;
+      case _i62.VendorProfile:
+        return _i62.VendorProfile.t;
     }
     return null;
   }
@@ -10149,4 +10599,19 @@ class Protocol extends _i1.SerializationManagerServer {
 
   @override
   String getModuleName() => 'asami';
+
+  /// Maps any `Record`s known to this [Protocol] to their JSON representation
+  ///
+  /// Throws in case the record type is not known.
+  ///
+  /// This method will return `null` (only) for `null` inputs.
+  Map<String, dynamic>? mapRecordToJson(Record? record) {
+    if (record == null) {
+      return null;
+    }
+    try {
+      return _i2.Protocol().mapRecordToJson(record);
+    } catch (_) {}
+    throw Exception('Unsupported record type ${record.runtimeType}');
+  }
 }

@@ -76,11 +76,13 @@ abstract class WishlistItem implements _i1.SerializableModel {
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       notes: jsonSerialization['notes'] as String?,
-      priority: jsonSerialization['priority'] as int,
+      priority: jsonSerialization['priority'] as int?,
       priceWhenAdded: (jsonSerialization['priceWhenAdded'] as num).toDouble(),
-      notifyOnPriceDrop: jsonSerialization['notifyOnPriceDrop'] as bool,
+      notifyOnPriceDrop: jsonSerialization['notifyOnPriceDrop'] as bool?,
       targetPrice: (jsonSerialization['targetPrice'] as num?)?.toDouble(),
-      addedAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
+      addedAt: jsonSerialization['addedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
     );
   }
 

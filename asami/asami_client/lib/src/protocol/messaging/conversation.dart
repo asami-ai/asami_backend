@@ -90,7 +90,9 @@ abstract class Conversation implements _i1.SerializableModel {
 
   factory Conversation.fromJson(Map<String, dynamic> jsonSerialization) {
     return Conversation(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: jsonSerialization['userId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
@@ -105,9 +107,11 @@ abstract class Conversation implements _i1.SerializableModel {
       userType: _i5.UserType.fromJson(
         (jsonSerialization['userType'] as String),
       ),
-      status: _i2.ConversationStatus.fromJson(
-        (jsonSerialization['status'] as String),
-      ),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.ConversationStatus.fromJson(
+              (jsonSerialization['status'] as String),
+            ),
       sessionData: jsonSerialization['sessionData'] as String?,
       contextData: jsonSerialization['contextData'] as String?,
       activeCartId: jsonSerialization['activeCartId'] as String?,
@@ -117,7 +121,7 @@ abstract class Conversation implements _i1.SerializableModel {
       lastEntities: jsonSerialization['lastEntities'] as String?,
       agentState: jsonSerialization['agentState'] as String?,
       conversationSummary: jsonSerialization['conversationSummary'] as String?,
-      isEscalated: jsonSerialization['isEscalated'] as bool,
+      isEscalated: jsonSerialization['isEscalated'] as bool?,
       escalatedTo: jsonSerialization['escalatedTo'] as String?,
       escalatedAt: jsonSerialization['escalatedAt'] == null
           ? null
@@ -125,16 +129,16 @@ abstract class Conversation implements _i1.SerializableModel {
               jsonSerialization['escalatedAt'],
             ),
       escalationReason: jsonSerialization['escalationReason'] as String?,
-      messageCount: jsonSerialization['messageCount'] as int,
-      botResponseCount: jsonSerialization['botResponseCount'] as int,
+      messageCount: jsonSerialization['messageCount'] as int?,
+      botResponseCount: jsonSerialization['botResponseCount'] as int?,
       averageResponseTime: (jsonSerialization['averageResponseTime'] as num?)
           ?.toDouble(),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       lastMessageAt: jsonSerialization['lastMessageAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

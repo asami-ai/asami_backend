@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -95,7 +94,9 @@ abstract class ProductAnalytics
 
   factory ProductAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return ProductAnalytics(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       productId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['productId'],
       ),
@@ -109,28 +110,28 @@ abstract class ProductAnalytics
       ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
-      views: jsonSerialization['views'] as int,
-      uniqueViews: jsonSerialization['uniqueViews'] as int,
-      wishlistAdds: jsonSerialization['wishlistAdds'] as int,
-      cartAdds: jsonSerialization['cartAdds'] as int,
-      orderCount: jsonSerialization['orderCount'] as int,
-      quantitySold: jsonSerialization['quantitySold'] as int,
-      revenue: (jsonSerialization['revenue'] as num).toDouble(),
-      conversionRate: (jsonSerialization['conversionRate'] as num).toDouble(),
-      bounceRate: (jsonSerialization['bounceRate'] as num).toDouble(),
-      averageTimeOnPage: (jsonSerialization['averageTimeOnPage'] as num)
-          .toDouble(),
-      newReviews: jsonSerialization['newReviews'] as int,
-      averageRating: (jsonSerialization['averageRating'] as num).toDouble(),
-      searchImpressions: jsonSerialization['searchImpressions'] as int,
-      searchClicks: jsonSerialization['searchClicks'] as int,
-      searchRanking: (jsonSerialization['searchRanking'] as num).toDouble(),
-      stockLevelStart: jsonSerialization['stockLevelStart'] as int,
-      stockLevelEnd: jsonSerialization['stockLevelEnd'] as int,
-      stockOuts: jsonSerialization['stockOuts'] as int,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      views: jsonSerialization['views'] as int?,
+      uniqueViews: jsonSerialization['uniqueViews'] as int?,
+      wishlistAdds: jsonSerialization['wishlistAdds'] as int?,
+      cartAdds: jsonSerialization['cartAdds'] as int?,
+      orderCount: jsonSerialization['orderCount'] as int?,
+      quantitySold: jsonSerialization['quantitySold'] as int?,
+      revenue: (jsonSerialization['revenue'] as num?)?.toDouble(),
+      conversionRate: (jsonSerialization['conversionRate'] as num?)?.toDouble(),
+      bounceRate: (jsonSerialization['bounceRate'] as num?)?.toDouble(),
+      averageTimeOnPage: (jsonSerialization['averageTimeOnPage'] as num?)
+          ?.toDouble(),
+      newReviews: jsonSerialization['newReviews'] as int?,
+      averageRating: (jsonSerialization['averageRating'] as num?)?.toDouble(),
+      searchImpressions: jsonSerialization['searchImpressions'] as int?,
+      searchClicks: jsonSerialization['searchClicks'] as int?,
+      searchRanking: (jsonSerialization['searchRanking'] as num?)?.toDouble(),
+      stockLevelStart: jsonSerialization['stockLevelStart'] as int?,
+      stockLevelEnd: jsonSerialization['stockLevelEnd'] as int?,
+      stockOuts: jsonSerialization['stockOuts'] as int?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

@@ -70,7 +70,9 @@ abstract class Refund implements _i1.SerializableModel {
 
   factory Refund.fromJson(Map<String, dynamic> jsonSerialization) {
     return Refund(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       orderId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['orderId'],
       ),
@@ -88,11 +90,11 @@ abstract class Refund implements _i1.SerializableModel {
               jsonSerialization['orderItem'],
             ),
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       reason: jsonSerialization['reason'] as String,
       customerComment: jsonSerialization['customerComment'] as String?,
-      status: jsonSerialization['status'] as String,
-      isApproved: jsonSerialization['isApproved'] as bool,
+      status: jsonSerialization['status'] as String?,
+      isApproved: jsonSerialization['isApproved'] as bool?,
       approvedBy: jsonSerialization['approvedBy'] as String?,
       approvedAt: jsonSerialization['approvedAt'] == null
           ? null
@@ -108,12 +110,12 @@ abstract class Refund implements _i1.SerializableModel {
             ),
       vendorComment: jsonSerialization['vendorComment'] as String?,
       rejectionReason: jsonSerialization['rejectionReason'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

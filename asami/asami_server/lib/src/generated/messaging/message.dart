@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -100,7 +99,9 @@ abstract class Message
 
   factory Message.fromJson(Map<String, dynamic> jsonSerialization) {
     return Message(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['conversationId'],
       ),
@@ -120,12 +121,12 @@ abstract class Message
       mediaUrl: jsonSerialization['mediaUrl'] as String?,
       mediaType: jsonSerialization['mediaType'] as String?,
       thumbnailUrl: jsonSerialization['thumbnailUrl'] as String?,
-      isFromBot: jsonSerialization['isFromBot'] as bool,
-      isFromUser: jsonSerialization['isFromUser'] as bool,
+      isFromBot: jsonSerialization['isFromBot'] as bool?,
+      isFromUser: jsonSerialization['isFromUser'] as bool?,
       senderId: jsonSerialization['senderId'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['senderId']),
-      isProcessedByAi: jsonSerialization['isProcessedByAi'] as bool,
+      isProcessedByAi: jsonSerialization['isProcessedByAi'] as bool?,
       aiIntent: jsonSerialization['aiIntent'] as String?,
       aiEntities: jsonSerialization['aiEntities'] as String?,
       aiConfidence: (jsonSerialization['aiConfidence'] as num?)?.toDouble(),
@@ -134,9 +135,9 @@ abstract class Message
       functionCalled: jsonSerialization['functionCalled'] as String?,
       functionParams: jsonSerialization['functionParams'] as String?,
       functionResult: jsonSerialization['functionResult'] as String?,
-      isDelivered: jsonSerialization['isDelivered'] as bool,
-      isRead: jsonSerialization['isRead'] as bool,
-      isFailed: jsonSerialization['isFailed'] as bool,
+      isDelivered: jsonSerialization['isDelivered'] as bool?,
+      isRead: jsonSerialization['isRead'] as bool?,
+      isFailed: jsonSerialization['isFailed'] as bool?,
       errorMessage: jsonSerialization['errorMessage'] as String?,
       replyToMessageId: jsonSerialization['replyToMessageId'] == null
           ? null
@@ -149,9 +150,9 @@ abstract class Message
               jsonSerialization['replyToMessage'],
             ),
       metadata: jsonSerialization['metadata'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       deliveredAt: jsonSerialization['deliveredAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

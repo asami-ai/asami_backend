@@ -1,0 +1,53 @@
+
+class: ProductCategory
+table: product_categories
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Simple category (user-facing)
+  name: String                          # "Electronics"
+  slug: String                          # "electronics"
+  description: String?
+  icon: String?                         # Emoji or icon name
+  
+  # Parent/child hierarchy
+  parentId: UuidValue?
+  parent: ProductCategory?, relation(field=parentId)
+  level: int, default=0                 # 0=root, 1=subcategory, etc.
+  
+  # Meta/Facebook category mapping
+  facebookCategoryId: int?              # Facebook's category ID
+  facebookCategoryName: String?         # "Electronics > Computers & Tablets"
+  
+  # Google taxonomy mapping
+  googleTaxonomyId: int?                # Google product taxonomy ID
+  googleTaxonomyPath: String?           # "Electronics > Computers > Laptops"
+  
+  # Display & sorting
+  displayOrder: int, default=0
+  isActive: bool, default=true
+  isFeatured: bool, default=false
+  
+  # Usage stats
+  productCount: int, default=0
+  
+  # Keywords for AI matching
+  keywords: List<String>?               # ["phone", "mobile", "smartphone", "cell"]
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  name_idx:
+    fields: name
+  slug_cat_idx:
+    fields: slug
+  parent_cat_idx:
+    fields: parentId
+  facebook_idx:
+    fields: facebookCategoryId
+  google_idx:
+    fields: googleTaxonomyId
+  active_cat_order_idx:
+    fields: isActive, displayOrder

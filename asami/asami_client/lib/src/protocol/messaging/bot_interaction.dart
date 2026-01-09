@@ -76,7 +76,9 @@ abstract class BotInteraction implements _i1.SerializableModel {
 
   factory BotInteraction.fromJson(Map<String, dynamic> jsonSerialization) {
     return BotInteraction(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       conversationId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['conversationId'],
       ),
@@ -103,7 +105,7 @@ abstract class BotInteraction implements _i1.SerializableModel {
       functionInput: jsonSerialization['functionInput'] as String?,
       functionOutput: jsonSerialization['functionOutput'] as String?,
       executionTime: jsonSerialization['executionTime'] as int?,
-      isSuccess: jsonSerialization['isSuccess'] as bool,
+      isSuccess: jsonSerialization['isSuccess'] as bool?,
       errorMessage: jsonSerialization['errorMessage'] as String?,
       wasHelpful: jsonSerialization['wasHelpful'] as bool?,
       userFeedback: jsonSerialization['userFeedback'] as String?,
@@ -114,9 +116,9 @@ abstract class BotInteraction implements _i1.SerializableModel {
       promptTokens: jsonSerialization['promptTokens'] as int?,
       completionTokens: jsonSerialization['completionTokens'] as int?,
       totalTokens: jsonSerialization['totalTokens'] as int?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

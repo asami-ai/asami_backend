@@ -52,7 +52,9 @@ abstract class QuickReply
 
   factory QuickReply.fromJson(Map<String, dynamic> jsonSerialization) {
     return QuickReply(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       intent: jsonSerialization['intent'] as String,
       userType: _i2.UserType.fromJson(
         (jsonSerialization['userType'] as String),
@@ -64,14 +66,14 @@ abstract class QuickReply
       payload: jsonSerialization['payload'] as String,
       description: jsonSerialization['description'] as String?,
       iconUrl: jsonSerialization['iconUrl'] as String?,
-      displayOrder: jsonSerialization['displayOrder'] as int,
-      isActive: jsonSerialization['isActive'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      displayOrder: jsonSerialization['displayOrder'] as int?,
+      isActive: jsonSerialization['isActive'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

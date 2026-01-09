@@ -50,6 +50,9 @@ class _ServerConfig {
   final String? metaAccessToken;
   final String? metaCatalogId;
   final int webPort;
+  final String? imagekitPublicKey;
+  final String? imagekitPrivateKey;
+  final String? imagekitUrlEndpoint;
 
   _ServerConfig({
     required this.whatsappToken,
@@ -65,6 +68,9 @@ class _ServerConfig {
     this.metaAccessToken,
     this.metaCatalogId,
     required this.webPort,
+    this.imagekitPrivateKey,
+    this.imagekitPublicKey,
+    this.imagekitUrlEndpoint,
   });
 }
 
@@ -89,6 +95,9 @@ _ServerConfig _loadConfiguration(Serverpod pod) {
     grokKey: pod.getPassword('grokApiKey'),
     metaAccessToken: pod.getPassword('metaAccessToken'),
     metaCatalogId: pod.getPassword('metaCatalogId'),
+    imagekitPrivateKey: pod.getPassword('imagekitPrivateKey'),
+    imagekitPublicKey: pod.getPassword('imagekitPublicKey'),
+    imagekitUrlEndpoint: pod.getPassword('imagekitUrlEndpoint'),
     webPort: pod.config.webServer?.publicPort ?? 8082,
   );
 }
@@ -157,18 +166,22 @@ Future<void> _setupDependencies(
     _ServerConfig config, _WebhookUrls webhookUrls) async {
   try {
     await setupDependencyInjection(
-      whatsappAccessToken: config.whatsappToken,
-      whatsappFromNumberId: config.whatsappFromId,
-      whatsappWebhookVerifyToken: config.whatsappVerifyToken,
-      telegramBotToken: config.telegramToken,
-      telegramWebhookUrl: webhookUrls.telegram,
-      aiProvider: config.aiProvider,
-      claudeApiKey: config.claudeKey,
-      openaiApiKey: config.openaiKey,
-      geminiApiKey: config.geminiKey,
-      grokApiKey: config.grokKey,
-
-    );
+        whatsappAccessToken: config.whatsappToken,
+        whatsappFromNumberId: config.whatsappFromId,
+        whatsappWebhookVerifyToken: config.whatsappVerifyToken,
+        telegramBotToken: config.telegramToken,
+        telegramWebhookUrl: webhookUrls.telegram,
+        aiProvider: config.aiProvider,
+        claudeApiKey: config.claudeKey,
+        openaiApiKey: config.openaiKey,
+        geminiApiKey: config.geminiKey,
+        grokApiKey: config.grokKey,
+        imagekitPrivateKey: config.imagekitPrivateKey,
+        imagekitPublicKey: config.imagekitPublicKey,
+        imagekitUrlEndpoint: config.imagekitUrlEndpoint,
+        metaCatalogId: config.metaCatalogId,
+        metaAccessToken: config.metaAccessToken,
+        );
     Log.startupSuccess('✅ Dependency injection configured');
     Log.info(''); // Empty line for readability
   } catch (e, stackTrace) {

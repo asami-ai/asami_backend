@@ -9,6 +9,7 @@ import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_service.da
 import 'package:serverpod/serverpod.dart' hide Message;
 import 'package:televerse/telegram.dart' hide User, Message;
 import '../../generated/protocol.dart';
+import '../messaging/telegram/telegram_commands_setup.dart';
 
 /// Manages authentication state using temporary conversations
 class AuthStateManager {
@@ -99,7 +100,7 @@ s
             'type': 'reply',
             'reply': {
               'id': 'auth_login',
-              'title': isLogin? '📱 Login' :'📱 I Have an Account',
+              'title': isLogin ? '📱 Login' : '📱 I Have an Account',
             }
           },
         ],
@@ -161,135 +162,135 @@ What would you like to do?
   }
 
 // SHOW TELEGRAM STARTUP MENU
-  Future<void> showTelegramMenu(String chatId, Session session,
-      {bool dBCheck = true,
-      String? defaultMessage,
-      bool isLogin = false}) async {
-    // Check if user is authenticated
-    User? user;
-    if (dBCheck) {
-      user = await User.db.findFirstRow(
-        session,
-        where: (t) =>
-            t.telegramId.equals(chatId) & t.telegramAuthenticated.equals(true),
-      );
-    }
+//   Future<void> showTelegramMenu(String chatId, Session session,
+//       {bool dBCheck = true,
+//       String? defaultMessage,
+//       bool isLogin = false}) async {
+//     // Check if user is authenticated
+//     User? user;
+//     if (dBCheck) {
+//       user = await User.db.findFirstRow(
+//         session,
+//         where: (t) =>
+//             t.telegramId.equals(chatId) & t.telegramAuthenticated.equals(true),
+//       );
+//     }
 
-    final telegramService = getIt<TelegramService>();
-    if (user == null) {
-      final message = defaultMessage ??
-          '''
-👋 Welcome to Asami!
+//     final telegramService = getIt<TelegramService>();
+//     if (user == null) {
+//       final message = defaultMessage ??
+//           '''
+// 👋 Welcome to Asami!
 
-Your AI-powered shopping assistant for discovering products, managing sales, and seamless transactions.
+// Your AI-powered shopping assistant for discovering products, managing sales, and seamless transactions.
 
-What would you like to do?
-''';
-      // Show auth menu
-      final keyboard = [
-        if (!isLogin)
-          [
-            InlineKeyboardButton(
-              text: '🛍️ Shop as Customer',
-              callbackData: 'auth_signup_customer',
-            ),
-          ],
-        if (!isLogin)
-          [
-            InlineKeyboardButton(
-              text: '🏪 Sell as Vendor',
-              callbackData: 'auth_signup_vendor',
-            ),
-          ],
-        [
-          InlineKeyboardButton(
-            text: isLogin? '📱 Login' :'📱 I Have an Account',
-            callbackData: 'auth_login',
-          ),
-        ],
-      ];
+// What would you like to do?
+// ''';
+//       // Show auth menu
+//       final keyboard = [
+//         if (!isLogin)
+//           [
+//             InlineKeyboardButton(
+//               text: '🛍️ Shop as Customer',
+//               callbackData: 'auth_signup_customer',
+//             ),
+//           ],
+//         if (!isLogin)
+//           [
+//             InlineKeyboardButton(
+//               text: '🏪 Sell as Vendor',
+//               callbackData: 'auth_signup_vendor',
+//             ),
+//           ],
+//         [
+//           InlineKeyboardButton(
+//             text: isLogin ? '📱 Login' : '📱 I Have an Account',
+//             callbackData: 'auth_login',
+//           ),
+//         ],
+//       ];
 
-      await telegramService.sendInlineKeyboard(
-        chatId: int.parse(chatId),
-        text: message,
-        keyboard: keyboard,
-      );
-      return;
-    }
+//       await telegramService.sendInlineKeyboard(
+//         chatId: int.parse(chatId),
+//         text: message,
+//         keyboard: keyboard,
+//       );
+//       return;
+//     }
 
-    // Show authenticated menu
-    final isVendor = user.userType == UserType.vendor;
+//     // Show authenticated menu
+//     final isVendor = user.userType == UserType.vendor;
 
-    List<List<InlineKeyboardButton>> keyboard = [
-      [
-        InlineKeyboardButton(
-          text: '🛍️ Browse Products',
-          callbackData: 'nav_products',
-        ),
-        InlineKeyboardButton(
-          text: '🛒 My Cart',
-          callbackData: 'cart_view',
-        ),
-      ],
-      [
-        InlineKeyboardButton(
-          text: '📦 My Orders',
-          callbackData: 'nav_orders',
-        ),
-      ],
-    ];
+//     List<List<InlineKeyboardButton>> keyboard = [
+//       [
+//         InlineKeyboardButton(
+//           text: '🛍️ Browse Products',
+//           callbackData: 'nav_products',
+//         ),
+//         InlineKeyboardButton(
+//           text: '🛒 My Cart',
+//           callbackData: 'cart_view',
+//         ),
+//       ],
+//       [
+//         InlineKeyboardButton(
+//           text: '📦 My Orders',
+//           callbackData: 'nav_orders',
+//         ),
+//       ],
+//     ];
 
-    if (isVendor) {
-      keyboard.addAll([
-        [
-          InlineKeyboardButton(
-            text: '📊 Analytics',
-            callbackData: 'vendor_analytics',
-          ),
-          InlineKeyboardButton(
-            text: '🏪 My Products',
-            callbackData: 'vendor_products',
-          ),
-        ],
-      ]);
-    }
+//     if (isVendor) {
+//       keyboard.addAll([
+//         [
+//           InlineKeyboardButton(
+//             text: '📊 Analytics',
+//             callbackData: 'vendor_analytics',
+//           ),
+//           InlineKeyboardButton(
+//             text: '🏪 My Products',
+//             callbackData: 'vendor_products',
+//           ),
+//         ],
+//       ]);
+//     }
 
-    keyboard.add([
-      InlineKeyboardButton(
-        text: '👤 Account',
-        callbackData: 'nav_account',
-      ),
-      InlineKeyboardButton(
-        text: '❓ Help',
-        callbackData: 'nav_help',
-      ),
-    ]);
-    final message = isVendor
-        ? '''
-🏠 *Main Menu*
+//     keyboard.add([
+//       InlineKeyboardButton(
+//         text: '👤 Account',
+//         callbackData: 'nav_account',
+//       ),
+//       InlineKeyboardButton(
+//         text: '❓ Help',
+//         callbackData: 'nav_help',
+//       ),
+//     ]);
+//     final message = isVendor
+//         ? '''
+// 🏠 *Main Menu*
 
-Quick Actions:
-• Browse products to buy
-• Manage your cart & orders
-• ${isVendor ? 'Check your business analytics' : 'Track deliveries'}
+// Quick Actions:
+// • Browse products to buy
+// • Manage your cart & orders
+// • ${isVendor ? 'Check your business analytics' : 'Track deliveries'}
 
-${isVendor ? 'Use /myproducts for vendor tools' : ''}
+// ${isVendor ? 'Use /myproducts for vendor tools' : ''}
 
-What would you like to do?
-'''
-        : '''
-🏠 *Main Menu*
+// What would you like to do?
+// '''
+//         : '''
+// 🏠 *Main Menu*
 
-What would you like to do?
-''';
+// What would you like to do?
+// ''';
 
-    await telegramService.sendInlineKeyboard(
-      chatId: int.parse(chatId),
-      text: message,
-      keyboard: keyboard,
-      parseMode: ParseMode.markdown,
-    );
-  }
+//     await telegramService.sendInlineKeyboard(
+//       chatId: int.parse(chatId),
+//       text: message,
+//       keyboard: keyboard,
+//       parseMode: ParseMode.markdown,
+//     );
+//   }
 
   /// Create new temporary auth conversation
   Future<Conversation> createTempAuthConversation(
@@ -415,6 +416,8 @@ What would you like to do?
     required Conversation tempConversation,
     required User authenticatedUser,
   }) async {
+    session.log(
+        '🎯 Completing authentication for user ${authenticatedUser.id.uuid}');
     // Update conversation with real user ID
     tempConversation.userId = authenticatedUser.id;
     tempConversation.status = ConversationStatus.active;
@@ -432,7 +435,100 @@ What would you like to do?
     tempConversation.sessionData = jsonEncode(sessionData);
     tempConversation.updatedAt = DateTime.now();
     await User.db.updateRow(session, authenticatedUser);
+
+    // 2. ✅ NEW: Update Telegram commands for this user
+    await _updateTelegramCommandsAfterAuth(
+      session,
+      authenticatedUser: authenticatedUser,
+      platform: tempConversation.platform,
+      platformUserId: tempConversation.platformUserId,
+    );
     return await Conversation.db.updateRow(session, tempConversation);
+  }
+
+  /// ✅ NEW: Show Telegram menu with inline keyboard
+  Future<void> showTelegramMenu(
+    String chatID,
+    Session session, {
+    bool dBCheck = true,
+    bool isLogin = false,
+    String? defaultMessage,
+  }) async {
+    try {
+      // Check if user is authenticated
+      User? existingUser;
+      if (dBCheck) {
+        existingUser = await User.db.findFirstRow(
+          session,
+          where: (t) =>
+              t.telegramId.equals(chatID) &
+              t.telegramAuthenticated.equals(true),
+        );
+      }
+      final telegramService = getIt<TelegramService>();
+
+      final isVendor = existingUser?.userType == UserType.vendor;
+
+      if (existingUser != null && existingUser.emailVerified) {
+        // User is already authenticated, show main menu
+        await telegramService.sendInlineKeyboard(
+          chatId: int.parse(chatID),
+          text: defaultMessage ??
+              '''
+👋 Welcome back, ${existingUser.firstName ?? 'there'}!
+
+Choose an option below or type /help to see all commands:
+''',
+          parseMode: ParseMode.markdown,
+          keyboard: TelegramCommandsSetup.createMainMenu(isVendor),
+        );
+
+        // ✅ Update their commands
+        await TelegramCommandsSetup.updateUserCommands(
+          telegramService,
+          int.parse(chatID),
+          isVendor,
+        );
+      } else {
+        // Show auth menu
+        final keyboard = [
+          if (!isLogin) ...[
+            [
+              InlineKeyboardButton(
+                text: '🛍️ Shop as Customer',
+                callbackData: 'auth_customer',
+              ),
+            ],
+            [
+              InlineKeyboardButton(
+                text: '🪐 Sell as Vendor',
+                callbackData: 'auth_vendor',
+              ),
+            ],
+          ],
+          [
+            InlineKeyboardButton(
+              text: '🔐 Login to Existing Account',
+              callbackData: 'auth_login',
+            ),
+          ]
+        ];
+
+        await telegramService.sendInlineKeyboard(
+          chatId: int.parse(chatID),
+          text: defaultMessage ??
+              '''
+👋 Welcome to Asami!
+
+${isLogin ? '🔐 Please login to continue.' : '✨ Get started by choosing your account type:'}
+''',
+          parseMode: ParseMode.markdown,
+          keyboard: keyboard,
+        );
+      }
+    } catch (e, stackTrace) {
+      session.log('Error showing Telegram menu: $e', stackTrace: stackTrace);
+    }
   }
 
   /// Delete temporary conversation (cleanup on failure/cancellation)
@@ -512,6 +608,36 @@ What would you like to do?
     final seconds = remaining.inSeconds % 60;
 
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  /// ✅ NEW: Update Telegram bot commands after successful authentication
+  Future<void> _updateTelegramCommandsAfterAuth(
+    Session session, {
+    required User authenticatedUser,
+    required PlatformType platform,
+    required String platformUserId,
+  }) async {
+    if (platform != PlatformType.telegram) return;
+
+    try {
+      final telegramService = getIt<TelegramService>();
+      final userId = int.parse(platformUserId);
+      final isVendor = authenticatedUser.userType == UserType.vendor;
+
+      // Update commands for this specific user
+      await TelegramCommandsSetup.updateUserCommands(
+        telegramService,
+        userId,
+        isVendor,
+      );
+
+      session.log(
+          '✅ Updated Telegram commands for user $userId (${isVendor ? 'vendor' : 'customer'})');
+    } catch (e, stackTrace) {
+      session.log('⚠️ Failed to update Telegram commands: $e',
+          stackTrace: stackTrace);
+      // Don't fail auth if command update fails
+    }
   }
 }
 

@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -30,17 +29,20 @@ import 'package:asami_server/src/generated/order/cart_item.dart' as _i13;
 import 'package:asami_server/src/generated/order/payment_method.dart' as _i14;
 import 'package:asami_server/src/generated/order/order_status.dart' as _i15;
 import 'package:asami_server/src/generated/product/product_status.dart' as _i16;
-import 'package:asami_server/src/generated/subscription/subscription.dart'
+import 'package:asami_server/src/generated/product/product_condition.dart'
     as _i17;
-import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i18;
+import 'package:asami_server/src/generated/subscription/subscription.dart'
+    as _i18;
+import 'package:asami_server/src/generated/user/subscription_tier.dart' as _i19;
 import 'package:asami_server/src/generated/subscription/usage_record.dart'
-    as _i19;
-import 'package:asami_server/src/generated/subscription/subscription_invoice.dart'
     as _i20;
-import 'package:asami_server/src/generated/user/user.dart' as _i21;
-import 'package:asami_server/src/generated/user/customer_profile.dart' as _i22;
-import 'package:asami_server/src/generated/user/vendor_profile.dart' as _i23;
-import 'package:asami_server/src/generated/user/address.dart' as _i24;
+import 'package:asami_server/src/generated/subscription/subscription_invoice.dart'
+    as _i21;
+import 'package:asami_server/src/generated/user/user.dart' as _i22;
+import 'package:asami_server/src/generated/user/customer_profile.dart' as _i23;
+import 'package:asami_server/src/generated/user/vendor_profile.dart' as _i24;
+import 'package:asami_server/src/generated/user/address.dart' as _i25;
+import 'package:asami_server/src/generated/future_calls.dart' as _i26;
 import 'package:asami_server/src/generated/protocol.dart';
 import 'package:asami_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -148,6 +150,8 @@ void withServerpod(
 }
 
 class TestEndpoints {
+  late final futureCalls = _FutureCalls();
+
   late final _AnalyticsEndpoint analytics;
 
   late final _AuthEndpoint auth;
@@ -223,6 +227,16 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
   }
+}
+
+class _FutureCalls {
+  late final dailyUsageResetCall = _DailyUsageResetCallFutureCall();
+
+  late final monthlyBillingCall = _MonthlyBillingCallFutureCall();
+
+  late final usagePatternAnalysisCall = _UsagePatternAnalysisCallFutureCall();
+
+  late final weeklyUsageReportsCall = _WeeklyUsageReportsCallFutureCall();
 }
 
 class _AnalyticsEndpoint {
@@ -1487,19 +1501,35 @@ class _ProductEndpoint {
     String? shortDescription,
     String? subCategory,
     List<String>? tags,
+    String? currency,
+    int? quantity,
     List<String>? images,
-    required bool isAiGenerated,
-    double? aiConfidenceScore,
-    required int quantity,
-    String? sku,
+    List<String>? whatsappMediaIds,
+    List<String>? telegramFileIds,
+    String? thumbnailUrl,
+    String? videoUrl,
+    String? videoThumbnailUrl,
     List<String>? color,
     List<String>? size,
     String? material,
     String? brand,
     double? weight,
     String? weightUnit,
-    required bool trackInventory,
-    required _i16.ProductStatus status,
+    String? dimensions,
+    String? sku,
+    String? barcode,
+    bool? isAiGenerated,
+    _i16.ProductStatus? status,
+    _i17.ProductCondition? condition,
+    String? facebookCategory,
+    String? googleCategory,
+    bool? shippingRequired,
+    int? estimatedDeliveryDays,
+    bool? freeShipping,
+    double? shippingCost,
+    String? facebookCategoryId,
+    String? googleCategoryId,
+    List<String>? searchKeywords,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1521,19 +1551,35 @@ class _ProductEndpoint {
             'shortDescription': shortDescription,
             'subCategory': subCategory,
             'tags': tags,
-            'images': images,
-            'isAiGenerated': isAiGenerated,
-            'aiConfidenceScore': aiConfidenceScore,
+            'currency': currency,
             'quantity': quantity,
-            'sku': sku,
+            'images': images,
+            'whatsappMediaIds': whatsappMediaIds,
+            'telegramFileIds': telegramFileIds,
+            'thumbnailUrl': thumbnailUrl,
+            'videoUrl': videoUrl,
+            'videoThumbnailUrl': videoThumbnailUrl,
             'color': color,
             'size': size,
             'material': material,
             'brand': brand,
             'weight': weight,
             'weightUnit': weightUnit,
-            'trackInventory': trackInventory,
+            'dimensions': dimensions,
+            'sku': sku,
+            'barcode': barcode,
+            'isAiGenerated': isAiGenerated,
             'status': status,
+            'condition': condition,
+            'facebookCategory': facebookCategory,
+            'googleCategory': googleCategory,
+            'shippingRequired': shippingRequired,
+            'estimatedDeliveryDays': estimatedDeliveryDays,
+            'freeShipping': freeShipping,
+            'shippingCost': shippingCost,
+            'facebookCategoryId': facebookCategoryId,
+            'googleCategoryId': googleCategoryId,
+            'searchKeywords': searchKeywords,
           }),
           serializationManager: _serializationManager,
         );
@@ -1558,14 +1604,17 @@ class _ProductEndpoint {
     String? shortDescription,
     String? category,
     String? subCategory,
-    List<String>? tags,
     double? basePrice,
     double? discountPrice,
     int? quantity,
-    _i16.ProductStatus? status,
-    List<String>? images,
+    List<String>? color,
+    List<String>? size,
+    String? material,
+    String? brand,
     bool? isActive,
-    bool? isFeatured,
+    _i16.ProductStatus? status,
+    String? thumbnailUrl,
+    List<String>? images,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1585,14 +1634,17 @@ class _ProductEndpoint {
             'shortDescription': shortDescription,
             'category': category,
             'subCategory': subCategory,
-            'tags': tags,
             'basePrice': basePrice,
             'discountPrice': discountPrice,
             'quantity': quantity,
-            'status': status,
-            'images': images,
+            'color': color,
+            'size': size,
+            'material': material,
+            'brand': brand,
             'isActive': isActive,
-            'isFeatured': isFeatured,
+            'status': status,
+            'thumbnailUrl': thumbnailUrl,
+            'images': images,
           }),
           serializationManager: _serializationManager,
         );
@@ -1943,7 +1995,7 @@ class _SubscriptionEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i17.Subscription?> getVendorSubscription(
+  _i3.Future<_i18.Subscription?> getVendorSubscription(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue vendorId,
   ) async {
@@ -1966,7 +2018,7 @@ class _SubscriptionEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i17.Subscription?>);
+                as _i3.Future<_i18.Subscription?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1974,10 +2026,10 @@ class _SubscriptionEndpoint {
     });
   }
 
-  _i3.Future<_i17.Subscription?> changeTier(
+  _i3.Future<_i18.Subscription?> changeTier(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue vendorId,
-    required _i18.SubscriptionTier newTier,
+    required _i19.SubscriptionTier newTier,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -2001,7 +2053,7 @@ class _SubscriptionEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i17.Subscription?>);
+                as _i3.Future<_i18.Subscription?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2009,7 +2061,7 @@ class _SubscriptionEndpoint {
     });
   }
 
-  _i3.Future<List<_i19.UsageRecord>> getUsageRecords(
+  _i3.Future<List<_i20.UsageRecord>> getUsageRecords(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue vendorId,
     required DateTime periodStart,
@@ -2038,7 +2090,7 @@ class _SubscriptionEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i19.UsageRecord>>);
+                as _i3.Future<List<_i20.UsageRecord>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2046,7 +2098,7 @@ class _SubscriptionEndpoint {
     });
   }
 
-  _i3.Future<_i20.SubscriptionInvoice?> generateInvoice(
+  _i3.Future<_i21.SubscriptionInvoice?> generateInvoice(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue subscriptionId,
     required DateTime periodStart,
@@ -2075,7 +2127,7 @@ class _SubscriptionEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i20.SubscriptionInvoice?>);
+                as _i3.Future<_i21.SubscriptionInvoice?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2208,7 +2260,7 @@ class _UserEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i21.User?> updateProfile(
+  _i3.Future<_i22.User?> updateProfile(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue userId,
     String? firstName,
@@ -2251,7 +2303,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i21.User?>);
+                as _i3.Future<_i22.User?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2259,7 +2311,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i22.CustomerProfile?> getCustomerProfile(
+  _i3.Future<_i23.CustomerProfile?> getCustomerProfile(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue userId,
   ) async {
@@ -2282,7 +2334,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i22.CustomerProfile?>);
+                as _i3.Future<_i23.CustomerProfile?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2290,7 +2342,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i22.CustomerProfile?> updateCustomerProfile(
+  _i3.Future<_i23.CustomerProfile?> updateCustomerProfile(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue userId,
     String? preferredPaymentMethod,
@@ -2319,7 +2371,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i22.CustomerProfile?>);
+                as _i3.Future<_i23.CustomerProfile?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2327,7 +2379,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i23.VendorProfile?> getVendorProfile(
+  _i3.Future<_i24.VendorProfile?> getVendorProfile(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue userId,
   ) async {
@@ -2350,7 +2402,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i23.VendorProfile?>);
+                as _i3.Future<_i24.VendorProfile?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2358,7 +2410,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i23.VendorProfile?> updateVendorProfile(
+  _i3.Future<_i24.VendorProfile?> updateVendorProfile(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue userId,
     String? businessName,
@@ -2397,7 +2449,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i23.VendorProfile?>);
+                as _i3.Future<_i24.VendorProfile?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2405,7 +2457,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<_i24.Address?> addAddress(
+  _i3.Future<_i25.Address?> addAddress(
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue userId,
     required String label,
@@ -2456,7 +2508,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i24.Address?>);
+                as _i3.Future<_i25.Address?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2464,7 +2516,7 @@ class _UserEndpoint {
     });
   }
 
-  _i3.Future<List<_i24.Address>> getUserAddresses(
+  _i3.Future<List<_i25.Address>> getUserAddresses(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue userId,
   ) async {
@@ -2487,7 +2539,7 @@ class _UserEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i24.Address>>);
+                as _i3.Future<List<_i25.Address>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -2607,5 +2659,77 @@ class _WhatsAppWebhookEndpoint {
         await _localUniqueSession.close();
       }
     });
+  }
+}
+
+class _DailyUsageResetCallFutureCall {
+  Future<void> invoke(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.SerializableModel? object,
+  ) async {
+    var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder)
+        .internalBuild();
+    try {
+      await _i26.DailyUsageResetCallInvokeFutureCall().invoke(
+        _localUniqueSession,
+        object,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
+  }
+}
+
+class _MonthlyBillingCallFutureCall {
+  Future<void> invoke(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.SerializableModel? object,
+  ) async {
+    var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder)
+        .internalBuild();
+    try {
+      await _i26.MonthlyBillingCallInvokeFutureCall().invoke(
+        _localUniqueSession,
+        object,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
+  }
+}
+
+class _UsagePatternAnalysisCallFutureCall {
+  Future<void> invoke(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.SerializableModel? object,
+  ) async {
+    var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder)
+        .internalBuild();
+    try {
+      await _i26.UsagePatternAnalysisCallInvokeFutureCall().invoke(
+        _localUniqueSession,
+        object,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
+  }
+}
+
+class _WeeklyUsageReportsCallFutureCall {
+  Future<void> invoke(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.SerializableModel? object,
+  ) async {
+    var _localUniqueSession = (sessionBuilder as _i1.InternalTestSessionBuilder)
+        .internalBuild();
+    try {
+      await _i26.WeeklyUsageReportsCallInvokeFutureCall().invoke(
+        _localUniqueSession,
+        object,
+      );
+    } finally {
+      await _localUniqueSession.close();
+    }
   }
 }

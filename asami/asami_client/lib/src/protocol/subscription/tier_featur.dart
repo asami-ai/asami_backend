@@ -83,7 +83,9 @@ abstract class TierFeature implements _i1.SerializableModel {
 
   factory TierFeature.fromJson(Map<String, dynamic> jsonSerialization) {
     return TierFeature(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       tier: _i2.SubscriptionTier.fromJson(
         (jsonSerialization['tier'] as String),
       ),
@@ -93,32 +95,32 @@ abstract class TierFeature implements _i1.SerializableModel {
       monthlyAIMessageLimit: jsonSerialization['monthlyAIMessageLimit'] as int,
       productLimit: jsonSerialization['productLimit'] as int,
       aiDescriptionLimit: jsonSerialization['aiDescriptionLimit'] as int,
-      allowBulkOperations: jsonSerialization['allowBulkOperations'] as bool,
+      allowBulkOperations: jsonSerialization['allowBulkOperations'] as bool?,
       allowAdvancedAnalytics:
-          jsonSerialization['allowAdvancedAnalytics'] as bool,
-      allowAPIAccess: jsonSerialization['allowAPIAccess'] as bool,
-      allowWhiteLabel: jsonSerialization['allowWhiteLabel'] as bool,
-      supportPriority: jsonSerialization['supportPriority'] as String,
-      supportResponseTime: jsonSerialization['supportResponseTime'] as int,
+          jsonSerialization['allowAdvancedAnalytics'] as bool?,
+      allowAPIAccess: jsonSerialization['allowAPIAccess'] as bool?,
+      allowWhiteLabel: jsonSerialization['allowWhiteLabel'] as bool?,
+      supportPriority: jsonSerialization['supportPriority'] as String?,
+      supportResponseTime: jsonSerialization['supportResponseTime'] as int?,
       monthlyPrice: (jsonSerialization['monthlyPrice'] as num).toDouble(),
       yearlyPrice: (jsonSerialization['yearlyPrice'] as num).toDouble(),
       platformTransactionFee:
           (jsonSerialization['platformTransactionFee'] as num).toDouble(),
-      overageToolCallPrice: (jsonSerialization['overageToolCallPrice'] as num)
-          .toDouble(),
-      overageAIMessagePrice: (jsonSerialization['overageAIMessagePrice'] as num)
-          .toDouble(),
-      overageProductPrice: (jsonSerialization['overageProductPrice'] as num)
-          .toDouble(),
+      overageToolCallPrice: (jsonSerialization['overageToolCallPrice'] as num?)
+          ?.toDouble(),
+      overageAIMessagePrice:
+          (jsonSerialization['overageAIMessagePrice'] as num?)?.toDouble(),
+      overageProductPrice: (jsonSerialization['overageProductPrice'] as num?)
+          ?.toDouble(),
       overageAIDescriptionPrice:
-          (jsonSerialization['overageAIDescriptionPrice'] as num).toDouble(),
-      isActive: jsonSerialization['isActive'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+          (jsonSerialization['overageAIDescriptionPrice'] as num?)?.toDouble(),
+      isActive: jsonSerialization['isActive'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

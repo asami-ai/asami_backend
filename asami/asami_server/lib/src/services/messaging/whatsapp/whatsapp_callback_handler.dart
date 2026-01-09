@@ -193,23 +193,6 @@ Your email will be used to:
     String from,
     Conversation? tempConversation,
   ) async {
-    if (tempConversation == null) {
-      tempConversation = await authStateManager.createTempAuthConversation(
-        session,
-        platform: PlatformType.whatsapp,
-        platformUserId: from,
-        initialState: AuthState.LOGIN_AWAITING_EMAIL,
-        userType: UserType.customer,
-        initialData: {'is_login': true},
-      );
-    } else {
-      await authStateManager.updateState(
-        session,
-        conversation: tempConversation,
-        newState: AuthState.LOGIN_AWAITING_EMAIL,
-        additionalData: {'is_login': true},
-      );
-    }
     final user = await User.db
         .findFirstRow(session, where: (t) => t.whatsappId.equals(from));
     if (user != null && user.email != null) {
@@ -217,6 +200,35 @@ Your email will be used to:
         session,
         email: user.email ?? '',
       );
+      // Create or update temp conversation for login
+      if (tempConversation == null) {
+        tempConversation = await authStateManager.createTempAuthConversation(
+          session,
+          platform: PlatformType.whatsapp,
+          platformUserId: from,
+          initialState: AuthState.LOGIN_AWAITING_CODE,
+          userType: user.userType,
+          initialData: {
+            'is_login': true,
+            'auth_email': user.email,
+            'auth_code_sent_at': DateTime.now().toIso8601String(),
+            'auth_attempts': 0,
+          },
+        );
+      } else {
+        await authStateManager.updateState(
+          session,
+          conversation: tempConversation,
+          newState: AuthState.LOGIN_AWAITING_CODE,
+          additionalData: {
+            'is_login': true,
+            'auth_email': user.email,
+            'auth_code_sent_at': DateTime.now().toIso8601String(),
+            'auth_attempts': 0,
+          },
+        );
+      }
+
       await _sendMessage(from, '''
  🔐 I've sent a 6-digit verification code to ${user.email}
 
@@ -225,6 +237,24 @@ Please reply with the code (expires in 10 minutes)
 Reply "resend" for a new code.
 ''');
     } else {
+      if (tempConversation == null) {
+        tempConversation = await authStateManager.createTempAuthConversation(
+          session,
+          platform: PlatformType.whatsapp,
+          platformUserId: from,
+          initialState: AuthState.LOGIN_AWAITING_EMAIL,
+          userType: UserType.customer,
+          initialData: {'is_login': true},
+        );
+      } else {
+        await authStateManager.updateState(
+          session,
+          conversation: tempConversation,
+          newState: AuthState.LOGIN_AWAITING_EMAIL,
+          additionalData: {'is_login': true},
+        );
+      }
+
       await _sendMessage(from, '''
 📱 Welcome back!
 

@@ -117,44 +117,47 @@ abstract class PlatformAnalytics implements _i1.SerializableModel {
 
   factory PlatformAnalytics.fromJson(Map<String, dynamic> jsonSerialization) {
     return PlatformAnalytics(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       period: jsonSerialization['period'] as String,
-      totalUsers: jsonSerialization['totalUsers'] as int,
-      activeUsers: jsonSerialization['activeUsers'] as int,
-      newUsers: jsonSerialization['newUsers'] as int,
-      totalCustomers: jsonSerialization['totalCustomers'] as int,
-      totalVendors: jsonSerialization['totalVendors'] as int,
-      totalOrders: jsonSerialization['totalOrders'] as int,
-      totalRevenue: (jsonSerialization['totalRevenue'] as num).toDouble(),
-      averageOrderValue: (jsonSerialization['averageOrderValue'] as num)
-          .toDouble(),
-      platformFeesCollected: (jsonSerialization['platformFeesCollected'] as num)
-          .toDouble(),
-      totalProducts: jsonSerialization['totalProducts'] as int,
-      activeProducts: jsonSerialization['activeProducts'] as int,
-      newProducts: jsonSerialization['newProducts'] as int,
-      totalAiInteractions: jsonSerialization['totalAiInteractions'] as int,
-      successfulAiResponses: jsonSerialization['successfulAiResponses'] as int,
-      aiResponseTime: (jsonSerialization['aiResponseTime'] as num).toDouble(),
-      aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num).toDouble(),
-      whatsappMessages: jsonSerialization['whatsappMessages'] as int,
-      telegramMessages: jsonSerialization['telegramMessages'] as int,
-      totalConversations: jsonSerialization['totalConversations'] as int,
-      activeConversations: jsonSerialization['activeConversations'] as int,
-      fiatTransactions: jsonSerialization['fiatTransactions'] as int,
-      cryptoTransactions: jsonSerialization['cryptoTransactions'] as int,
-      fiatVolume: (jsonSerialization['fiatVolume'] as num).toDouble(),
-      cryptoVolume: (jsonSerialization['cryptoVolume'] as num).toDouble(),
-      freemiumVendors: jsonSerialization['freemiumVendors'] as int,
-      proVendors: jsonSerialization['proVendors'] as int,
-      proMaxVendors: jsonSerialization['proMaxVendors'] as int,
-      subscriptionRevenue: (jsonSerialization['subscriptionRevenue'] as num)
-          .toDouble(),
-      churnRate: (jsonSerialization['churnRate'] as num).toDouble(),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      totalUsers: jsonSerialization['totalUsers'] as int?,
+      activeUsers: jsonSerialization['activeUsers'] as int?,
+      newUsers: jsonSerialization['newUsers'] as int?,
+      totalCustomers: jsonSerialization['totalCustomers'] as int?,
+      totalVendors: jsonSerialization['totalVendors'] as int?,
+      totalOrders: jsonSerialization['totalOrders'] as int?,
+      totalRevenue: (jsonSerialization['totalRevenue'] as num?)?.toDouble(),
+      averageOrderValue: (jsonSerialization['averageOrderValue'] as num?)
+          ?.toDouble(),
+      platformFeesCollected:
+          (jsonSerialization['platformFeesCollected'] as num?)?.toDouble(),
+      totalProducts: jsonSerialization['totalProducts'] as int?,
+      activeProducts: jsonSerialization['activeProducts'] as int?,
+      newProducts: jsonSerialization['newProducts'] as int?,
+      totalAiInteractions: jsonSerialization['totalAiInteractions'] as int?,
+      successfulAiResponses: jsonSerialization['successfulAiResponses'] as int?,
+      aiResponseTime: (jsonSerialization['aiResponseTime'] as num?)?.toDouble(),
+      aiCostsIncurred: (jsonSerialization['aiCostsIncurred'] as num?)
+          ?.toDouble(),
+      whatsappMessages: jsonSerialization['whatsappMessages'] as int?,
+      telegramMessages: jsonSerialization['telegramMessages'] as int?,
+      totalConversations: jsonSerialization['totalConversations'] as int?,
+      activeConversations: jsonSerialization['activeConversations'] as int?,
+      fiatTransactions: jsonSerialization['fiatTransactions'] as int?,
+      cryptoTransactions: jsonSerialization['cryptoTransactions'] as int?,
+      fiatVolume: (jsonSerialization['fiatVolume'] as num?)?.toDouble(),
+      cryptoVolume: (jsonSerialization['cryptoVolume'] as num?)?.toDouble(),
+      freemiumVendors: jsonSerialization['freemiumVendors'] as int?,
+      proVendors: jsonSerialization['proVendors'] as int?,
+      proMaxVendors: jsonSerialization['proMaxVendors'] as int?,
+      subscriptionRevenue: (jsonSerialization['subscriptionRevenue'] as num?)
+          ?.toDouble(),
+      churnRate: (jsonSerialization['churnRate'] as num?)?.toDouble(),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

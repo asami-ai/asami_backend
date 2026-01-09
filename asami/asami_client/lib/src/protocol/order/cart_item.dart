@@ -74,14 +74,16 @@ abstract class CartItem implements _i1.SerializableModel {
           : _i5.Protocol().deserialize<_i4.ProductVariant>(
               jsonSerialization['variant'],
             ),
-      quantity: jsonSerialization['quantity'] as int,
+      quantity: jsonSerialization['quantity'] as int?,
       unitPrice: (jsonSerialization['unitPrice'] as num).toDouble(),
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
       customerNotes: jsonSerialization['customerNotes'] as String?,
-      addedAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      addedAt: jsonSerialization['addedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

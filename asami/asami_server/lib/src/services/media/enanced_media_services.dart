@@ -5,13 +5,16 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:serverpod/serverpod.dart';
 
+import '../../../utils/logger/asami_logger.dart';
 import '../../generated/protocol.dart';
 import '../messaging/whatsapp/whatsapp_service.dart';
 import '../messaging/telegram/telegram_service.dart';
+import 'imagekit_service.dart';
 
 class EnhancedMediaService {
   final WhatsAppService? whatsappService;
   final TelegramService? telegramService;
+  final ImageKitService? imageKitService;
 
   // Cache the check result to avoid repeated system calls across requests
   static bool? _isFFmpegAvailable;
@@ -19,6 +22,7 @@ class EnhancedMediaService {
   EnhancedMediaService({
     this.whatsappService,
     this.telegramService,
+    this.imageKitService,
   });
 
   /// Checks if FFmpeg is installed on the host OS
@@ -39,23 +43,27 @@ class EnhancedMediaService {
         level: LogLevel.error,
       );
     }
-    
+
     return _isFFmpegAvailable!;
   }
 
-  /// Process product media from WhatsApp or Telegram
-  Future<Map<String, dynamic>> processProductMedia(
-    Session session,
-    {
+  /// Process product media from WhatsApp or Telegram with ImageKit CDN upload
+  Future<Map<String, dynamic>> processProductMedia({
     required String mediaId,
     required PlatformType platform,
     required UuidValue vendorId,
     required UuidValue productId,
     bool isVideo = false,
   }) async {
+    final session = await Serverpod.instance.createSession();
+
     try {
+      session
+          .log('🎬 Processing ${isVideo ? 'video' : 'image'} media: $mediaId');
+
       // Step 1: Download from platform
       final downloadResult = await _downloadFromPlatform(
+        session,
         mediaId: mediaId,
         platform: platform,
         isVideo: isVideo,
@@ -74,7 +82,37 @@ class EnhancedMediaService {
         thumbnailPath = await _generateVideoThumbnail(session, localFile.path);
       }
 
-      // Step 3: Upload to CDN (background job)
+      // Step 3: Upload to ImageKit CDN (if configured)
+      if (imageKitService != null) {
+        // Upload to ImageKit in background and update product when done
+        unawaited(_uploadToImageKit(
+          file: localFile,
+          vendorId: vendorId,
+          productId: productId,
+          isVideo: isVideo,
+          thumbnailPath: thumbnailPath,
+        ).then((cdnResult) {
+          if (cdnResult['success'] == true) {
+            _updateProductWithCDNUrls(
+              productId: productId,
+              cdnUrls: cdnResult,
+            );
+          }
+        }));
+
+        // Return immediate result
+        return {
+          'success': true,
+          'local_path': localFile.path,
+          'platform_media_id': mediaId,
+          'mime_type': mimeType,
+          'is_video': isVideo,
+          'thumbnail_path': thumbnailPath,
+          'cdn_status': 'uploading',
+        };
+      }
+
+      // Step 4: Fallback to legacy CDN upload (if ImageKit not configured)
       unawaited(_uploadToCDN(
         session,
         file: localFile,
@@ -84,13 +122,12 @@ class EnhancedMediaService {
         thumbnailPath: thumbnailPath,
       ).then((cdnUrls) {
         _updateProductWithCDNUrls(
-          session,
           productId: productId,
           cdnUrls: cdnUrls,
         );
       }));
 
-      // Step 4: Return immediate result
+      // Return immediate result
       return {
         'success': true,
         'local_path': localFile.path,
@@ -106,11 +143,133 @@ class EnhancedMediaService {
         'success': false,
         'error': e.toString(),
       };
+    } finally {
+      await session.close();
+    }
+  }
+
+  /// Upload to ImageKit CDN
+  Future<Map<String, dynamic>> _uploadToImageKit({
+    required File file,
+    required UuidValue vendorId,
+    required UuidValue productId,
+    required bool isVideo,
+    String? thumbnailPath,
+  }) async {
+    final session = await Serverpod.instance.createSession();
+
+    try {
+      final fileName =
+          '${productId.uuid}_${DateTime.now().millisecondsSinceEpoch}${isVideo ? '.mp4' : '.jpg'}';
+      final folder = '/products/${vendorId.uuid}/${productId.uuid}';
+
+      session.log('☁️ Uploading to ImageKit: $fileName');
+
+      // Upload main file with progress tracking
+      final uploadResult = isVideo
+          ? await imageKitService!.uploadVideo(
+              videoFile: file,
+              fileName: fileName,
+              session: session,
+              folder: folder,
+              tags: ['product', productId.uuid],
+              onProgress: (sent, total) {
+                final progress = (sent / total * 100).toStringAsFixed(1);
+                session.log('📊 Upload progress: $progress%');
+              },
+            )
+          : await imageKitService!.uploadImage(
+              imageFile: file,
+              fileName: fileName,
+              session: session,
+              folder: folder,
+              tags: ['product', productId.uuid],
+              onProgress: (sent, total) {
+                final progress = (sent / total * 100).toStringAsFixed(1);
+                session.log('📊 Upload progress: $progress%');
+              },
+            );
+
+      String? thumbnailCdnUrl;
+      String? thumbnailFileId;
+
+      // Upload thumbnail if exists
+      if (thumbnailPath != null) {
+        try {
+          final thumbnailFile = File(thumbnailPath);
+          final thumbName = 'thumb_${fileName.replaceAll('.mp4', '.jpg')}';
+
+          final thumbResult = await imageKitService!.uploadImage(
+            imageFile: thumbnailFile,
+            fileName: thumbName,
+            session: session,
+            folder: folder,
+            tags: ['thumbnail', productId.uuid],
+          );
+
+          thumbnailCdnUrl = thumbResult.url;
+          thumbnailFileId = thumbResult.fileId;
+
+          session.log('✅ Thumbnail uploaded: $thumbnailCdnUrl');
+
+          // Clean up local thumbnail
+          await thumbnailFile.delete();
+        } catch (e) {
+          session.log('⚠️ Thumbnail upload failed: $e');
+        } finally {
+          await session.close();
+        }
+      }
+
+      // Clean up local file
+      await file.delete();
+
+      // Generate optimized URLs
+      final optimizedUrl = imageKitService!.getOptimizedUrl(
+          fileUrl: uploadResult.url,
+          width: 800,
+          quality: '80',
+          progressive: true,
+          session: session);
+
+      final thumbnailOptimizedUrl = imageKitService!.getOptimizedUrl(
+          fileUrl: uploadResult.url,
+          width: 300,
+          height: 300,
+          quality: '70',
+          session: session);
+
+      session.log('✅ ImageKit upload complete!');
+      session.log('   📎 URL: $optimizedUrl');
+      session.log('   🏷️ File ID: ${uploadResult.fileId}');
+
+      return {
+        'success': true,
+        'cdn_url': uploadResult.url,
+        'optimized_url': optimizedUrl,
+        'thumbnail_url': thumbnailOptimizedUrl,
+        'video_thumbnail_url': thumbnailCdnUrl,
+        'file_id': uploadResult.fileId,
+        'thumbnail_file_id': thumbnailFileId,
+        'width': uploadResult.width,
+        'height': uploadResult.height,
+        'size': uploadResult.size,
+        'is_video': isVideo,
+        'cdn_status': 'completed',
+      };
+    } catch (e, stackTrace) {
+      session.log('ImageKit upload error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': 'CDN upload failed: $e',
+        'cdn_status': 'failed',
+      };
     }
   }
 
   /// Download media from WhatsApp or Telegram
-  Future<Map<String, dynamic>> _downloadFromPlatform({
+  Future<Map<String, dynamic>> _downloadFromPlatform(
+    Session session, {
     required String mediaId,
     required PlatformType platform,
     bool isVideo = false,
@@ -123,11 +282,18 @@ class EnhancedMediaService {
         final mediaInfo = await whatsappService!.getMedia(mediaId: mediaId);
 
         if (!mediaInfo.isSuccess()) {
-          return {'success': false, 'error': 'Failed to get WhatsApp media info'};
+          return {
+            'success': false,
+            'error': 'Failed to get WhatsApp media info'
+          };
         }
 
         final mediaUrl = mediaInfo.getMediaUrl();
         mimeType = mediaInfo.getMediaMimeType();
+        final accessToken =
+            session.server.serverpod.getPassword('whatsappAccessToken');
+        Log.info('📥 Downloading media from WhatsApp: $mediaUrl $mimeType');
+        Log.info('📥 Media token: $accessToken}');
 
         if (mediaUrl == null) {
           return {'success': false, 'error': 'No media URL returned'};
@@ -136,25 +302,34 @@ class EnhancedMediaService {
         final response = await http.get(
           Uri.parse(mediaUrl),
           headers: {
-            'Authorization': 'Bearer ${whatsappService!.webhookVerifyToken}',
+            'Authorization': 'Bearer $accessToken',
           },
         );
 
         if (response.statusCode != 200) {
-          return {'success': false, 'error': 'Failed to download from WhatsApp'};
+          return {
+            'success': false,
+            'error': 'Failed to download from WhatsApp'
+          };
         }
+
+        Log.info('media res: ${response.bodyBytes.length} bytes');
 
         // Use Directory.systemTemp for pure Dart environments
         final tempDir = Directory.systemTemp;
         final extension = _getExtensionFromMimeType(mimeType ?? 'image/jpeg');
-        final fileName = '${mediaId}_${DateTime.now().millisecondsSinceEpoch}$extension';
+        final fileName =
+            '${mediaId}_${DateTime.now().millisecondsSinceEpoch}$extension';
         file = File('${tempDir.path}/$fileName');
 
         await file.writeAsBytes(response.bodyBytes);
+        session.log('✅ Downloaded from WhatsApp: ${file.path}');
       } else if (platform == PlatformType.telegram && telegramService != null) {
         final fileInfo = await telegramService!.api.getFile(mediaId);
         file = await fileInfo.download();
         mimeType = _getMimeTypeFromExtension(file?.path ?? '');
+
+        session.log('✅ Downloaded from Telegram: ${file?.path}');
       }
 
       if (file == null) {
@@ -172,11 +347,14 @@ class EnhancedMediaService {
   }
 
   /// Generate thumbnail from video using FFmpeg
-  Future<String?> _generateVideoThumbnail(Session session, String videoPath) async {
+  Future<String?> _generateVideoThumbnail(
+      Session session, String videoPath) async {
     if (!await _verifyFFmpeg(session)) return null;
 
     try {
       final String outPath = '${videoPath}_thumb.jpg';
+
+      session.log('🎬 Generating video thumbnail...');
 
       // Runs FFmpeg to capture 1 frame at 1 second mark
       final result = await Process.run('ffmpeg', [
@@ -184,25 +362,26 @@ class EnhancedMediaService {
         '-i', videoPath,
         '-vframes', '1',
         '-q:v', '2', // Quality scale 2 (high quality)
+        '-y', // Overwrite output file
         outPath,
       ]);
 
       if (result.exitCode == 0) {
+        session.log('✅ Video thumbnail generated: $outPath');
         return outPath;
       } else {
-        session.log('FFmpeg failed: ${result.stderr}');
+        session.log('⚠️ FFmpeg failed: ${result.stderr}');
         return null;
       }
     } catch (e) {
-      session.log('Failed to generate video thumbnail: $e');
+      session.log('⚠️ Failed to generate video thumbnail: $e');
       return null;
     }
   }
 
-  /// Upload to CDN (background operation)
+  /// Legacy CDN upload (fallback if ImageKit not configured)
   Future<Map<String, String>> _uploadToCDN(
-    Session session,
-    {
+    Session session, {
     required File file,
     required UuidValue vendorId,
     required UuidValue productId,
@@ -223,7 +402,7 @@ class EnhancedMediaService {
 
       // Simulate upload delay
       await Future.delayed(Duration(seconds: 2));
-      session.log('Uploaded to CDN: $cdnUrl');
+      session.log('Uploaded to legacy CDN: $cdnUrl');
 
       return {
         'cdn_url': cdnUrl,
@@ -236,49 +415,55 @@ class EnhancedMediaService {
   }
 
   /// Update product with CDN URLs
-  Future<void> _updateProductWithCDNUrls(
-    Session session,
-    {
+  Future<void> _updateProductWithCDNUrls({
     required UuidValue productId,
-    required Map<String, String> cdnUrls,
+    required Map<String, dynamic> cdnUrls,
   }) async {
+    final session = await Serverpod.instance.createSession();
+
     try {
       final product = await Product.db.findById(session, productId);
       if (product == null) return;
 
-      final cdnUrl = cdnUrls['cdn_url'];
-      final thumbnailUrl = cdnUrls['thumbnail_cdn_url'];
+      final cdnUrl = cdnUrls['cdn_url'] as String?;
+      final thumbnailUrl = cdnUrls['thumbnail_url'] as String?;
+      final videoThumbnailUrl = cdnUrls['video_thumbnail_url'] as String?;
+      final optimizedUrl = cdnUrls['optimized_url'] as String?;
 
-      if (cdnUrl != null) {
-        if (!product.images.contains(cdnUrl)) {
-          product.images = [...product.images, cdnUrl];
+      // Use optimized URL if available, otherwise use original
+      final finalUrl = optimizedUrl ?? cdnUrl;
+
+      if (finalUrl != null) {
+        if (!product.images.contains(finalUrl)) {
+          product.images = [...product.images, finalUrl];
         }
 
-        product.thumbnailUrl ??= cdnUrl;
+        // Use thumbnail for thumbnailUrl if available
+        product.thumbnailUrl ??= thumbnailUrl ?? finalUrl;
 
-        if (cdnUrl.contains('.mp4') || cdnUrl.contains('.mov')) {
-          product.videoUrl = cdnUrl;
-          if (thumbnailUrl != null) {
-            product.videoThumbnailUrl = thumbnailUrl;
+        if (finalUrl.contains('.mp4') || finalUrl.contains('.mov')) {
+          product.videoUrl = finalUrl;
+          if (videoThumbnailUrl != null) {
+            product.videoThumbnailUrl = videoThumbnailUrl;
           }
         }
 
-        product.cdnUploadStatus = 'completed';
+        product.cdnUploadStatus =
+            cdnUrls['cdn_status'] as String? ?? 'completed';
         product.cdnUploadedAt = DateTime.now();
         product.updatedAt = DateTime.now();
 
         await Product.db.updateRow(session, product);
-        session.log('Product updated with CDN URLs');
+        session.log('✅ Product updated with CDN URLs');
       }
     } catch (e) {
-      session.log('Update product with CDN URLs error: $e');
+      session.log('⚠️ Update product with CDN URLs error: $e');
     }
   }
 
   /// Batch process multiple media items
   Future<List<Map<String, dynamic>>> batchProcessMedia(
-    Session session,
-    {
+    Session session, {
     required List<String> mediaIds,
     required PlatformType platform,
     required UuidValue vendorId,
@@ -289,7 +474,6 @@ class EnhancedMediaService {
 
     for (var i = 0; i < mediaIds.length; i++) {
       final result = await processProductMedia(
-        session,
         mediaId: mediaIds[i],
         platform: platform,
         vendorId: vendorId,
@@ -297,9 +481,25 @@ class EnhancedMediaService {
         isVideo: isVideoFlags?[i] ?? false,
       );
       results.add(result);
+
+      // Small delay between uploads to avoid rate limits
+      if (i < mediaIds.length - 1) {
+        await Future.delayed(Duration(milliseconds: 500));
+      }
     }
 
     return results;
+  }
+
+  /// Delete media from ImageKit
+  Future<bool> deleteMediaFromCDN(String fileId, Session session) async {
+    if (imageKitService == null) return false;
+
+    try {
+      return await imageKitService!.deleteFile(fileId, session);
+    } catch (e) {
+      return false;
+    }
   }
 
   String _getExtensionFromMimeType(String mimeType) {

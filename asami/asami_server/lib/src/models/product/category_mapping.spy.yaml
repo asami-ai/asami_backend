@@ -1,0 +1,36 @@
+
+class: CategoryMapping
+table: category_mappings
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Simple category
+  simpleCategoryId: UuidValue
+  simpleCategory: ProductCategory?, relation(field=simpleCategoryId)
+  
+  # Pattern matching
+  productNamePattern: String?           # Regex or keywords
+  productDescriptionPattern: String?
+  
+  # Meta mapping
+  facebookCategoryId: int
+  facebookCategoryName: String
+  
+  # Google mapping
+  googleTaxonomyId: int
+  googleTaxonomyPath: String
+  
+  # Confidence score
+  confidence: double, default=1.0       # 0.0-1.0
+  
+  # Usage
+  matchCount: int, default=0
+  lastUsedAt: DateTime?
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  simple_category_idx:
+    fields: simpleCategoryId
+  facebook_cat_idx:
+    fields: facebookCategoryId

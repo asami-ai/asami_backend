@@ -5,85 +5,90 @@ fields:
   vendorId: UuidValue
   vendor: VendorProfile?, relation(field=vendorId)
   
-  # Basic Info
-  name: String
-  description: String
-  shortDescription: String?
-  category: String
+  # ✅ BASIC INFO (Meta Required)
+  name: String                      # → Meta: title
+  description: String               # → Meta: description (HTML allowed)
+  shortDescription: String?         # For previews/cards
+  category: String                  # → Meta: google_product_category
   subCategory: String?
   tags: List<String>?
   
-  # Facebook Product Categories (for Meta Catalog)
-  facebookCategory: String?
+  # ✅ META CATALOG FIELDS (Enhanced)
+  facebookCategory: String?         # Meta's product category
   facebookCategoryId: String?
-  googleCategory: String?
+  googleCategory: String?           # Google product taxonomy
   googleCategoryId: String?
   
-  # AI Generated Content
+  # ✅ PRICING (Meta Required)
+  basePrice: double                 # → Meta: price (format: "100.4 USD")
+  discountPrice: double?
+  discountPercentage: double?
+  discountStartDate: DateTime?
+  discountEndDate: DateTime?
+  currency: String, default='NGN'   # → Meta: price currency
+  
+  # ✅ INVENTORY (Meta Required)
+  sku: String?                      # Unique product identifier
+  barcode: String?
+  quantity: int, default=1          # ✅ FIXED: Default 1, not 0
+  lowStockThreshold: int, default=5
+  trackInventory: bool, default=true
+  
+  # ✅ AVAILABILITY (Meta Required)
+  status: ProductStatus, default=draft
+  isActive: bool, default=true
+  isFeatured: bool, default=false
+  condition: ProductCondition, default=newItem  # → Meta: condition
+  
+  # ✅ PHYSICAL ATTRIBUTES
+  weight: double?
+  weightUnit: String?, default='kg'
+  dimensions: String?               # Format: "10x20x5 cm"
+  color: List<String>?
+  size: List<String>?
+  material: String?
+  brand: String?                    # → Meta: brand (Required!)
+  
+  # ✅ MEDIA (Meta Required)
+  images: List<String>              # → Meta: image_link (first) + additional_image_link
+  thumbnailUrl: String?             # For lists/cards
+  videoUrl: String?
+  videoThumbnailUrl: String?
+  
+  # ✅ PLATFORM MEDIA IDS (For CDN-less mode)
+  whatsappMediaIds: List<String>?   # Store WhatsApp media IDs
+  telegramFileIds: List<String>?    # Store Telegram file IDs
+  
+  # ✅ CDN STATUS
+  cdnUploadStatus: String, default='pending'  # pending/uploading/completed/failed
+  cdnUploadedAt: DateTime?
+  originalMediaUrls: List<String>?  # Backup URLs
+  
+  # ✅ META CATALOG INTEGRATION
+  metaCatalogId: String?            # The catalog ID this belongs to
+  metaProductId: String?            # Meta's internal product ID
+  metaRetailerId: String?           # Our unique retailer_id (same as id.uuid)
+  metaSyncStatus: String, default='pending'  # pending/syncing/synced/failed
+  metaSyncedAt: DateTime?
+  metaSyncError: String?
+  metaSyncAttempts: int, default=0
+  
+  # ✅ LINK (Meta Required)
+  productUrl: String?               # → Meta: link (deep link to product)
+  
+  # ✅ AI GENERATION
   isAiGenerated: bool, default=false
   aiGeneratedAt: DateTime?
   aiConfidenceScore: double?
   hasAiGeneratedImages: bool, default=false
   
-  # Pricing
-  basePrice: double
-  discountPrice: double?
-  discountPercentage: double?
-  discountStartDate: DateTime?
-  discountEndDate: DateTime?
-  currency: String, default='NGN'
-  
-  # Inventory
-  sku: String?
-  barcode: String?
-  quantity: int, default=0
-  lowStockThreshold: int, default=5
-  trackInventory: bool, default=true
-  
-  # Physical Attributes
-  weight: double?
-  weightUnit: String?
-  dimensions: String?
-  color: List<String>?
-  size: List<String>?
-  material: String?
-  brand: String?
-  
-  # Status & Visibility
-  status: ProductStatus, default=draft
-  isActive: bool, default=true
-  isFeatured: bool, default=false
-  condition: ProductCondition, default=newItem
-  
-  # Media (Enhanced)
-  images: List<String>
-  thumbnailUrl: String?
-  videoUrl: String?
-  videoThumbnailUrl: String?
-  
-  # Platform Media IDs (for tracking original sources)
-  whatsappMediaIds: List<String>?
-  telegramFileIds: List<String>?
-  
-  # CDN Upload Status
-  cdnUploadStatus: String, default='pending'
-  cdnUploadedAt: DateTime?
-  originalMediaUrls: List<String>?
-  
-  # Meta Catalog Integration
-  metaCatalogId: String?
-  metaProductId: String?
-  metaSyncStatus: String, default='pending'
-  metaSyncedAt: DateTime?
-  metaSyncError: String?
-  
-  # Delivery
+  # ✅ DELIVERY
   shippingRequired: bool, default=true
   estimatedDeliveryDays: int?
   freeShipping: bool, default=false
   shippingCost: double, default=0.0
   
-  # Performance Metrics
+  # ✅ PERFORMANCE METRICS
   viewCount: int, default=0
   orderCount: int, default=0
   wishlistCount: int, default=0
@@ -91,12 +96,12 @@ fields:
   totalReviews: int, default=0
   conversionRate: double, default=0.0
   
-  # SEO & Search
+  # ✅ SEO & SEARCH
   searchKeywords: List<String>?
   metaTitle: String?
-  metaDescription: String?  
+  metaDescription: String?
   
-  # Timestamps
+  # ✅ TIMESTAMPS
   createdAt: DateTime, default=now
   updatedAt: DateTime, default=now
   publishedAt: DateTime?
@@ -117,3 +122,7 @@ indexes:
     fields: metaSyncStatus
   cdn_upload_idx:
     fields: cdnUploadStatus
+  meta_retailer_idx:
+    fields: metaRetailerId
+  quantity_idx:
+    fields: quantity

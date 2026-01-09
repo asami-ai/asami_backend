@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -73,7 +72,9 @@ abstract class Refund
 
   factory Refund.fromJson(Map<String, dynamic> jsonSerialization) {
     return Refund(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       orderId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['orderId'],
       ),
@@ -91,11 +92,11 @@ abstract class Refund
               jsonSerialization['orderItem'],
             ),
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       reason: jsonSerialization['reason'] as String,
       customerComment: jsonSerialization['customerComment'] as String?,
-      status: jsonSerialization['status'] as String,
-      isApproved: jsonSerialization['isApproved'] as bool,
+      status: jsonSerialization['status'] as String?,
+      isApproved: jsonSerialization['isApproved'] as bool?,
       approvedBy: jsonSerialization['approvedBy'] as String?,
       approvedAt: jsonSerialization['approvedAt'] == null
           ? null
@@ -111,12 +112,12 @@ abstract class Refund
             ),
       vendorComment: jsonSerialization['vendorComment'] as String?,
       rejectionReason: jsonSerialization['rejectionReason'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

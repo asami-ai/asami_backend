@@ -102,6 +102,41 @@ class VendorTools {
       handler: _handleGetTopSellingProducts,
       allowedRoles: ['vendor'],
     );
+
+    // 13. Bulk Update Inventory
+    registry.register(
+      definition: _bulkUpdateInventoryTool(),
+      handler: _handleBulkUpdateInventory,
+      allowedRoles: ['vendor'],
+    );
+
+    // 14. Get Inventory Alerts
+    registry.register(
+      definition: _getInventoryAlertsTool(),
+      handler: _handleGetInventoryAlerts,
+      allowedRoles: ['vendor'],
+    );
+
+    // 15. Get Full Order Details
+    registry.register(
+      definition: _getFullOrderDetailsTool(),
+      handler: _handleGetFullOrderDetails,
+      allowedRoles: ['vendor'],
+    );
+
+    // 16. Batch Update Order Status
+    registry.register(
+      definition: _batchUpdateOrderStatusTool(),
+      handler: _handleBatchUpdateOrderStatus,
+      allowedRoles: ['vendor'],
+    );
+
+    // 17. Get Product Performance
+    registry.register(
+      definition: _getProductPerformanceTool(),
+      handler: _handleGetProductPerformance,
+      allowedRoles: ['vendor'],
+    );
   }
 
   // ========================================================================
@@ -111,8 +146,15 @@ class VendorTools {
   static ToolDefinition _createProductTool() {
     return ToolDefinition(
       name: 'create_product',
-      description:
-          'Create a new product listing. Can use AI to generate descriptions from images/text.',
+      description: '''
+Initiate product creation flow. This starts an interactive process where the system will:
+1. Ask user to send product images (1-5 images)
+2. Request product details in one batch
+3. Create the product and sync to Meta Catalog
+
+DO NOT collect product details before calling this - the flow handles it.
+Call this immediately when user wants to add/create/upload a product.
+''',
       parameters: {
         'name': ToolParameter(
           type: 'string',
@@ -364,6 +406,89 @@ class VendorTools {
     );
   }
 
+  static ToolDefinition _bulkUpdateInventoryTool() {
+    return ToolDefinition(
+      name: 'bulk_update_inventory',
+      description: 'Update inventory for multiple products at once',
+      parameters: {
+        'updates': ToolParameter(
+          type: 'array',
+          description: 'Array of {product_id, quantity} objects',
+          items: ToolParameter(type: 'object'),
+        ),
+      },
+      requiredParameters: ['updates'],
+    );
+  }
+
+  static ToolDefinition _getInventoryAlertsTool() {
+    return ToolDefinition(
+      name: 'get_inventory_alerts',
+      description: 'Get products that need inventory attention (low stock, out of stock)',
+      parameters: {
+        'alert_type': ToolParameter(
+          type: 'string',
+          description: 'Type of alert',
+          enumValues: ['low_stock', 'out_of_stock', 'all'],
+          defaultValue: 'all',
+        ),
+      },
+    );
+  }
+
+  static ToolDefinition _getFullOrderDetailsTool() {
+    return ToolDefinition(
+      name: 'get_full_order_details',
+      description: 'Get complete order details including items and customer info',
+      parameters: {
+        'order_number': ToolParameter(
+          type: 'string',
+          description: 'Order number',
+        ),
+      },
+      requiredParameters: ['order_number'],
+    );
+  }
+
+  static ToolDefinition _batchUpdateOrderStatusTool() {
+    return ToolDefinition(
+      name: 'batch_update_order_status',
+      description: 'Update status for multiple orders at once',
+      parameters: {
+        'updates': ToolParameter(
+          type: 'array',
+          description: 'Array of {order_number, status} objects',
+          items: ToolParameter(type: 'object'),
+        ),
+      },
+      requiredParameters: ['updates'],
+    );
+  }
+
+  static ToolDefinition _getProductPerformanceTool() {
+    return ToolDefinition(
+      name: 'get_product_performance',
+      description: 'Get detailed performance metrics for products',
+      parameters: {
+        'product_id': ToolParameter(
+          type: 'string',
+          description: 'Specific product ID (optional)',
+        ),
+        'limit': ToolParameter(
+          type: 'number',
+          description: 'Number of products to analyze',
+          defaultValue: 10,
+        ),
+        'sort_by': ToolParameter(
+          type: 'string',
+          description: 'Sort criteria',
+          enumValues: ['sales', 'views', 'revenue', 'rating'],
+          defaultValue: 'sales',
+        ),
+      },
+    );
+  }
+
   // ========================================================================
   // TOOL HANDLERS
   // ========================================================================
@@ -409,7 +534,8 @@ class VendorTools {
       final productHandler = getIt<ProductCreationHandler>();
 
       // Check if already in creation flow
-      if (await productHandler.isInCreationFlow(session, conversation.id.uuid)) {
+      if (await productHandler.isInCreationFlow(
+          session, conversation.id.uuid)) {
         return {
           'success': false,
           'error':
@@ -443,27 +569,6 @@ class VendorTools {
         'success': false,
         'error': 'Failed to initiate product creation: ${e.toString()}',
       };
-    }
-  }
-
-// Remove _pushToMetaCatalog - now handled by ProductSyncService
-
-  // Background job
-  static Future<void> _pushToMetaCatalog(
-      Session session, Product product) async {
-    try {
-      final metaService = getIt<MetaCatalogService>();
-
-      // Wait for CDN upload to complete
-      await Future.delayed(Duration(seconds: 5));
-
-      // Reload product to get CDN URLs
-      final updatedProduct = await Product.db.findById(session, product.id);
-      if (updatedProduct == null) return;
-
-      await metaService.pushProduct(session, updatedProduct);
-    } catch (e) {
-      session.log('Failed to push to Meta: $e');
     }
   }
 
@@ -930,6 +1035,345 @@ class VendorTools {
         'error': 'Failed to get top selling products: ${e.toString()}',
       };
     }
+  }
+
+  static Future<Map<String, dynamic>> _handleBulkUpdateInventory(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final updates = (arguments['updates'] as List).cast<Map<String, dynamic>>();
+
+    final results = <Map<String, dynamic>>[];
+    int successCount = 0;
+    int failCount = 0;
+
+    for (var update in updates) {
+      final productId = update['product_id'] as String;
+      final quantity = (update['quantity'] as num).toInt();
+
+      try {
+        final success = await ProductEndpoint().updateInventory(
+          session,
+          productId: UuidValue.fromString(productId),
+          quantity: quantity,
+        );
+
+        if (success) {
+          successCount++;
+          results.add({
+            'product_id': productId,
+            'status': 'success',
+            'new_quantity': quantity,
+          });
+        } else {
+          failCount++;
+          results.add({
+            'product_id': productId,
+            'status': 'failed',
+            'error': 'Update failed',
+          });
+        }
+      } catch (e) {
+        failCount++;
+        results.add({
+          'product_id': productId,
+          'status': 'error',
+          'error': e.toString(),
+        });
+      }
+    }
+
+    return {
+      'success': true,
+      'summary': {
+        'total': updates.length,
+        'successful': successCount,
+        'failed': failCount,
+      },
+      'results': results,
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleGetInventoryAlerts(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final alertType = arguments['alert_type'] as String? ?? 'all';
+
+    final products = await ProductEndpoint().getVendorProducts(
+      session,
+      vendorId: UuidValue.fromString(context.userId),
+      limit: 100,
+    );
+
+    final lowStock = products.where((p) => 
+      p.quantity > 0 && p.quantity <= p.lowStockThreshold
+    ).toList();
+
+    final outOfStock = products.where((p) => p.quantity == 0).toList();
+
+    Map<String, dynamic> result = {
+      'success': true,
+    };
+
+    if (alertType == 'low_stock' || alertType == 'all') {
+      result['low_stock'] = {
+        'count': lowStock.length,
+        'products': lowStock.map((p) => {
+          'id': p.id.uuid,
+          'name': p.name,
+          'current_stock': p.quantity,
+          'threshold': p.lowStockThreshold,
+        }).toList(),
+      };
+    }
+
+    if (alertType == 'out_of_stock' || alertType == 'all') {
+      result['out_of_stock'] = {
+        'count': outOfStock.length,
+        'products': outOfStock.map((p) => {
+          'id': p.id.uuid,
+          'name': p.name,
+          'orders_count': p.orderCount,
+        }).toList(),
+      };
+    }
+
+    return result;
+  }
+
+  static Future<Map<String, dynamic>> _handleGetFullOrderDetails(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final orderNumber = arguments['order_number'] as String;
+
+    final order = await Order.db.findFirstRow(
+      session,
+      where: (t) => t.orderNumber.equals(orderNumber),
+    );
+
+    if (order == null) {
+      return {
+        'success': false,
+        'error': 'Order not found',
+      };
+    }
+
+    final orderData = await OrderEndpoint().getOrderWithItems(
+      session,
+      order.id,
+    );
+
+    if (orderData == null) {
+      return {
+        'success': false,
+        'error': 'Failed to load order details',
+      };
+    }
+
+    final items = orderData['items'] as List<OrderItem>;
+
+    return {
+      'success': true,
+      'order': {
+        'order_number': order.orderNumber,
+        'status': order.status.name,
+        'customer': {
+          'name': order.customerName,
+          'phone': order.customerPhone,
+          'email': order.customerEmail,
+        },
+        'payment': {
+          'method': order.paymentMethod.name,
+          'status': order.paymentStatus.name,
+          'paid_at': order.paidAt?.toIso8601String(),
+        },
+        'amounts': {
+          'subtotal': order.subtotal,
+          'shipping': order.shippingCost,
+          'tax': order.taxAmount,
+          'total': order.totalAmount,
+          'currency': order.currency,
+        },
+        'items': items.map((item) => {
+          'product_name': item.productName,
+          'quantity': item.quantity,
+          'unit_price': item.unitPrice,
+          'total': item.totalAmount,
+        }).toList(),
+        'delivery': {
+          'tracking_number': order.trackingNumber,
+          'estimated_date': order.estimatedDeliveryDate?.toIso8601String(),
+          'actual_date': order.actualDeliveryDate?.toIso8601String(),
+        },
+        'notes': {
+          'customer': order.customerNotes,
+          'vendor': order.vendorNotes,
+        },
+        'dates': {
+          'created': order.createdAt.toIso8601String(),
+          'confirmed': order.confirmedAt?.toIso8601String(),
+          'shipped': order.shippedAt?.toIso8601String(),
+          'delivered': order.deliveredAt?.toIso8601String(),
+        },
+      },
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleBatchUpdateOrderStatus(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final updates = (arguments['updates'] as List).cast<Map<String, dynamic>>();
+
+    final results = <Map<String, dynamic>>[];
+    int successCount = 0;
+
+    for (var update in updates) {
+      final orderNumber = update['order_number'] as String;
+      final statusStr = update['status'] as String;
+
+      try {
+        final order = await Order.db.findFirstRow(
+          session,
+          where: (t) => t.orderNumber.equals(orderNumber),
+        );
+
+        if (order == null) {
+          results.add({
+            'order_number': orderNumber,
+            'status': 'failed',
+            'error': 'Order not found',
+          });
+          continue;
+        }
+
+        final status = _parseOrderStatus(statusStr);
+        final success = await OrderEndpoint().updateOrderStatus(
+          session,
+          orderId: order.id,
+          status: status,
+        );
+
+        if (success) {
+          successCount++;
+          results.add({
+            'order_number': orderNumber,
+            'status': 'success',
+            'new_status': status.name,
+          });
+        } else {
+          results.add({
+            'order_number': orderNumber,
+            'status': 'failed',
+            'error': 'Update failed',
+          });
+        }
+      } catch (e) {
+        results.add({
+          'order_number': orderNumber,
+          'status': 'error',
+          'error': e.toString(),
+        });
+      }
+    }
+
+    return {
+      'success': true,
+      'summary': {
+        'total': updates.length,
+        'successful': successCount,
+        'failed': updates.length - successCount,
+      },
+      'results': results,
+    };
+  }
+
+  static Future<Map<String, dynamic>> _handleGetProductPerformance(
+    Map<String, dynamic> arguments,
+    ToolExecutionContext context,
+  ) async {
+    final session = context.session!;
+    final productId = arguments['product_id'] as String?;
+    final limit = (arguments['limit'] as num?)?.toInt() ?? 10;
+    final sortBy = arguments['sort_by'] as String? ?? 'sales';
+
+    if (productId != null) {
+      // Single product analysis
+      final product = await ProductEndpoint().getProduct(
+        session,
+        UuidValue.fromString(productId),
+      );
+
+      if (product == null) {
+        return {
+          'success': false,
+          'error': 'Product not found',
+        };
+      }
+
+      return {
+        'success': true,
+        'product': {
+          'id': product.id.uuid,
+          'name': product.name,
+          'metrics': {
+            'views': product.viewCount,
+            'orders': product.orderCount,
+            'rating': product.averageRating,
+            'reviews': product.totalReviews,
+            'conversion_rate': product.conversionRate,
+          },
+          'performance': {
+            'revenue': product.basePrice * product.orderCount,
+            'avg_order_value': product.basePrice,
+          },
+        },
+      };
+    }
+
+    // Multiple products analysis
+    final products = await ProductEndpoint().getVendorProducts(
+      session,
+      vendorId: UuidValue.fromString(context.userId),
+      limit: limit * 2, // Get more to sort properly
+    );
+
+    // Sort based on criteria
+    products.sort((a, b) {
+      switch (sortBy) {
+        case 'sales':
+          return b.orderCount.compareTo(a.orderCount);
+        case 'views':
+          return b.viewCount.compareTo(a.viewCount);
+        case 'revenue':
+          return (b.basePrice * b.orderCount).compareTo(a.basePrice * a.orderCount);
+        case 'rating':
+          return b.averageRating.compareTo(a.averageRating);
+        default:
+          return 0;
+      }
+    });
+
+    return {
+      'success': true,
+      'products': products.take(limit).map((p) => {
+        'id': p.id.uuid,
+        'name': p.name,
+        'metrics': {
+          'views': p.viewCount,
+          'orders': p.orderCount,
+          'rating': p.averageRating,
+          'conversion_rate': p.conversionRate,
+        },
+        'revenue': p.basePrice * p.orderCount,
+      }).toList(),
+    };
   }
 
   // Helper methods

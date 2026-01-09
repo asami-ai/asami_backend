@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -89,7 +88,9 @@ abstract class OrderItem
 
   factory OrderItem.fromJson(Map<String, dynamic> jsonSerialization) {
     return OrderItem(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       orderId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['orderId'],
       ),
@@ -123,25 +124,27 @@ abstract class OrderItem
       discountPrice: (jsonSerialization['discountPrice'] as num?)?.toDouble(),
       quantity: jsonSerialization['quantity'] as int,
       subtotal: (jsonSerialization['subtotal'] as num).toDouble(),
-      taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
+      taxAmount: (jsonSerialization['taxAmount'] as num?)?.toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      status: _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
-      isFulfilled: jsonSerialization['isFulfilled'] as bool,
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.OrderStatus.fromJson((jsonSerialization['status'] as String)),
+      isFulfilled: jsonSerialization['isFulfilled'] as bool?,
       fulfilledAt: jsonSerialization['fulfilledAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['fulfilledAt'],
             ),
-      isReturnable: jsonSerialization['isReturnable'] as bool,
+      isReturnable: jsonSerialization['isReturnable'] as bool?,
       returnBy: jsonSerialization['returnBy'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['returnBy']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

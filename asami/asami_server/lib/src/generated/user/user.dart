@@ -99,34 +99,40 @@ abstract class User
 
   factory User.fromJson(Map<String, dynamic> jsonSerialization) {
     return User(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userType: _i3.UserType.fromJson(
         (jsonSerialization['userType'] as String),
       ),
-      status: _i2.UserStatus.fromJson((jsonSerialization['status'] as String)),
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.UserStatus.fromJson((jsonSerialization['status'] as String)),
       email: jsonSerialization['email'] as String?,
       phoneNumber: jsonSerialization['phoneNumber'] as String,
       countryCode: jsonSerialization['countryCode'] as String,
-      isPhoneVerified: jsonSerialization['isPhoneVerified'] as bool,
+      isPhoneVerified: jsonSerialization['isPhoneVerified'] as bool?,
       whatsappId: jsonSerialization['whatsappId'] as String?,
       telegramId: jsonSerialization['telegramId'] as String?,
       firstName: jsonSerialization['firstName'] as String?,
       lastName: jsonSerialization['lastName'] as String?,
       profileImageUrl: jsonSerialization['profileImageUrl'] as String?,
-      language: jsonSerialization['language'] as String,
-      timezone: jsonSerialization['timezone'] as String,
+      language: jsonSerialization['language'] as String?,
+      timezone: jsonSerialization['timezone'] as String?,
       city: jsonSerialization['city'] as String?,
       state: jsonSerialization['state'] as String?,
       country: jsonSerialization['country'] as String?,
-      emailVerified: jsonSerialization['emailVerified'] as bool,
+      emailVerified: jsonSerialization['emailVerified'] as bool?,
       emailVerifiedAt: jsonSerialization['emailVerifiedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['emailVerifiedAt'],
             ),
-      whatsappAuthenticated: jsonSerialization['whatsappAuthenticated'] as bool,
-      telegramAuthenticated: jsonSerialization['telegramAuthenticated'] as bool,
-      webAuthenticated: jsonSerialization['webAuthenticated'] as bool,
+      whatsappAuthenticated:
+          jsonSerialization['whatsappAuthenticated'] as bool?,
+      telegramAuthenticated:
+          jsonSerialization['telegramAuthenticated'] as bool?,
+      webAuthenticated: jsonSerialization['webAuthenticated'] as bool?,
       lastWhatsappLogin: jsonSerialization['lastWhatsappLogin'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -149,13 +155,13 @@ abstract class User
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['verificationCodeExpiry'],
             ),
-      verificationAttempts: jsonSerialization['verificationAttempts'] as int,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      verificationAttempts: jsonSerialization['verificationAttempts'] as int?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       lastActiveAt: jsonSerialization['lastActiveAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(

@@ -75,7 +75,9 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
 
   factory SubscriptionInvoice.fromJson(Map<String, dynamic> jsonSerialization) {
     return SubscriptionInvoice(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       subscriptionId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['subscriptionId'],
       ),
@@ -89,14 +91,14 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
       ),
       invoiceNumber: jsonSerialization['invoiceNumber'] as String,
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
-      subscriptionAmount: (jsonSerialization['subscriptionAmount'] as num)
-          .toDouble(),
-      usageCharges: (jsonSerialization['usageCharges'] as num).toDouble(),
-      taxAmount: (jsonSerialization['taxAmount'] as num).toDouble(),
-      discountAmount: (jsonSerialization['discountAmount'] as num).toDouble(),
-      status: jsonSerialization['status'] as String,
-      isPaid: jsonSerialization['isPaid'] as bool,
+      currency: jsonSerialization['currency'] as String?,
+      subscriptionAmount: (jsonSerialization['subscriptionAmount'] as num?)
+          ?.toDouble(),
+      usageCharges: (jsonSerialization['usageCharges'] as num?)?.toDouble(),
+      taxAmount: (jsonSerialization['taxAmount'] as num?)?.toDouble(),
+      discountAmount: (jsonSerialization['discountAmount'] as num?)?.toDouble(),
+      status: jsonSerialization['status'] as String?,
+      isPaid: jsonSerialization['isPaid'] as bool?,
       paymentMethod: jsonSerialization['paymentMethod'] == null
           ? null
           : _i3.PaymentMethod.fromJson(
@@ -114,12 +116,12 @@ abstract class SubscriptionInvoice implements _i1.SerializableModel {
         jsonSerialization['periodEnd'],
       ),
       dueDate: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['dueDate']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

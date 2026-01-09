@@ -71,7 +71,9 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
 
   factory ToolUsageLog.fromJson(Map<String, dynamic> jsonSerialization) {
     return ToolUsageLog(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userType: _i2.UserType.fromJson(
         (jsonSerialization['userType'] as String),
@@ -84,11 +86,11 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
       toolName: jsonSerialization['toolName'] as String,
       toolCategory: jsonSerialization['toolCategory'] as String?,
       arguments: jsonSerialization['arguments'] as String?,
-      success: jsonSerialization['success'] as bool,
+      success: jsonSerialization['success'] as bool?,
       executionTimeMs: jsonSerialization['executionTimeMs'] as int,
       errorMessage: jsonSerialization['errorMessage'] as String?,
-      costIncurred: (jsonSerialization['costIncurred'] as num).toDouble(),
-      isBillable: jsonSerialization['isBillable'] as bool,
+      costIncurred: (jsonSerialization['costIncurred'] as num?)?.toDouble(),
+      isBillable: jsonSerialization['isBillable'] as bool?,
       billingPeriodStart: jsonSerialization['billingPeriodStart'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -99,15 +101,15 @@ abstract class ToolUsageLog implements _i1.SerializableModel {
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['billingPeriodEnd'],
             ),
-      wasWithinLimit: jsonSerialization['wasWithinLimit'] as bool,
-      usedGracePeriod: jsonSerialization['usedGracePeriod'] as bool,
-      deniedDueToLimit: jsonSerialization['deniedDueToLimit'] as bool,
+      wasWithinLimit: jsonSerialization['wasWithinLimit'] as bool?,
+      usedGracePeriod: jsonSerialization['usedGracePeriod'] as bool?,
+      deniedDueToLimit: jsonSerialization['deniedDueToLimit'] as bool?,
       platform: jsonSerialization['platform'] as String?,
       ipAddress: jsonSerialization['ipAddress'] as String?,
       userAgent: jsonSerialization['userAgent'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

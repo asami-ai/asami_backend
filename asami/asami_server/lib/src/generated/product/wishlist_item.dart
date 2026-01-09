@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -79,11 +78,13 @@ abstract class WishlistItem
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['variantId']),
       notes: jsonSerialization['notes'] as String?,
-      priority: jsonSerialization['priority'] as int,
+      priority: jsonSerialization['priority'] as int?,
       priceWhenAdded: (jsonSerialization['priceWhenAdded'] as num).toDouble(),
-      notifyOnPriceDrop: jsonSerialization['notifyOnPriceDrop'] as bool,
+      notifyOnPriceDrop: jsonSerialization['notifyOnPriceDrop'] as bool?,
       targetPrice: (jsonSerialization['targetPrice'] as num?)?.toDouble(),
-      addedAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
+      addedAt: jsonSerialization['addedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['addedAt']),
     );
   }
 

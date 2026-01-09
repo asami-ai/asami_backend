@@ -31,10 +31,6 @@ abstract class Product implements _i1.SerializableModel {
     this.facebookCategoryId,
     this.googleCategory,
     this.googleCategoryId,
-    bool? isAiGenerated,
-    this.aiGeneratedAt,
-    this.aiConfidenceScore,
-    bool? hasAiGeneratedImages,
     required this.basePrice,
     this.discountPrice,
     this.discountPercentage,
@@ -46,17 +42,17 @@ abstract class Product implements _i1.SerializableModel {
     int? quantity,
     int? lowStockThreshold,
     bool? trackInventory,
+    _i2.ProductStatus? status,
+    bool? isActive,
+    bool? isFeatured,
+    _i3.ProductCondition? condition,
     this.weight,
-    this.weightUnit,
+    String? weightUnit,
     this.dimensions,
     this.color,
     this.size,
     this.material,
     this.brand,
-    _i2.ProductStatus? status,
-    bool? isActive,
-    bool? isFeatured,
-    _i3.ProductCondition? condition,
     required this.images,
     this.thumbnailUrl,
     this.videoUrl,
@@ -68,9 +64,16 @@ abstract class Product implements _i1.SerializableModel {
     this.originalMediaUrls,
     this.metaCatalogId,
     this.metaProductId,
+    this.metaRetailerId,
     String? metaSyncStatus,
     this.metaSyncedAt,
     this.metaSyncError,
+    int? metaSyncAttempts,
+    this.productUrl,
+    bool? isAiGenerated,
+    this.aiGeneratedAt,
+    this.aiConfidenceScore,
+    bool? hasAiGeneratedImages,
     bool? shippingRequired,
     this.estimatedDeliveryDays,
     bool? freeShipping,
@@ -89,18 +92,20 @@ abstract class Product implements _i1.SerializableModel {
     this.publishedAt,
     this.deletedAt,
   }) : id = id ?? _i1.Uuid().v4obj(),
-       isAiGenerated = isAiGenerated ?? false,
-       hasAiGeneratedImages = hasAiGeneratedImages ?? false,
        currency = currency ?? 'NGN',
-       quantity = quantity ?? 0,
+       quantity = quantity ?? 1,
        lowStockThreshold = lowStockThreshold ?? 5,
        trackInventory = trackInventory ?? true,
        status = status ?? _i2.ProductStatus.draft,
        isActive = isActive ?? true,
        isFeatured = isFeatured ?? false,
        condition = condition ?? _i3.ProductCondition.newItem,
+       weightUnit = weightUnit ?? 'kg',
        cdnUploadStatus = cdnUploadStatus ?? 'pending',
        metaSyncStatus = metaSyncStatus ?? 'pending',
+       metaSyncAttempts = metaSyncAttempts ?? 0,
+       isAiGenerated = isAiGenerated ?? false,
+       hasAiGeneratedImages = hasAiGeneratedImages ?? false,
        shippingRequired = shippingRequired ?? true,
        freeShipping = freeShipping ?? false,
        shippingCost = shippingCost ?? 0.0,
@@ -127,10 +132,6 @@ abstract class Product implements _i1.SerializableModel {
     String? facebookCategoryId,
     String? googleCategory,
     String? googleCategoryId,
-    bool? isAiGenerated,
-    DateTime? aiGeneratedAt,
-    double? aiConfidenceScore,
-    bool? hasAiGeneratedImages,
     required double basePrice,
     double? discountPrice,
     double? discountPercentage,
@@ -142,6 +143,10 @@ abstract class Product implements _i1.SerializableModel {
     int? quantity,
     int? lowStockThreshold,
     bool? trackInventory,
+    _i2.ProductStatus? status,
+    bool? isActive,
+    bool? isFeatured,
+    _i3.ProductCondition? condition,
     double? weight,
     String? weightUnit,
     String? dimensions,
@@ -149,10 +154,6 @@ abstract class Product implements _i1.SerializableModel {
     List<String>? size,
     String? material,
     String? brand,
-    _i2.ProductStatus? status,
-    bool? isActive,
-    bool? isFeatured,
-    _i3.ProductCondition? condition,
     required List<String> images,
     String? thumbnailUrl,
     String? videoUrl,
@@ -164,9 +165,16 @@ abstract class Product implements _i1.SerializableModel {
     List<String>? originalMediaUrls,
     String? metaCatalogId,
     String? metaProductId,
+    String? metaRetailerId,
     String? metaSyncStatus,
     DateTime? metaSyncedAt,
     String? metaSyncError,
+    int? metaSyncAttempts,
+    String? productUrl,
+    bool? isAiGenerated,
+    DateTime? aiGeneratedAt,
+    double? aiConfidenceScore,
+    bool? hasAiGeneratedImages,
     bool? shippingRequired,
     int? estimatedDeliveryDays,
     bool? freeShipping,
@@ -188,7 +196,9 @@ abstract class Product implements _i1.SerializableModel {
 
   factory Product.fromJson(Map<String, dynamic> jsonSerialization) {
     return Product(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       vendorId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['vendorId'],
       ),
@@ -209,15 +219,6 @@ abstract class Product implements _i1.SerializableModel {
       facebookCategoryId: jsonSerialization['facebookCategoryId'] as String?,
       googleCategory: jsonSerialization['googleCategory'] as String?,
       googleCategoryId: jsonSerialization['googleCategoryId'] as String?,
-      isAiGenerated: jsonSerialization['isAiGenerated'] as bool,
-      aiGeneratedAt: jsonSerialization['aiGeneratedAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['aiGeneratedAt'],
-            ),
-      aiConfidenceScore: (jsonSerialization['aiConfidenceScore'] as num?)
-          ?.toDouble(),
-      hasAiGeneratedImages: jsonSerialization['hasAiGeneratedImages'] as bool,
       basePrice: (jsonSerialization['basePrice'] as num).toDouble(),
       discountPrice: (jsonSerialization['discountPrice'] as num?)?.toDouble(),
       discountPercentage: (jsonSerialization['discountPercentage'] as num?)
@@ -232,12 +233,22 @@ abstract class Product implements _i1.SerializableModel {
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['discountEndDate'],
             ),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       sku: jsonSerialization['sku'] as String?,
       barcode: jsonSerialization['barcode'] as String?,
-      quantity: jsonSerialization['quantity'] as int,
-      lowStockThreshold: jsonSerialization['lowStockThreshold'] as int,
-      trackInventory: jsonSerialization['trackInventory'] as bool,
+      quantity: jsonSerialization['quantity'] as int?,
+      lowStockThreshold: jsonSerialization['lowStockThreshold'] as int?,
+      trackInventory: jsonSerialization['trackInventory'] as bool?,
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.ProductStatus.fromJson((jsonSerialization['status'] as String)),
+      isActive: jsonSerialization['isActive'] as bool?,
+      isFeatured: jsonSerialization['isFeatured'] as bool?,
+      condition: jsonSerialization['condition'] == null
+          ? null
+          : _i3.ProductCondition.fromJson(
+              (jsonSerialization['condition'] as String),
+            ),
       weight: (jsonSerialization['weight'] as num?)?.toDouble(),
       weightUnit: jsonSerialization['weightUnit'] as String?,
       dimensions: jsonSerialization['dimensions'] as String?,
@@ -251,14 +262,6 @@ abstract class Product implements _i1.SerializableModel {
           : _i5.Protocol().deserialize<List<String>>(jsonSerialization['size']),
       material: jsonSerialization['material'] as String?,
       brand: jsonSerialization['brand'] as String?,
-      status: _i2.ProductStatus.fromJson(
-        (jsonSerialization['status'] as String),
-      ),
-      isActive: jsonSerialization['isActive'] as bool,
-      isFeatured: jsonSerialization['isFeatured'] as bool,
-      condition: _i3.ProductCondition.fromJson(
-        (jsonSerialization['condition'] as String),
-      ),
       images: _i5.Protocol().deserialize<List<String>>(
         jsonSerialization['images'],
       ),
@@ -275,7 +278,7 @@ abstract class Product implements _i1.SerializableModel {
           : _i5.Protocol().deserialize<List<String>>(
               jsonSerialization['telegramFileIds'],
             ),
-      cdnUploadStatus: jsonSerialization['cdnUploadStatus'] as String,
+      cdnUploadStatus: jsonSerialization['cdnUploadStatus'] as String?,
       cdnUploadedAt: jsonSerialization['cdnUploadedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -288,23 +291,35 @@ abstract class Product implements _i1.SerializableModel {
             ),
       metaCatalogId: jsonSerialization['metaCatalogId'] as String?,
       metaProductId: jsonSerialization['metaProductId'] as String?,
-      metaSyncStatus: jsonSerialization['metaSyncStatus'] as String,
+      metaRetailerId: jsonSerialization['metaRetailerId'] as String?,
+      metaSyncStatus: jsonSerialization['metaSyncStatus'] as String?,
       metaSyncedAt: jsonSerialization['metaSyncedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['metaSyncedAt'],
             ),
       metaSyncError: jsonSerialization['metaSyncError'] as String?,
-      shippingRequired: jsonSerialization['shippingRequired'] as bool,
+      metaSyncAttempts: jsonSerialization['metaSyncAttempts'] as int?,
+      productUrl: jsonSerialization['productUrl'] as String?,
+      isAiGenerated: jsonSerialization['isAiGenerated'] as bool?,
+      aiGeneratedAt: jsonSerialization['aiGeneratedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['aiGeneratedAt'],
+            ),
+      aiConfidenceScore: (jsonSerialization['aiConfidenceScore'] as num?)
+          ?.toDouble(),
+      hasAiGeneratedImages: jsonSerialization['hasAiGeneratedImages'] as bool?,
+      shippingRequired: jsonSerialization['shippingRequired'] as bool?,
       estimatedDeliveryDays: jsonSerialization['estimatedDeliveryDays'] as int?,
-      freeShipping: jsonSerialization['freeShipping'] as bool,
-      shippingCost: (jsonSerialization['shippingCost'] as num).toDouble(),
-      viewCount: jsonSerialization['viewCount'] as int,
-      orderCount: jsonSerialization['orderCount'] as int,
-      wishlistCount: jsonSerialization['wishlistCount'] as int,
-      averageRating: (jsonSerialization['averageRating'] as num).toDouble(),
-      totalReviews: jsonSerialization['totalReviews'] as int,
-      conversionRate: (jsonSerialization['conversionRate'] as num).toDouble(),
+      freeShipping: jsonSerialization['freeShipping'] as bool?,
+      shippingCost: (jsonSerialization['shippingCost'] as num?)?.toDouble(),
+      viewCount: jsonSerialization['viewCount'] as int?,
+      orderCount: jsonSerialization['orderCount'] as int?,
+      wishlistCount: jsonSerialization['wishlistCount'] as int?,
+      averageRating: (jsonSerialization['averageRating'] as num?)?.toDouble(),
+      totalReviews: jsonSerialization['totalReviews'] as int?,
+      conversionRate: (jsonSerialization['conversionRate'] as num?)?.toDouble(),
       searchKeywords: jsonSerialization['searchKeywords'] == null
           ? null
           : _i5.Protocol().deserialize<List<String>>(
@@ -312,12 +327,12 @@ abstract class Product implements _i1.SerializableModel {
             ),
       metaTitle: jsonSerialization['metaTitle'] as String?,
       metaDescription: jsonSerialization['metaDescription'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
       publishedAt: jsonSerialization['publishedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -356,14 +371,6 @@ abstract class Product implements _i1.SerializableModel {
 
   String? googleCategoryId;
 
-  bool isAiGenerated;
-
-  DateTime? aiGeneratedAt;
-
-  double? aiConfidenceScore;
-
-  bool hasAiGeneratedImages;
-
   double basePrice;
 
   double? discountPrice;
@@ -386,6 +393,14 @@ abstract class Product implements _i1.SerializableModel {
 
   bool trackInventory;
 
+  _i2.ProductStatus status;
+
+  bool isActive;
+
+  bool isFeatured;
+
+  _i3.ProductCondition condition;
+
   double? weight;
 
   String? weightUnit;
@@ -399,14 +414,6 @@ abstract class Product implements _i1.SerializableModel {
   String? material;
 
   String? brand;
-
-  _i2.ProductStatus status;
-
-  bool isActive;
-
-  bool isFeatured;
-
-  _i3.ProductCondition condition;
 
   List<String> images;
 
@@ -430,11 +437,25 @@ abstract class Product implements _i1.SerializableModel {
 
   String? metaProductId;
 
+  String? metaRetailerId;
+
   String metaSyncStatus;
 
   DateTime? metaSyncedAt;
 
   String? metaSyncError;
+
+  int metaSyncAttempts;
+
+  String? productUrl;
+
+  bool isAiGenerated;
+
+  DateTime? aiGeneratedAt;
+
+  double? aiConfidenceScore;
+
+  bool hasAiGeneratedImages;
 
   bool shippingRequired;
 
@@ -487,10 +508,6 @@ abstract class Product implements _i1.SerializableModel {
     String? facebookCategoryId,
     String? googleCategory,
     String? googleCategoryId,
-    bool? isAiGenerated,
-    DateTime? aiGeneratedAt,
-    double? aiConfidenceScore,
-    bool? hasAiGeneratedImages,
     double? basePrice,
     double? discountPrice,
     double? discountPercentage,
@@ -502,6 +519,10 @@ abstract class Product implements _i1.SerializableModel {
     int? quantity,
     int? lowStockThreshold,
     bool? trackInventory,
+    _i2.ProductStatus? status,
+    bool? isActive,
+    bool? isFeatured,
+    _i3.ProductCondition? condition,
     double? weight,
     String? weightUnit,
     String? dimensions,
@@ -509,10 +530,6 @@ abstract class Product implements _i1.SerializableModel {
     List<String>? size,
     String? material,
     String? brand,
-    _i2.ProductStatus? status,
-    bool? isActive,
-    bool? isFeatured,
-    _i3.ProductCondition? condition,
     List<String>? images,
     String? thumbnailUrl,
     String? videoUrl,
@@ -524,9 +541,16 @@ abstract class Product implements _i1.SerializableModel {
     List<String>? originalMediaUrls,
     String? metaCatalogId,
     String? metaProductId,
+    String? metaRetailerId,
     String? metaSyncStatus,
     DateTime? metaSyncedAt,
     String? metaSyncError,
+    int? metaSyncAttempts,
+    String? productUrl,
+    bool? isAiGenerated,
+    DateTime? aiGeneratedAt,
+    double? aiConfidenceScore,
+    bool? hasAiGeneratedImages,
     bool? shippingRequired,
     int? estimatedDeliveryDays,
     bool? freeShipping,
@@ -562,10 +586,6 @@ abstract class Product implements _i1.SerializableModel {
       if (facebookCategoryId != null) 'facebookCategoryId': facebookCategoryId,
       if (googleCategory != null) 'googleCategory': googleCategory,
       if (googleCategoryId != null) 'googleCategoryId': googleCategoryId,
-      'isAiGenerated': isAiGenerated,
-      if (aiGeneratedAt != null) 'aiGeneratedAt': aiGeneratedAt?.toJson(),
-      if (aiConfidenceScore != null) 'aiConfidenceScore': aiConfidenceScore,
-      'hasAiGeneratedImages': hasAiGeneratedImages,
       'basePrice': basePrice,
       if (discountPrice != null) 'discountPrice': discountPrice,
       if (discountPercentage != null) 'discountPercentage': discountPercentage,
@@ -578,6 +598,10 @@ abstract class Product implements _i1.SerializableModel {
       'quantity': quantity,
       'lowStockThreshold': lowStockThreshold,
       'trackInventory': trackInventory,
+      'status': status.toJson(),
+      'isActive': isActive,
+      'isFeatured': isFeatured,
+      'condition': condition.toJson(),
       if (weight != null) 'weight': weight,
       if (weightUnit != null) 'weightUnit': weightUnit,
       if (dimensions != null) 'dimensions': dimensions,
@@ -585,10 +609,6 @@ abstract class Product implements _i1.SerializableModel {
       if (size != null) 'size': size?.toJson(),
       if (material != null) 'material': material,
       if (brand != null) 'brand': brand,
-      'status': status.toJson(),
-      'isActive': isActive,
-      'isFeatured': isFeatured,
-      'condition': condition.toJson(),
       'images': images.toJson(),
       if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
       if (videoUrl != null) 'videoUrl': videoUrl,
@@ -602,9 +622,16 @@ abstract class Product implements _i1.SerializableModel {
         'originalMediaUrls': originalMediaUrls?.toJson(),
       if (metaCatalogId != null) 'metaCatalogId': metaCatalogId,
       if (metaProductId != null) 'metaProductId': metaProductId,
+      if (metaRetailerId != null) 'metaRetailerId': metaRetailerId,
       'metaSyncStatus': metaSyncStatus,
       if (metaSyncedAt != null) 'metaSyncedAt': metaSyncedAt?.toJson(),
       if (metaSyncError != null) 'metaSyncError': metaSyncError,
+      'metaSyncAttempts': metaSyncAttempts,
+      if (productUrl != null) 'productUrl': productUrl,
+      'isAiGenerated': isAiGenerated,
+      if (aiGeneratedAt != null) 'aiGeneratedAt': aiGeneratedAt?.toJson(),
+      if (aiConfidenceScore != null) 'aiConfidenceScore': aiConfidenceScore,
+      'hasAiGeneratedImages': hasAiGeneratedImages,
       'shippingRequired': shippingRequired,
       if (estimatedDeliveryDays != null)
         'estimatedDeliveryDays': estimatedDeliveryDays,
@@ -649,10 +676,6 @@ class _ProductImpl extends Product {
     String? facebookCategoryId,
     String? googleCategory,
     String? googleCategoryId,
-    bool? isAiGenerated,
-    DateTime? aiGeneratedAt,
-    double? aiConfidenceScore,
-    bool? hasAiGeneratedImages,
     required double basePrice,
     double? discountPrice,
     double? discountPercentage,
@@ -664,6 +687,10 @@ class _ProductImpl extends Product {
     int? quantity,
     int? lowStockThreshold,
     bool? trackInventory,
+    _i2.ProductStatus? status,
+    bool? isActive,
+    bool? isFeatured,
+    _i3.ProductCondition? condition,
     double? weight,
     String? weightUnit,
     String? dimensions,
@@ -671,10 +698,6 @@ class _ProductImpl extends Product {
     List<String>? size,
     String? material,
     String? brand,
-    _i2.ProductStatus? status,
-    bool? isActive,
-    bool? isFeatured,
-    _i3.ProductCondition? condition,
     required List<String> images,
     String? thumbnailUrl,
     String? videoUrl,
@@ -686,9 +709,16 @@ class _ProductImpl extends Product {
     List<String>? originalMediaUrls,
     String? metaCatalogId,
     String? metaProductId,
+    String? metaRetailerId,
     String? metaSyncStatus,
     DateTime? metaSyncedAt,
     String? metaSyncError,
+    int? metaSyncAttempts,
+    String? productUrl,
+    bool? isAiGenerated,
+    DateTime? aiGeneratedAt,
+    double? aiConfidenceScore,
+    bool? hasAiGeneratedImages,
     bool? shippingRequired,
     int? estimatedDeliveryDays,
     bool? freeShipping,
@@ -720,10 +750,6 @@ class _ProductImpl extends Product {
          facebookCategoryId: facebookCategoryId,
          googleCategory: googleCategory,
          googleCategoryId: googleCategoryId,
-         isAiGenerated: isAiGenerated,
-         aiGeneratedAt: aiGeneratedAt,
-         aiConfidenceScore: aiConfidenceScore,
-         hasAiGeneratedImages: hasAiGeneratedImages,
          basePrice: basePrice,
          discountPrice: discountPrice,
          discountPercentage: discountPercentage,
@@ -735,6 +761,10 @@ class _ProductImpl extends Product {
          quantity: quantity,
          lowStockThreshold: lowStockThreshold,
          trackInventory: trackInventory,
+         status: status,
+         isActive: isActive,
+         isFeatured: isFeatured,
+         condition: condition,
          weight: weight,
          weightUnit: weightUnit,
          dimensions: dimensions,
@@ -742,10 +772,6 @@ class _ProductImpl extends Product {
          size: size,
          material: material,
          brand: brand,
-         status: status,
-         isActive: isActive,
-         isFeatured: isFeatured,
-         condition: condition,
          images: images,
          thumbnailUrl: thumbnailUrl,
          videoUrl: videoUrl,
@@ -757,9 +783,16 @@ class _ProductImpl extends Product {
          originalMediaUrls: originalMediaUrls,
          metaCatalogId: metaCatalogId,
          metaProductId: metaProductId,
+         metaRetailerId: metaRetailerId,
          metaSyncStatus: metaSyncStatus,
          metaSyncedAt: metaSyncedAt,
          metaSyncError: metaSyncError,
+         metaSyncAttempts: metaSyncAttempts,
+         productUrl: productUrl,
+         isAiGenerated: isAiGenerated,
+         aiGeneratedAt: aiGeneratedAt,
+         aiConfidenceScore: aiConfidenceScore,
+         hasAiGeneratedImages: hasAiGeneratedImages,
          shippingRequired: shippingRequired,
          estimatedDeliveryDays: estimatedDeliveryDays,
          freeShipping: freeShipping,
@@ -797,10 +830,6 @@ class _ProductImpl extends Product {
     Object? facebookCategoryId = _Undefined,
     Object? googleCategory = _Undefined,
     Object? googleCategoryId = _Undefined,
-    bool? isAiGenerated,
-    Object? aiGeneratedAt = _Undefined,
-    Object? aiConfidenceScore = _Undefined,
-    bool? hasAiGeneratedImages,
     double? basePrice,
     Object? discountPrice = _Undefined,
     Object? discountPercentage = _Undefined,
@@ -812,6 +841,10 @@ class _ProductImpl extends Product {
     int? quantity,
     int? lowStockThreshold,
     bool? trackInventory,
+    _i2.ProductStatus? status,
+    bool? isActive,
+    bool? isFeatured,
+    _i3.ProductCondition? condition,
     Object? weight = _Undefined,
     Object? weightUnit = _Undefined,
     Object? dimensions = _Undefined,
@@ -819,10 +852,6 @@ class _ProductImpl extends Product {
     Object? size = _Undefined,
     Object? material = _Undefined,
     Object? brand = _Undefined,
-    _i2.ProductStatus? status,
-    bool? isActive,
-    bool? isFeatured,
-    _i3.ProductCondition? condition,
     List<String>? images,
     Object? thumbnailUrl = _Undefined,
     Object? videoUrl = _Undefined,
@@ -834,9 +863,16 @@ class _ProductImpl extends Product {
     Object? originalMediaUrls = _Undefined,
     Object? metaCatalogId = _Undefined,
     Object? metaProductId = _Undefined,
+    Object? metaRetailerId = _Undefined,
     String? metaSyncStatus,
     Object? metaSyncedAt = _Undefined,
     Object? metaSyncError = _Undefined,
+    int? metaSyncAttempts,
+    Object? productUrl = _Undefined,
+    bool? isAiGenerated,
+    Object? aiGeneratedAt = _Undefined,
+    Object? aiConfidenceScore = _Undefined,
+    bool? hasAiGeneratedImages,
     bool? shippingRequired,
     Object? estimatedDeliveryDays = _Undefined,
     bool? freeShipping,
@@ -879,14 +915,6 @@ class _ProductImpl extends Product {
       googleCategoryId: googleCategoryId is String?
           ? googleCategoryId
           : this.googleCategoryId,
-      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
-      aiGeneratedAt: aiGeneratedAt is DateTime?
-          ? aiGeneratedAt
-          : this.aiGeneratedAt,
-      aiConfidenceScore: aiConfidenceScore is double?
-          ? aiConfidenceScore
-          : this.aiConfidenceScore,
-      hasAiGeneratedImages: hasAiGeneratedImages ?? this.hasAiGeneratedImages,
       basePrice: basePrice ?? this.basePrice,
       discountPrice: discountPrice is double?
           ? discountPrice
@@ -906,6 +934,10 @@ class _ProductImpl extends Product {
       quantity: quantity ?? this.quantity,
       lowStockThreshold: lowStockThreshold ?? this.lowStockThreshold,
       trackInventory: trackInventory ?? this.trackInventory,
+      status: status ?? this.status,
+      isActive: isActive ?? this.isActive,
+      isFeatured: isFeatured ?? this.isFeatured,
+      condition: condition ?? this.condition,
       weight: weight is double? ? weight : this.weight,
       weightUnit: weightUnit is String? ? weightUnit : this.weightUnit,
       dimensions: dimensions is String? ? dimensions : this.dimensions,
@@ -915,10 +947,6 @@ class _ProductImpl extends Product {
       size: size is List<String>? ? size : this.size?.map((e0) => e0).toList(),
       material: material is String? ? material : this.material,
       brand: brand is String? ? brand : this.brand,
-      status: status ?? this.status,
-      isActive: isActive ?? this.isActive,
-      isFeatured: isFeatured ?? this.isFeatured,
-      condition: condition ?? this.condition,
       images: images ?? this.images.map((e0) => e0).toList(),
       thumbnailUrl: thumbnailUrl is String? ? thumbnailUrl : this.thumbnailUrl,
       videoUrl: videoUrl is String? ? videoUrl : this.videoUrl,
@@ -944,6 +972,9 @@ class _ProductImpl extends Product {
       metaProductId: metaProductId is String?
           ? metaProductId
           : this.metaProductId,
+      metaRetailerId: metaRetailerId is String?
+          ? metaRetailerId
+          : this.metaRetailerId,
       metaSyncStatus: metaSyncStatus ?? this.metaSyncStatus,
       metaSyncedAt: metaSyncedAt is DateTime?
           ? metaSyncedAt
@@ -951,6 +982,16 @@ class _ProductImpl extends Product {
       metaSyncError: metaSyncError is String?
           ? metaSyncError
           : this.metaSyncError,
+      metaSyncAttempts: metaSyncAttempts ?? this.metaSyncAttempts,
+      productUrl: productUrl is String? ? productUrl : this.productUrl,
+      isAiGenerated: isAiGenerated ?? this.isAiGenerated,
+      aiGeneratedAt: aiGeneratedAt is DateTime?
+          ? aiGeneratedAt
+          : this.aiGeneratedAt,
+      aiConfidenceScore: aiConfidenceScore is double?
+          ? aiConfidenceScore
+          : this.aiConfidenceScore,
+      hasAiGeneratedImages: hasAiGeneratedImages ?? this.hasAiGeneratedImages,
       shippingRequired: shippingRequired ?? this.shippingRequired,
       estimatedDeliveryDays: estimatedDeliveryDays is int?
           ? estimatedDeliveryDays

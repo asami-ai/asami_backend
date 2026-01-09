@@ -82,39 +82,41 @@ abstract class DailyUsageTracker
 
   factory DailyUsageTracker.fromJson(Map<String, dynamic> jsonSerialization) {
     return DailyUsageTracker(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       userType: _i2.UserType.fromJson(
         (jsonSerialization['userType'] as String),
       ),
       date: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['date']),
       resetAt: _i1.DateTimeJsonExtension.fromJson(jsonSerialization['resetAt']),
-      toolCallsCount: jsonSerialization['toolCallsCount'] as int,
+      toolCallsCount: jsonSerialization['toolCallsCount'] as int?,
       toolCallsLimit: jsonSerialization['toolCallsLimit'] as int,
-      aiMessagesCount: jsonSerialization['aiMessagesCount'] as int,
+      aiMessagesCount: jsonSerialization['aiMessagesCount'] as int?,
       aiMessagesLimit: jsonSerialization['aiMessagesLimit'] as int,
-      productsCreatedCount: jsonSerialization['productsCreatedCount'] as int,
+      productsCreatedCount: jsonSerialization['productsCreatedCount'] as int?,
       productsCreatedLimit: jsonSerialization['productsCreatedLimit'] as int,
-      aiDescriptionsCount: jsonSerialization['aiDescriptionsCount'] as int,
+      aiDescriptionsCount: jsonSerialization['aiDescriptionsCount'] as int?,
       aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int,
-      analyticsQueriesCount: jsonSerialization['analyticsQueriesCount'] as int,
+      analyticsQueriesCount: jsonSerialization['analyticsQueriesCount'] as int?,
       analyticsQueriesLimit: jsonSerialization['analyticsQueriesLimit'] as int,
-      isInGracePeriod: jsonSerialization['isInGracePeriod'] as bool,
-      gracePeriodUsed: jsonSerialization['gracePeriodUsed'] as int,
-      gracePeriodLimit: jsonSerialization['gracePeriodLimit'] as int,
+      isInGracePeriod: jsonSerialization['isInGracePeriod'] as bool?,
+      gracePeriodUsed: jsonSerialization['gracePeriodUsed'] as int?,
+      gracePeriodLimit: jsonSerialization['gracePeriodLimit'] as int?,
       subscriptionTier: jsonSerialization['subscriptionTier'] == null
           ? null
           : _i3.SubscriptionTier.fromJson(
               (jsonSerialization['subscriptionTier'] as String),
             ),
-      softLimitWarned: jsonSerialization['softLimitWarned'] as bool,
-      hardLimitReached: jsonSerialization['hardLimitReached'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      softLimitWarned: jsonSerialization['softLimitWarned'] as bool?,
+      hardLimitReached: jsonSerialization['hardLimitReached'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

@@ -70,7 +70,9 @@ abstract class Notification implements _i1.SerializableModel {
 
   factory Notification.fromJson(Map<String, dynamic> jsonSerialization) {
     return Notification(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
       user: jsonSerialization['user'] == null
           ? null
@@ -85,20 +87,20 @@ abstract class Notification implements _i1.SerializableModel {
             ),
       actionUrl: jsonSerialization['actionUrl'] as String?,
       actionData: jsonSerialization['actionData'] as String?,
-      isSent: jsonSerialization['isSent'] as bool,
-      isDelivered: jsonSerialization['isDelivered'] as bool,
-      isRead: jsonSerialization['isRead'] as bool,
-      isFailed: jsonSerialization['isFailed'] as bool,
+      isSent: jsonSerialization['isSent'] as bool?,
+      isDelivered: jsonSerialization['isDelivered'] as bool?,
+      isRead: jsonSerialization['isRead'] as bool?,
+      isFailed: jsonSerialization['isFailed'] as bool?,
       errorMessage: jsonSerialization['errorMessage'] as String?,
-      priority: jsonSerialization['priority'] as int,
+      priority: jsonSerialization['priority'] as int?,
       scheduledFor: jsonSerialization['scheduledFor'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
               jsonSerialization['scheduledFor'],
             ),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       sentAt: jsonSerialization['sentAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['sentAt']),

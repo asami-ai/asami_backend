@@ -64,7 +64,9 @@ abstract class UsageRecord implements _i1.SerializableModel {
 
   factory UsageRecord.fromJson(Map<String, dynamic> jsonSerialization) {
     return UsageRecord(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       vendorId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['vendorId'],
       ),
@@ -75,10 +77,10 @@ abstract class UsageRecord implements _i1.SerializableModel {
             ),
       subscriptionId: jsonSerialization['subscriptionId'] as String?,
       usageType: jsonSerialization['usageType'] as String,
-      quantity: jsonSerialization['quantity'] as int,
+      quantity: jsonSerialization['quantity'] as int?,
       unitPrice: (jsonSerialization['unitPrice'] as num).toDouble(),
       totalAmount: (jsonSerialization['totalAmount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       resourceId: jsonSerialization['resourceId'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
       billingPeriodStart: _i1.DateTimeJsonExtension.fromJson(
@@ -95,13 +97,13 @@ abstract class UsageRecord implements _i1.SerializableModel {
           : _i4.Protocol().deserialize<_i3.SubscriptionInvoice>(
               jsonSerialization['invoice'],
             ),
-      isBilled: jsonSerialization['isBilled'] as bool,
+      isBilled: jsonSerialization['isBilled'] as bool?,
       billedAt: jsonSerialization['billedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['billedAt']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
     );
   }
 

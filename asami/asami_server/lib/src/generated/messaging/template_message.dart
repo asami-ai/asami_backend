@@ -64,10 +64,12 @@ abstract class TemplateMessage
 
   factory TemplateMessage.fromJson(Map<String, dynamic> jsonSerialization) {
     return TemplateMessage(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       name: jsonSerialization['name'] as String,
       category: jsonSerialization['category'] as String,
-      language: jsonSerialization['language'] as String,
+      language: jsonSerialization['language'] as String?,
       header: jsonSerialization['header'] as String?,
       body: jsonSerialization['body'] as String,
       footer: jsonSerialization['footer'] as String?,
@@ -81,18 +83,18 @@ abstract class TemplateMessage
         (jsonSerialization['platform'] as String),
       ),
       platformTemplateId: jsonSerialization['platformTemplateId'] as String?,
-      isApproved: jsonSerialization['isApproved'] as bool,
-      isActive: jsonSerialization['isActive'] as bool,
-      usageCount: jsonSerialization['usageCount'] as int,
+      isApproved: jsonSerialization['isApproved'] as bool?,
+      isActive: jsonSerialization['isActive'] as bool?,
+      usageCount: jsonSerialization['usageCount'] as int?,
       lastUsedAt: jsonSerialization['lastUsedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['lastUsedAt']),
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

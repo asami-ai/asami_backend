@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -46,22 +45,24 @@ abstract class Wishlist
 
   factory Wishlist.fromJson(Map<String, dynamic> jsonSerialization) {
     return Wishlist(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       customerId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['customerId'],
       ),
       customer: jsonSerialization['customer'] == null
           ? null
           : _i3.Protocol().deserialize<_i2.User>(jsonSerialization['customer']),
-      name: jsonSerialization['name'] as String,
+      name: jsonSerialization['name'] as String?,
       description: jsonSerialization['description'] as String?,
-      isPublic: jsonSerialization['isPublic'] as bool,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      isPublic: jsonSerialization['isPublic'] as bool?,
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 

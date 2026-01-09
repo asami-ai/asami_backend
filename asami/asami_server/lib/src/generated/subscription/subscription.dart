@@ -8,7 +8,6 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-
 // ignore_for_file: unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
@@ -79,7 +78,9 @@ abstract class Subscription
 
   factory Subscription.fromJson(Map<String, dynamic> jsonSerialization) {
     return Subscription(
-      id: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
+      id: jsonSerialization['id'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       vendorId: _i1.UuidValueJsonExtension.fromJson(
         jsonSerialization['vendorId'],
       ),
@@ -91,10 +92,10 @@ abstract class Subscription
       tier: _i3.SubscriptionTier.fromJson(
         (jsonSerialization['tier'] as String),
       ),
-      status: jsonSerialization['status'] as String,
-      billingCycle: jsonSerialization['billingCycle'] as String,
+      status: jsonSerialization['status'] as String?,
+      billingCycle: jsonSerialization['billingCycle'] as String?,
       amount: (jsonSerialization['amount'] as num).toDouble(),
-      currency: jsonSerialization['currency'] as String,
+      currency: jsonSerialization['currency'] as String?,
       currentPeriodStart: _i1.DateTimeJsonExtension.fromJson(
         jsonSerialization['currentPeriodStart'],
       ),
@@ -105,9 +106,9 @@ abstract class Subscription
       aiDescriptionsLimit: jsonSerialization['aiDescriptionsLimit'] as int,
       platformTransactionFee:
           (jsonSerialization['platformTransactionFee'] as num).toDouble(),
-      autoRenew: jsonSerialization['autoRenew'] as bool,
-      cancelAtPeriodEnd: jsonSerialization['cancelAtPeriodEnd'] as bool,
-      isTrialing: jsonSerialization['isTrialing'] as bool,
+      autoRenew: jsonSerialization['autoRenew'] as bool?,
+      cancelAtPeriodEnd: jsonSerialization['cancelAtPeriodEnd'] as bool?,
+      isTrialing: jsonSerialization['isTrialing'] as bool?,
       trialStart: jsonSerialization['trialStart'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['trialStart']),
@@ -120,12 +121,12 @@ abstract class Subscription
               jsonSerialization['cancelledAt'],
             ),
       cancellationReason: jsonSerialization['cancellationReason'] as String?,
-      createdAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['createdAt'],
-      ),
-      updatedAt: _i1.DateTimeJsonExtension.fromJson(
-        jsonSerialization['updatedAt'],
-      ),
+      createdAt: jsonSerialization['createdAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
+      updatedAt: jsonSerialization['updatedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
     );
   }
 
