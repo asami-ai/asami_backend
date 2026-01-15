@@ -1,4 +1,3 @@
-
 import 'package:serverpod/serverpod.dart';
 import '../generated/protocol.dart';
 
@@ -34,7 +33,7 @@ class UserEndpoint extends Endpoint {
       if (country != null) user.country = country;
       if (language != null) user.language = language;
       if (timezone != null) user.timezone = timezone;
-      
+
       user.updatedAt = DateTime.now();
 
       return await User.db.updateRow(session, user);
@@ -42,6 +41,14 @@ class UserEndpoint extends Endpoint {
       session.log('Update profile error: $e');
       return null;
     }
+  }
+
+  // Get User profile
+  Future<User?> getProfile(
+    Session session,
+    UuidValue userId,
+  ) async {
+    return await User.db.findById(session, userId);
   }
 
   /// Get customer profile
@@ -103,10 +110,12 @@ class UserEndpoint extends Endpoint {
     if (profile == null) return null;
 
     if (businessName != null) profile.businessName = businessName;
-    if (businessDescription != null) profile.businessDescription = businessDescription;
+    if (businessDescription != null)
+      profile.businessDescription = businessDescription;
     if (businessCategory != null) profile.businessCategory = businessCategory;
     if (businessLogoUrl != null) profile.businessLogoUrl = businessLogoUrl;
-    if (businessBannerUrl != null) profile.businessBannerUrl = businessBannerUrl;
+    if (businessBannerUrl != null)
+      profile.businessBannerUrl = businessBannerUrl;
     if (supportEmail != null) profile.supportEmail = supportEmail;
     if (supportPhone != null) profile.supportPhone = supportPhone;
 

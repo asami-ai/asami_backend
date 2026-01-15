@@ -1,0 +1,65 @@
+class: OrderEscrow
+table: order_escrows
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Order Reference
+  orderId: UuidValue
+  order: Order?, relation(field=orderId)
+  vendorId: UuidValue
+  customerId: UuidValue
+  
+  # Escrow Amount
+  totalAmount: double                         # Full order amount
+  vendorEarnings: double                      # Vendor's share (after platform fee)
+  platformFee: double                         # Platform's commission
+  paystackFee: double                         # Paystack's fee
+  
+  # Status
+  status: EscrowStatus
+  
+  # Delivery Tracking
+  expectedDeliveryDate: DateTime?
+  deliveryDeadline: DateTime                  # 5 days from order confirmation
+  markedDeliveredAt: DateTime?                # When vendor marked as delivered
+  customerAcknowledgedAt: DateTime?           # When customer confirmed delivery
+  
+  # Return Window
+  returnWindowStart: DateTime?                # When return window opens (at delivery)
+  returnWindowEnd: DateTime?                  # 2 days after delivery
+  isReturnWindowActive: bool, default=false
+  isReturnWindowExpired: bool, default=false
+  
+  # Release Conditions
+  canRelease: bool, default=false
+  releaseScheduledAt: DateTime?               # Auto-release datetime
+  releasedAt: DateTime?
+  releaseReason: String?                      # delivery_confirmed, auto_release, manual
+  
+  # Return/Refund Info
+  hasActiveReturn: bool, default=false
+  returnRequestedAt: DateTime?
+  refundProcessedAt: DateTime?
+  
+  # Flags
+  isAutoReleased: bool, default=false         # Released automatically
+  isManuallyReleased: bool, default=false     # Released by admin
+  isRefunded: bool, default=false
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  escrow_order_idx:
+    fields: orderId
+  escrow_vendor_idx:
+    fields: vendorId
+  escrow_status_idx:
+    fields: status
+  release_schedule_idx:
+    fields: releaseScheduledAt, canRelease
+  return_window_idx:
+    fields: isReturnWindowActive, returnWindowEnd
+  delivery_deadline_idx:
+    fields: deliveryDeadline

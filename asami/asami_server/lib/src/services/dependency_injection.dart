@@ -19,6 +19,7 @@ import 'ai_services/core/command_processor.dart';
 import 'ai_services/core/intent_analyzer.dart';
 import 'ai_services/core/response_formater.dart';
 import 'ai_services/core/ai_cache_manager.dart';
+import 'ai_services/tools/payment_tools.dart';
 import 'ai_services/tools/tool_registry.dart';
 import 'ai_services/tools/customer_tools.dart';
 import 'ai_services/tools/vendor_tools.dart';
@@ -33,6 +34,8 @@ import 'messaging/whatsapp/whatsapp_service.dart';
 import 'messaging/whatsapp/whatsapp_service_adapter.dart';
 import 'messaging/telegram/telegram_service.dart';
 import 'messaging/telegram/telegram_service_adapter.dart';
+import 'payment/paystack_service.dart';
+import 'payment/paystack_webhook_handler.dart';
 
 final getIt = GetIt.instance;
 
@@ -86,6 +89,8 @@ Future<void> setupDependencyInjection({
   );
 
   await _setupProductCreationHandler();
+
+  await _setupPaystackService();
 
   Log.info('\n✅ Dependency injection setup complete!\n');
 }
@@ -177,17 +182,23 @@ Future<void> _setupToolRegistry() async {
   // Register customer and vendor tools
   CustomerTools.registerAll(toolRegistry);
   VendorTools.registerAll(toolRegistry);
+  PaymentTools.registerAll(toolRegistry);
 
   final customerToolCount = toolRegistry.getToolsForRole('customer').length;
   final vendorToolCount = toolRegistry.getToolsForRole('vendor').length;
+  // final paymentToolCount = toolRegistry.getToolsForRole('payment').length;
+
 
   Log.info('   ✅ Customer tools registered ($customerToolCount tools)');
   Log.info('   ✅ Vendor tools registered ($vendorToolCount tools)');
+  // Log.info('   ✅ Payment tools registered ($paymentToolCount tools)');
+
 
   // Register tools with AI provider
   final allTools = [
     ...toolRegistry.getToolsForRole('customer'),
     ...toolRegistry.getToolsForRole('vendor'),
+    ...toolRegistry.getToolsForRole('payment'),
   ];
   provider.registerTools(allTools);
   Log.info('   ✅ Tools registered with AI provider (${allTools.length} total)');
@@ -552,6 +563,22 @@ Future<void> initializeTierFeatures() async {
   } finally {
     await session.close();
   }
+}
+
+
+Future<void> _setupPaystackService() async {
+  final paystackService = PaystackService(
+    secretKey: Serverpod.instance.getPassword('paystackSecretKey') ?? '',
+    publicKey: Serverpod.instance.getPassword('paystackPublicKey') ?? '',
+  );
+  
+  getIt.registerSingleton<PaystackService>(paystackService);
+  Log.info('✅ Paystack service initialized');
+
+
+  // Initialize webhook handler
+  PaystackWebhookHandler.instance;
+  Log.info('   ✅ Webhook handler initialized');
 }
 
 // ==================== CLEANUP ====================

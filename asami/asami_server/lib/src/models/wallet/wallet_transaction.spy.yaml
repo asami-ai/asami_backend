@@ -1,0 +1,67 @@
+class: WalletTransaction
+table: wallet_transactions
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Wallet Reference
+  walletId: UuidValue
+  wallet: VendorWallet?, relation(field=walletId)
+  vendorId: UuidValue
+  
+  # Transaction Details
+  type: WalletTransactionType
+  amount: double
+  balanceBefore: double
+  balanceAfter: double
+  
+  # Reference (what caused this transaction)
+  referenceType: String                       # order, withdrawal, refund, fee, adjustment
+  referenceId: String?                        # Order ID, Withdrawal ID, etc.
+  orderId: UuidValue?
+  order: Order?, relation(field=orderId)
+  
+  # Description
+  description: String
+  notes: String?
+  
+  # Status
+  status: TransactionStatus, default=pending
+  
+  # Escrow Info (for earnings)
+  isInEscrow: bool, default=false
+  escrowReleasedAt: DateTime?
+  escrowReleaseScheduledAt: DateTime?         # When funds should be released
+  
+  # Paystack Transfer Info (for withdrawals)
+  transferCode: String?                       # Paystack transfer code
+  transferId: String?                         # Paystack transfer ID
+  transferStatus: String?
+  transferredAt: DateTime?
+  
+  # Failure Info
+  failureReason: String?
+  retryCount: int, default=0
+  
+  # Metadata
+  metadata: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  processedAt: DateTime?
+
+indexes:
+  wallet_idx:
+    fields: walletId
+  vendor_wallet_idx:
+    fields: vendorId
+  wallet_type_idx:
+    fields: type
+  wallet_status_idx:
+    fields: status
+  wallet_escrow_idx:
+    fields: isInEscrow, escrowReleaseScheduledAt
+  wallet_reference_idx:
+    fields: referenceType, referenceId
+  wallet_created_idx:
+    fields: createdAt

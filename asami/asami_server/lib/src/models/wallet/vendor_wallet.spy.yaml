@@ -1,0 +1,54 @@
+class: VendorWallet
+table: vendor_wallets
+fields:
+  id: UuidValue, defaultModel=random
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  
+  # Balance Breakdown
+  totalEarnings: double, default=0.0          # All-time earnings
+  availableBalance: double, default=0.0       # Ready for withdrawal
+  pendingBalance: double, default=0.0         # In escrow (awaiting delivery/return window)
+  processingBalance: double, default=0.0      # Being transferred
+  totalWithdrawn: double, default=0.0         # Lifetime withdrawals
+  
+  # Currency
+  currency: String, default='NGN'
+  
+  # Bank Account (for withdrawals)
+  bankName: String?
+  bankCode: String?
+  accountNumber: String?
+  accountName: String?
+  
+  # Paystack Transfer Recipient
+  recipientCode: String?                      # Paystack recipient code
+  recipientId: String?                        # Paystack recipient ID
+  isRecipientActive: bool, default=false
+  
+  # Withdrawal Settings
+  minimumWithdrawal: double, default=1000.0   # Minimum ₦1,000
+  autoWithdrawal: bool, default=false         # Auto-withdraw when available
+  autoWithdrawalThreshold: double?            # Auto-withdraw when balance reaches
+  
+  # Statistics
+  totalTransactions: int, default=0
+  successfulWithdrawals: int, default=0
+  failedWithdrawals: int, default=0
+  
+  # Flags
+  isActive: bool, default=true
+  isSuspended: bool, default=false
+  suspensionReason: String?
+  
+  # Timestamps
+  lastWithdrawalAt: DateTime?
+  lastEarningAt: DateTime?
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  wallet_vendor_idx:
+    fields: vendorId
+  wallet_active_idx:
+    fields: isActive, isSuspended

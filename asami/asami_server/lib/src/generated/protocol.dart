@@ -35,53 +35,66 @@ import 'messaging/template_message.dart' as _i22;
 import 'order/cart.dart' as _i23;
 import 'order/cart_item.dart' as _i24;
 import 'order/order.dart' as _i25;
-import 'order/order_item.dart' as _i26;
-import 'order/order_status.dart' as _i27;
-import 'order/payment_method.dart' as _i28;
-import 'order/payment_status.dart' as _i29;
-import 'order/payment_transaction.dart' as _i30;
-import 'order/refund.dart' as _i31;
-import 'product/category.dart' as _i32;
-import 'product/category_mapping.dart' as _i33;
-import 'product/product.dart' as _i34;
-import 'product/product_category.dart' as _i35;
-import 'product/product_condition.dart' as _i36;
-import 'product/product_review.dart' as _i37;
-import 'product/product_status.dart' as _i38;
-import 'product/product_variant.dart' as _i39;
-import 'product/wishlist.dart' as _i40;
-import 'product/wishlist_item.dart' as _i41;
-import 'subscription/alert_type.dart' as _i42;
-import 'subscription/billing_cycle_summary.dart' as _i43;
-import 'subscription/daily_usage_tracker.dart' as _i44;
-import 'subscription/limit_type.dart' as _i45;
-import 'subscription/subscription.dart' as _i46;
-import 'subscription/subscription_event.dart' as _i47;
-import 'subscription/subscription_invoice.dart' as _i48;
-import 'subscription/tier_featur.dart' as _i49;
-import 'subscription/tool_usage_limit.dart' as _i50;
-import 'subscription/usage_alert.dart' as _i51;
-import 'subscription/usage_class.dart' as _i52;
-import 'subscription/usage_record.dart' as _i53;
-import 'user/address.dart' as _i54;
-import 'user/auth_session.dart' as _i55;
-import 'user/customer_policy.dart' as _i56;
-import 'user/customer_profile.dart' as _i57;
-import 'user/subscription_tier.dart' as _i58;
-import 'user/user.dart' as _i59;
-import 'user/user_status.dart' as _i60;
-import 'user/user_type.dart' as _i61;
-import 'user/vendor_profile.dart' as _i62;
+import 'order/order_escrow.dart' as _i26;
+import 'order/order_item.dart' as _i27;
+import 'order/order_status.dart' as _i28;
+import 'order/payment_method.dart' as _i29;
+import 'order/payment_status.dart' as _i30;
+import 'order/payment_transaction.dart' as _i31;
+import 'order/refund.dart' as _i32;
+import 'order/wallet_enums/escrow_status.dart' as _i33;
+import 'order/wallet_enums/transaction_status.dart' as _i34;
+import 'order/wallet_enums/wallet_transaction_type.dart' as _i35;
+import 'order/wallet_enums/withdrawal_status.dart' as _i36;
+import 'product/category.dart' as _i37;
+import 'product/category_mapping.dart' as _i38;
+import 'product/product.dart' as _i39;
+import 'product/product_category.dart' as _i40;
+import 'product/product_condition.dart' as _i41;
+import 'product/product_review.dart' as _i42;
+import 'product/product_status.dart' as _i43;
+import 'product/product_variant.dart' as _i44;
+import 'product/wishlist.dart' as _i45;
+import 'product/wishlist_item.dart' as _i46;
+import 'subscription/alert_type.dart' as _i47;
+import 'subscription/billing_cycle_summary.dart' as _i48;
+import 'subscription/daily_usage_tracker.dart' as _i49;
+import 'subscription/limit_type.dart' as _i50;
+import 'subscription/subscription.dart' as _i51;
+import 'subscription/subscription_event.dart' as _i52;
+import 'subscription/subscription_invoice.dart' as _i53;
+import 'subscription/tier_featur.dart' as _i54;
+import 'subscription/tool_usage_limit.dart' as _i55;
+import 'subscription/usage_alert.dart' as _i56;
+import 'subscription/usage_class.dart' as _i57;
+import 'subscription/usage_record.dart' as _i58;
+import 'user/address.dart' as _i59;
+import 'user/auth_session.dart' as _i60;
+import 'user/customer_policy.dart' as _i61;
+import 'user/customer_profile.dart' as _i62;
+import 'user/subscription_tier.dart' as _i63;
+import 'user/user.dart' as _i64;
+import 'user/user_status.dart' as _i65;
+import 'user/user_type.dart' as _i66;
+import 'user/vendor_profile.dart' as _i67;
+import 'wallet/vendor_wallet.dart' as _i68;
+import 'wallet/wallet_transaction.dart' as _i69;
+import 'wallet/withdrawal_request.dart' as _i70;
+import 'webhook/webhook_event.dart' as _i71;
 import 'package:asami_server/src/generated/analytics/vendor_analytics.dart'
-    as _i63;
+    as _i72;
 import 'package:asami_server/src/generated/analytics/product_analytics.dart'
-    as _i64;
-import 'package:asami_server/src/generated/product/product.dart' as _i65;
-import 'package:asami_server/src/generated/order/order_item.dart' as _i66;
-import 'package:asami_server/src/generated/order/order.dart' as _i67;
+    as _i73;
+import 'package:asami_server/src/generated/product/product.dart' as _i74;
+import 'package:asami_server/src/generated/order/order_item.dart' as _i75;
+import 'package:asami_server/src/generated/order/order.dart' as _i76;
+import 'package:asami_server/src/generated/order/payment_transaction.dart'
+    as _i77;
 import 'package:asami_server/src/generated/subscription/usage_record.dart'
-    as _i68;
-import 'package:asami_server/src/generated/user/address.dart' as _i69;
+    as _i78;
+import 'package:asami_server/src/generated/user/address.dart' as _i79;
+import 'package:asami_server/src/generated/wallet/withdrawal_request.dart'
+    as _i80;
 export 'analytics/ai_conversation_usage.dart';
 export 'analytics/breach_severity.dart';
 export 'analytics/customer_usage_pattern.dart';
@@ -105,12 +118,17 @@ export 'messaging/template_message.dart';
 export 'order/cart.dart';
 export 'order/cart_item.dart';
 export 'order/order.dart';
+export 'order/order_escrow.dart';
 export 'order/order_item.dart';
 export 'order/order_status.dart';
 export 'order/payment_method.dart';
 export 'order/payment_status.dart';
 export 'order/payment_transaction.dart';
 export 'order/refund.dart';
+export 'order/wallet_enums/escrow_status.dart';
+export 'order/wallet_enums/transaction_status.dart';
+export 'order/wallet_enums/wallet_transaction_type.dart';
+export 'order/wallet_enums/withdrawal_status.dart';
 export 'product/category.dart';
 export 'product/category_mapping.dart';
 export 'product/product.dart';
@@ -142,6 +160,10 @@ export 'user/user.dart';
 export 'user/user_status.dart';
 export 'user/user_type.dart';
 export 'user/vendor_profile.dart';
+export 'wallet/vendor_wallet.dart';
+export 'wallet/wallet_transaction.dart';
+export 'wallet/withdrawal_request.dart';
+export 'webhook/webhook_event.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -3419,6 +3441,312 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'order_escrows',
+      dartName: 'OrderEscrow',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorEarnings',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platformFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paystackFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:EscrowStatus',
+        ),
+        _i2.ColumnDefinition(
+          name: 'expectedDeliveryDate',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'deliveryDeadline',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'markedDeliveredAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerAcknowledgedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'returnWindowStart',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'returnWindowEnd',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isReturnWindowActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isReturnWindowExpired',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'canRelease',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'releaseScheduledAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'releasedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'releaseReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'hasActiveReturn',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'returnRequestedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundProcessedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isAutoReleased',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isManuallyReleased',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isRefunded',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'order_escrows_fk_0',
+          columns: ['orderId'],
+          referenceTable: 'orders',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'order_escrows_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'escrow_order_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'orderId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'escrow_vendor_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'vendorId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'escrow_status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'release_schedule_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'releaseScheduledAt',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'canRelease',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'return_window_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isReturnWindowActive',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'returnWindowEnd',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'delivery_deadline_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'deliveryDeadline',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'order_items',
       dartName: 'OrderItem',
       schema: 'public',
@@ -4036,10 +4364,28 @@ class Protocol extends _i1.SerializationManagerServer {
           columnDefault: 'gen_random_uuid()',
         ),
         _i2.ColumnDefinition(
-          name: 'orderId',
+          name: 'reference',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transactionId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userId',
           columnType: _i2.ColumnType.uuid,
           isNullable: false,
           dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
         ),
         _i2.ColumnDefinition(
           name: 'amount',
@@ -4052,34 +4398,16 @@ class Protocol extends _i1.SerializationManagerServer {
           columnType: _i2.ColumnType.text,
           isNullable: false,
           dartType: 'String',
-          columnDefault: '\'USD\'::text',
+          columnDefault: '\'NGN\'::text',
         ),
         _i2.ColumnDefinition(
           name: 'paymentMethod',
           columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:PaymentMethod',
-        ),
-        _i2.ColumnDefinition(
-          name: 'paymentStatus',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'protocol:PaymentStatus',
-        ),
-        _i2.ColumnDefinition(
-          name: 'gatewayName',
-          columnType: _i2.ColumnType.text,
-          isNullable: false,
-          dartType: 'String',
-        ),
-        _i2.ColumnDefinition(
-          name: 'gatewayTransactionId',
-          columnType: _i2.ColumnType.text,
           isNullable: true,
-          dartType: 'String?',
+          dartType: 'protocol:PaymentMethod?',
         ),
         _i2.ColumnDefinition(
-          name: 'gatewayResponse',
+          name: 'channel',
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
@@ -4121,39 +4449,66 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'double?',
         ),
         _i2.ColumnDefinition(
-          name: 'platformFee',
-          columnType: _i2.ColumnType.doublePrecision,
+          name: 'gateway',
+          columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'double',
-          columnDefault: '0.0',
+          dartType: 'String',
+          columnDefault: '\'paystack\'::text',
         ),
         _i2.ColumnDefinition(
-          name: 'gatewayFee',
-          columnType: _i2.ColumnType.doublePrecision,
-          isNullable: false,
-          dartType: 'double',
-          columnDefault: '0.0',
+          name: 'gatewayReference',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
         ),
         _i2.ColumnDefinition(
-          name: 'isPending',
-          columnType: _i2.ColumnType.boolean,
-          isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'true',
+          name: 'authorizationCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
         ),
         _i2.ColumnDefinition(
-          name: 'isCompleted',
-          columnType: _i2.ColumnType.boolean,
+          name: 'status',
+          columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
+          dartType: 'protocol:PaymentStatus',
+          columnDefault: '\'pending\'::text',
         ),
         _i2.ColumnDefinition(
-          name: 'isFailed',
-          columnType: _i2.ColumnType.boolean,
+          name: 'paidAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerEmail',
+          columnType: _i2.ColumnType.text,
           isNullable: false,
-          dartType: 'bool',
-          columnDefault: 'false',
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerPhone',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerName',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'authorizationUrl',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'accessCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
         ),
         _i2.ColumnDefinition(
           name: 'metadata',
@@ -4162,7 +4517,120 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String?',
         ),
         _i2.ColumnDefinition(
+          name: 'platformType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:PlatformType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'conversationId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'expiresAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isExpired',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'webhookEvents',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastWebhookAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paystackFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'platformFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'netAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isRefunded',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'refundReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verifiedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verificationAttempts',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ipAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'userAgent',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
           name: 'failureReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'gatewayResponse',
           columnType: _i2.ColumnType.text,
           isNullable: true,
           dartType: 'String?',
@@ -4181,22 +4649,20 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'DateTime',
           columnDefault: 'CURRENT_TIMESTAMP',
         ),
-        _i2.ColumnDefinition(
-          name: 'completedAt',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
-        ),
-        _i2.ColumnDefinition(
-          name: 'failedAt',
-          columnType: _i2.ColumnType.timestampWithoutTimeZone,
-          isNullable: true,
-          dartType: 'DateTime?',
-        ),
       ],
       foreignKeys: [
         _i2.ForeignKeyDefinition(
           constraintName: 'payment_transactions_fk_0',
+          columns: ['userId'],
+          referenceTable: 'users',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'payment_transactions_fk_1',
           columns: ['orderId'],
           referenceTable: 'orders',
           referenceTableSchema: 'public',
@@ -4221,6 +4687,36 @@ class Protocol extends _i1.SerializationManagerServer {
           isPrimary: true,
         ),
         _i2.IndexDefinition(
+          indexName: 'reference_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'reference',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'user_status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'userId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
           indexName: 'the_order_idx',
           tableSpace: null,
           elements: [
@@ -4234,38 +4730,55 @@ class Protocol extends _i1.SerializationManagerServer {
           isPrimary: false,
         ),
         _i2.IndexDefinition(
-          indexName: 'gateway_transaction_idx',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'gatewayTransactionId',
-            ),
-          ],
-          type: 'btree',
-          isUnique: false,
-          isPrimary: false,
-        ),
-        _i2.IndexDefinition(
-          indexName: 'transaction_hash_idx',
-          tableSpace: null,
-          elements: [
-            _i2.IndexElementDefinition(
-              type: _i2.IndexElementDefinitionType.column,
-              definition: 'transactionHash',
-            ),
-          ],
-          type: 'btree',
-          isUnique: false,
-          isPrimary: false,
-        ),
-        _i2.IndexDefinition(
           indexName: 'payment_status_idx',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
-              definition: 'paymentStatus',
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'expired_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isExpired',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'expiresAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'createdat_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'paystack_ref_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'gatewayReference',
             ),
           ],
           type: 'btree',
@@ -9388,6 +9901,793 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'vendor_wallets',
+      dartName: 'VendorWallet',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalEarnings',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'availableBalance',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'pendingBalance',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processingBalance',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalWithdrawn',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currency',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'NGN\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'bankName',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'bankCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'accountNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'accountName',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'recipientCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'recipientId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isRecipientActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'minimumWithdrawal',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '1000.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'autoWithdrawal',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'autoWithdrawalThreshold',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'totalTransactions',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'successfulWithdrawals',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'failedWithdrawals',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isActive',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'true',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isSuspended',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'suspensionReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastWithdrawalAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastEarningAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'vendor_wallets_fk_0',
+          columns: ['vendorId'],
+          referenceTable: 'vendor_profiles',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'vendor_wallets_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_vendor_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'vendorId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_active_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isActive',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isSuspended',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'wallet_transactions',
+      dartName: 'WalletTransaction',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'walletId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'type',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:WalletTransactionType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'amount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'balanceBefore',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'balanceAfter',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'referenceType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'referenceId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'orderId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'description',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'notes',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:TransactionStatus',
+          columnDefault: '\'pending\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isInEscrow',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'escrowReleasedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'escrowReleaseScheduledAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferStatus',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferredAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'failureReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'retryCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'metadata',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'wallet_transactions_fk_0',
+          columns: ['walletId'],
+          referenceTable: 'vendor_wallets',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'wallet_transactions_fk_1',
+          columns: ['orderId'],
+          referenceTable: 'orders',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'wallet_transactions_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'walletId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'vendor_wallet_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'vendorId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'type',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_escrow_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'isInEscrow',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'escrowReleaseScheduledAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_reference_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'referenceType',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'referenceId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_created_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'webhook_events',
+      dartName: 'WebhookEvent',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'eventType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'eventId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'paymentTransactionId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: true,
+          dartType: 'UuidValue?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transactionReference',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'rawPayload',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processedPayload',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'received\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'retryCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'lastRetryAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'errorMessage',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'isVerified',
+          columnType: _i2.ColumnType.boolean,
+          isNullable: false,
+          dartType: 'bool',
+          columnDefault: 'false',
+        ),
+        _i2.ColumnDefinition(
+          name: 'verifiedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'source',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'paystack\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'ipAddress',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'webhook_events_fk_0',
+          columns: ['paymentTransactionId'],
+          referenceTable: 'payment_transactions',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'webhook_events_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_event_type_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'eventType',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_transaction_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'paymentTransactionId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_transaction_ref_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'transactionReference',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_created_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'webhook_event_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'eventId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'wishlist_items',
       dartName: 'WishlistItem',
       schema: 'public',
@@ -9620,6 +10920,311 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'withdrawal_requests',
+      dartName: 'WithdrawalRequest',
+      schema: 'public',
+      module: 'asami',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+          columnDefault: 'gen_random_uuid()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'walletId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'requestNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'amount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+        ),
+        _i2.ColumnDefinition(
+          name: 'currency',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+          columnDefault: '\'NGN\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'bankName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'bankCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'accountNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'accountName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:WithdrawalStatus',
+          columnDefault: '\'pending\'::text',
+        ),
+        _i2.ColumnDefinition(
+          name: 'approvedBy',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'approvedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'processedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'completedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'recipientCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferId',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferReference',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferStatus',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'transferFee',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: false,
+          dartType: 'double',
+          columnDefault: '0.0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'netAmount',
+          columnType: _i2.ColumnType.doublePrecision,
+          isNullable: true,
+          dartType: 'double?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'failureReason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'failureCode',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'retryCount',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '0',
+        ),
+        _i2.ColumnDefinition(
+          name: 'maxRetries',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '3',
+        ),
+        _i2.ColumnDefinition(
+          name: 'vendorNotes',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'adminNotes',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'updatedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+        _i2.ColumnDefinition(
+          name: 'cancelledAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+      ],
+      foreignKeys: [
+        _i2.ForeignKeyDefinition(
+          constraintName: 'withdrawal_requests_fk_0',
+          columns: ['vendorId'],
+          referenceTable: 'vendor_profiles',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+        _i2.ForeignKeyDefinition(
+          constraintName: 'withdrawal_requests_fk_1',
+          columns: ['walletId'],
+          referenceTable: 'vendor_wallets',
+          referenceTableSchema: 'public',
+          referenceColumns: ['id'],
+          onUpdate: _i2.ForeignKeyAction.noAction,
+          onDelete: _i2.ForeignKeyAction.noAction,
+          matchType: null,
+        ),
+      ],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'withdrawal_requests_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'vendor_withdrawal_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'vendorId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'wallet_withdrawal_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'walletId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'withdrawal_status_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'status',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'request_number_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'requestNumber',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'withdrawal_created_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'createdAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     ..._i2.Protocol.targetTableDefinitions,
   ];
 
@@ -9719,116 +11324,143 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i25.Order) {
       return _i25.Order.fromJson(data) as T;
     }
-    if (t == _i26.OrderItem) {
-      return _i26.OrderItem.fromJson(data) as T;
+    if (t == _i26.OrderEscrow) {
+      return _i26.OrderEscrow.fromJson(data) as T;
     }
-    if (t == _i27.OrderStatus) {
-      return _i27.OrderStatus.fromJson(data) as T;
+    if (t == _i27.OrderItem) {
+      return _i27.OrderItem.fromJson(data) as T;
     }
-    if (t == _i28.PaymentMethod) {
-      return _i28.PaymentMethod.fromJson(data) as T;
+    if (t == _i28.OrderStatus) {
+      return _i28.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i29.PaymentStatus) {
-      return _i29.PaymentStatus.fromJson(data) as T;
+    if (t == _i29.PaymentMethod) {
+      return _i29.PaymentMethod.fromJson(data) as T;
     }
-    if (t == _i30.PaymentTransaction) {
-      return _i30.PaymentTransaction.fromJson(data) as T;
+    if (t == _i30.PaymentStatus) {
+      return _i30.PaymentStatus.fromJson(data) as T;
     }
-    if (t == _i31.Refund) {
-      return _i31.Refund.fromJson(data) as T;
+    if (t == _i31.PaymentTransaction) {
+      return _i31.PaymentTransaction.fromJson(data) as T;
     }
-    if (t == _i32.Category) {
-      return _i32.Category.fromJson(data) as T;
+    if (t == _i32.Refund) {
+      return _i32.Refund.fromJson(data) as T;
     }
-    if (t == _i33.CategoryMapping) {
-      return _i33.CategoryMapping.fromJson(data) as T;
+    if (t == _i33.EscrowStatus) {
+      return _i33.EscrowStatus.fromJson(data) as T;
     }
-    if (t == _i34.Product) {
-      return _i34.Product.fromJson(data) as T;
+    if (t == _i34.TransactionStatus) {
+      return _i34.TransactionStatus.fromJson(data) as T;
     }
-    if (t == _i35.ProductCategory) {
-      return _i35.ProductCategory.fromJson(data) as T;
+    if (t == _i35.WalletTransactionType) {
+      return _i35.WalletTransactionType.fromJson(data) as T;
     }
-    if (t == _i36.ProductCondition) {
-      return _i36.ProductCondition.fromJson(data) as T;
+    if (t == _i36.WithdrawalStatus) {
+      return _i36.WithdrawalStatus.fromJson(data) as T;
     }
-    if (t == _i37.ProductReview) {
-      return _i37.ProductReview.fromJson(data) as T;
+    if (t == _i37.Category) {
+      return _i37.Category.fromJson(data) as T;
     }
-    if (t == _i38.ProductStatus) {
-      return _i38.ProductStatus.fromJson(data) as T;
+    if (t == _i38.CategoryMapping) {
+      return _i38.CategoryMapping.fromJson(data) as T;
     }
-    if (t == _i39.ProductVariant) {
-      return _i39.ProductVariant.fromJson(data) as T;
+    if (t == _i39.Product) {
+      return _i39.Product.fromJson(data) as T;
     }
-    if (t == _i40.Wishlist) {
-      return _i40.Wishlist.fromJson(data) as T;
+    if (t == _i40.ProductCategory) {
+      return _i40.ProductCategory.fromJson(data) as T;
     }
-    if (t == _i41.WishlistItem) {
-      return _i41.WishlistItem.fromJson(data) as T;
+    if (t == _i41.ProductCondition) {
+      return _i41.ProductCondition.fromJson(data) as T;
     }
-    if (t == _i42.AlertType) {
-      return _i42.AlertType.fromJson(data) as T;
+    if (t == _i42.ProductReview) {
+      return _i42.ProductReview.fromJson(data) as T;
     }
-    if (t == _i43.BillingCycleSummary) {
-      return _i43.BillingCycleSummary.fromJson(data) as T;
+    if (t == _i43.ProductStatus) {
+      return _i43.ProductStatus.fromJson(data) as T;
     }
-    if (t == _i44.DailyUsageTracker) {
-      return _i44.DailyUsageTracker.fromJson(data) as T;
+    if (t == _i44.ProductVariant) {
+      return _i44.ProductVariant.fromJson(data) as T;
     }
-    if (t == _i45.LimitType) {
-      return _i45.LimitType.fromJson(data) as T;
+    if (t == _i45.Wishlist) {
+      return _i45.Wishlist.fromJson(data) as T;
     }
-    if (t == _i46.Subscription) {
-      return _i46.Subscription.fromJson(data) as T;
+    if (t == _i46.WishlistItem) {
+      return _i46.WishlistItem.fromJson(data) as T;
     }
-    if (t == _i47.SubscriptionEvent) {
-      return _i47.SubscriptionEvent.fromJson(data) as T;
+    if (t == _i47.AlertType) {
+      return _i47.AlertType.fromJson(data) as T;
     }
-    if (t == _i48.SubscriptionInvoice) {
-      return _i48.SubscriptionInvoice.fromJson(data) as T;
+    if (t == _i48.BillingCycleSummary) {
+      return _i48.BillingCycleSummary.fromJson(data) as T;
     }
-    if (t == _i49.TierFeature) {
-      return _i49.TierFeature.fromJson(data) as T;
+    if (t == _i49.DailyUsageTracker) {
+      return _i49.DailyUsageTracker.fromJson(data) as T;
     }
-    if (t == _i50.ToolUsageLimit) {
-      return _i50.ToolUsageLimit.fromJson(data) as T;
+    if (t == _i50.LimitType) {
+      return _i50.LimitType.fromJson(data) as T;
     }
-    if (t == _i51.UsageAlert) {
-      return _i51.UsageAlert.fromJson(data) as T;
+    if (t == _i51.Subscription) {
+      return _i51.Subscription.fromJson(data) as T;
     }
-    if (t == _i52.UsageClass) {
-      return _i52.UsageClass.fromJson(data) as T;
+    if (t == _i52.SubscriptionEvent) {
+      return _i52.SubscriptionEvent.fromJson(data) as T;
     }
-    if (t == _i53.UsageRecord) {
-      return _i53.UsageRecord.fromJson(data) as T;
+    if (t == _i53.SubscriptionInvoice) {
+      return _i53.SubscriptionInvoice.fromJson(data) as T;
     }
-    if (t == _i54.Address) {
-      return _i54.Address.fromJson(data) as T;
+    if (t == _i54.TierFeature) {
+      return _i54.TierFeature.fromJson(data) as T;
     }
-    if (t == _i55.AuthSession) {
-      return _i55.AuthSession.fromJson(data) as T;
+    if (t == _i55.ToolUsageLimit) {
+      return _i55.ToolUsageLimit.fromJson(data) as T;
     }
-    if (t == _i56.CustomerAIPolicy) {
-      return _i56.CustomerAIPolicy.fromJson(data) as T;
+    if (t == _i56.UsageAlert) {
+      return _i56.UsageAlert.fromJson(data) as T;
     }
-    if (t == _i57.CustomerProfile) {
-      return _i57.CustomerProfile.fromJson(data) as T;
+    if (t == _i57.UsageClass) {
+      return _i57.UsageClass.fromJson(data) as T;
     }
-    if (t == _i58.SubscriptionTier) {
-      return _i58.SubscriptionTier.fromJson(data) as T;
+    if (t == _i58.UsageRecord) {
+      return _i58.UsageRecord.fromJson(data) as T;
     }
-    if (t == _i59.User) {
-      return _i59.User.fromJson(data) as T;
+    if (t == _i59.Address) {
+      return _i59.Address.fromJson(data) as T;
     }
-    if (t == _i60.UserStatus) {
-      return _i60.UserStatus.fromJson(data) as T;
+    if (t == _i60.AuthSession) {
+      return _i60.AuthSession.fromJson(data) as T;
     }
-    if (t == _i61.UserType) {
-      return _i61.UserType.fromJson(data) as T;
+    if (t == _i61.CustomerAIPolicy) {
+      return _i61.CustomerAIPolicy.fromJson(data) as T;
     }
-    if (t == _i62.VendorProfile) {
-      return _i62.VendorProfile.fromJson(data) as T;
+    if (t == _i62.CustomerProfile) {
+      return _i62.CustomerProfile.fromJson(data) as T;
+    }
+    if (t == _i63.SubscriptionTier) {
+      return _i63.SubscriptionTier.fromJson(data) as T;
+    }
+    if (t == _i64.User) {
+      return _i64.User.fromJson(data) as T;
+    }
+    if (t == _i65.UserStatus) {
+      return _i65.UserStatus.fromJson(data) as T;
+    }
+    if (t == _i66.UserType) {
+      return _i66.UserType.fromJson(data) as T;
+    }
+    if (t == _i67.VendorProfile) {
+      return _i67.VendorProfile.fromJson(data) as T;
+    }
+    if (t == _i68.VendorWallet) {
+      return _i68.VendorWallet.fromJson(data) as T;
+    }
+    if (t == _i69.WalletTransaction) {
+      return _i69.WalletTransaction.fromJson(data) as T;
+    }
+    if (t == _i70.WithdrawalRequest) {
+      return _i70.WithdrawalRequest.fromJson(data) as T;
+    }
+    if (t == _i71.WebhookEvent) {
+      return _i71.WebhookEvent.fromJson(data) as T;
     }
     if (t == _i1.getType<_i3.AIConversationUsage?>()) {
       return (data != null ? _i3.AIConversationUsage.fromJson(data) : null)
@@ -9902,119 +11534,147 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i25.Order?>()) {
       return (data != null ? _i25.Order.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.OrderItem?>()) {
-      return (data != null ? _i26.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.OrderEscrow?>()) {
+      return (data != null ? _i26.OrderEscrow.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i27.OrderStatus?>()) {
-      return (data != null ? _i27.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i27.OrderItem?>()) {
+      return (data != null ? _i27.OrderItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i28.PaymentMethod?>()) {
-      return (data != null ? _i28.PaymentMethod.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i28.OrderStatus?>()) {
+      return (data != null ? _i28.OrderStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.PaymentStatus?>()) {
-      return (data != null ? _i29.PaymentStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i29.PaymentMethod?>()) {
+      return (data != null ? _i29.PaymentMethod.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.PaymentTransaction?>()) {
-      return (data != null ? _i30.PaymentTransaction.fromJson(data) : null)
+    if (t == _i1.getType<_i30.PaymentStatus?>()) {
+      return (data != null ? _i30.PaymentStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i31.PaymentTransaction?>()) {
+      return (data != null ? _i31.PaymentTransaction.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i31.Refund?>()) {
-      return (data != null ? _i31.Refund.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i32.Refund?>()) {
+      return (data != null ? _i32.Refund.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i32.Category?>()) {
-      return (data != null ? _i32.Category.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.EscrowStatus?>()) {
+      return (data != null ? _i33.EscrowStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.CategoryMapping?>()) {
-      return (data != null ? _i33.CategoryMapping.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i34.TransactionStatus?>()) {
+      return (data != null ? _i34.TransactionStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i34.Product?>()) {
-      return (data != null ? _i34.Product.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i35.ProductCategory?>()) {
-      return (data != null ? _i35.ProductCategory.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i36.ProductCondition?>()) {
-      return (data != null ? _i36.ProductCondition.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i37.ProductReview?>()) {
-      return (data != null ? _i37.ProductReview.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i38.ProductStatus?>()) {
-      return (data != null ? _i38.ProductStatus.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i39.ProductVariant?>()) {
-      return (data != null ? _i39.ProductVariant.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i40.Wishlist?>()) {
-      return (data != null ? _i40.Wishlist.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i41.WishlistItem?>()) {
-      return (data != null ? _i41.WishlistItem.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i42.AlertType?>()) {
-      return (data != null ? _i42.AlertType.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i43.BillingCycleSummary?>()) {
-      return (data != null ? _i43.BillingCycleSummary.fromJson(data) : null)
+    if (t == _i1.getType<_i35.WalletTransactionType?>()) {
+      return (data != null ? _i35.WalletTransactionType.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i44.DailyUsageTracker?>()) {
-      return (data != null ? _i44.DailyUsageTracker.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.WithdrawalStatus?>()) {
+      return (data != null ? _i36.WithdrawalStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i45.LimitType?>()) {
-      return (data != null ? _i45.LimitType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.Category?>()) {
+      return (data != null ? _i37.Category.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i46.Subscription?>()) {
-      return (data != null ? _i46.Subscription.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i38.CategoryMapping?>()) {
+      return (data != null ? _i38.CategoryMapping.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i47.SubscriptionEvent?>()) {
-      return (data != null ? _i47.SubscriptionEvent.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i39.Product?>()) {
+      return (data != null ? _i39.Product.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i48.SubscriptionInvoice?>()) {
-      return (data != null ? _i48.SubscriptionInvoice.fromJson(data) : null)
+    if (t == _i1.getType<_i40.ProductCategory?>()) {
+      return (data != null ? _i40.ProductCategory.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i41.ProductCondition?>()) {
+      return (data != null ? _i41.ProductCondition.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i42.ProductReview?>()) {
+      return (data != null ? _i42.ProductReview.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i43.ProductStatus?>()) {
+      return (data != null ? _i43.ProductStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i44.ProductVariant?>()) {
+      return (data != null ? _i44.ProductVariant.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i45.Wishlist?>()) {
+      return (data != null ? _i45.Wishlist.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i46.WishlistItem?>()) {
+      return (data != null ? _i46.WishlistItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i47.AlertType?>()) {
+      return (data != null ? _i47.AlertType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i48.BillingCycleSummary?>()) {
+      return (data != null ? _i48.BillingCycleSummary.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i49.TierFeature?>()) {
-      return (data != null ? _i49.TierFeature.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i49.DailyUsageTracker?>()) {
+      return (data != null ? _i49.DailyUsageTracker.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i50.ToolUsageLimit?>()) {
-      return (data != null ? _i50.ToolUsageLimit.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i50.LimitType?>()) {
+      return (data != null ? _i50.LimitType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i51.UsageAlert?>()) {
-      return (data != null ? _i51.UsageAlert.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i51.Subscription?>()) {
+      return (data != null ? _i51.Subscription.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i52.UsageClass?>()) {
-      return (data != null ? _i52.UsageClass.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i52.SubscriptionEvent?>()) {
+      return (data != null ? _i52.SubscriptionEvent.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i53.UsageRecord?>()) {
-      return (data != null ? _i53.UsageRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i53.SubscriptionInvoice?>()) {
+      return (data != null ? _i53.SubscriptionInvoice.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i54.Address?>()) {
-      return (data != null ? _i54.Address.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i54.TierFeature?>()) {
+      return (data != null ? _i54.TierFeature.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i55.AuthSession?>()) {
-      return (data != null ? _i55.AuthSession.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i55.ToolUsageLimit?>()) {
+      return (data != null ? _i55.ToolUsageLimit.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i56.CustomerAIPolicy?>()) {
-      return (data != null ? _i56.CustomerAIPolicy.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i56.UsageAlert?>()) {
+      return (data != null ? _i56.UsageAlert.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i57.CustomerProfile?>()) {
-      return (data != null ? _i57.CustomerProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i57.UsageClass?>()) {
+      return (data != null ? _i57.UsageClass.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i58.SubscriptionTier?>()) {
-      return (data != null ? _i58.SubscriptionTier.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i58.UsageRecord?>()) {
+      return (data != null ? _i58.UsageRecord.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.User?>()) {
-      return (data != null ? _i59.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i59.Address?>()) {
+      return (data != null ? _i59.Address.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i60.UserStatus?>()) {
-      return (data != null ? _i60.UserStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i60.AuthSession?>()) {
+      return (data != null ? _i60.AuthSession.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i61.UserType?>()) {
-      return (data != null ? _i61.UserType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i61.CustomerAIPolicy?>()) {
+      return (data != null ? _i61.CustomerAIPolicy.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i62.VendorProfile?>()) {
-      return (data != null ? _i62.VendorProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i62.CustomerProfile?>()) {
+      return (data != null ? _i62.CustomerProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i63.SubscriptionTier?>()) {
+      return (data != null ? _i63.SubscriptionTier.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i64.User?>()) {
+      return (data != null ? _i64.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i65.UserStatus?>()) {
+      return (data != null ? _i65.UserStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i66.UserType?>()) {
+      return (data != null ? _i66.UserType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i67.VendorProfile?>()) {
+      return (data != null ? _i67.VendorProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i68.VendorWallet?>()) {
+      return (data != null ? _i68.VendorWallet.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i69.WalletTransaction?>()) {
+      return (data != null ? _i69.WalletTransaction.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i70.WithdrawalRequest?>()) {
+      return (data != null ? _i70.WithdrawalRequest.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i71.WebhookEvent?>()) {
+      return (data != null ? _i71.WebhookEvent.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
@@ -10025,9 +11685,9 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i63.VendorAnalytics>) {
+    if (t == List<_i72.VendorAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i63.VendorAnalytics>(e))
+              .map((e) => deserialize<_i72.VendorAnalytics>(e))
               .toList()
           as T;
     }
@@ -10037,14 +11697,14 @@ class Protocol extends _i1.SerializationManagerServer {
           )
           as T;
     }
-    if (t == List<_i64.ProductAnalytics>) {
+    if (t == List<_i73.ProductAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i64.ProductAnalytics>(e))
+              .map((e) => deserialize<_i73.ProductAnalytics>(e))
               .toList()
           as T;
     }
-    if (t == List<_i65.Product>) {
-      return (data as List).map((e) => deserialize<_i65.Product>(e)).toList()
+    if (t == List<_i74.Product>) {
+      return (data as List).map((e) => deserialize<_i74.Product>(e)).toList()
           as T;
     }
     if (t == Map<String, double>) {
@@ -10062,12 +11722,18 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i66.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i66.OrderItem>(e)).toList()
+    if (t == List<_i75.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i75.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<_i67.Order>) {
-      return (data as List).map((e) => deserialize<_i67.Order>(e)).toList()
+    if (t == List<_i76.Order>) {
+      return (data as List).map((e) => deserialize<_i76.Order>(e)).toList()
+          as T;
+    }
+    if (t == List<_i77.PaymentTransaction>) {
+      return (data as List)
+              .map((e) => deserialize<_i77.PaymentTransaction>(e))
+              .toList()
           as T;
     }
     if (t == List<String>) {
@@ -10079,14 +11745,20 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == List<_i68.UsageRecord>) {
+    if (t == List<_i78.UsageRecord>) {
       return (data as List)
-              .map((e) => deserialize<_i68.UsageRecord>(e))
+              .map((e) => deserialize<_i78.UsageRecord>(e))
               .toList()
           as T;
     }
-    if (t == List<_i69.Address>) {
-      return (data as List).map((e) => deserialize<_i69.Address>(e)).toList()
+    if (t == List<_i79.Address>) {
+      return (data as List).map((e) => deserialize<_i79.Address>(e)).toList()
+          as T;
+    }
+    if (t == List<_i80.WithdrawalRequest>) {
+      return (data as List)
+              .map((e) => deserialize<_i80.WithdrawalRequest>(e))
+              .toList()
           as T;
     }
     try {
@@ -10120,43 +11792,52 @@ class Protocol extends _i1.SerializationManagerServer {
       _i23.Cart => 'Cart',
       _i24.CartItem => 'CartItem',
       _i25.Order => 'Order',
-      _i26.OrderItem => 'OrderItem',
-      _i27.OrderStatus => 'OrderStatus',
-      _i28.PaymentMethod => 'PaymentMethod',
-      _i29.PaymentStatus => 'PaymentStatus',
-      _i30.PaymentTransaction => 'PaymentTransaction',
-      _i31.Refund => 'Refund',
-      _i32.Category => 'Category',
-      _i33.CategoryMapping => 'CategoryMapping',
-      _i34.Product => 'Product',
-      _i35.ProductCategory => 'ProductCategory',
-      _i36.ProductCondition => 'ProductCondition',
-      _i37.ProductReview => 'ProductReview',
-      _i38.ProductStatus => 'ProductStatus',
-      _i39.ProductVariant => 'ProductVariant',
-      _i40.Wishlist => 'Wishlist',
-      _i41.WishlistItem => 'WishlistItem',
-      _i42.AlertType => 'AlertType',
-      _i43.BillingCycleSummary => 'BillingCycleSummary',
-      _i44.DailyUsageTracker => 'DailyUsageTracker',
-      _i45.LimitType => 'LimitType',
-      _i46.Subscription => 'Subscription',
-      _i47.SubscriptionEvent => 'SubscriptionEvent',
-      _i48.SubscriptionInvoice => 'SubscriptionInvoice',
-      _i49.TierFeature => 'TierFeature',
-      _i50.ToolUsageLimit => 'ToolUsageLimit',
-      _i51.UsageAlert => 'UsageAlert',
-      _i52.UsageClass => 'UsageClass',
-      _i53.UsageRecord => 'UsageRecord',
-      _i54.Address => 'Address',
-      _i55.AuthSession => 'AuthSession',
-      _i56.CustomerAIPolicy => 'CustomerAIPolicy',
-      _i57.CustomerProfile => 'CustomerProfile',
-      _i58.SubscriptionTier => 'SubscriptionTier',
-      _i59.User => 'User',
-      _i60.UserStatus => 'UserStatus',
-      _i61.UserType => 'UserType',
-      _i62.VendorProfile => 'VendorProfile',
+      _i26.OrderEscrow => 'OrderEscrow',
+      _i27.OrderItem => 'OrderItem',
+      _i28.OrderStatus => 'OrderStatus',
+      _i29.PaymentMethod => 'PaymentMethod',
+      _i30.PaymentStatus => 'PaymentStatus',
+      _i31.PaymentTransaction => 'PaymentTransaction',
+      _i32.Refund => 'Refund',
+      _i33.EscrowStatus => 'EscrowStatus',
+      _i34.TransactionStatus => 'TransactionStatus',
+      _i35.WalletTransactionType => 'WalletTransactionType',
+      _i36.WithdrawalStatus => 'WithdrawalStatus',
+      _i37.Category => 'Category',
+      _i38.CategoryMapping => 'CategoryMapping',
+      _i39.Product => 'Product',
+      _i40.ProductCategory => 'ProductCategory',
+      _i41.ProductCondition => 'ProductCondition',
+      _i42.ProductReview => 'ProductReview',
+      _i43.ProductStatus => 'ProductStatus',
+      _i44.ProductVariant => 'ProductVariant',
+      _i45.Wishlist => 'Wishlist',
+      _i46.WishlistItem => 'WishlistItem',
+      _i47.AlertType => 'AlertType',
+      _i48.BillingCycleSummary => 'BillingCycleSummary',
+      _i49.DailyUsageTracker => 'DailyUsageTracker',
+      _i50.LimitType => 'LimitType',
+      _i51.Subscription => 'Subscription',
+      _i52.SubscriptionEvent => 'SubscriptionEvent',
+      _i53.SubscriptionInvoice => 'SubscriptionInvoice',
+      _i54.TierFeature => 'TierFeature',
+      _i55.ToolUsageLimit => 'ToolUsageLimit',
+      _i56.UsageAlert => 'UsageAlert',
+      _i57.UsageClass => 'UsageClass',
+      _i58.UsageRecord => 'UsageRecord',
+      _i59.Address => 'Address',
+      _i60.AuthSession => 'AuthSession',
+      _i61.CustomerAIPolicy => 'CustomerAIPolicy',
+      _i62.CustomerProfile => 'CustomerProfile',
+      _i63.SubscriptionTier => 'SubscriptionTier',
+      _i64.User => 'User',
+      _i65.UserStatus => 'UserStatus',
+      _i66.UserType => 'UserType',
+      _i67.VendorProfile => 'VendorProfile',
+      _i68.VendorWallet => 'VendorWallet',
+      _i69.WalletTransaction => 'WalletTransaction',
+      _i70.WithdrawalRequest => 'WithdrawalRequest',
+      _i71.WebhookEvent => 'WebhookEvent',
       _ => null,
     };
   }
@@ -10217,80 +11898,98 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'CartItem';
       case _i25.Order():
         return 'Order';
-      case _i26.OrderItem():
+      case _i26.OrderEscrow():
+        return 'OrderEscrow';
+      case _i27.OrderItem():
         return 'OrderItem';
-      case _i27.OrderStatus():
+      case _i28.OrderStatus():
         return 'OrderStatus';
-      case _i28.PaymentMethod():
+      case _i29.PaymentMethod():
         return 'PaymentMethod';
-      case _i29.PaymentStatus():
+      case _i30.PaymentStatus():
         return 'PaymentStatus';
-      case _i30.PaymentTransaction():
+      case _i31.PaymentTransaction():
         return 'PaymentTransaction';
-      case _i31.Refund():
+      case _i32.Refund():
         return 'Refund';
-      case _i32.Category():
+      case _i33.EscrowStatus():
+        return 'EscrowStatus';
+      case _i34.TransactionStatus():
+        return 'TransactionStatus';
+      case _i35.WalletTransactionType():
+        return 'WalletTransactionType';
+      case _i36.WithdrawalStatus():
+        return 'WithdrawalStatus';
+      case _i37.Category():
         return 'Category';
-      case _i33.CategoryMapping():
+      case _i38.CategoryMapping():
         return 'CategoryMapping';
-      case _i34.Product():
+      case _i39.Product():
         return 'Product';
-      case _i35.ProductCategory():
+      case _i40.ProductCategory():
         return 'ProductCategory';
-      case _i36.ProductCondition():
+      case _i41.ProductCondition():
         return 'ProductCondition';
-      case _i37.ProductReview():
+      case _i42.ProductReview():
         return 'ProductReview';
-      case _i38.ProductStatus():
+      case _i43.ProductStatus():
         return 'ProductStatus';
-      case _i39.ProductVariant():
+      case _i44.ProductVariant():
         return 'ProductVariant';
-      case _i40.Wishlist():
+      case _i45.Wishlist():
         return 'Wishlist';
-      case _i41.WishlistItem():
+      case _i46.WishlistItem():
         return 'WishlistItem';
-      case _i42.AlertType():
+      case _i47.AlertType():
         return 'AlertType';
-      case _i43.BillingCycleSummary():
+      case _i48.BillingCycleSummary():
         return 'BillingCycleSummary';
-      case _i44.DailyUsageTracker():
+      case _i49.DailyUsageTracker():
         return 'DailyUsageTracker';
-      case _i45.LimitType():
+      case _i50.LimitType():
         return 'LimitType';
-      case _i46.Subscription():
+      case _i51.Subscription():
         return 'Subscription';
-      case _i47.SubscriptionEvent():
+      case _i52.SubscriptionEvent():
         return 'SubscriptionEvent';
-      case _i48.SubscriptionInvoice():
+      case _i53.SubscriptionInvoice():
         return 'SubscriptionInvoice';
-      case _i49.TierFeature():
+      case _i54.TierFeature():
         return 'TierFeature';
-      case _i50.ToolUsageLimit():
+      case _i55.ToolUsageLimit():
         return 'ToolUsageLimit';
-      case _i51.UsageAlert():
+      case _i56.UsageAlert():
         return 'UsageAlert';
-      case _i52.UsageClass():
+      case _i57.UsageClass():
         return 'UsageClass';
-      case _i53.UsageRecord():
+      case _i58.UsageRecord():
         return 'UsageRecord';
-      case _i54.Address():
+      case _i59.Address():
         return 'Address';
-      case _i55.AuthSession():
+      case _i60.AuthSession():
         return 'AuthSession';
-      case _i56.CustomerAIPolicy():
+      case _i61.CustomerAIPolicy():
         return 'CustomerAIPolicy';
-      case _i57.CustomerProfile():
+      case _i62.CustomerProfile():
         return 'CustomerProfile';
-      case _i58.SubscriptionTier():
+      case _i63.SubscriptionTier():
         return 'SubscriptionTier';
-      case _i59.User():
+      case _i64.User():
         return 'User';
-      case _i60.UserStatus():
+      case _i65.UserStatus():
         return 'UserStatus';
-      case _i61.UserType():
+      case _i66.UserType():
         return 'UserType';
-      case _i62.VendorProfile():
+      case _i67.VendorProfile():
         return 'VendorProfile';
+      case _i68.VendorWallet():
+        return 'VendorWallet';
+      case _i69.WalletTransaction():
+        return 'WalletTransaction';
+      case _i70.WithdrawalRequest():
+        return 'WithdrawalRequest';
+      case _i71.WebhookEvent():
+        return 'WebhookEvent';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -10374,116 +12073,143 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'Order') {
       return deserialize<_i25.Order>(data['data']);
     }
+    if (dataClassName == 'OrderEscrow') {
+      return deserialize<_i26.OrderEscrow>(data['data']);
+    }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i26.OrderItem>(data['data']);
+      return deserialize<_i27.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i27.OrderStatus>(data['data']);
+      return deserialize<_i28.OrderStatus>(data['data']);
     }
     if (dataClassName == 'PaymentMethod') {
-      return deserialize<_i28.PaymentMethod>(data['data']);
+      return deserialize<_i29.PaymentMethod>(data['data']);
     }
     if (dataClassName == 'PaymentStatus') {
-      return deserialize<_i29.PaymentStatus>(data['data']);
+      return deserialize<_i30.PaymentStatus>(data['data']);
     }
     if (dataClassName == 'PaymentTransaction') {
-      return deserialize<_i30.PaymentTransaction>(data['data']);
+      return deserialize<_i31.PaymentTransaction>(data['data']);
     }
     if (dataClassName == 'Refund') {
-      return deserialize<_i31.Refund>(data['data']);
+      return deserialize<_i32.Refund>(data['data']);
+    }
+    if (dataClassName == 'EscrowStatus') {
+      return deserialize<_i33.EscrowStatus>(data['data']);
+    }
+    if (dataClassName == 'TransactionStatus') {
+      return deserialize<_i34.TransactionStatus>(data['data']);
+    }
+    if (dataClassName == 'WalletTransactionType') {
+      return deserialize<_i35.WalletTransactionType>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalStatus') {
+      return deserialize<_i36.WithdrawalStatus>(data['data']);
     }
     if (dataClassName == 'Category') {
-      return deserialize<_i32.Category>(data['data']);
+      return deserialize<_i37.Category>(data['data']);
     }
     if (dataClassName == 'CategoryMapping') {
-      return deserialize<_i33.CategoryMapping>(data['data']);
+      return deserialize<_i38.CategoryMapping>(data['data']);
     }
     if (dataClassName == 'Product') {
-      return deserialize<_i34.Product>(data['data']);
+      return deserialize<_i39.Product>(data['data']);
     }
     if (dataClassName == 'ProductCategory') {
-      return deserialize<_i35.ProductCategory>(data['data']);
+      return deserialize<_i40.ProductCategory>(data['data']);
     }
     if (dataClassName == 'ProductCondition') {
-      return deserialize<_i36.ProductCondition>(data['data']);
+      return deserialize<_i41.ProductCondition>(data['data']);
     }
     if (dataClassName == 'ProductReview') {
-      return deserialize<_i37.ProductReview>(data['data']);
+      return deserialize<_i42.ProductReview>(data['data']);
     }
     if (dataClassName == 'ProductStatus') {
-      return deserialize<_i38.ProductStatus>(data['data']);
+      return deserialize<_i43.ProductStatus>(data['data']);
     }
     if (dataClassName == 'ProductVariant') {
-      return deserialize<_i39.ProductVariant>(data['data']);
+      return deserialize<_i44.ProductVariant>(data['data']);
     }
     if (dataClassName == 'Wishlist') {
-      return deserialize<_i40.Wishlist>(data['data']);
+      return deserialize<_i45.Wishlist>(data['data']);
     }
     if (dataClassName == 'WishlistItem') {
-      return deserialize<_i41.WishlistItem>(data['data']);
+      return deserialize<_i46.WishlistItem>(data['data']);
     }
     if (dataClassName == 'AlertType') {
-      return deserialize<_i42.AlertType>(data['data']);
+      return deserialize<_i47.AlertType>(data['data']);
     }
     if (dataClassName == 'BillingCycleSummary') {
-      return deserialize<_i43.BillingCycleSummary>(data['data']);
+      return deserialize<_i48.BillingCycleSummary>(data['data']);
     }
     if (dataClassName == 'DailyUsageTracker') {
-      return deserialize<_i44.DailyUsageTracker>(data['data']);
+      return deserialize<_i49.DailyUsageTracker>(data['data']);
     }
     if (dataClassName == 'LimitType') {
-      return deserialize<_i45.LimitType>(data['data']);
+      return deserialize<_i50.LimitType>(data['data']);
     }
     if (dataClassName == 'Subscription') {
-      return deserialize<_i46.Subscription>(data['data']);
+      return deserialize<_i51.Subscription>(data['data']);
     }
     if (dataClassName == 'SubscriptionEvent') {
-      return deserialize<_i47.SubscriptionEvent>(data['data']);
+      return deserialize<_i52.SubscriptionEvent>(data['data']);
     }
     if (dataClassName == 'SubscriptionInvoice') {
-      return deserialize<_i48.SubscriptionInvoice>(data['data']);
+      return deserialize<_i53.SubscriptionInvoice>(data['data']);
     }
     if (dataClassName == 'TierFeature') {
-      return deserialize<_i49.TierFeature>(data['data']);
+      return deserialize<_i54.TierFeature>(data['data']);
     }
     if (dataClassName == 'ToolUsageLimit') {
-      return deserialize<_i50.ToolUsageLimit>(data['data']);
+      return deserialize<_i55.ToolUsageLimit>(data['data']);
     }
     if (dataClassName == 'UsageAlert') {
-      return deserialize<_i51.UsageAlert>(data['data']);
+      return deserialize<_i56.UsageAlert>(data['data']);
     }
     if (dataClassName == 'UsageClass') {
-      return deserialize<_i52.UsageClass>(data['data']);
+      return deserialize<_i57.UsageClass>(data['data']);
     }
     if (dataClassName == 'UsageRecord') {
-      return deserialize<_i53.UsageRecord>(data['data']);
+      return deserialize<_i58.UsageRecord>(data['data']);
     }
     if (dataClassName == 'Address') {
-      return deserialize<_i54.Address>(data['data']);
+      return deserialize<_i59.Address>(data['data']);
     }
     if (dataClassName == 'AuthSession') {
-      return deserialize<_i55.AuthSession>(data['data']);
+      return deserialize<_i60.AuthSession>(data['data']);
     }
     if (dataClassName == 'CustomerAIPolicy') {
-      return deserialize<_i56.CustomerAIPolicy>(data['data']);
+      return deserialize<_i61.CustomerAIPolicy>(data['data']);
     }
     if (dataClassName == 'CustomerProfile') {
-      return deserialize<_i57.CustomerProfile>(data['data']);
+      return deserialize<_i62.CustomerProfile>(data['data']);
     }
     if (dataClassName == 'SubscriptionTier') {
-      return deserialize<_i58.SubscriptionTier>(data['data']);
+      return deserialize<_i63.SubscriptionTier>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i59.User>(data['data']);
+      return deserialize<_i64.User>(data['data']);
     }
     if (dataClassName == 'UserStatus') {
-      return deserialize<_i60.UserStatus>(data['data']);
+      return deserialize<_i65.UserStatus>(data['data']);
     }
     if (dataClassName == 'UserType') {
-      return deserialize<_i61.UserType>(data['data']);
+      return deserialize<_i66.UserType>(data['data']);
     }
     if (dataClassName == 'VendorProfile') {
-      return deserialize<_i62.VendorProfile>(data['data']);
+      return deserialize<_i67.VendorProfile>(data['data']);
+    }
+    if (dataClassName == 'VendorWallet') {
+      return deserialize<_i68.VendorWallet>(data['data']);
+    }
+    if (dataClassName == 'WalletTransaction') {
+      return deserialize<_i69.WalletTransaction>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalRequest') {
+      return deserialize<_i70.WithdrawalRequest>(data['data']);
+    }
+    if (dataClassName == 'WebhookEvent') {
+      return deserialize<_i71.WebhookEvent>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -10537,58 +12263,68 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i24.CartItem.t;
       case _i25.Order:
         return _i25.Order.t;
-      case _i26.OrderItem:
-        return _i26.OrderItem.t;
-      case _i30.PaymentTransaction:
-        return _i30.PaymentTransaction.t;
-      case _i31.Refund:
-        return _i31.Refund.t;
-      case _i32.Category:
-        return _i32.Category.t;
-      case _i33.CategoryMapping:
-        return _i33.CategoryMapping.t;
-      case _i34.Product:
-        return _i34.Product.t;
-      case _i35.ProductCategory:
-        return _i35.ProductCategory.t;
-      case _i37.ProductReview:
-        return _i37.ProductReview.t;
-      case _i39.ProductVariant:
-        return _i39.ProductVariant.t;
-      case _i40.Wishlist:
-        return _i40.Wishlist.t;
-      case _i41.WishlistItem:
-        return _i41.WishlistItem.t;
-      case _i43.BillingCycleSummary:
-        return _i43.BillingCycleSummary.t;
-      case _i44.DailyUsageTracker:
-        return _i44.DailyUsageTracker.t;
-      case _i46.Subscription:
-        return _i46.Subscription.t;
-      case _i47.SubscriptionEvent:
-        return _i47.SubscriptionEvent.t;
-      case _i48.SubscriptionInvoice:
-        return _i48.SubscriptionInvoice.t;
-      case _i49.TierFeature:
-        return _i49.TierFeature.t;
-      case _i50.ToolUsageLimit:
-        return _i50.ToolUsageLimit.t;
-      case _i51.UsageAlert:
-        return _i51.UsageAlert.t;
-      case _i53.UsageRecord:
-        return _i53.UsageRecord.t;
-      case _i54.Address:
-        return _i54.Address.t;
-      case _i55.AuthSession:
-        return _i55.AuthSession.t;
-      case _i56.CustomerAIPolicy:
-        return _i56.CustomerAIPolicy.t;
-      case _i57.CustomerProfile:
-        return _i57.CustomerProfile.t;
-      case _i59.User:
-        return _i59.User.t;
-      case _i62.VendorProfile:
-        return _i62.VendorProfile.t;
+      case _i26.OrderEscrow:
+        return _i26.OrderEscrow.t;
+      case _i27.OrderItem:
+        return _i27.OrderItem.t;
+      case _i31.PaymentTransaction:
+        return _i31.PaymentTransaction.t;
+      case _i32.Refund:
+        return _i32.Refund.t;
+      case _i37.Category:
+        return _i37.Category.t;
+      case _i38.CategoryMapping:
+        return _i38.CategoryMapping.t;
+      case _i39.Product:
+        return _i39.Product.t;
+      case _i40.ProductCategory:
+        return _i40.ProductCategory.t;
+      case _i42.ProductReview:
+        return _i42.ProductReview.t;
+      case _i44.ProductVariant:
+        return _i44.ProductVariant.t;
+      case _i45.Wishlist:
+        return _i45.Wishlist.t;
+      case _i46.WishlistItem:
+        return _i46.WishlistItem.t;
+      case _i48.BillingCycleSummary:
+        return _i48.BillingCycleSummary.t;
+      case _i49.DailyUsageTracker:
+        return _i49.DailyUsageTracker.t;
+      case _i51.Subscription:
+        return _i51.Subscription.t;
+      case _i52.SubscriptionEvent:
+        return _i52.SubscriptionEvent.t;
+      case _i53.SubscriptionInvoice:
+        return _i53.SubscriptionInvoice.t;
+      case _i54.TierFeature:
+        return _i54.TierFeature.t;
+      case _i55.ToolUsageLimit:
+        return _i55.ToolUsageLimit.t;
+      case _i56.UsageAlert:
+        return _i56.UsageAlert.t;
+      case _i58.UsageRecord:
+        return _i58.UsageRecord.t;
+      case _i59.Address:
+        return _i59.Address.t;
+      case _i60.AuthSession:
+        return _i60.AuthSession.t;
+      case _i61.CustomerAIPolicy:
+        return _i61.CustomerAIPolicy.t;
+      case _i62.CustomerProfile:
+        return _i62.CustomerProfile.t;
+      case _i64.User:
+        return _i64.User.t;
+      case _i67.VendorProfile:
+        return _i67.VendorProfile.t;
+      case _i68.VendorWallet:
+        return _i68.VendorWallet.t;
+      case _i69.WalletTransaction:
+        return _i69.WalletTransaction.t;
+      case _i70.WithdrawalRequest:
+        return _i70.WithdrawalRequest.t;
+      case _i71.WebhookEvent:
+        return _i71.WebhookEvent.t;
     }
     return null;
   }

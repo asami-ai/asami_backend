@@ -26,21 +26,26 @@ import 'package:asami_client/src/protocol/order/cart.dart' as _i11;
 import 'package:asami_client/src/protocol/order/cart_item.dart' as _i12;
 import 'package:asami_client/src/protocol/order/payment_method.dart' as _i13;
 import 'package:asami_client/src/protocol/order/order_status.dart' as _i14;
-import 'package:asami_client/src/protocol/product/product_status.dart' as _i15;
+import 'package:asami_client/src/protocol/order/payment_transaction.dart'
+    as _i15;
+import 'package:asami_client/src/protocol/order/payment_status.dart' as _i16;
+import 'package:asami_client/src/protocol/product/product_status.dart' as _i17;
 import 'package:asami_client/src/protocol/product/product_condition.dart'
-    as _i16;
+    as _i18;
 import 'package:asami_client/src/protocol/subscription/subscription.dart'
-    as _i17;
-import 'package:asami_client/src/protocol/user/subscription_tier.dart' as _i18;
-import 'package:asami_client/src/protocol/subscription/usage_record.dart'
     as _i19;
+import 'package:asami_client/src/protocol/user/subscription_tier.dart' as _i20;
+import 'package:asami_client/src/protocol/subscription/usage_record.dart'
+    as _i21;
 import 'package:asami_client/src/protocol/subscription/subscription_invoice.dart'
-    as _i20;
-import 'package:asami_client/src/protocol/user/user.dart' as _i21;
-import 'package:asami_client/src/protocol/user/customer_profile.dart' as _i22;
-import 'package:asami_client/src/protocol/user/vendor_profile.dart' as _i23;
-import 'package:asami_client/src/protocol/user/address.dart' as _i24;
-import 'protocol.dart' as _i25;
+    as _i22;
+import 'package:asami_client/src/protocol/user/user.dart' as _i23;
+import 'package:asami_client/src/protocol/user/customer_profile.dart' as _i24;
+import 'package:asami_client/src/protocol/user/vendor_profile.dart' as _i25;
+import 'package:asami_client/src/protocol/user/address.dart' as _i26;
+import 'package:asami_client/src/protocol/wallet/withdrawal_request.dart'
+    as _i27;
+import 'protocol.dart' as _i28;
 
 /// {@category Endpoint}
 class EndpointAnalytics extends _i1.EndpointRef {
@@ -530,6 +535,142 @@ class EndpointOrder extends _i1.EndpointRef {
       'refund': refund,
     },
   );
+
+  /// Mark order as delivered (vendor action)
+  _i2.Future<Map<String, dynamic>> markOrderAsDelivered({
+    required String orderNumber,
+    required String vendorId,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'order',
+    'markOrderAsDelivered',
+    {
+      'orderNumber': orderNumber,
+      'vendorId': vendorId,
+    },
+  );
+
+  /// Customer acknowledges delivery
+  _i2.Future<Map<String, dynamic>> acknowledgeDelivery({
+    required String orderNumber,
+    required String customerId,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'order',
+    'acknowledgeDelivery',
+    {
+      'orderNumber': orderNumber,
+      'customerId': customerId,
+    },
+  );
+
+  /// Request return
+  _i2.Future<Map<String, dynamic>> requestReturn({
+    required String orderNumber,
+    required String customerId,
+    required String reason,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'order',
+    'requestReturn',
+    {
+      'orderNumber': orderNumber,
+      'customerId': customerId,
+      'reason': reason,
+    },
+  );
+
+  /// Approve return (vendor action)
+  _i2.Future<Map<String, dynamic>> approveReturn({
+    required String orderNumber,
+    required String vendorId,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'order',
+    'approveReturn',
+    {
+      'orderNumber': orderNumber,
+      'vendorId': vendorId,
+    },
+  );
+}
+
+/// {@category Endpoint}
+class EndpointPayment extends _i1.EndpointRef {
+  EndpointPayment(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'payment';
+
+  /// Initialize payment for a product (Buy Now)
+  _i2.Future<Map<String, dynamic>> initializeProductPayment({
+    required String userId,
+    required String productId,
+    required String conversationId,
+    required _i7.PlatformType platform,
+    required int quantity,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'payment',
+    'initializeProductPayment',
+    {
+      'userId': userId,
+      'productId': productId,
+      'conversationId': conversationId,
+      'platform': platform,
+      'quantity': quantity,
+    },
+  );
+
+  /// Initialize payment for cart checkout
+  _i2.Future<Map<String, dynamic>> initializeCartPayment({
+    required String userId,
+    required String conversationId,
+    required _i7.PlatformType platform,
+    required String shippingAddressId,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'payment',
+    'initializeCartPayment',
+    {
+      'userId': userId,
+      'conversationId': conversationId,
+      'platform': platform,
+      'shippingAddressId': shippingAddressId,
+    },
+  );
+
+  /// Verify payment transaction
+  _i2.Future<Map<String, dynamic>> verifyPayment(String reference) =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'payment',
+        'verifyPayment',
+        {'reference': reference},
+      );
+
+  /// Get transaction by reference
+  _i2.Future<_i15.PaymentTransaction?> getTransaction(String reference) =>
+      caller.callServerEndpoint<_i15.PaymentTransaction?>(
+        'payment',
+        'getTransaction',
+        {'reference': reference},
+      );
+
+  /// Get user transactions
+  _i2.Future<List<_i15.PaymentTransaction>> getUserTransactions({
+    required String userId,
+    _i16.PaymentStatus? status,
+    required int limit,
+  }) => caller.callServerEndpoint<List<_i15.PaymentTransaction>>(
+    'payment',
+    'getUserTransactions',
+    {
+      'userId': userId,
+      'status': status,
+      'limit': limit,
+    },
+  );
+
+  /// Mark expired transactions
+  _i2.Future<int> markExpiredTransactions() => caller.callServerEndpoint<int>(
+    'payment',
+    'markExpiredTransactions',
+    {},
+  );
 }
 
 /// {@category Endpoint}
@@ -567,8 +708,8 @@ class EndpointProduct extends _i1.EndpointRef {
     String? sku,
     String? barcode,
     bool? isAiGenerated,
-    _i15.ProductStatus? status,
-    _i16.ProductCondition? condition,
+    _i17.ProductStatus? status,
+    _i18.ProductCondition? condition,
     String? facebookCategory,
     String? googleCategory,
     bool? shippingRequired,
@@ -638,7 +779,7 @@ class EndpointProduct extends _i1.EndpointRef {
     String? material,
     String? brand,
     bool? isActive,
-    _i15.ProductStatus? status,
+    _i17.ProductStatus? status,
     String? thumbnailUrl,
     List<String>? images,
   }) => caller.callServerEndpoint<_i5.Product?>(
@@ -692,7 +833,7 @@ class EndpointProduct extends _i1.EndpointRef {
   /// Get vendor products
   _i2.Future<List<_i5.Product>> getVendorProducts({
     required _i1.UuidValue vendorId,
-    _i15.ProductStatus? status,
+    _i17.ProductStatus? status,
     bool? isActive,
     required int limit,
     required int offset,
@@ -795,19 +936,19 @@ class EndpointSubscription extends _i1.EndpointRef {
   String get name => 'subscription';
 
   /// Get vendor subscription
-  _i2.Future<_i17.Subscription?> getVendorSubscription(
+  _i2.Future<_i19.Subscription?> getVendorSubscription(
     _i1.UuidValue vendorId,
-  ) => caller.callServerEndpoint<_i17.Subscription?>(
+  ) => caller.callServerEndpoint<_i19.Subscription?>(
     'subscription',
     'getVendorSubscription',
     {'vendorId': vendorId},
   );
 
   /// Upgrade/change subscription tier
-  _i2.Future<_i17.Subscription?> changeTier({
+  _i2.Future<_i19.Subscription?> changeTier({
     required _i1.UuidValue vendorId,
-    required _i18.SubscriptionTier newTier,
-  }) => caller.callServerEndpoint<_i17.Subscription?>(
+    required _i20.SubscriptionTier newTier,
+  }) => caller.callServerEndpoint<_i19.Subscription?>(
     'subscription',
     'changeTier',
     {
@@ -817,11 +958,11 @@ class EndpointSubscription extends _i1.EndpointRef {
   );
 
   /// Get usage records for billing period
-  _i2.Future<List<_i19.UsageRecord>> getUsageRecords({
+  _i2.Future<List<_i21.UsageRecord>> getUsageRecords({
     required _i1.UuidValue vendorId,
     required DateTime periodStart,
     required DateTime periodEnd,
-  }) => caller.callServerEndpoint<List<_i19.UsageRecord>>(
+  }) => caller.callServerEndpoint<List<_i21.UsageRecord>>(
     'subscription',
     'getUsageRecords',
     {
@@ -832,11 +973,11 @@ class EndpointSubscription extends _i1.EndpointRef {
   );
 
   /// Generate invoice for subscription period
-  _i2.Future<_i20.SubscriptionInvoice?> generateInvoice({
+  _i2.Future<_i22.SubscriptionInvoice?> generateInvoice({
     required _i1.UuidValue subscriptionId,
     required DateTime periodStart,
     required DateTime periodEnd,
-  }) => caller.callServerEndpoint<_i20.SubscriptionInvoice?>(
+  }) => caller.callServerEndpoint<_i22.SubscriptionInvoice?>(
     'subscription',
     'generateInvoice',
     {
@@ -895,7 +1036,7 @@ class EndpointUser extends _i1.EndpointRef {
   String get name => 'user';
 
   /// Update user profile
-  _i2.Future<_i21.User?> updateProfile({
+  _i2.Future<_i23.User?> updateProfile({
     required _i1.UuidValue userId,
     String? firstName,
     String? lastName,
@@ -906,7 +1047,7 @@ class EndpointUser extends _i1.EndpointRef {
     String? country,
     String? language,
     String? timezone,
-  }) => caller.callServerEndpoint<_i21.User?>(
+  }) => caller.callServerEndpoint<_i23.User?>(
     'user',
     'updateProfile',
     {
@@ -923,20 +1064,27 @@ class EndpointUser extends _i1.EndpointRef {
     },
   );
 
+  _i2.Future<_i23.User?> getProfile(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<_i23.User?>(
+        'user',
+        'getProfile',
+        {'userId': userId},
+      );
+
   /// Get customer profile
-  _i2.Future<_i22.CustomerProfile?> getCustomerProfile(_i1.UuidValue userId) =>
-      caller.callServerEndpoint<_i22.CustomerProfile?>(
+  _i2.Future<_i24.CustomerProfile?> getCustomerProfile(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<_i24.CustomerProfile?>(
         'user',
         'getCustomerProfile',
         {'userId': userId},
       );
 
   /// Update customer profile
-  _i2.Future<_i22.CustomerProfile?> updateCustomerProfile({
+  _i2.Future<_i24.CustomerProfile?> updateCustomerProfile({
     required _i1.UuidValue userId,
     String? preferredPaymentMethod,
     List<String>? favoriteVendors,
-  }) => caller.callServerEndpoint<_i22.CustomerProfile?>(
+  }) => caller.callServerEndpoint<_i24.CustomerProfile?>(
     'user',
     'updateCustomerProfile',
     {
@@ -947,15 +1095,15 @@ class EndpointUser extends _i1.EndpointRef {
   );
 
   /// Get vendor profile
-  _i2.Future<_i23.VendorProfile?> getVendorProfile(_i1.UuidValue userId) =>
-      caller.callServerEndpoint<_i23.VendorProfile?>(
+  _i2.Future<_i25.VendorProfile?> getVendorProfile(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<_i25.VendorProfile?>(
         'user',
         'getVendorProfile',
         {'userId': userId},
       );
 
   /// Update vendor profile
-  _i2.Future<_i23.VendorProfile?> updateVendorProfile({
+  _i2.Future<_i25.VendorProfile?> updateVendorProfile({
     required _i1.UuidValue userId,
     String? businessName,
     String? businessDescription,
@@ -964,7 +1112,7 @@ class EndpointUser extends _i1.EndpointRef {
     String? businessBannerUrl,
     String? supportEmail,
     String? supportPhone,
-  }) => caller.callServerEndpoint<_i23.VendorProfile?>(
+  }) => caller.callServerEndpoint<_i25.VendorProfile?>(
     'user',
     'updateVendorProfile',
     {
@@ -980,7 +1128,7 @@ class EndpointUser extends _i1.EndpointRef {
   );
 
   /// Add address
-  _i2.Future<_i24.Address?> addAddress({
+  _i2.Future<_i26.Address?> addAddress({
     required _i1.UuidValue userId,
     required String label,
     required String recipientName,
@@ -995,7 +1143,7 @@ class EndpointUser extends _i1.EndpointRef {
     required bool isDefault,
     double? latitude,
     double? longitude,
-  }) => caller.callServerEndpoint<_i24.Address?>(
+  }) => caller.callServerEndpoint<_i26.Address?>(
     'user',
     'addAddress',
     {
@@ -1017,8 +1165,8 @@ class EndpointUser extends _i1.EndpointRef {
   );
 
   /// Get user addresses
-  _i2.Future<List<_i24.Address>> getUserAddresses(_i1.UuidValue userId) =>
-      caller.callServerEndpoint<List<_i24.Address>>(
+  _i2.Future<List<_i26.Address>> getUserAddresses(_i1.UuidValue userId) =>
+      caller.callServerEndpoint<List<_i26.Address>>(
         'user',
         'getUserAddresses',
         {'userId': userId},
@@ -1074,6 +1222,98 @@ class EndpointWhatsAppWebhook extends _i1.EndpointRef {
   );
 }
 
+/// {@category Endpoint}
+class EndpointWithdrawal extends _i1.EndpointRef {
+  EndpointWithdrawal(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'withdrawal';
+
+  /// Get available banks
+  _i2.Future<Map<String, dynamic>> getBanks() =>
+      caller.callServerEndpoint<Map<String, dynamic>>(
+        'withdrawal',
+        'getBanks',
+        {},
+      );
+
+  /// Verify account details
+  _i2.Future<Map<String, dynamic>> verifyAccount({
+    required String accountNumber,
+    required String bankCode,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'withdrawal',
+    'verifyAccount',
+    {
+      'accountNumber': accountNumber,
+      'bankCode': bankCode,
+    },
+  );
+
+  /// Setup bank account for withdrawals
+  _i2.Future<Map<String, dynamic>> setupBankAccount({
+    required String vendorId,
+    required String bankCode,
+    required String accountNumber,
+    required String accountName,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'withdrawal',
+    'setupBankAccount',
+    {
+      'vendorId': vendorId,
+      'bankCode': bankCode,
+      'accountNumber': accountNumber,
+      'accountName': accountName,
+    },
+  );
+
+  /// Request withdrawal
+  _i2.Future<Map<String, dynamic>> requestWithdrawal({
+    required String vendorId,
+    required double amount,
+    String? notes,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'withdrawal',
+    'requestWithdrawal',
+    {
+      'vendorId': vendorId,
+      'amount': amount,
+      'notes': notes,
+    },
+  );
+
+  /// Get withdrawal history
+  _i2.Future<List<_i27.WithdrawalRequest>> getWithdrawalHistory({
+    required String vendorId,
+    required int limit,
+  }) => caller.callServerEndpoint<List<_i27.WithdrawalRequest>>(
+    'withdrawal',
+    'getWithdrawalHistory',
+    {
+      'vendorId': vendorId,
+      'limit': limit,
+    },
+  );
+
+  /// Get pending withdrawals (admin)
+  _i2.Future<List<_i27.WithdrawalRequest>> getPendingWithdrawals({
+    required int limit,
+  }) => caller.callServerEndpoint<List<_i27.WithdrawalRequest>>(
+    'withdrawal',
+    'getPendingWithdrawals',
+    {'limit': limit},
+  );
+
+  /// Process withdrawal (admin/automated)
+  _i2.Future<Map<String, dynamic>> processWithdrawal({
+    required String requestNumber,
+  }) => caller.callServerEndpoint<Map<String, dynamic>>(
+    'withdrawal',
+    'processWithdrawal',
+    {'requestNumber': requestNumber},
+  );
+}
+
 class Client extends _i1.ServerpodClientShared {
   Client(
     String host, {
@@ -1094,7 +1334,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i25.Protocol(),
+         _i28.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -1108,12 +1348,14 @@ class Client extends _i1.ServerpodClientShared {
     bot = EndpointBot(this);
     cart = EndpointCart(this);
     order = EndpointOrder(this);
+    payment = EndpointPayment(this);
     product = EndpointProduct(this);
     subscription = EndpointSubscription(this);
     telegramWebhook = EndpointTelegramWebhook(this);
     usage = EndpointUsage(this);
     user = EndpointUser(this);
     whatsAppWebhook = EndpointWhatsAppWebhook(this);
+    withdrawal = EndpointWithdrawal(this);
   }
 
   late final EndpointAnalytics analytics;
@@ -1125,6 +1367,8 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointCart cart;
 
   late final EndpointOrder order;
+
+  late final EndpointPayment payment;
 
   late final EndpointProduct product;
 
@@ -1138,6 +1382,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointWhatsAppWebhook whatsAppWebhook;
 
+  late final EndpointWithdrawal withdrawal;
+
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
     'analytics': analytics,
@@ -1145,12 +1391,14 @@ class Client extends _i1.ServerpodClientShared {
     'bot': bot,
     'cart': cart,
     'order': order,
+    'payment': payment,
     'product': product,
     'subscription': subscription,
     'telegramWebhook': telegramWebhook,
     'usage': usage,
     'user': user,
     'whatsAppWebhook': whatsAppWebhook,
+    'withdrawal': withdrawal,
   };
 
   @override

@@ -1,57 +1,140 @@
-// File: server/lib/src/utils/logger_helper.dart
+// File: server/lib/utils/logger/asami_logger.dart
 
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod/serverpod.dart' hide LogLevel;
+import 'package:talker/talker.dart';
 
-class PLoggerHelper {
-  // Store session for logging (will be set during request handling)
+/// Global Talker instance for application-wide logging
+final talker = Talker(
+  settings: TalkerSettings(
+    useConsoleLogs: true,
+    colors: {
+      TalkerKey.error: AnsiPen()..red(),
+      TalkerKey.warning: AnsiPen()..yellow(),
+      TalkerKey.info: AnsiPen()..blue(),
+      TalkerKey.debug: AnsiPen()..gray(level: 0.5),
+      TalkerKey.verbose: AnsiPen()..gray(level: 0.3),
+      TalkerKey.critical: AnsiPen()..magenta(),
+    },
+  ),
+  logger: TalkerLogger(
+    settings: TalkerLoggerSettings(
+      enableColors: true,
+      defaultTitle: 'ASAMI-LOG'
+      // lineLength: 120,
+    ),
+  ),
+);
+
+/// Enhanced logger with Talker integration
+class Log {
   static Session? _currentSession;
 
-  // Set the current session (call this at the start of each request)
+  /// Set current session for dual logging (Talker + Serverpod)
   static void setSession(Session session) {
     _currentSession = session;
   }
 
-  // Helper to log with session or fallback to print
-  static void _log(String message, {LogLevel level = LogLevel.info}) {
-    if (_currentSession != null) {
-      _currentSession!.log(message, level: level);
-    } else {
-      // Fallback to print if no session available (startup logs)
-      print(message);
-    }
+  /// Clear current session
+  static void clearSession() {
+    _currentSession = null;
   }
 
-  // 🐛 Debug - Detailed info for debugging
+  // ==================== PAYMENT SPECIFIC LOGS ====================
+
+  /// Log payment initialization
+  static void paymentInit({
+    required String reference,
+    required double amount,
+    required String userId,
+    String? productId,
+    String? cartId,
+    Session? session,
+  }) {
+    final msg = '''
+💳 PAYMENT INITIALIZED
+   Reference: $reference
+   Amount: ₦${amount.toStringAsFixed(2)}
+   User ID: $userId
+   ${productId != null ? 'Product ID: $productId' : ''}
+   ${cartId != null ? 'Cart ID: $cartId' : ''}
+''';
+    talker.info(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.info);
+  }
+
+  /// Log payment verification
+  static void paymentVerify({
+    required String reference,
+    required String status,
+    double? amount,
+    Session? session,
+  }) {
+    final msg = '''
+🔍 PAYMENT VERIFICATION
+   Reference: $reference
+   Status: $status
+   ${amount != null ? 'Amount: ₦${amount.toStringAsFixed(2)}' : ''}
+''';
+    talker.info(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.info);
+  }
+
+  /// Log payment success
+  static void paymentSuccess({
+    required String reference,
+    required double amount,
+    String? orderId,
+    Session? session,
+  }) {
+    final msg = '''
+✅ PAYMENT SUCCESSFUL
+   Reference: $reference
+   Amount: ₦${amount.toStringAsFixed(2)}
+   ${orderId != null ? 'Order ID: $orderId' : ''}
+''';
+    talker.info(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.info);
+  }
+
+  /// Log payment failure
+  static void paymentFailed({
+    required String reference,
+    required String reason,
+    Session? session,
+  }) {
+    final msg = '''
+❌ PAYMENT FAILED
+   Reference: $reference
+   Reason: $reason
+''';
+    talker.error(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.error);
+  }
+
+  // ==================== GENERAL LOGS ====================
+
+  /// Debug level
   static void debug(String message, {dynamic data, Session? session}) {
-    final msg = data != null ? '$message\nData: $data' : message;
-    if (session != null) {
-      session.log('🐛 $msg', level: LogLevel.debug);
-    } else {
-      _log('🐛 $msg', level: LogLevel.debug);
-    }
+    final msg = data != null ? '$message\n${_formatData(data)}' : message;
+    talker.debug('🐛 $msg');
+    _serverpodLog('🐛 $msg', session: session, level: LogLevel.debug);
   }
 
-  // ℹ️ Info - General informational messages
+  /// Info level
   static void info(String message, {dynamic data, Session? session}) {
-    final msg = data != null ? '$message\nData: $data' : message;
-    if (session != null) {
-      session.log('ℹ️ $msg', level: LogLevel.info);
-    } else {
-      _log('ℹ️ $msg', level: LogLevel.info);
-    }
+    final msg = data != null ? '$message\n${_formatData(data)}' : message;
+    talker.info('ℹ️ $msg');
+    _serverpodLog('ℹ️ $msg', session: session, level: LogLevel.info);
   }
 
-  // ⚠️ Warning - Something unexpected but not critical
+  /// Warning level
   static void warning(String message, {dynamic data, Session? session}) {
-    final msg = data != null ? '$message\nData: $data' : message;
-    if (session != null) {
-      session.log('⚠️ $msg', level: LogLevel.warning);
-    } else {
-      _log('⚠️ $msg', level: LogLevel.warning);
-    }
+    final msg = data != null ? '$message\n${_formatData(data)}' : message;
+    talker.warning('⚠️ $msg');
+    _serverpodLog('⚠️ $msg', session: session, level: LogLevel.warning);
   }
 
-  // ❌ Error - Error occurred, with optional error object and stacktrace
+  /// Error level
   static void error(
     String message, {
     dynamic error,
@@ -59,70 +142,137 @@ class PLoggerHelper {
     Session? session,
   }) {
     final errorMsg = error != null ? '$message: $error' : message;
-    if (session != null) {
-      session.log('❌ $errorMsg', level: LogLevel.error, stackTrace: stackTrace);
-    } else if (_currentSession != null) {
-      _currentSession!.log('❌ $errorMsg', level: LogLevel.error, stackTrace: stackTrace);
-    } else {
-      print('❌ $errorMsg');
-      if (stackTrace != null) print(stackTrace);
-    }
+    talker.error('❌ $errorMsg', error, stackTrace);
+    _serverpodLog('❌ $errorMsg',
+        session: session, level: LogLevel.error, stackTrace: stackTrace);
   }
 
-  // ✅ Success - Operation completed successfully
+  /// Success level
   static void success(String message, {dynamic data, Session? session}) {
-    final msg = data != null ? '✅ $message\nData: $data' : '✅ $message';
-    if (session != null) {
-      session.log(msg, level: LogLevel.info);
-    } else {
-      _log(msg, level: LogLevel.info);
-    }
+    final msg = data != null ? '$message\n${_formatData(data)}' : message;
+    talker.info('✅ $msg');
+    _serverpodLog('✅ $msg', session: session, level: LogLevel.info);
   }
 
-  // 📡 Webhook - Specific for webhook events
-  static void webhook(String service, String method, String path, {Session? session}) {
+  /// Critical level
+  static void critical(String message, {dynamic error, Session? session}) {
+    final msg = error != null ? '$message: $error' : message;
+    talker.critical('🔴 $msg');
+    _serverpodLog('🔴 $msg', session: session, level: LogLevel.error);
+  }
+
+  // ==================== SPECIFIC USE CASES ====================
+
+  /// Webhook logs
+  static void webhook(String service, String method, String path,
+      {Session? session}) {
     final msg = '📡 $service webhook - Method: $method, Path: $path';
-    if (session != null) {
-      session.log(msg, level: LogLevel.info);
-    } else {
-      _log(msg, level: LogLevel.info);
+    talker.info(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.info);
+  }
+
+  /// API request logs
+  static void apiRequest({
+    required String endpoint,
+    required String method,
+    Map<String, dynamic>? params,
+    Session? session,
+  }) {
+    final msg = '''
+📤 API REQUEST
+   Endpoint: $endpoint
+   Method: $method
+   ${params != null ? 'Params: ${_formatData(params)}' : ''}
+''';
+    talker.verbose(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.debug);
+  }
+
+  /// API response logs
+  static void apiResponse({
+    required String endpoint,
+    required int statusCode,
+    dynamic data,
+    Session? session,
+  }) {
+    final msg = '''
+📥 API RESPONSE
+   Endpoint: $endpoint
+   Status: $statusCode
+   ${data != null ? 'Data: ${_formatData(data)}' : ''}
+''';
+    talker.verbose(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.debug);
+  }
+
+  /// Database query logs
+  static void dbQuery(String query, {Map<String, dynamic>? params, Session? session}) {
+    final msg = '''
+🗄️ DATABASE QUERY
+   ${_truncate(query, maxLength: 200)}
+   ${params != null ? 'Params: ${_formatData(params)}' : ''}
+''';
+    talker.verbose(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.debug);
+  }
+
+  /// State change logs
+  static void stateChange({
+    required String entity,
+    required String from,
+    required String to,
+    Session? session,
+  }) {
+    final msg = '🔄 STATE CHANGE: $entity | $from → $to';
+    talker.info(msg);
+    _serverpodLog(msg, session: session, level: LogLevel.info);
+  }
+
+  // ==================== STARTUP LOGS ====================
+
+  static void startup(String message) {
+    talker.info('🚀 $message');
+    print('🚀 $message');
+  }
+
+  static void startupInfo(String message) {
+    talker.info('   $message');
+    print('   $message');
+  }
+
+  static void startupSuccess(String message) {
+    talker.info('✅ $message');
+    print('✅ $message');
+  }
+
+  static void startupWarning(String message) {
+    talker.warning('⚠️ $message');
+    print('⚠️ $message');
+  }
+
+  static void startupError(String message, {dynamic error}) {
+    final msg = error != null ? '$message\n   Error: $error' : message;
+    talker.error('❌ $msg');
+    print('❌ $msg');
+  }
+
+  // ==================== HELPERS ====================
+
+  /// Log to Serverpod if session available
+  static void _serverpodLog(
+    String message, {
+    Session? session,
+    LogLevel level = LogLevel.info,
+    StackTrace? stackTrace,
+  }) {
+    final s = session ?? _currentSession;
+    if (s != null) {
+      s.log(message, stackTrace: stackTrace);
     }
   }
 
-  // 📨 Request - Incoming request
-  static void request(String message, {dynamic payload, Session? session}) {
-    final msg = payload != null ? '📨 $message\n${_formatPayload(payload)}' : '📨 $message';
-    if (session != null) {
-      session.log(msg, level: LogLevel.info);
-    } else {
-      _log(msg, level: LogLevel.info);
-    }
-  }
-
-  // 📦 Payload - Data payload
-  static void payload(String message, dynamic data, {Session? session}) {
-    final msg = '📦 $message\n${_formatPayload(data)}';
-    if (session != null) {
-      session.log(msg, level: LogLevel.debug);
-    } else {
-      _log(msg, level: LogLevel.debug);
-    }
-  }
-
-  // 🔍 Verification - Webhook verification
-  static void verification(String service, {Map<String, dynamic>? params, Session? session}) {
-    final msg = params != null
-        ? '🔍 $service webhook verification\n${_formatPayload(params)}'
-        : '🔍 $service webhook verification';
-    if (session != null) {
-      session.log(msg, level: LogLevel.info);
-    } else {
-      _log(msg, level: LogLevel.info);
-    }
-  }
-
-  // Helper method to format payload data
-  static String _formatPayload(dynamic data) {
+  /// Format data for display
+  static String _formatData(dynamic data) {
     if (data is Map) {
       return data.entries
           .map((e) => '   ${e.key}: ${_truncate(e.value.toString())}')
@@ -134,34 +284,15 @@ class PLoggerHelper {
     return '   ${_truncate(data.toString())}';
   }
 
-  // Helper to truncate long strings
+  /// Truncate long strings
   static String _truncate(String text, {int maxLength = 100}) {
     if (text.length <= maxLength) return text;
     return '${text.substring(0, maxLength)}...';
   }
 
-  // Startup logs (use print since no session available yet)
-  static void startup(String message) {
-    print('🚀 $message');
-  }
+  /// Get Talker history
+  static List<TalkerData> getHistory() => talker.history;
 
-  static void startupInfo(String message) {
-    print('   $message');
-  }
-
-  static void startupSuccess(String message) {
-    print('✅ $message');
-  }
-
-  static void startupWarning(String message) {
-    print('⚠️ $message');
-  }
-
-  static void startupError(String message, {dynamic error}) {
-    print('❌ $message');
-    if (error != null) print('   Error: $error');
-  }
+  /// Clear Talker history
+  static void clearHistory() => talker.cleanHistory();
 }
-
-// Convenience aliases for shorter code
-typedef Log = PLoggerHelper;

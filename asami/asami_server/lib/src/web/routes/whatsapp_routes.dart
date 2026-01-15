@@ -18,7 +18,9 @@ class WhatsAppWebhookRoute extends Route {
         final token = queryParams['hub.verify_token'];
         final challenge = queryParams['hub.challenge'];
 
-        Log.verification('WhatsApp', 
+        Log.apiRequest(
+          endpoint: request.url.path,
+          method: request.method.value, 
           params: {
             'mode': mode ?? 'null',
             'token': token != null ? '${token.substring(0, 5)}***' : 'null',

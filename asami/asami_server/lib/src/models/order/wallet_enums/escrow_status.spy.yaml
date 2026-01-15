@@ -1,0 +1,9 @@
+# EscrowStatus
+enum: EscrowStatus
+default: held
+values:
+  - held                 # Money held in escrow
+  - released             # Released to vendor wallet
+  - refunded             # Refunded to customer
+  - disputed             # Under dispute
+  - expired              # Escrow expired (delivery deadline passed)

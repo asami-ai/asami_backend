@@ -140,6 +140,15 @@ class CommandProcessor {
     'viewallcustomers': ['admin'],
     'moderatecontent': ['admin'],
     'systemconfig': ['admin'],
+
+
+    // ====================== PAYMENT/ ORDER COMMANDS ====================
+    'wallet' : ['vendor'],
+    'withdraw' : ['vendor'],
+    'setupbank': ['vendor'],
+    'received' : ['vendor', 'customer'],
+    'return' : ['vendor,customer'],
+    
   };
 
   /// Check if a command exists

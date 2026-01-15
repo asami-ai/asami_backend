@@ -1,3 +1,5 @@
+import 'package:asami_server/utils/logger/asami_logger.dart';
+
 import '../../generated/protocol.dart';
 import 'messaging_service_interface.dart';
 import 'whatsapp/whatsapp_service.dart';
@@ -18,7 +20,7 @@ class MessagingServiceFactory {
     required WhatsAppService whatsappService,
   }) {
     if (_initialized) {
-      print('⚠️ MessagingServiceFactory already initialized');
+      Log.info('⚠️ MessagingServiceFactory already initialized');
       return;
     }
 
@@ -28,7 +30,7 @@ class MessagingServiceFactory {
       PlatformType.whatsapp,
       whatsappServiceAdapter,
     );
-    print('✅ WhatsApp service registered');
+    Log.info('✅ WhatsApp service registered');
 
     // Register Telegram (if token provided)
     register(
@@ -38,13 +40,13 @@ class MessagingServiceFactory {
 
     // Start the Telegram bot
     telegramService.start().then((_) {
-      print('✅ Telegram service registered and started');
+      Log.info('✅ Telegram service registered and started');
     }).catchError((e) {
-      print('❌ Failed to start Telegram service: $e');
+      Log.info('❌ Failed to start Telegram service: $e');
     });
 
     _initialized = true;
-    print('✅ MessagingServiceFactory initialized');
+    Log.info('✅ MessagingServiceFactory initialized');
   }
 
   /// Register a messaging service
@@ -78,11 +80,11 @@ class MessagingServiceFactory {
       try {
         service.dispose();
       } catch (e) {
-        print('⚠️ Error disposing service: $e');
+        Log.info('⚠️ Error disposing service: $e');
       }
     }
     _services.clear();
     _initialized = false;
-    print('🧹 All messaging services disposed');
+    Log.info('🧹 All messaging services disposed');
   }
 }

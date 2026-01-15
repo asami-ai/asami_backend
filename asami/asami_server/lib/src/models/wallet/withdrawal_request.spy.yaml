@@ -1,0 +1,68 @@
+class: WithdrawalRequest
+table: withdrawal_requests
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Vendor Info
+  vendorId: UuidValue
+  vendor: VendorProfile?, relation(field=vendorId)
+  walletId: UuidValue
+  wallet: VendorWallet?, relation(field=walletId)
+  
+  # Request Details
+  requestNumber: String                       # Unique request number
+  amount: double
+  currency: String, default='NGN'
+  
+  # Bank Details
+  bankName: String
+  bankCode: String
+  accountNumber: String
+  accountName: String
+  
+  # Status
+  status: WithdrawalStatus, default=pending
+  
+  # Processing
+  approvedBy: String?                         # Admin who approved
+  approvedAt: DateTime?
+  processedAt: DateTime?
+  completedAt: DateTime?
+  
+  # Paystack Transfer
+  recipientCode: String?
+  transferCode: String?
+  transferId: String?
+  transferReference: String?
+  transferStatus: String?
+  
+  # Fees
+  transferFee: double, default=0.0            # Paystack transfer fee
+  netAmount: double?                          # Amount after fees
+  
+  # Failure Handling
+  failureReason: String?
+  failureCode: String?
+  retryCount: int, default=0
+  maxRetries: int, default=3
+  
+  # Notes
+  vendorNotes: String?
+  adminNotes: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  cancelledAt: DateTime?
+
+indexes:
+  vendor_withdrawal_idx:
+    fields: vendorId
+  wallet_withdrawal_idx:
+    fields: walletId
+  withdrawal_status_idx:
+    fields: status
+  request_number_idx:
+    fields: requestNumber
+  withdrawal_created_idx:
+    fields: createdAt

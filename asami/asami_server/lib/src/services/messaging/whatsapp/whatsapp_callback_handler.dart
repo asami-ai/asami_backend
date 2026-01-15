@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'package:asami_server/src/services/dependency_injection.dart';
+import 'package:asami_server/src/services/messaging/whatsapp/whatsapp_product_button_handler.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/auth_endpoint.dart';
 import '../../../generated/protocol.dart';
@@ -58,7 +59,7 @@ class WhatsAppCallbackHandler {
     // Route to appropriate handler based on button ID prefix
     if (buttonId.startsWith('auth_')) {
       await _handleAuthCallback(from, buttonId);
-    } else if (buttonId.startsWith('product_')) {
+    } else if (buttonId.startsWith('prod_')) {
       await _handleProductCallback(from, buttonId);
     } else if (buttonId.startsWith('cart_')) {
       await _handleCartCallback(from, buttonId);
@@ -290,16 +291,36 @@ Please wait a moment.
   // ==================== PRODUCT CALLBACKS ====================
 
   Future<void> _handleProductCallback(String from, String buttonId) async {
-    if (buttonId.startsWith('product_view_')) {
-      final productId = buttonId.replaceFirst('product_view_', '');
-      await _showProductDetails(from, productId);
-    } else if (buttonId.startsWith('product_add_cart_')) {
-      final productId = buttonId.replaceFirst('product_add_cart_', '');
-      await _addProductToCart(from, productId);
-    } else if (buttonId.startsWith('product_buy_')) {
-      final productId = buttonId.replaceFirst('product_buy_', '');
-      await _buyProductNow(from, productId);
+
+    final user = await User.db.findFirstRow(  session,
+      where: (t) => t.whatsappId.equals(from),
+    );
+
+    if (user == null){
+       await _sendMessage(from, '❌ User not found, Please authenticate first.');
     }
+    final lastConversation = await Conversation.db.findFirstRow(
+      session,
+      where: (t) =>
+          t.platformUserId.equals(from) &
+          t.platform.equals(PlatformType.whatsapp),
+    );
+    await WhatsAppProductButtonHandler.processButtonClick(session,
+        buttonId: buttonId,
+        platformUserId: from,
+        userId: user?.id.uuid ?? '',
+        conversationId: lastConversation?.id.uuid ?? '');
+
+    // if (buttonId.startsWith('product_view_')) {
+    //   final productId = buttonId.replaceFirst('product_view_', '');
+    //   await _showProductDetails(from, productId);
+    // } else if (buttonId.startsWith('product_add_cart_')) {
+    //   final productId = buttonId.replaceFirst('product_add_cart_', '');
+    //   await _addProductToCart(from, productId);
+    // } else if (buttonId.startsWith('product_buy_')) {
+    //   final productId = buttonId.replaceFirst('product_buy_', '');
+    //   await _buyProductNow(from, productId);
+    // }
   }
 
   Future<void> _showProductDetails(String from, String productId) async {

@@ -11,10 +11,12 @@ import '../../../endpoints/order_endpoint.dart';
 import '../../../endpoints/product_endpoint.dart';
 import '../../../endpoints/subscription_endpoint.dart';
 import '../../../endpoints/auth_endpoint.dart';
+import '../../../endpoints/withdrawal_endpoint.dart';
 import '../../../generated/protocol.dart';
 import '../../messaging/telegram/telegram_commands_setup.dart';
 import '../../messaging/telegram/telegram_service.dart';
 import '../../messaging/whatsapp/whatsapp_message_formatter.dart';
+import '../../wallet/wallet_service.dart';
 import '../core/command_processor.dart';
 
 void registerEnhancedCommands(CommandProcessor processor) {
@@ -511,7 +513,18 @@ Start shopping with /products
     };
   });
 
-  // Track order - ENHANCED
+
+  // Wishlist (placeholder for future)
+  processor.registerCommand('wishlist', (args, context) async {
+    return {
+      'success': true,
+      'response':
+          '💝 **Wishlist Feature**\n\nComing soon! You\'ll be able to save your favorite products.',
+      'command': 'wishlist',
+    };
+  });
+
+  // Track order with payment info
   processor.registerCommand('track', (args, context) async {
     if (args.isEmpty) {
       return {
@@ -520,40 +533,52 @@ Start shopping with /products
       };
     }
 
+    final session = context.session!;
     final orderNumber = args.join(' ');
 
-    // ✅ USE ACTUAL TOOL LOGIC
-    final toolRegistry = getIt<ToolRegistry>();
-    final result = await toolRegistry.execute(
-      'track_order_by_number',
-      {'order_number': orderNumber},
-      context,
+    final order = await Order.db.findFirstRow(
+      session,
+      where: (t) => t.orderNumber.equals(orderNumber),
     );
 
-    if (!result['success']) {
+    if (order == null) {
       return {
         'success': false,
-        'response': result['error'] ?? 'Order not found',
-        'command': 'track',
+        'response': '❌ Order not found: $orderNumber',
       };
     }
 
-    final order = result['order'] as Map<String, dynamic>;
+    // Get escrow info
+    final escrow = await OrderEscrow.db.findFirstRow(
+      session,
+      where: (t) => t.orderId.equals(order.id),
+    );
 
     final buffer = StringBuffer();
-    buffer.writeln('📦 **Order #${order['order_number']}**\n');
-    buffer.writeln('**Status:** ${_formatOrderStatus(order['status'])}');
-    buffer.writeln(order['status_description']);
+    buffer.writeln('📦 **Order Tracking**\n');
+    buffer.writeln('Order: ${order.orderNumber}');
+    buffer.writeln('Status: ${_formatOrderStatus(order.status.name)}');
     buffer.writeln(
-        '\n**Total:** ${order['currency']} ${order['total_amount'].toStringAsFixed(2)}');
+        'Amount: ${order.currency} ${order.totalAmount.toStringAsFixed(2)}');
 
-    if (order['tracking_number'] != null) {
-      buffer.writeln('**Tracking:** ${order['tracking_number']}');
+    if (order.trackingNumber != null) {
+      buffer.writeln('Tracking: ${order.trackingNumber}');
     }
 
-    if (order['estimated_delivery'] != null) {
-      buffer.writeln(
-          '**Estimated Delivery:** ${_formatDate(DateTime.parse(order['estimated_delivery']))}');
+    if (escrow != null) {
+      buffer.writeln('\n**Protection Info:**');
+
+      if (escrow.status == EscrowStatus.held) {
+        if (escrow.isReturnWindowActive) {
+          final daysLeft =
+              escrow.returnWindowEnd!.difference(DateTime.now()).inDays;
+          buffer.writeln('🛡️ Return window: $daysLeft days left');
+        } else {
+          buffer.writeln('⏳ Awaiting delivery confirmation');
+        }
+      } else if (escrow.status == EscrowStatus.released) {
+        buffer.writeln('✅ Payment released to vendor');
+      }
     }
 
     return {
@@ -563,13 +588,91 @@ Start shopping with /products
     };
   });
 
-  // Wishlist (placeholder for future)
-  processor.registerCommand('wishlist', (args, context) async {
+  // Acknowledge delivery
+  processor.registerCommand('received', (args, context) async {
+    if (args.isEmpty) {
+      return {
+        'success': false,
+        'response': 'Usage: `/received ORDER-12345`',
+      };
+    }
+
+    final session = context.session!;
+    final orderNumber = args.join(' ');
+
+    final result = await OrderEndpoint().acknowledgeDelivery(
+      session,
+      orderNumber: orderNumber,
+      customerId: context.userId,
+    );
+
+    if (result['success']) {
+      return {
+        'success': true,
+        'response': '''
+✅ **Delivery Confirmed**
+
+Order: $orderNumber
+
+Thank you! Your confirmation helps us release payment to the vendor faster.
+
+You still have 2 days to request a return if there's any issue.
+
+Type /return $orderNumber to start a return.
+''',
+        'command': 'received',
+      };
+    }
+
     return {
-      'success': true,
-      'response':
-          '💝 **Wishlist Feature**\n\nComing soon! You\'ll be able to save your favorite products.',
-      'command': 'wishlist',
+      'success': false,
+      'response': result['error'],
+    };
+  });
+
+  // Request return
+  processor.registerCommand('return', (args, context) async {
+    if (args.isEmpty) {
+      return {
+        'success': false,
+        'response': 'Usage: `/return ORDER-12345 [reason]`',
+      };
+    }
+
+    final session = context.session!;
+    final orderNumber = args[0];
+    final reason =
+        args.length > 1 ? args.skip(1).join(' ') : 'Customer requested return';
+
+    final result = await OrderEndpoint().requestReturn(
+      session,
+      orderNumber: orderNumber,
+      customerId: context.userId,
+      reason: reason,
+    );
+
+    if (result['success']) {
+      return {
+        'success': true,
+        'response': '''
+🔄 **Return Request Submitted**
+
+Order: $orderNumber
+Reason: $reason
+
+The vendor will review your request within 24 hours.
+
+If approved, you'll receive a full refund.
+
+Refund ID: ${result['refund_id']}
+''',
+        'command': 'return',
+      };
+    }
+
+    return {
+      'success': false,
+      'response': result['error'],
     };
   });
 }
@@ -1549,6 +1652,117 @@ Type "upgrade" to see Pro options!
       'success': true,
       'response': _getCapabilitiesText(userType),
       'command': 'capabilities',
+    };
+  });
+
+  // Wallet & Earnings
+  processor.registerCommand('wallet', (args, context) async {
+    final session = context.session!;
+    final summary = await WalletService.getWalletSummary(
+      session,
+      UuidValue.fromString(context.userId),
+    );
+
+    if (!summary['found']) {
+      return {'success': false, 'error': 'Wallet not found'};
+    }
+
+    final wallet = summary['wallet'] as VendorWallet;
+
+    return {
+      'success': true,
+      'response': '''
+💰 **Your Wallet**
+
+Available: ₦${wallet.availableBalance.toStringAsFixed(2)} ✅
+Pending: ₦${wallet.pendingBalance.toStringAsFixed(2)} ⏳
+Processing: ₦${wallet.processingBalance.toStringAsFixed(2)} 🔄
+
+Total Earnings: ₦${wallet.totalEarnings.toStringAsFixed(2)}
+Total Withdrawn: ₦${wallet.totalWithdrawn.toStringAsFixed(2)}
+
+Type /withdraw to request a withdrawal.
+''',
+      'command': 'wallet',
+    };
+  });
+
+  // Withdraw money
+  processor.registerCommand('withdraw', (args, context) async {
+    final session = context.session!;
+
+    if (args.isEmpty) {
+      return {
+        'success': false,
+        'response': '''
+💸 **Withdraw Funds**
+
+Usage: /withdraw [amount]
+Example: /withdraw 5000
+
+Minimum: ₦1,000
+
+Check your balance: /wallet
+''',
+      };
+    }
+
+    final amount = double.tryParse(args[0]);
+    if (amount == null) {
+      return {'success': false, 'response': 'Invalid amount'};
+    }
+
+    final result = await WithdrawalEndpoint().requestWithdrawal(
+      session,
+      vendorId: context.userId,
+      amount: amount,
+    );
+
+    if (result['success']) {
+      return {
+        'success': true,
+        'response': '''
+✅ Withdrawal Request Submitted
+
+Amount: ₦${amount.toStringAsFixed(2)}
+Fee: ₦${result['fee'].toStringAsFixed(2)}
+You'll receive: ₦${result['net_amount'].toStringAsFixed(2)}
+
+Request #: ${result['request_number']}
+Status: Pending processing
+
+Money will be sent to your bank account within 24 hours.
+''',
+        'command': 'withdraw',
+      };
+    }
+
+    return {
+      'success': false,
+      'response': result['error'],
+    };
+  });
+
+  // Setup bank account
+  processor.registerCommand('setupbank', (args, context) async {
+    return {
+      'success': true,
+      'response': '''
+🏦 **Setup Bank Account**
+
+To receive withdrawals, I need your bank details.
+
+Send me:
+1. Bank name (e.g., GTBank)
+2. Account number
+3. Account name
+
+Example:
+"GTBank 0123456789 JOHN DOE"
+
+Or type /banks to see available banks.
+''',
+      'command': 'setupbank',
     };
   });
 }

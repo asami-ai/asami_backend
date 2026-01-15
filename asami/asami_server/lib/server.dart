@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:asami_server/src/web/routes/health_route.dart';
+import 'package:asami_server/src/web/routes/paystack_routes.dart';
 import 'package:asami_server/src/web/routes/root.dart';
 import 'package:asami_server/src/web/routes/telegram_routes.dart';
 import 'package:asami_server/src/web/routes/whatsapp_flow_route.dart';
@@ -14,7 +15,7 @@ import 'package:serverpod/serverpod.dart';
 import 'src/generated/endpoints.dart';
 import 'src/generated/protocol.dart';
 import 'src/services/dependency_injection.dart';
-import 'src/services/jobs/register_usage.dart';
+import 'src/services/future_calls/register_usage.dart';
 
 void run(List<String> args) async {
   final pod = Serverpod(args, Protocol(), Endpoints());
@@ -166,22 +167,22 @@ Future<void> _setupDependencies(
     _ServerConfig config, _WebhookUrls webhookUrls) async {
   try {
     await setupDependencyInjection(
-        whatsappAccessToken: config.whatsappToken,
-        whatsappFromNumberId: config.whatsappFromId,
-        whatsappWebhookVerifyToken: config.whatsappVerifyToken,
-        telegramBotToken: config.telegramToken,
-        telegramWebhookUrl: webhookUrls.telegram,
-        aiProvider: config.aiProvider,
-        claudeApiKey: config.claudeKey,
-        openaiApiKey: config.openaiKey,
-        geminiApiKey: config.geminiKey,
-        grokApiKey: config.grokKey,
-        imagekitPrivateKey: config.imagekitPrivateKey,
-        imagekitPublicKey: config.imagekitPublicKey,
-        imagekitUrlEndpoint: config.imagekitUrlEndpoint,
-        metaCatalogId: config.metaCatalogId,
-        metaAccessToken: config.metaAccessToken,
-        );
+      whatsappAccessToken: config.whatsappToken,
+      whatsappFromNumberId: config.whatsappFromId,
+      whatsappWebhookVerifyToken: config.whatsappVerifyToken,
+      telegramBotToken: config.telegramToken,
+      telegramWebhookUrl: webhookUrls.telegram,
+      aiProvider: config.aiProvider,
+      claudeApiKey: config.claudeKey,
+      openaiApiKey: config.openaiKey,
+      geminiApiKey: config.geminiKey,
+      grokApiKey: config.grokKey,
+      imagekitPrivateKey: config.imagekitPrivateKey,
+      imagekitPublicKey: config.imagekitPublicKey,
+      imagekitUrlEndpoint: config.imagekitUrlEndpoint,
+      metaCatalogId: config.metaCatalogId,
+      metaAccessToken: config.metaAccessToken,
+    );
     Log.startupSuccess('✅ Dependency injection configured');
     Log.info(''); // Empty line for readability
   } catch (e, stackTrace) {
@@ -208,6 +209,12 @@ void _configureRoutes(Serverpod pod) {
   pod.webServer.addRoute(TelegramWebhookRoute(), '/webhooks/telegram');
   Log.startupInfo('✅ /webhooks/telegram (GET, POST)');
   pod.webServer.fallbackRoute = _NotFoundRoute();
+
+  // Paystack webhook
+  pod.webServer.addRoute(PaystackWebhookRoute(), '/webhooks/paystack');
+  Log.startupInfo('✅ /webhooks/paystack (POST)');
+
+
   // whatsapp flow route
   // pod.webServer.addRoute(WhatsAppFlowRoute(), '/webhooks/whatsapp/flow');
   // Log.startupInfo('✅ /webhooks/whatsapp/flow (POST)');
@@ -217,16 +224,7 @@ void _configureRoutes(Serverpod pod) {
   pod.webServer.addRoute(RouteRoot(), '/index.html');
   Log.startupInfo('✅ / and /index.html');
 
-  // Static files (OPTIONAL - comment out to restrict access)
-  // pod.webServer.addRoute(
-  //   StaticRoute.directory(Directory('static')),
-  //   '/*',
-  // );
-  // Log.startupInfo('✅ Static files: /*');
-
-  // ALTERNATIVE: Uncomment to block all other routes
-  // pod.webServer.addRoute(_NotFoundRoute(), '/*');
-  // Log.startupInfo('✅ All other routes blocked');
+// Add to your server configuration
 
   Log.info(''); // Empty line for readability
 }

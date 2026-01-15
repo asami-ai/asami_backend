@@ -18,7 +18,7 @@ insightsServer:
 # Configuration for the web server (where webhooks are handled)
 webServer:
   port: 8082
-  publicHost: 1414130cce1f.ngrok-free.app
+  publicHost: fa07e6f9b686.ngrok-free.app
   publicPort: 443
   publicScheme: https
 

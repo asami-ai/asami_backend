@@ -12,79 +12,127 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
-import '../order/order.dart' as _i2;
-import '../order/payment_method.dart' as _i3;
-import '../order/payment_status.dart' as _i4;
-import 'package:asami_server/src/generated/protocol.dart' as _i5;
+import '../order/payment_status.dart' as _i2;
+import '../user/user.dart' as _i3;
+import '../order/order.dart' as _i4;
+import '../order/payment_method.dart' as _i5;
+import '../messaging/platfom_type.dart' as _i6;
+import 'package:asami_server/src/generated/protocol.dart' as _i7;
 
 abstract class PaymentTransaction
     implements _i1.TableRow<_i1.UuidValue>, _i1.ProtocolSerialization {
   PaymentTransaction._({
     _i1.UuidValue? id,
-    required this.orderId,
+    required this.reference,
+    this.transactionId,
+    required this.userId,
+    this.user,
+    this.orderId,
     this.order,
     required this.amount,
     String? currency,
-    required this.paymentMethod,
-    required this.paymentStatus,
-    required this.gatewayName,
-    this.gatewayTransactionId,
-    this.gatewayResponse,
+    this.paymentMethod,
+    this.channel,
     this.cryptoType,
     this.cryptoAmount,
     this.walletAddress,
     this.transactionHash,
     this.blockchainNetwork,
     this.conversionRate,
-    double? platformFee,
-    double? gatewayFee,
-    bool? isPending,
-    bool? isCompleted,
-    bool? isFailed,
+    String? gateway,
+    this.gatewayReference,
+    this.authorizationCode,
+    _i2.PaymentStatus? status,
+    this.paidAt,
+    required this.customerEmail,
+    this.customerPhone,
+    this.customerName,
+    this.authorizationUrl,
+    this.accessCode,
     this.metadata,
+    required this.platformType,
+    this.conversationId,
+    required this.expiresAt,
+    bool? isExpired,
+    this.webhookEvents,
+    this.lastWebhookAt,
+    double? paystackFee,
+    double? platformFee,
+    this.netAmount,
+    bool? isRefunded,
+    this.refundedAt,
+    this.refundAmount,
+    this.refundReason,
+    this.verifiedAt,
+    int? verificationAttempts,
+    this.ipAddress,
+    this.userAgent,
     this.failureReason,
+    this.gatewayResponse,
     DateTime? createdAt,
     DateTime? updatedAt,
-    this.completedAt,
-    this.failedAt,
   }) : id = id ?? _i1.Uuid().v4obj(),
-       currency = currency ?? 'USD',
+       currency = currency ?? 'NGN',
+       gateway = gateway ?? 'paystack',
+       status = status ?? _i2.PaymentStatus.pending,
+       isExpired = isExpired ?? false,
+       paystackFee = paystackFee ?? 0.0,
        platformFee = platformFee ?? 0.0,
-       gatewayFee = gatewayFee ?? 0.0,
-       isPending = isPending ?? true,
-       isCompleted = isCompleted ?? false,
-       isFailed = isFailed ?? false,
+       isRefunded = isRefunded ?? false,
+       verificationAttempts = verificationAttempts ?? 0,
        createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
   factory PaymentTransaction({
     _i1.UuidValue? id,
-    required _i1.UuidValue orderId,
-    _i2.Order? order,
+    required String reference,
+    String? transactionId,
+    required _i1.UuidValue userId,
+    _i3.User? user,
+    _i1.UuidValue? orderId,
+    _i4.Order? order,
     required double amount,
     String? currency,
-    required _i3.PaymentMethod paymentMethod,
-    required _i4.PaymentStatus paymentStatus,
-    required String gatewayName,
-    String? gatewayTransactionId,
-    String? gatewayResponse,
+    _i5.PaymentMethod? paymentMethod,
+    String? channel,
     String? cryptoType,
     double? cryptoAmount,
     String? walletAddress,
     String? transactionHash,
     String? blockchainNetwork,
     double? conversionRate,
-    double? platformFee,
-    double? gatewayFee,
-    bool? isPending,
-    bool? isCompleted,
-    bool? isFailed,
+    String? gateway,
+    String? gatewayReference,
+    String? authorizationCode,
+    _i2.PaymentStatus? status,
+    DateTime? paidAt,
+    required String customerEmail,
+    String? customerPhone,
+    String? customerName,
+    String? authorizationUrl,
+    String? accessCode,
     String? metadata,
+    required _i6.PlatformType platformType,
+    _i1.UuidValue? conversationId,
+    required DateTime expiresAt,
+    bool? isExpired,
+    String? webhookEvents,
+    DateTime? lastWebhookAt,
+    double? paystackFee,
+    double? platformFee,
+    double? netAmount,
+    bool? isRefunded,
+    DateTime? refundedAt,
+    double? refundAmount,
+    String? refundReason,
+    DateTime? verifiedAt,
+    int? verificationAttempts,
+    String? ipAddress,
+    String? userAgent,
     String? failureReason,
+    String? gatewayResponse,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? completedAt,
-    DateTime? failedAt,
   }) = _PaymentTransactionImpl;
 
   factory PaymentTransaction.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -92,51 +140,88 @@ abstract class PaymentTransaction
       id: jsonSerialization['id'] == null
           ? null
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
-      orderId: _i1.UuidValueJsonExtension.fromJson(
-        jsonSerialization['orderId'],
-      ),
+      reference: jsonSerialization['reference'] as String,
+      transactionId: jsonSerialization['transactionId'] as String?,
+      userId: _i1.UuidValueJsonExtension.fromJson(jsonSerialization['userId']),
+      user: jsonSerialization['user'] == null
+          ? null
+          : _i7.Protocol().deserialize<_i3.User>(jsonSerialization['user']),
+      orderId: jsonSerialization['orderId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['orderId']),
       order: jsonSerialization['order'] == null
           ? null
-          : _i5.Protocol().deserialize<_i2.Order>(jsonSerialization['order']),
+          : _i7.Protocol().deserialize<_i4.Order>(jsonSerialization['order']),
       amount: (jsonSerialization['amount'] as num).toDouble(),
       currency: jsonSerialization['currency'] as String?,
-      paymentMethod: _i3.PaymentMethod.fromJson(
-        (jsonSerialization['paymentMethod'] as String),
-      ),
-      paymentStatus: _i4.PaymentStatus.fromJson(
-        (jsonSerialization['paymentStatus'] as String),
-      ),
-      gatewayName: jsonSerialization['gatewayName'] as String,
-      gatewayTransactionId:
-          jsonSerialization['gatewayTransactionId'] as String?,
-      gatewayResponse: jsonSerialization['gatewayResponse'] as String?,
+      paymentMethod: jsonSerialization['paymentMethod'] == null
+          ? null
+          : _i5.PaymentMethod.fromJson(
+              (jsonSerialization['paymentMethod'] as String),
+            ),
+      channel: jsonSerialization['channel'] as String?,
       cryptoType: jsonSerialization['cryptoType'] as String?,
       cryptoAmount: (jsonSerialization['cryptoAmount'] as num?)?.toDouble(),
       walletAddress: jsonSerialization['walletAddress'] as String?,
       transactionHash: jsonSerialization['transactionHash'] as String?,
       blockchainNetwork: jsonSerialization['blockchainNetwork'] as String?,
       conversionRate: (jsonSerialization['conversionRate'] as num?)?.toDouble(),
-      platformFee: (jsonSerialization['platformFee'] as num?)?.toDouble(),
-      gatewayFee: (jsonSerialization['gatewayFee'] as num?)?.toDouble(),
-      isPending: jsonSerialization['isPending'] as bool?,
-      isCompleted: jsonSerialization['isCompleted'] as bool?,
-      isFailed: jsonSerialization['isFailed'] as bool?,
+      gateway: jsonSerialization['gateway'] as String?,
+      gatewayReference: jsonSerialization['gatewayReference'] as String?,
+      authorizationCode: jsonSerialization['authorizationCode'] as String?,
+      status: jsonSerialization['status'] == null
+          ? null
+          : _i2.PaymentStatus.fromJson((jsonSerialization['status'] as String)),
+      paidAt: jsonSerialization['paidAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['paidAt']),
+      customerEmail: jsonSerialization['customerEmail'] as String,
+      customerPhone: jsonSerialization['customerPhone'] as String?,
+      customerName: jsonSerialization['customerName'] as String?,
+      authorizationUrl: jsonSerialization['authorizationUrl'] as String?,
+      accessCode: jsonSerialization['accessCode'] as String?,
       metadata: jsonSerialization['metadata'] as String?,
+      platformType: _i6.PlatformType.fromJson(
+        (jsonSerialization['platformType'] as String),
+      ),
+      conversationId: jsonSerialization['conversationId'] == null
+          ? null
+          : _i1.UuidValueJsonExtension.fromJson(
+              jsonSerialization['conversationId'],
+            ),
+      expiresAt: _i1.DateTimeJsonExtension.fromJson(
+        jsonSerialization['expiresAt'],
+      ),
+      isExpired: jsonSerialization['isExpired'] as bool?,
+      webhookEvents: jsonSerialization['webhookEvents'] as String?,
+      lastWebhookAt: jsonSerialization['lastWebhookAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(
+              jsonSerialization['lastWebhookAt'],
+            ),
+      paystackFee: (jsonSerialization['paystackFee'] as num?)?.toDouble(),
+      platformFee: (jsonSerialization['platformFee'] as num?)?.toDouble(),
+      netAmount: (jsonSerialization['netAmount'] as num?)?.toDouble(),
+      isRefunded: jsonSerialization['isRefunded'] as bool?,
+      refundedAt: jsonSerialization['refundedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['refundedAt']),
+      refundAmount: (jsonSerialization['refundAmount'] as num?)?.toDouble(),
+      refundReason: jsonSerialization['refundReason'] as String?,
+      verifiedAt: jsonSerialization['verifiedAt'] == null
+          ? null
+          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['verifiedAt']),
+      verificationAttempts: jsonSerialization['verificationAttempts'] as int?,
+      ipAddress: jsonSerialization['ipAddress'] as String?,
+      userAgent: jsonSerialization['userAgent'] as String?,
       failureReason: jsonSerialization['failureReason'] as String?,
+      gatewayResponse: jsonSerialization['gatewayResponse'] as String?,
       createdAt: jsonSerialization['createdAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       updatedAt: jsonSerialization['updatedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['updatedAt']),
-      completedAt: jsonSerialization['completedAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(
-              jsonSerialization['completedAt'],
-            ),
-      failedAt: jsonSerialization['failedAt'] == null
-          ? null
-          : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['failedAt']),
     );
   }
 
@@ -147,23 +232,25 @@ abstract class PaymentTransaction
   @override
   _i1.UuidValue id;
 
-  _i1.UuidValue orderId;
+  String reference;
 
-  _i2.Order? order;
+  String? transactionId;
+
+  _i1.UuidValue userId;
+
+  _i3.User? user;
+
+  _i1.UuidValue? orderId;
+
+  _i4.Order? order;
 
   double amount;
 
   String currency;
 
-  _i3.PaymentMethod paymentMethod;
+  _i5.PaymentMethod? paymentMethod;
 
-  _i4.PaymentStatus paymentStatus;
-
-  String gatewayName;
-
-  String? gatewayTransactionId;
-
-  String? gatewayResponse;
+  String? channel;
 
   String? cryptoType;
 
@@ -177,27 +264,69 @@ abstract class PaymentTransaction
 
   double? conversionRate;
 
-  double platformFee;
+  String gateway;
 
-  double gatewayFee;
+  String? gatewayReference;
 
-  bool isPending;
+  String? authorizationCode;
 
-  bool isCompleted;
+  _i2.PaymentStatus status;
 
-  bool isFailed;
+  DateTime? paidAt;
+
+  String customerEmail;
+
+  String? customerPhone;
+
+  String? customerName;
+
+  String? authorizationUrl;
+
+  String? accessCode;
 
   String? metadata;
 
+  _i6.PlatformType platformType;
+
+  _i1.UuidValue? conversationId;
+
+  DateTime expiresAt;
+
+  bool isExpired;
+
+  String? webhookEvents;
+
+  DateTime? lastWebhookAt;
+
+  double paystackFee;
+
+  double platformFee;
+
+  double? netAmount;
+
+  bool isRefunded;
+
+  DateTime? refundedAt;
+
+  double? refundAmount;
+
+  String? refundReason;
+
+  DateTime? verifiedAt;
+
+  int verificationAttempts;
+
+  String? ipAddress;
+
+  String? userAgent;
+
   String? failureReason;
+
+  String? gatewayResponse;
 
   DateTime createdAt;
 
   DateTime updatedAt;
-
-  DateTime? completedAt;
-
-  DateTime? failedAt;
 
   @override
   _i1.Table<_i1.UuidValue> get table => t;
@@ -207,65 +336,108 @@ abstract class PaymentTransaction
   @_i1.useResult
   PaymentTransaction copyWith({
     _i1.UuidValue? id,
+    String? reference,
+    String? transactionId,
+    _i1.UuidValue? userId,
+    _i3.User? user,
     _i1.UuidValue? orderId,
-    _i2.Order? order,
+    _i4.Order? order,
     double? amount,
     String? currency,
-    _i3.PaymentMethod? paymentMethod,
-    _i4.PaymentStatus? paymentStatus,
-    String? gatewayName,
-    String? gatewayTransactionId,
-    String? gatewayResponse,
+    _i5.PaymentMethod? paymentMethod,
+    String? channel,
     String? cryptoType,
     double? cryptoAmount,
     String? walletAddress,
     String? transactionHash,
     String? blockchainNetwork,
     double? conversionRate,
-    double? platformFee,
-    double? gatewayFee,
-    bool? isPending,
-    bool? isCompleted,
-    bool? isFailed,
+    String? gateway,
+    String? gatewayReference,
+    String? authorizationCode,
+    _i2.PaymentStatus? status,
+    DateTime? paidAt,
+    String? customerEmail,
+    String? customerPhone,
+    String? customerName,
+    String? authorizationUrl,
+    String? accessCode,
     String? metadata,
+    _i6.PlatformType? platformType,
+    _i1.UuidValue? conversationId,
+    DateTime? expiresAt,
+    bool? isExpired,
+    String? webhookEvents,
+    DateTime? lastWebhookAt,
+    double? paystackFee,
+    double? platformFee,
+    double? netAmount,
+    bool? isRefunded,
+    DateTime? refundedAt,
+    double? refundAmount,
+    String? refundReason,
+    DateTime? verifiedAt,
+    int? verificationAttempts,
+    String? ipAddress,
+    String? userAgent,
     String? failureReason,
+    String? gatewayResponse,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? completedAt,
-    DateTime? failedAt,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       '__className__': 'PaymentTransaction',
       'id': id.toJson(),
-      'orderId': orderId.toJson(),
+      'reference': reference,
+      if (transactionId != null) 'transactionId': transactionId,
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJson(),
+      if (orderId != null) 'orderId': orderId?.toJson(),
       if (order != null) 'order': order?.toJson(),
       'amount': amount,
       'currency': currency,
-      'paymentMethod': paymentMethod.toJson(),
-      'paymentStatus': paymentStatus.toJson(),
-      'gatewayName': gatewayName,
-      if (gatewayTransactionId != null)
-        'gatewayTransactionId': gatewayTransactionId,
-      if (gatewayResponse != null) 'gatewayResponse': gatewayResponse,
+      if (paymentMethod != null) 'paymentMethod': paymentMethod?.toJson(),
+      if (channel != null) 'channel': channel,
       if (cryptoType != null) 'cryptoType': cryptoType,
       if (cryptoAmount != null) 'cryptoAmount': cryptoAmount,
       if (walletAddress != null) 'walletAddress': walletAddress,
       if (transactionHash != null) 'transactionHash': transactionHash,
       if (blockchainNetwork != null) 'blockchainNetwork': blockchainNetwork,
       if (conversionRate != null) 'conversionRate': conversionRate,
-      'platformFee': platformFee,
-      'gatewayFee': gatewayFee,
-      'isPending': isPending,
-      'isCompleted': isCompleted,
-      'isFailed': isFailed,
+      'gateway': gateway,
+      if (gatewayReference != null) 'gatewayReference': gatewayReference,
+      if (authorizationCode != null) 'authorizationCode': authorizationCode,
+      'status': status.toJson(),
+      if (paidAt != null) 'paidAt': paidAt?.toJson(),
+      'customerEmail': customerEmail,
+      if (customerPhone != null) 'customerPhone': customerPhone,
+      if (customerName != null) 'customerName': customerName,
+      if (authorizationUrl != null) 'authorizationUrl': authorizationUrl,
+      if (accessCode != null) 'accessCode': accessCode,
       if (metadata != null) 'metadata': metadata,
+      'platformType': platformType.toJson(),
+      if (conversationId != null) 'conversationId': conversationId?.toJson(),
+      'expiresAt': expiresAt.toJson(),
+      'isExpired': isExpired,
+      if (webhookEvents != null) 'webhookEvents': webhookEvents,
+      if (lastWebhookAt != null) 'lastWebhookAt': lastWebhookAt?.toJson(),
+      'paystackFee': paystackFee,
+      'platformFee': platformFee,
+      if (netAmount != null) 'netAmount': netAmount,
+      'isRefunded': isRefunded,
+      if (refundedAt != null) 'refundedAt': refundedAt?.toJson(),
+      if (refundAmount != null) 'refundAmount': refundAmount,
+      if (refundReason != null) 'refundReason': refundReason,
+      if (verifiedAt != null) 'verifiedAt': verifiedAt?.toJson(),
+      'verificationAttempts': verificationAttempts,
+      if (ipAddress != null) 'ipAddress': ipAddress,
+      if (userAgent != null) 'userAgent': userAgent,
       if (failureReason != null) 'failureReason': failureReason,
+      if (gatewayResponse != null) 'gatewayResponse': gatewayResponse,
       'createdAt': createdAt.toJson(),
       'updatedAt': updatedAt.toJson(),
-      if (completedAt != null) 'completedAt': completedAt?.toJson(),
-      if (failedAt != null) 'failedAt': failedAt?.toJson(),
     };
   }
 
@@ -274,38 +446,65 @@ abstract class PaymentTransaction
     return {
       '__className__': 'PaymentTransaction',
       'id': id.toJson(),
-      'orderId': orderId.toJson(),
+      'reference': reference,
+      if (transactionId != null) 'transactionId': transactionId,
+      'userId': userId.toJson(),
+      if (user != null) 'user': user?.toJsonForProtocol(),
+      if (orderId != null) 'orderId': orderId?.toJson(),
       if (order != null) 'order': order?.toJsonForProtocol(),
       'amount': amount,
       'currency': currency,
-      'paymentMethod': paymentMethod.toJson(),
-      'paymentStatus': paymentStatus.toJson(),
-      'gatewayName': gatewayName,
-      if (gatewayTransactionId != null)
-        'gatewayTransactionId': gatewayTransactionId,
-      if (gatewayResponse != null) 'gatewayResponse': gatewayResponse,
+      if (paymentMethod != null) 'paymentMethod': paymentMethod?.toJson(),
+      if (channel != null) 'channel': channel,
       if (cryptoType != null) 'cryptoType': cryptoType,
       if (cryptoAmount != null) 'cryptoAmount': cryptoAmount,
       if (walletAddress != null) 'walletAddress': walletAddress,
       if (transactionHash != null) 'transactionHash': transactionHash,
       if (blockchainNetwork != null) 'blockchainNetwork': blockchainNetwork,
       if (conversionRate != null) 'conversionRate': conversionRate,
-      'platformFee': platformFee,
-      'gatewayFee': gatewayFee,
-      'isPending': isPending,
-      'isCompleted': isCompleted,
-      'isFailed': isFailed,
+      'gateway': gateway,
+      if (gatewayReference != null) 'gatewayReference': gatewayReference,
+      if (authorizationCode != null) 'authorizationCode': authorizationCode,
+      'status': status.toJson(),
+      if (paidAt != null) 'paidAt': paidAt?.toJson(),
+      'customerEmail': customerEmail,
+      if (customerPhone != null) 'customerPhone': customerPhone,
+      if (customerName != null) 'customerName': customerName,
+      if (authorizationUrl != null) 'authorizationUrl': authorizationUrl,
+      if (accessCode != null) 'accessCode': accessCode,
       if (metadata != null) 'metadata': metadata,
+      'platformType': platformType.toJson(),
+      if (conversationId != null) 'conversationId': conversationId?.toJson(),
+      'expiresAt': expiresAt.toJson(),
+      'isExpired': isExpired,
+      if (webhookEvents != null) 'webhookEvents': webhookEvents,
+      if (lastWebhookAt != null) 'lastWebhookAt': lastWebhookAt?.toJson(),
+      'paystackFee': paystackFee,
+      'platformFee': platformFee,
+      if (netAmount != null) 'netAmount': netAmount,
+      'isRefunded': isRefunded,
+      if (refundedAt != null) 'refundedAt': refundedAt?.toJson(),
+      if (refundAmount != null) 'refundAmount': refundAmount,
+      if (refundReason != null) 'refundReason': refundReason,
+      if (verifiedAt != null) 'verifiedAt': verifiedAt?.toJson(),
+      'verificationAttempts': verificationAttempts,
+      if (ipAddress != null) 'ipAddress': ipAddress,
+      if (userAgent != null) 'userAgent': userAgent,
       if (failureReason != null) 'failureReason': failureReason,
+      if (gatewayResponse != null) 'gatewayResponse': gatewayResponse,
       'createdAt': createdAt.toJson(),
       'updatedAt': updatedAt.toJson(),
-      if (completedAt != null) 'completedAt': completedAt?.toJson(),
-      if (failedAt != null) 'failedAt': failedAt?.toJson(),
     };
   }
 
-  static PaymentTransactionInclude include({_i2.OrderInclude? order}) {
-    return PaymentTransactionInclude._(order: order);
+  static PaymentTransactionInclude include({
+    _i3.UserInclude? user,
+    _i4.OrderInclude? order,
+  }) {
+    return PaymentTransactionInclude._(
+      user: user,
+      order: order,
+    );
   }
 
   static PaymentTransactionIncludeList includeList({
@@ -339,60 +538,104 @@ class _Undefined {}
 class _PaymentTransactionImpl extends PaymentTransaction {
   _PaymentTransactionImpl({
     _i1.UuidValue? id,
-    required _i1.UuidValue orderId,
-    _i2.Order? order,
+    required String reference,
+    String? transactionId,
+    required _i1.UuidValue userId,
+    _i3.User? user,
+    _i1.UuidValue? orderId,
+    _i4.Order? order,
     required double amount,
     String? currency,
-    required _i3.PaymentMethod paymentMethod,
-    required _i4.PaymentStatus paymentStatus,
-    required String gatewayName,
-    String? gatewayTransactionId,
-    String? gatewayResponse,
+    _i5.PaymentMethod? paymentMethod,
+    String? channel,
     String? cryptoType,
     double? cryptoAmount,
     String? walletAddress,
     String? transactionHash,
     String? blockchainNetwork,
     double? conversionRate,
-    double? platformFee,
-    double? gatewayFee,
-    bool? isPending,
-    bool? isCompleted,
-    bool? isFailed,
+    String? gateway,
+    String? gatewayReference,
+    String? authorizationCode,
+    _i2.PaymentStatus? status,
+    DateTime? paidAt,
+    required String customerEmail,
+    String? customerPhone,
+    String? customerName,
+    String? authorizationUrl,
+    String? accessCode,
     String? metadata,
+    required _i6.PlatformType platformType,
+    _i1.UuidValue? conversationId,
+    required DateTime expiresAt,
+    bool? isExpired,
+    String? webhookEvents,
+    DateTime? lastWebhookAt,
+    double? paystackFee,
+    double? platformFee,
+    double? netAmount,
+    bool? isRefunded,
+    DateTime? refundedAt,
+    double? refundAmount,
+    String? refundReason,
+    DateTime? verifiedAt,
+    int? verificationAttempts,
+    String? ipAddress,
+    String? userAgent,
     String? failureReason,
+    String? gatewayResponse,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? completedAt,
-    DateTime? failedAt,
   }) : super._(
          id: id,
+         reference: reference,
+         transactionId: transactionId,
+         userId: userId,
+         user: user,
          orderId: orderId,
          order: order,
          amount: amount,
          currency: currency,
          paymentMethod: paymentMethod,
-         paymentStatus: paymentStatus,
-         gatewayName: gatewayName,
-         gatewayTransactionId: gatewayTransactionId,
-         gatewayResponse: gatewayResponse,
+         channel: channel,
          cryptoType: cryptoType,
          cryptoAmount: cryptoAmount,
          walletAddress: walletAddress,
          transactionHash: transactionHash,
          blockchainNetwork: blockchainNetwork,
          conversionRate: conversionRate,
-         platformFee: platformFee,
-         gatewayFee: gatewayFee,
-         isPending: isPending,
-         isCompleted: isCompleted,
-         isFailed: isFailed,
+         gateway: gateway,
+         gatewayReference: gatewayReference,
+         authorizationCode: authorizationCode,
+         status: status,
+         paidAt: paidAt,
+         customerEmail: customerEmail,
+         customerPhone: customerPhone,
+         customerName: customerName,
+         authorizationUrl: authorizationUrl,
+         accessCode: accessCode,
          metadata: metadata,
+         platformType: platformType,
+         conversationId: conversationId,
+         expiresAt: expiresAt,
+         isExpired: isExpired,
+         webhookEvents: webhookEvents,
+         lastWebhookAt: lastWebhookAt,
+         paystackFee: paystackFee,
+         platformFee: platformFee,
+         netAmount: netAmount,
+         isRefunded: isRefunded,
+         refundedAt: refundedAt,
+         refundAmount: refundAmount,
+         refundReason: refundReason,
+         verifiedAt: verifiedAt,
+         verificationAttempts: verificationAttempts,
+         ipAddress: ipAddress,
+         userAgent: userAgent,
          failureReason: failureReason,
+         gatewayResponse: gatewayResponse,
          createdAt: createdAt,
          updatedAt: updatedAt,
-         completedAt: completedAt,
-         failedAt: failedAt,
        );
 
   /// Returns a shallow copy of this [PaymentTransaction]
@@ -401,48 +644,71 @@ class _PaymentTransactionImpl extends PaymentTransaction {
   @override
   PaymentTransaction copyWith({
     _i1.UuidValue? id,
-    _i1.UuidValue? orderId,
+    String? reference,
+    Object? transactionId = _Undefined,
+    _i1.UuidValue? userId,
+    Object? user = _Undefined,
+    Object? orderId = _Undefined,
     Object? order = _Undefined,
     double? amount,
     String? currency,
-    _i3.PaymentMethod? paymentMethod,
-    _i4.PaymentStatus? paymentStatus,
-    String? gatewayName,
-    Object? gatewayTransactionId = _Undefined,
-    Object? gatewayResponse = _Undefined,
+    Object? paymentMethod = _Undefined,
+    Object? channel = _Undefined,
     Object? cryptoType = _Undefined,
     Object? cryptoAmount = _Undefined,
     Object? walletAddress = _Undefined,
     Object? transactionHash = _Undefined,
     Object? blockchainNetwork = _Undefined,
     Object? conversionRate = _Undefined,
-    double? platformFee,
-    double? gatewayFee,
-    bool? isPending,
-    bool? isCompleted,
-    bool? isFailed,
+    String? gateway,
+    Object? gatewayReference = _Undefined,
+    Object? authorizationCode = _Undefined,
+    _i2.PaymentStatus? status,
+    Object? paidAt = _Undefined,
+    String? customerEmail,
+    Object? customerPhone = _Undefined,
+    Object? customerName = _Undefined,
+    Object? authorizationUrl = _Undefined,
+    Object? accessCode = _Undefined,
     Object? metadata = _Undefined,
+    _i6.PlatformType? platformType,
+    Object? conversationId = _Undefined,
+    DateTime? expiresAt,
+    bool? isExpired,
+    Object? webhookEvents = _Undefined,
+    Object? lastWebhookAt = _Undefined,
+    double? paystackFee,
+    double? platformFee,
+    Object? netAmount = _Undefined,
+    bool? isRefunded,
+    Object? refundedAt = _Undefined,
+    Object? refundAmount = _Undefined,
+    Object? refundReason = _Undefined,
+    Object? verifiedAt = _Undefined,
+    int? verificationAttempts,
+    Object? ipAddress = _Undefined,
+    Object? userAgent = _Undefined,
     Object? failureReason = _Undefined,
+    Object? gatewayResponse = _Undefined,
     DateTime? createdAt,
     DateTime? updatedAt,
-    Object? completedAt = _Undefined,
-    Object? failedAt = _Undefined,
   }) {
     return PaymentTransaction(
       id: id ?? this.id,
-      orderId: orderId ?? this.orderId,
-      order: order is _i2.Order? ? order : this.order?.copyWith(),
+      reference: reference ?? this.reference,
+      transactionId: transactionId is String?
+          ? transactionId
+          : this.transactionId,
+      userId: userId ?? this.userId,
+      user: user is _i3.User? ? user : this.user?.copyWith(),
+      orderId: orderId is _i1.UuidValue? ? orderId : this.orderId,
+      order: order is _i4.Order? ? order : this.order?.copyWith(),
       amount: amount ?? this.amount,
       currency: currency ?? this.currency,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      paymentStatus: paymentStatus ?? this.paymentStatus,
-      gatewayName: gatewayName ?? this.gatewayName,
-      gatewayTransactionId: gatewayTransactionId is String?
-          ? gatewayTransactionId
-          : this.gatewayTransactionId,
-      gatewayResponse: gatewayResponse is String?
-          ? gatewayResponse
-          : this.gatewayResponse,
+      paymentMethod: paymentMethod is _i5.PaymentMethod?
+          ? paymentMethod
+          : this.paymentMethod,
+      channel: channel is String? ? channel : this.channel,
       cryptoType: cryptoType is String? ? cryptoType : this.cryptoType,
       cryptoAmount: cryptoAmount is double? ? cryptoAmount : this.cryptoAmount,
       walletAddress: walletAddress is String?
@@ -457,19 +723,56 @@ class _PaymentTransactionImpl extends PaymentTransaction {
       conversionRate: conversionRate is double?
           ? conversionRate
           : this.conversionRate,
-      platformFee: platformFee ?? this.platformFee,
-      gatewayFee: gatewayFee ?? this.gatewayFee,
-      isPending: isPending ?? this.isPending,
-      isCompleted: isCompleted ?? this.isCompleted,
-      isFailed: isFailed ?? this.isFailed,
+      gateway: gateway ?? this.gateway,
+      gatewayReference: gatewayReference is String?
+          ? gatewayReference
+          : this.gatewayReference,
+      authorizationCode: authorizationCode is String?
+          ? authorizationCode
+          : this.authorizationCode,
+      status: status ?? this.status,
+      paidAt: paidAt is DateTime? ? paidAt : this.paidAt,
+      customerEmail: customerEmail ?? this.customerEmail,
+      customerPhone: customerPhone is String?
+          ? customerPhone
+          : this.customerPhone,
+      customerName: customerName is String? ? customerName : this.customerName,
+      authorizationUrl: authorizationUrl is String?
+          ? authorizationUrl
+          : this.authorizationUrl,
+      accessCode: accessCode is String? ? accessCode : this.accessCode,
       metadata: metadata is String? ? metadata : this.metadata,
+      platformType: platformType ?? this.platformType,
+      conversationId: conversationId is _i1.UuidValue?
+          ? conversationId
+          : this.conversationId,
+      expiresAt: expiresAt ?? this.expiresAt,
+      isExpired: isExpired ?? this.isExpired,
+      webhookEvents: webhookEvents is String?
+          ? webhookEvents
+          : this.webhookEvents,
+      lastWebhookAt: lastWebhookAt is DateTime?
+          ? lastWebhookAt
+          : this.lastWebhookAt,
+      paystackFee: paystackFee ?? this.paystackFee,
+      platformFee: platformFee ?? this.platformFee,
+      netAmount: netAmount is double? ? netAmount : this.netAmount,
+      isRefunded: isRefunded ?? this.isRefunded,
+      refundedAt: refundedAt is DateTime? ? refundedAt : this.refundedAt,
+      refundAmount: refundAmount is double? ? refundAmount : this.refundAmount,
+      refundReason: refundReason is String? ? refundReason : this.refundReason,
+      verifiedAt: verifiedAt is DateTime? ? verifiedAt : this.verifiedAt,
+      verificationAttempts: verificationAttempts ?? this.verificationAttempts,
+      ipAddress: ipAddress is String? ? ipAddress : this.ipAddress,
+      userAgent: userAgent is String? ? userAgent : this.userAgent,
       failureReason: failureReason is String?
           ? failureReason
           : this.failureReason,
+      gatewayResponse: gatewayResponse is String?
+          ? gatewayResponse
+          : this.gatewayResponse,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      completedAt: completedAt is DateTime? ? completedAt : this.completedAt,
-      failedAt: failedAt is DateTime? ? failedAt : this.failedAt,
     );
   }
 }
@@ -478,7 +781,24 @@ class PaymentTransactionUpdateTable
     extends _i1.UpdateTable<PaymentTransactionTable> {
   PaymentTransactionUpdateTable(super.table);
 
-  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> orderId(_i1.UuidValue value) =>
+  _i1.ColumnValue<String, String> reference(String value) => _i1.ColumnValue(
+    table.reference,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> transactionId(String? value) =>
+      _i1.ColumnValue(
+        table.transactionId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> userId(_i1.UuidValue value) =>
+      _i1.ColumnValue(
+        table.userId,
+        value,
+      );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> orderId(_i1.UuidValue? value) =>
       _i1.ColumnValue(
         table.orderId,
         value,
@@ -494,36 +814,17 @@ class PaymentTransactionUpdateTable
     value,
   );
 
-  _i1.ColumnValue<_i3.PaymentMethod, _i3.PaymentMethod> paymentMethod(
-    _i3.PaymentMethod value,
+  _i1.ColumnValue<_i5.PaymentMethod, _i5.PaymentMethod> paymentMethod(
+    _i5.PaymentMethod? value,
   ) => _i1.ColumnValue(
     table.paymentMethod,
     value,
   );
 
-  _i1.ColumnValue<_i4.PaymentStatus, _i4.PaymentStatus> paymentStatus(
-    _i4.PaymentStatus value,
-  ) => _i1.ColumnValue(
-    table.paymentStatus,
+  _i1.ColumnValue<String, String> channel(String? value) => _i1.ColumnValue(
+    table.channel,
     value,
   );
-
-  _i1.ColumnValue<String, String> gatewayName(String value) => _i1.ColumnValue(
-    table.gatewayName,
-    value,
-  );
-
-  _i1.ColumnValue<String, String> gatewayTransactionId(String? value) =>
-      _i1.ColumnValue(
-        table.gatewayTransactionId,
-        value,
-      );
-
-  _i1.ColumnValue<String, String> gatewayResponse(String? value) =>
-      _i1.ColumnValue(
-        table.gatewayResponse,
-        value,
-      );
 
   _i1.ColumnValue<String, String> cryptoType(String? value) => _i1.ColumnValue(
     table.cryptoType,
@@ -560,28 +861,62 @@ class PaymentTransactionUpdateTable
         value,
       );
 
-  _i1.ColumnValue<double, double> platformFee(double value) => _i1.ColumnValue(
-    table.platformFee,
+  _i1.ColumnValue<String, String> gateway(String value) => _i1.ColumnValue(
+    table.gateway,
     value,
   );
 
-  _i1.ColumnValue<double, double> gatewayFee(double value) => _i1.ColumnValue(
-    table.gatewayFee,
+  _i1.ColumnValue<String, String> gatewayReference(String? value) =>
+      _i1.ColumnValue(
+        table.gatewayReference,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> authorizationCode(String? value) =>
+      _i1.ColumnValue(
+        table.authorizationCode,
+        value,
+      );
+
+  _i1.ColumnValue<_i2.PaymentStatus, _i2.PaymentStatus> status(
+    _i2.PaymentStatus value,
+  ) => _i1.ColumnValue(
+    table.status,
     value,
   );
 
-  _i1.ColumnValue<bool, bool> isPending(bool value) => _i1.ColumnValue(
-    table.isPending,
-    value,
-  );
+  _i1.ColumnValue<DateTime, DateTime> paidAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.paidAt,
+        value,
+      );
 
-  _i1.ColumnValue<bool, bool> isCompleted(bool value) => _i1.ColumnValue(
-    table.isCompleted,
-    value,
-  );
+  _i1.ColumnValue<String, String> customerEmail(String value) =>
+      _i1.ColumnValue(
+        table.customerEmail,
+        value,
+      );
 
-  _i1.ColumnValue<bool, bool> isFailed(bool value) => _i1.ColumnValue(
-    table.isFailed,
+  _i1.ColumnValue<String, String> customerPhone(String? value) =>
+      _i1.ColumnValue(
+        table.customerPhone,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> customerName(String? value) =>
+      _i1.ColumnValue(
+        table.customerName,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> authorizationUrl(String? value) =>
+      _i1.ColumnValue(
+        table.authorizationUrl,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> accessCode(String? value) => _i1.ColumnValue(
+    table.accessCode,
     value,
   );
 
@@ -590,9 +925,111 @@ class PaymentTransactionUpdateTable
     value,
   );
 
+  _i1.ColumnValue<_i6.PlatformType, _i6.PlatformType> platformType(
+    _i6.PlatformType value,
+  ) => _i1.ColumnValue(
+    table.platformType,
+    value,
+  );
+
+  _i1.ColumnValue<_i1.UuidValue, _i1.UuidValue> conversationId(
+    _i1.UuidValue? value,
+  ) => _i1.ColumnValue(
+    table.conversationId,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> expiresAt(DateTime value) =>
+      _i1.ColumnValue(
+        table.expiresAt,
+        value,
+      );
+
+  _i1.ColumnValue<bool, bool> isExpired(bool value) => _i1.ColumnValue(
+    table.isExpired,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> webhookEvents(String? value) =>
+      _i1.ColumnValue(
+        table.webhookEvents,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> lastWebhookAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.lastWebhookAt,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> paystackFee(double value) => _i1.ColumnValue(
+    table.paystackFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> platformFee(double value) => _i1.ColumnValue(
+    table.platformFee,
+    value,
+  );
+
+  _i1.ColumnValue<double, double> netAmount(double? value) => _i1.ColumnValue(
+    table.netAmount,
+    value,
+  );
+
+  _i1.ColumnValue<bool, bool> isRefunded(bool value) => _i1.ColumnValue(
+    table.isRefunded,
+    value,
+  );
+
+  _i1.ColumnValue<DateTime, DateTime> refundedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.refundedAt,
+        value,
+      );
+
+  _i1.ColumnValue<double, double> refundAmount(double? value) =>
+      _i1.ColumnValue(
+        table.refundAmount,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> refundReason(String? value) =>
+      _i1.ColumnValue(
+        table.refundReason,
+        value,
+      );
+
+  _i1.ColumnValue<DateTime, DateTime> verifiedAt(DateTime? value) =>
+      _i1.ColumnValue(
+        table.verifiedAt,
+        value,
+      );
+
+  _i1.ColumnValue<int, int> verificationAttempts(int value) => _i1.ColumnValue(
+    table.verificationAttempts,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> ipAddress(String? value) => _i1.ColumnValue(
+    table.ipAddress,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> userAgent(String? value) => _i1.ColumnValue(
+    table.userAgent,
+    value,
+  );
+
   _i1.ColumnValue<String, String> failureReason(String? value) =>
       _i1.ColumnValue(
         table.failureReason,
+        value,
+      );
+
+  _i1.ColumnValue<String, String> gatewayResponse(String? value) =>
+      _i1.ColumnValue(
+        table.gatewayResponse,
         value,
       );
 
@@ -607,24 +1044,24 @@ class PaymentTransactionUpdateTable
         table.updatedAt,
         value,
       );
-
-  _i1.ColumnValue<DateTime, DateTime> completedAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.completedAt,
-        value,
-      );
-
-  _i1.ColumnValue<DateTime, DateTime> failedAt(DateTime? value) =>
-      _i1.ColumnValue(
-        table.failedAt,
-        value,
-      );
 }
 
 class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
   PaymentTransactionTable({super.tableRelation})
     : super(tableName: 'payment_transactions') {
     updateTable = PaymentTransactionUpdateTable(this);
+    reference = _i1.ColumnString(
+      'reference',
+      this,
+    );
+    transactionId = _i1.ColumnString(
+      'transactionId',
+      this,
+    );
+    userId = _i1.ColumnUuid(
+      'userId',
+      this,
+    );
     orderId = _i1.ColumnUuid(
       'orderId',
       this,
@@ -643,21 +1080,8 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
       this,
       _i1.EnumSerialization.byName,
     );
-    paymentStatus = _i1.ColumnEnum(
-      'paymentStatus',
-      this,
-      _i1.EnumSerialization.byName,
-    );
-    gatewayName = _i1.ColumnString(
-      'gatewayName',
-      this,
-    );
-    gatewayTransactionId = _i1.ColumnString(
-      'gatewayTransactionId',
-      this,
-    );
-    gatewayResponse = _i1.ColumnString(
-      'gatewayResponse',
+    channel = _i1.ColumnString(
+      'channel',
       this,
     );
     cryptoType = _i1.ColumnString(
@@ -684,37 +1108,133 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
       'conversionRate',
       this,
     );
-    platformFee = _i1.ColumnDouble(
-      'platformFee',
+    gateway = _i1.ColumnString(
+      'gateway',
       this,
       hasDefault: true,
     );
-    gatewayFee = _i1.ColumnDouble(
-      'gatewayFee',
+    gatewayReference = _i1.ColumnString(
+      'gatewayReference',
       this,
+    );
+    authorizationCode = _i1.ColumnString(
+      'authorizationCode',
+      this,
+    );
+    status = _i1.ColumnEnum(
+      'status',
+      this,
+      _i1.EnumSerialization.byName,
       hasDefault: true,
     );
-    isPending = _i1.ColumnBool(
-      'isPending',
+    paidAt = _i1.ColumnDateTime(
+      'paidAt',
       this,
-      hasDefault: true,
     );
-    isCompleted = _i1.ColumnBool(
-      'isCompleted',
+    customerEmail = _i1.ColumnString(
+      'customerEmail',
       this,
-      hasDefault: true,
     );
-    isFailed = _i1.ColumnBool(
-      'isFailed',
+    customerPhone = _i1.ColumnString(
+      'customerPhone',
       this,
-      hasDefault: true,
+    );
+    customerName = _i1.ColumnString(
+      'customerName',
+      this,
+    );
+    authorizationUrl = _i1.ColumnString(
+      'authorizationUrl',
+      this,
+    );
+    accessCode = _i1.ColumnString(
+      'accessCode',
+      this,
     );
     metadata = _i1.ColumnString(
       'metadata',
       this,
     );
+    platformType = _i1.ColumnEnum(
+      'platformType',
+      this,
+      _i1.EnumSerialization.byName,
+    );
+    conversationId = _i1.ColumnUuid(
+      'conversationId',
+      this,
+    );
+    expiresAt = _i1.ColumnDateTime(
+      'expiresAt',
+      this,
+    );
+    isExpired = _i1.ColumnBool(
+      'isExpired',
+      this,
+      hasDefault: true,
+    );
+    webhookEvents = _i1.ColumnString(
+      'webhookEvents',
+      this,
+    );
+    lastWebhookAt = _i1.ColumnDateTime(
+      'lastWebhookAt',
+      this,
+    );
+    paystackFee = _i1.ColumnDouble(
+      'paystackFee',
+      this,
+      hasDefault: true,
+    );
+    platformFee = _i1.ColumnDouble(
+      'platformFee',
+      this,
+      hasDefault: true,
+    );
+    netAmount = _i1.ColumnDouble(
+      'netAmount',
+      this,
+    );
+    isRefunded = _i1.ColumnBool(
+      'isRefunded',
+      this,
+      hasDefault: true,
+    );
+    refundedAt = _i1.ColumnDateTime(
+      'refundedAt',
+      this,
+    );
+    refundAmount = _i1.ColumnDouble(
+      'refundAmount',
+      this,
+    );
+    refundReason = _i1.ColumnString(
+      'refundReason',
+      this,
+    );
+    verifiedAt = _i1.ColumnDateTime(
+      'verifiedAt',
+      this,
+    );
+    verificationAttempts = _i1.ColumnInt(
+      'verificationAttempts',
+      this,
+      hasDefault: true,
+    );
+    ipAddress = _i1.ColumnString(
+      'ipAddress',
+      this,
+    );
+    userAgent = _i1.ColumnString(
+      'userAgent',
+      this,
+    );
     failureReason = _i1.ColumnString(
       'failureReason',
+      this,
+    );
+    gatewayResponse = _i1.ColumnString(
+      'gatewayResponse',
       this,
     );
     createdAt = _i1.ColumnDateTime(
@@ -727,35 +1247,29 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
       this,
       hasDefault: true,
     );
-    completedAt = _i1.ColumnDateTime(
-      'completedAt',
-      this,
-    );
-    failedAt = _i1.ColumnDateTime(
-      'failedAt',
-      this,
-    );
   }
 
   late final PaymentTransactionUpdateTable updateTable;
 
+  late final _i1.ColumnString reference;
+
+  late final _i1.ColumnString transactionId;
+
+  late final _i1.ColumnUuid userId;
+
+  _i3.UserTable? _user;
+
   late final _i1.ColumnUuid orderId;
 
-  _i2.OrderTable? _order;
+  _i4.OrderTable? _order;
 
   late final _i1.ColumnDouble amount;
 
   late final _i1.ColumnString currency;
 
-  late final _i1.ColumnEnum<_i3.PaymentMethod> paymentMethod;
+  late final _i1.ColumnEnum<_i5.PaymentMethod> paymentMethod;
 
-  late final _i1.ColumnEnum<_i4.PaymentStatus> paymentStatus;
-
-  late final _i1.ColumnString gatewayName;
-
-  late final _i1.ColumnString gatewayTransactionId;
-
-  late final _i1.ColumnString gatewayResponse;
+  late final _i1.ColumnString channel;
 
   late final _i1.ColumnString cryptoType;
 
@@ -769,37 +1283,92 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
 
   late final _i1.ColumnDouble conversionRate;
 
-  late final _i1.ColumnDouble platformFee;
+  late final _i1.ColumnString gateway;
 
-  late final _i1.ColumnDouble gatewayFee;
+  late final _i1.ColumnString gatewayReference;
 
-  late final _i1.ColumnBool isPending;
+  late final _i1.ColumnString authorizationCode;
 
-  late final _i1.ColumnBool isCompleted;
+  late final _i1.ColumnEnum<_i2.PaymentStatus> status;
 
-  late final _i1.ColumnBool isFailed;
+  late final _i1.ColumnDateTime paidAt;
+
+  late final _i1.ColumnString customerEmail;
+
+  late final _i1.ColumnString customerPhone;
+
+  late final _i1.ColumnString customerName;
+
+  late final _i1.ColumnString authorizationUrl;
+
+  late final _i1.ColumnString accessCode;
 
   late final _i1.ColumnString metadata;
 
+  late final _i1.ColumnEnum<_i6.PlatformType> platformType;
+
+  late final _i1.ColumnUuid conversationId;
+
+  late final _i1.ColumnDateTime expiresAt;
+
+  late final _i1.ColumnBool isExpired;
+
+  late final _i1.ColumnString webhookEvents;
+
+  late final _i1.ColumnDateTime lastWebhookAt;
+
+  late final _i1.ColumnDouble paystackFee;
+
+  late final _i1.ColumnDouble platformFee;
+
+  late final _i1.ColumnDouble netAmount;
+
+  late final _i1.ColumnBool isRefunded;
+
+  late final _i1.ColumnDateTime refundedAt;
+
+  late final _i1.ColumnDouble refundAmount;
+
+  late final _i1.ColumnString refundReason;
+
+  late final _i1.ColumnDateTime verifiedAt;
+
+  late final _i1.ColumnInt verificationAttempts;
+
+  late final _i1.ColumnString ipAddress;
+
+  late final _i1.ColumnString userAgent;
+
   late final _i1.ColumnString failureReason;
+
+  late final _i1.ColumnString gatewayResponse;
 
   late final _i1.ColumnDateTime createdAt;
 
   late final _i1.ColumnDateTime updatedAt;
 
-  late final _i1.ColumnDateTime completedAt;
+  _i3.UserTable get user {
+    if (_user != null) return _user!;
+    _user = _i1.createRelationTable(
+      relationFieldName: 'user',
+      field: PaymentTransaction.t.userId,
+      foreignField: _i3.User.t.id,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i3.UserTable(tableRelation: foreignTableRelation),
+    );
+    return _user!;
+  }
 
-  late final _i1.ColumnDateTime failedAt;
-
-  _i2.OrderTable get order {
+  _i4.OrderTable get order {
     if (_order != null) return _order!;
     _order = _i1.createRelationTable(
       relationFieldName: 'order',
       field: PaymentTransaction.t.orderId,
-      foreignField: _i2.Order.t.id,
+      foreignField: _i4.Order.t.id,
       tableRelation: tableRelation,
       createTable: (foreignTableRelation) =>
-          _i2.OrderTable(tableRelation: foreignTableRelation),
+          _i4.OrderTable(tableRelation: foreignTableRelation),
     );
     return _order!;
   }
@@ -807,35 +1376,59 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
   @override
   List<_i1.Column> get columns => [
     id,
+    reference,
+    transactionId,
+    userId,
     orderId,
     amount,
     currency,
     paymentMethod,
-    paymentStatus,
-    gatewayName,
-    gatewayTransactionId,
-    gatewayResponse,
+    channel,
     cryptoType,
     cryptoAmount,
     walletAddress,
     transactionHash,
     blockchainNetwork,
     conversionRate,
-    platformFee,
-    gatewayFee,
-    isPending,
-    isCompleted,
-    isFailed,
+    gateway,
+    gatewayReference,
+    authorizationCode,
+    status,
+    paidAt,
+    customerEmail,
+    customerPhone,
+    customerName,
+    authorizationUrl,
+    accessCode,
     metadata,
+    platformType,
+    conversationId,
+    expiresAt,
+    isExpired,
+    webhookEvents,
+    lastWebhookAt,
+    paystackFee,
+    platformFee,
+    netAmount,
+    isRefunded,
+    refundedAt,
+    refundAmount,
+    refundReason,
+    verifiedAt,
+    verificationAttempts,
+    ipAddress,
+    userAgent,
     failureReason,
+    gatewayResponse,
     createdAt,
     updatedAt,
-    completedAt,
-    failedAt,
   ];
 
   @override
   _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'user') {
+      return user;
+    }
     if (relationField == 'order') {
       return order;
     }
@@ -844,14 +1437,23 @@ class PaymentTransactionTable extends _i1.Table<_i1.UuidValue> {
 }
 
 class PaymentTransactionInclude extends _i1.IncludeObject {
-  PaymentTransactionInclude._({_i2.OrderInclude? order}) {
+  PaymentTransactionInclude._({
+    _i3.UserInclude? user,
+    _i4.OrderInclude? order,
+  }) {
+    _user = user;
     _order = order;
   }
 
-  _i2.OrderInclude? _order;
+  _i3.UserInclude? _user;
+
+  _i4.OrderInclude? _order;
 
   @override
-  Map<String, _i1.Include?> get includes => {'order': _order};
+  Map<String, _i1.Include?> get includes => {
+    'user': _user,
+    'order': _order,
+  };
 
   @override
   _i1.Table<_i1.UuidValue> get table => PaymentTransaction.t;
@@ -881,6 +1483,8 @@ class PaymentTransactionRepository {
   const PaymentTransactionRepository._();
 
   final attachRow = const PaymentTransactionAttachRowRepository._();
+
+  final detachRow = const PaymentTransactionDetachRowRepository._();
 
   /// Returns a list of [PaymentTransaction]s matching the given query parameters.
   ///
@@ -1143,12 +1747,35 @@ class PaymentTransactionRepository {
 class PaymentTransactionAttachRowRepository {
   const PaymentTransactionAttachRowRepository._();
 
+  /// Creates a relation between the given [PaymentTransaction] and [User]
+  /// by setting the [PaymentTransaction]'s foreign key `userId` to refer to the [User].
+  Future<void> user(
+    _i1.Session session,
+    PaymentTransaction paymentTransaction,
+    _i3.User user, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (paymentTransaction.id == null) {
+      throw ArgumentError.notNull('paymentTransaction.id');
+    }
+    if (user.id == null) {
+      throw ArgumentError.notNull('user.id');
+    }
+
+    var $paymentTransaction = paymentTransaction.copyWith(userId: user.id);
+    await session.db.updateRow<PaymentTransaction>(
+      $paymentTransaction,
+      columns: [PaymentTransaction.t.userId],
+      transaction: transaction,
+    );
+  }
+
   /// Creates a relation between the given [PaymentTransaction] and [Order]
   /// by setting the [PaymentTransaction]'s foreign key `orderId` to refer to the [Order].
   Future<void> order(
     _i1.Session session,
     PaymentTransaction paymentTransaction,
-    _i2.Order order, {
+    _i4.Order order, {
     _i1.Transaction? transaction,
   }) async {
     if (paymentTransaction.id == null) {
@@ -1159,6 +1786,32 @@ class PaymentTransactionAttachRowRepository {
     }
 
     var $paymentTransaction = paymentTransaction.copyWith(orderId: order.id);
+    await session.db.updateRow<PaymentTransaction>(
+      $paymentTransaction,
+      columns: [PaymentTransaction.t.orderId],
+      transaction: transaction,
+    );
+  }
+}
+
+class PaymentTransactionDetachRowRepository {
+  const PaymentTransactionDetachRowRepository._();
+
+  /// Detaches the relation between this [PaymentTransaction] and the [Order] set in `order`
+  /// by setting the [PaymentTransaction]'s foreign key `orderId` to `null`.
+  ///
+  /// This removes the association between the two models without deleting
+  /// the related record.
+  Future<void> order(
+    _i1.Session session,
+    PaymentTransaction paymentTransaction, {
+    _i1.Transaction? transaction,
+  }) async {
+    if (paymentTransaction.id == null) {
+      throw ArgumentError.notNull('paymentTransaction.id');
+    }
+
+    var $paymentTransaction = paymentTransaction.copyWith(orderId: null);
     await session.db.updateRow<PaymentTransaction>(
       $paymentTransaction,
       columns: [PaymentTransaction.t.orderId],

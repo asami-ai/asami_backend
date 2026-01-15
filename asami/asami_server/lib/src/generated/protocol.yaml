@@ -36,6 +36,17 @@ order:
   - getVendorOrders:
   - updateOrderStatus:
   - cancelOrder:
+  - markOrderAsDelivered:
+  - acknowledgeDelivery:
+  - requestReturn:
+  - approveReturn:
+payment:
+  - initializeProductPayment:
+  - initializeCartPayment:
+  - verifyPayment:
+  - getTransaction:
+  - getUserTransactions:
+  - markExpiredTransactions:
 product:
   - createProduct:
   - updateProduct:
@@ -60,6 +71,7 @@ usage:
   - resetDailyLimits:
 user:
   - updateProfile:
+  - getProfile:
   - getCustomerProfile:
   - updateCustomerProfile:
   - getVendorProfile:
@@ -70,3 +82,11 @@ user:
 whatsAppWebhook:
   - verifyWebhook:
   - processWebhook:
+withdrawal:
+  - getBanks:
+  - verifyAccount:
+  - setupBankAccount:
+  - requestWithdrawal:
+  - getWithdrawalHistory:
+  - getPendingWithdrawals:
+  - processWithdrawal:

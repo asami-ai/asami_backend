@@ -18,9 +18,8 @@ enum PaymentStatus implements _i1.SerializableModel {
   completed,
   failed,
   refunded,
-  partially_refunded,
-  in_escrow,
-  released;
+  cancelled,
+  expired;
 
   static PaymentStatus fromJson(String name) {
     switch (name) {
@@ -34,12 +33,10 @@ enum PaymentStatus implements _i1.SerializableModel {
         return PaymentStatus.failed;
       case 'refunded':
         return PaymentStatus.refunded;
-      case 'partially_refunded':
-        return PaymentStatus.partially_refunded;
-      case 'in_escrow':
-        return PaymentStatus.in_escrow;
-      case 'released':
-        return PaymentStatus.released;
+      case 'cancelled':
+        return PaymentStatus.cancelled;
+      case 'expired':
+        return PaymentStatus.expired;
       default:
         throw ArgumentError(
           'Value "$name" cannot be converted to "PaymentStatus"',

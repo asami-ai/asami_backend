@@ -34,53 +34,66 @@ import 'messaging/template_message.dart' as _i21;
 import 'order/cart.dart' as _i22;
 import 'order/cart_item.dart' as _i23;
 import 'order/order.dart' as _i24;
-import 'order/order_item.dart' as _i25;
-import 'order/order_status.dart' as _i26;
-import 'order/payment_method.dart' as _i27;
-import 'order/payment_status.dart' as _i28;
-import 'order/payment_transaction.dart' as _i29;
-import 'order/refund.dart' as _i30;
-import 'product/category.dart' as _i31;
-import 'product/category_mapping.dart' as _i32;
-import 'product/product.dart' as _i33;
-import 'product/product_category.dart' as _i34;
-import 'product/product_condition.dart' as _i35;
-import 'product/product_review.dart' as _i36;
-import 'product/product_status.dart' as _i37;
-import 'product/product_variant.dart' as _i38;
-import 'product/wishlist.dart' as _i39;
-import 'product/wishlist_item.dart' as _i40;
-import 'subscription/alert_type.dart' as _i41;
-import 'subscription/billing_cycle_summary.dart' as _i42;
-import 'subscription/daily_usage_tracker.dart' as _i43;
-import 'subscription/limit_type.dart' as _i44;
-import 'subscription/subscription.dart' as _i45;
-import 'subscription/subscription_event.dart' as _i46;
-import 'subscription/subscription_invoice.dart' as _i47;
-import 'subscription/tier_featur.dart' as _i48;
-import 'subscription/tool_usage_limit.dart' as _i49;
-import 'subscription/usage_alert.dart' as _i50;
-import 'subscription/usage_class.dart' as _i51;
-import 'subscription/usage_record.dart' as _i52;
-import 'user/address.dart' as _i53;
-import 'user/auth_session.dart' as _i54;
-import 'user/customer_policy.dart' as _i55;
-import 'user/customer_profile.dart' as _i56;
-import 'user/subscription_tier.dart' as _i57;
-import 'user/user.dart' as _i58;
-import 'user/user_status.dart' as _i59;
-import 'user/user_type.dart' as _i60;
-import 'user/vendor_profile.dart' as _i61;
+import 'order/order_escrow.dart' as _i25;
+import 'order/order_item.dart' as _i26;
+import 'order/order_status.dart' as _i27;
+import 'order/payment_method.dart' as _i28;
+import 'order/payment_status.dart' as _i29;
+import 'order/payment_transaction.dart' as _i30;
+import 'order/refund.dart' as _i31;
+import 'order/wallet_enums/escrow_status.dart' as _i32;
+import 'order/wallet_enums/transaction_status.dart' as _i33;
+import 'order/wallet_enums/wallet_transaction_type.dart' as _i34;
+import 'order/wallet_enums/withdrawal_status.dart' as _i35;
+import 'product/category.dart' as _i36;
+import 'product/category_mapping.dart' as _i37;
+import 'product/product.dart' as _i38;
+import 'product/product_category.dart' as _i39;
+import 'product/product_condition.dart' as _i40;
+import 'product/product_review.dart' as _i41;
+import 'product/product_status.dart' as _i42;
+import 'product/product_variant.dart' as _i43;
+import 'product/wishlist.dart' as _i44;
+import 'product/wishlist_item.dart' as _i45;
+import 'subscription/alert_type.dart' as _i46;
+import 'subscription/billing_cycle_summary.dart' as _i47;
+import 'subscription/daily_usage_tracker.dart' as _i48;
+import 'subscription/limit_type.dart' as _i49;
+import 'subscription/subscription.dart' as _i50;
+import 'subscription/subscription_event.dart' as _i51;
+import 'subscription/subscription_invoice.dart' as _i52;
+import 'subscription/tier_featur.dart' as _i53;
+import 'subscription/tool_usage_limit.dart' as _i54;
+import 'subscription/usage_alert.dart' as _i55;
+import 'subscription/usage_class.dart' as _i56;
+import 'subscription/usage_record.dart' as _i57;
+import 'user/address.dart' as _i58;
+import 'user/auth_session.dart' as _i59;
+import 'user/customer_policy.dart' as _i60;
+import 'user/customer_profile.dart' as _i61;
+import 'user/subscription_tier.dart' as _i62;
+import 'user/user.dart' as _i63;
+import 'user/user_status.dart' as _i64;
+import 'user/user_type.dart' as _i65;
+import 'user/vendor_profile.dart' as _i66;
+import 'wallet/vendor_wallet.dart' as _i67;
+import 'wallet/wallet_transaction.dart' as _i68;
+import 'wallet/withdrawal_request.dart' as _i69;
+import 'webhook/webhook_event.dart' as _i70;
 import 'package:asami_client/src/protocol/analytics/vendor_analytics.dart'
-    as _i62;
+    as _i71;
 import 'package:asami_client/src/protocol/analytics/product_analytics.dart'
-    as _i63;
-import 'package:asami_client/src/protocol/product/product.dart' as _i64;
-import 'package:asami_client/src/protocol/order/order_item.dart' as _i65;
-import 'package:asami_client/src/protocol/order/order.dart' as _i66;
+    as _i72;
+import 'package:asami_client/src/protocol/product/product.dart' as _i73;
+import 'package:asami_client/src/protocol/order/order_item.dart' as _i74;
+import 'package:asami_client/src/protocol/order/order.dart' as _i75;
+import 'package:asami_client/src/protocol/order/payment_transaction.dart'
+    as _i76;
 import 'package:asami_client/src/protocol/subscription/usage_record.dart'
-    as _i67;
-import 'package:asami_client/src/protocol/user/address.dart' as _i68;
+    as _i77;
+import 'package:asami_client/src/protocol/user/address.dart' as _i78;
+import 'package:asami_client/src/protocol/wallet/withdrawal_request.dart'
+    as _i79;
 export 'analytics/ai_conversation_usage.dart';
 export 'analytics/breach_severity.dart';
 export 'analytics/customer_usage_pattern.dart';
@@ -104,12 +117,17 @@ export 'messaging/template_message.dart';
 export 'order/cart.dart';
 export 'order/cart_item.dart';
 export 'order/order.dart';
+export 'order/order_escrow.dart';
 export 'order/order_item.dart';
 export 'order/order_status.dart';
 export 'order/payment_method.dart';
 export 'order/payment_status.dart';
 export 'order/payment_transaction.dart';
 export 'order/refund.dart';
+export 'order/wallet_enums/escrow_status.dart';
+export 'order/wallet_enums/transaction_status.dart';
+export 'order/wallet_enums/wallet_transaction_type.dart';
+export 'order/wallet_enums/withdrawal_status.dart';
 export 'product/category.dart';
 export 'product/category_mapping.dart';
 export 'product/product.dart';
@@ -141,6 +159,10 @@ export 'user/user.dart';
 export 'user/user_status.dart';
 export 'user/user_type.dart';
 export 'user/vendor_profile.dart';
+export 'wallet/vendor_wallet.dart';
+export 'wallet/wallet_transaction.dart';
+export 'wallet/withdrawal_request.dart';
+export 'webhook/webhook_event.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -246,116 +268,143 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i24.Order) {
       return _i24.Order.fromJson(data) as T;
     }
-    if (t == _i25.OrderItem) {
-      return _i25.OrderItem.fromJson(data) as T;
+    if (t == _i25.OrderEscrow) {
+      return _i25.OrderEscrow.fromJson(data) as T;
     }
-    if (t == _i26.OrderStatus) {
-      return _i26.OrderStatus.fromJson(data) as T;
+    if (t == _i26.OrderItem) {
+      return _i26.OrderItem.fromJson(data) as T;
     }
-    if (t == _i27.PaymentMethod) {
-      return _i27.PaymentMethod.fromJson(data) as T;
+    if (t == _i27.OrderStatus) {
+      return _i27.OrderStatus.fromJson(data) as T;
     }
-    if (t == _i28.PaymentStatus) {
-      return _i28.PaymentStatus.fromJson(data) as T;
+    if (t == _i28.PaymentMethod) {
+      return _i28.PaymentMethod.fromJson(data) as T;
     }
-    if (t == _i29.PaymentTransaction) {
-      return _i29.PaymentTransaction.fromJson(data) as T;
+    if (t == _i29.PaymentStatus) {
+      return _i29.PaymentStatus.fromJson(data) as T;
     }
-    if (t == _i30.Refund) {
-      return _i30.Refund.fromJson(data) as T;
+    if (t == _i30.PaymentTransaction) {
+      return _i30.PaymentTransaction.fromJson(data) as T;
     }
-    if (t == _i31.Category) {
-      return _i31.Category.fromJson(data) as T;
+    if (t == _i31.Refund) {
+      return _i31.Refund.fromJson(data) as T;
     }
-    if (t == _i32.CategoryMapping) {
-      return _i32.CategoryMapping.fromJson(data) as T;
+    if (t == _i32.EscrowStatus) {
+      return _i32.EscrowStatus.fromJson(data) as T;
     }
-    if (t == _i33.Product) {
-      return _i33.Product.fromJson(data) as T;
+    if (t == _i33.TransactionStatus) {
+      return _i33.TransactionStatus.fromJson(data) as T;
     }
-    if (t == _i34.ProductCategory) {
-      return _i34.ProductCategory.fromJson(data) as T;
+    if (t == _i34.WalletTransactionType) {
+      return _i34.WalletTransactionType.fromJson(data) as T;
     }
-    if (t == _i35.ProductCondition) {
-      return _i35.ProductCondition.fromJson(data) as T;
+    if (t == _i35.WithdrawalStatus) {
+      return _i35.WithdrawalStatus.fromJson(data) as T;
     }
-    if (t == _i36.ProductReview) {
-      return _i36.ProductReview.fromJson(data) as T;
+    if (t == _i36.Category) {
+      return _i36.Category.fromJson(data) as T;
     }
-    if (t == _i37.ProductStatus) {
-      return _i37.ProductStatus.fromJson(data) as T;
+    if (t == _i37.CategoryMapping) {
+      return _i37.CategoryMapping.fromJson(data) as T;
     }
-    if (t == _i38.ProductVariant) {
-      return _i38.ProductVariant.fromJson(data) as T;
+    if (t == _i38.Product) {
+      return _i38.Product.fromJson(data) as T;
     }
-    if (t == _i39.Wishlist) {
-      return _i39.Wishlist.fromJson(data) as T;
+    if (t == _i39.ProductCategory) {
+      return _i39.ProductCategory.fromJson(data) as T;
     }
-    if (t == _i40.WishlistItem) {
-      return _i40.WishlistItem.fromJson(data) as T;
+    if (t == _i40.ProductCondition) {
+      return _i40.ProductCondition.fromJson(data) as T;
     }
-    if (t == _i41.AlertType) {
-      return _i41.AlertType.fromJson(data) as T;
+    if (t == _i41.ProductReview) {
+      return _i41.ProductReview.fromJson(data) as T;
     }
-    if (t == _i42.BillingCycleSummary) {
-      return _i42.BillingCycleSummary.fromJson(data) as T;
+    if (t == _i42.ProductStatus) {
+      return _i42.ProductStatus.fromJson(data) as T;
     }
-    if (t == _i43.DailyUsageTracker) {
-      return _i43.DailyUsageTracker.fromJson(data) as T;
+    if (t == _i43.ProductVariant) {
+      return _i43.ProductVariant.fromJson(data) as T;
     }
-    if (t == _i44.LimitType) {
-      return _i44.LimitType.fromJson(data) as T;
+    if (t == _i44.Wishlist) {
+      return _i44.Wishlist.fromJson(data) as T;
     }
-    if (t == _i45.Subscription) {
-      return _i45.Subscription.fromJson(data) as T;
+    if (t == _i45.WishlistItem) {
+      return _i45.WishlistItem.fromJson(data) as T;
     }
-    if (t == _i46.SubscriptionEvent) {
-      return _i46.SubscriptionEvent.fromJson(data) as T;
+    if (t == _i46.AlertType) {
+      return _i46.AlertType.fromJson(data) as T;
     }
-    if (t == _i47.SubscriptionInvoice) {
-      return _i47.SubscriptionInvoice.fromJson(data) as T;
+    if (t == _i47.BillingCycleSummary) {
+      return _i47.BillingCycleSummary.fromJson(data) as T;
     }
-    if (t == _i48.TierFeature) {
-      return _i48.TierFeature.fromJson(data) as T;
+    if (t == _i48.DailyUsageTracker) {
+      return _i48.DailyUsageTracker.fromJson(data) as T;
     }
-    if (t == _i49.ToolUsageLimit) {
-      return _i49.ToolUsageLimit.fromJson(data) as T;
+    if (t == _i49.LimitType) {
+      return _i49.LimitType.fromJson(data) as T;
     }
-    if (t == _i50.UsageAlert) {
-      return _i50.UsageAlert.fromJson(data) as T;
+    if (t == _i50.Subscription) {
+      return _i50.Subscription.fromJson(data) as T;
     }
-    if (t == _i51.UsageClass) {
-      return _i51.UsageClass.fromJson(data) as T;
+    if (t == _i51.SubscriptionEvent) {
+      return _i51.SubscriptionEvent.fromJson(data) as T;
     }
-    if (t == _i52.UsageRecord) {
-      return _i52.UsageRecord.fromJson(data) as T;
+    if (t == _i52.SubscriptionInvoice) {
+      return _i52.SubscriptionInvoice.fromJson(data) as T;
     }
-    if (t == _i53.Address) {
-      return _i53.Address.fromJson(data) as T;
+    if (t == _i53.TierFeature) {
+      return _i53.TierFeature.fromJson(data) as T;
     }
-    if (t == _i54.AuthSession) {
-      return _i54.AuthSession.fromJson(data) as T;
+    if (t == _i54.ToolUsageLimit) {
+      return _i54.ToolUsageLimit.fromJson(data) as T;
     }
-    if (t == _i55.CustomerAIPolicy) {
-      return _i55.CustomerAIPolicy.fromJson(data) as T;
+    if (t == _i55.UsageAlert) {
+      return _i55.UsageAlert.fromJson(data) as T;
     }
-    if (t == _i56.CustomerProfile) {
-      return _i56.CustomerProfile.fromJson(data) as T;
+    if (t == _i56.UsageClass) {
+      return _i56.UsageClass.fromJson(data) as T;
     }
-    if (t == _i57.SubscriptionTier) {
-      return _i57.SubscriptionTier.fromJson(data) as T;
+    if (t == _i57.UsageRecord) {
+      return _i57.UsageRecord.fromJson(data) as T;
     }
-    if (t == _i58.User) {
-      return _i58.User.fromJson(data) as T;
+    if (t == _i58.Address) {
+      return _i58.Address.fromJson(data) as T;
     }
-    if (t == _i59.UserStatus) {
-      return _i59.UserStatus.fromJson(data) as T;
+    if (t == _i59.AuthSession) {
+      return _i59.AuthSession.fromJson(data) as T;
     }
-    if (t == _i60.UserType) {
-      return _i60.UserType.fromJson(data) as T;
+    if (t == _i60.CustomerAIPolicy) {
+      return _i60.CustomerAIPolicy.fromJson(data) as T;
     }
-    if (t == _i61.VendorProfile) {
-      return _i61.VendorProfile.fromJson(data) as T;
+    if (t == _i61.CustomerProfile) {
+      return _i61.CustomerProfile.fromJson(data) as T;
+    }
+    if (t == _i62.SubscriptionTier) {
+      return _i62.SubscriptionTier.fromJson(data) as T;
+    }
+    if (t == _i63.User) {
+      return _i63.User.fromJson(data) as T;
+    }
+    if (t == _i64.UserStatus) {
+      return _i64.UserStatus.fromJson(data) as T;
+    }
+    if (t == _i65.UserType) {
+      return _i65.UserType.fromJson(data) as T;
+    }
+    if (t == _i66.VendorProfile) {
+      return _i66.VendorProfile.fromJson(data) as T;
+    }
+    if (t == _i67.VendorWallet) {
+      return _i67.VendorWallet.fromJson(data) as T;
+    }
+    if (t == _i68.WalletTransaction) {
+      return _i68.WalletTransaction.fromJson(data) as T;
+    }
+    if (t == _i69.WithdrawalRequest) {
+      return _i69.WithdrawalRequest.fromJson(data) as T;
+    }
+    if (t == _i70.WebhookEvent) {
+      return _i70.WebhookEvent.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.AIConversationUsage?>()) {
       return (data != null ? _i2.AIConversationUsage.fromJson(data) : null)
@@ -429,119 +478,147 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i24.Order?>()) {
       return (data != null ? _i24.Order.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.OrderItem?>()) {
-      return (data != null ? _i25.OrderItem.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i25.OrderEscrow?>()) {
+      return (data != null ? _i25.OrderEscrow.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.OrderStatus?>()) {
-      return (data != null ? _i26.OrderStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.OrderItem?>()) {
+      return (data != null ? _i26.OrderItem.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i27.PaymentMethod?>()) {
-      return (data != null ? _i27.PaymentMethod.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i27.OrderStatus?>()) {
+      return (data != null ? _i27.OrderStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i28.PaymentStatus?>()) {
-      return (data != null ? _i28.PaymentStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i28.PaymentMethod?>()) {
+      return (data != null ? _i28.PaymentMethod.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.PaymentTransaction?>()) {
-      return (data != null ? _i29.PaymentTransaction.fromJson(data) : null)
+    if (t == _i1.getType<_i29.PaymentStatus?>()) {
+      return (data != null ? _i29.PaymentStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i30.PaymentTransaction?>()) {
+      return (data != null ? _i30.PaymentTransaction.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i30.Refund?>()) {
-      return (data != null ? _i30.Refund.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i31.Refund?>()) {
+      return (data != null ? _i31.Refund.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i31.Category?>()) {
-      return (data != null ? _i31.Category.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i32.EscrowStatus?>()) {
+      return (data != null ? _i32.EscrowStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i32.CategoryMapping?>()) {
-      return (data != null ? _i32.CategoryMapping.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i33.TransactionStatus?>()) {
+      return (data != null ? _i33.TransactionStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i33.Product?>()) {
-      return (data != null ? _i33.Product.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i34.ProductCategory?>()) {
-      return (data != null ? _i34.ProductCategory.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i35.ProductCondition?>()) {
-      return (data != null ? _i35.ProductCondition.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i36.ProductReview?>()) {
-      return (data != null ? _i36.ProductReview.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i37.ProductStatus?>()) {
-      return (data != null ? _i37.ProductStatus.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i38.ProductVariant?>()) {
-      return (data != null ? _i38.ProductVariant.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i39.Wishlist?>()) {
-      return (data != null ? _i39.Wishlist.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i40.WishlistItem?>()) {
-      return (data != null ? _i40.WishlistItem.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i41.AlertType?>()) {
-      return (data != null ? _i41.AlertType.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i42.BillingCycleSummary?>()) {
-      return (data != null ? _i42.BillingCycleSummary.fromJson(data) : null)
+    if (t == _i1.getType<_i34.WalletTransactionType?>()) {
+      return (data != null ? _i34.WalletTransactionType.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i43.DailyUsageTracker?>()) {
-      return (data != null ? _i43.DailyUsageTracker.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i35.WithdrawalStatus?>()) {
+      return (data != null ? _i35.WithdrawalStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i44.LimitType?>()) {
-      return (data != null ? _i44.LimitType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i36.Category?>()) {
+      return (data != null ? _i36.Category.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i45.Subscription?>()) {
-      return (data != null ? _i45.Subscription.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i37.CategoryMapping?>()) {
+      return (data != null ? _i37.CategoryMapping.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i46.SubscriptionEvent?>()) {
-      return (data != null ? _i46.SubscriptionEvent.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i38.Product?>()) {
+      return (data != null ? _i38.Product.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i47.SubscriptionInvoice?>()) {
-      return (data != null ? _i47.SubscriptionInvoice.fromJson(data) : null)
+    if (t == _i1.getType<_i39.ProductCategory?>()) {
+      return (data != null ? _i39.ProductCategory.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i40.ProductCondition?>()) {
+      return (data != null ? _i40.ProductCondition.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i41.ProductReview?>()) {
+      return (data != null ? _i41.ProductReview.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i42.ProductStatus?>()) {
+      return (data != null ? _i42.ProductStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i43.ProductVariant?>()) {
+      return (data != null ? _i43.ProductVariant.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i44.Wishlist?>()) {
+      return (data != null ? _i44.Wishlist.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i45.WishlistItem?>()) {
+      return (data != null ? _i45.WishlistItem.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i46.AlertType?>()) {
+      return (data != null ? _i46.AlertType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i47.BillingCycleSummary?>()) {
+      return (data != null ? _i47.BillingCycleSummary.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i48.TierFeature?>()) {
-      return (data != null ? _i48.TierFeature.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i48.DailyUsageTracker?>()) {
+      return (data != null ? _i48.DailyUsageTracker.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i49.ToolUsageLimit?>()) {
-      return (data != null ? _i49.ToolUsageLimit.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i49.LimitType?>()) {
+      return (data != null ? _i49.LimitType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i50.UsageAlert?>()) {
-      return (data != null ? _i50.UsageAlert.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i50.Subscription?>()) {
+      return (data != null ? _i50.Subscription.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i51.UsageClass?>()) {
-      return (data != null ? _i51.UsageClass.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i51.SubscriptionEvent?>()) {
+      return (data != null ? _i51.SubscriptionEvent.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i52.UsageRecord?>()) {
-      return (data != null ? _i52.UsageRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i52.SubscriptionInvoice?>()) {
+      return (data != null ? _i52.SubscriptionInvoice.fromJson(data) : null)
+          as T;
     }
-    if (t == _i1.getType<_i53.Address?>()) {
-      return (data != null ? _i53.Address.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i53.TierFeature?>()) {
+      return (data != null ? _i53.TierFeature.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i54.AuthSession?>()) {
-      return (data != null ? _i54.AuthSession.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i54.ToolUsageLimit?>()) {
+      return (data != null ? _i54.ToolUsageLimit.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i55.CustomerAIPolicy?>()) {
-      return (data != null ? _i55.CustomerAIPolicy.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i55.UsageAlert?>()) {
+      return (data != null ? _i55.UsageAlert.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i56.CustomerProfile?>()) {
-      return (data != null ? _i56.CustomerProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i56.UsageClass?>()) {
+      return (data != null ? _i56.UsageClass.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i57.SubscriptionTier?>()) {
-      return (data != null ? _i57.SubscriptionTier.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i57.UsageRecord?>()) {
+      return (data != null ? _i57.UsageRecord.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i58.User?>()) {
-      return (data != null ? _i58.User.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i58.Address?>()) {
+      return (data != null ? _i58.Address.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i59.UserStatus?>()) {
-      return (data != null ? _i59.UserStatus.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i59.AuthSession?>()) {
+      return (data != null ? _i59.AuthSession.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i60.UserType?>()) {
-      return (data != null ? _i60.UserType.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i60.CustomerAIPolicy?>()) {
+      return (data != null ? _i60.CustomerAIPolicy.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i61.VendorProfile?>()) {
-      return (data != null ? _i61.VendorProfile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i61.CustomerProfile?>()) {
+      return (data != null ? _i61.CustomerProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i62.SubscriptionTier?>()) {
+      return (data != null ? _i62.SubscriptionTier.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i63.User?>()) {
+      return (data != null ? _i63.User.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i64.UserStatus?>()) {
+      return (data != null ? _i64.UserStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i65.UserType?>()) {
+      return (data != null ? _i65.UserType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i66.VendorProfile?>()) {
+      return (data != null ? _i66.VendorProfile.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i67.VendorWallet?>()) {
+      return (data != null ? _i67.VendorWallet.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i68.WalletTransaction?>()) {
+      return (data != null ? _i68.WalletTransaction.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i69.WithdrawalRequest?>()) {
+      return (data != null ? _i69.WithdrawalRequest.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i70.WebhookEvent?>()) {
+      return (data != null ? _i70.WebhookEvent.fromJson(data) : null) as T;
     }
     if (t == List<String>) {
       return (data as List).map((e) => deserialize<String>(e)).toList() as T;
@@ -552,9 +629,9 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
-    if (t == List<_i62.VendorAnalytics>) {
+    if (t == List<_i71.VendorAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i62.VendorAnalytics>(e))
+              .map((e) => deserialize<_i71.VendorAnalytics>(e))
               .toList()
           as T;
     }
@@ -564,14 +641,14 @@ class Protocol extends _i1.SerializationManager {
           )
           as T;
     }
-    if (t == List<_i63.ProductAnalytics>) {
+    if (t == List<_i72.ProductAnalytics>) {
       return (data as List)
-              .map((e) => deserialize<_i63.ProductAnalytics>(e))
+              .map((e) => deserialize<_i72.ProductAnalytics>(e))
               .toList()
           as T;
     }
-    if (t == List<_i64.Product>) {
-      return (data as List).map((e) => deserialize<_i64.Product>(e)).toList()
+    if (t == List<_i73.Product>) {
+      return (data as List).map((e) => deserialize<_i73.Product>(e)).toList()
           as T;
     }
     if (t == Map<String, double>) {
@@ -589,12 +666,18 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
-    if (t == List<_i65.OrderItem>) {
-      return (data as List).map((e) => deserialize<_i65.OrderItem>(e)).toList()
+    if (t == List<_i74.OrderItem>) {
+      return (data as List).map((e) => deserialize<_i74.OrderItem>(e)).toList()
           as T;
     }
-    if (t == List<_i66.Order>) {
-      return (data as List).map((e) => deserialize<_i66.Order>(e)).toList()
+    if (t == List<_i75.Order>) {
+      return (data as List).map((e) => deserialize<_i75.Order>(e)).toList()
+          as T;
+    }
+    if (t == List<_i76.PaymentTransaction>) {
+      return (data as List)
+              .map((e) => deserialize<_i76.PaymentTransaction>(e))
+              .toList()
           as T;
     }
     if (t == List<String>) {
@@ -606,14 +689,20 @@ class Protocol extends _i1.SerializationManager {
               : null)
           as T;
     }
-    if (t == List<_i67.UsageRecord>) {
+    if (t == List<_i77.UsageRecord>) {
       return (data as List)
-              .map((e) => deserialize<_i67.UsageRecord>(e))
+              .map((e) => deserialize<_i77.UsageRecord>(e))
               .toList()
           as T;
     }
-    if (t == List<_i68.Address>) {
-      return (data as List).map((e) => deserialize<_i68.Address>(e)).toList()
+    if (t == List<_i78.Address>) {
+      return (data as List).map((e) => deserialize<_i78.Address>(e)).toList()
+          as T;
+    }
+    if (t == List<_i79.WithdrawalRequest>) {
+      return (data as List)
+              .map((e) => deserialize<_i79.WithdrawalRequest>(e))
+              .toList()
           as T;
     }
     return super.deserialize<T>(data, t);
@@ -644,43 +733,52 @@ class Protocol extends _i1.SerializationManager {
       _i22.Cart => 'Cart',
       _i23.CartItem => 'CartItem',
       _i24.Order => 'Order',
-      _i25.OrderItem => 'OrderItem',
-      _i26.OrderStatus => 'OrderStatus',
-      _i27.PaymentMethod => 'PaymentMethod',
-      _i28.PaymentStatus => 'PaymentStatus',
-      _i29.PaymentTransaction => 'PaymentTransaction',
-      _i30.Refund => 'Refund',
-      _i31.Category => 'Category',
-      _i32.CategoryMapping => 'CategoryMapping',
-      _i33.Product => 'Product',
-      _i34.ProductCategory => 'ProductCategory',
-      _i35.ProductCondition => 'ProductCondition',
-      _i36.ProductReview => 'ProductReview',
-      _i37.ProductStatus => 'ProductStatus',
-      _i38.ProductVariant => 'ProductVariant',
-      _i39.Wishlist => 'Wishlist',
-      _i40.WishlistItem => 'WishlistItem',
-      _i41.AlertType => 'AlertType',
-      _i42.BillingCycleSummary => 'BillingCycleSummary',
-      _i43.DailyUsageTracker => 'DailyUsageTracker',
-      _i44.LimitType => 'LimitType',
-      _i45.Subscription => 'Subscription',
-      _i46.SubscriptionEvent => 'SubscriptionEvent',
-      _i47.SubscriptionInvoice => 'SubscriptionInvoice',
-      _i48.TierFeature => 'TierFeature',
-      _i49.ToolUsageLimit => 'ToolUsageLimit',
-      _i50.UsageAlert => 'UsageAlert',
-      _i51.UsageClass => 'UsageClass',
-      _i52.UsageRecord => 'UsageRecord',
-      _i53.Address => 'Address',
-      _i54.AuthSession => 'AuthSession',
-      _i55.CustomerAIPolicy => 'CustomerAIPolicy',
-      _i56.CustomerProfile => 'CustomerProfile',
-      _i57.SubscriptionTier => 'SubscriptionTier',
-      _i58.User => 'User',
-      _i59.UserStatus => 'UserStatus',
-      _i60.UserType => 'UserType',
-      _i61.VendorProfile => 'VendorProfile',
+      _i25.OrderEscrow => 'OrderEscrow',
+      _i26.OrderItem => 'OrderItem',
+      _i27.OrderStatus => 'OrderStatus',
+      _i28.PaymentMethod => 'PaymentMethod',
+      _i29.PaymentStatus => 'PaymentStatus',
+      _i30.PaymentTransaction => 'PaymentTransaction',
+      _i31.Refund => 'Refund',
+      _i32.EscrowStatus => 'EscrowStatus',
+      _i33.TransactionStatus => 'TransactionStatus',
+      _i34.WalletTransactionType => 'WalletTransactionType',
+      _i35.WithdrawalStatus => 'WithdrawalStatus',
+      _i36.Category => 'Category',
+      _i37.CategoryMapping => 'CategoryMapping',
+      _i38.Product => 'Product',
+      _i39.ProductCategory => 'ProductCategory',
+      _i40.ProductCondition => 'ProductCondition',
+      _i41.ProductReview => 'ProductReview',
+      _i42.ProductStatus => 'ProductStatus',
+      _i43.ProductVariant => 'ProductVariant',
+      _i44.Wishlist => 'Wishlist',
+      _i45.WishlistItem => 'WishlistItem',
+      _i46.AlertType => 'AlertType',
+      _i47.BillingCycleSummary => 'BillingCycleSummary',
+      _i48.DailyUsageTracker => 'DailyUsageTracker',
+      _i49.LimitType => 'LimitType',
+      _i50.Subscription => 'Subscription',
+      _i51.SubscriptionEvent => 'SubscriptionEvent',
+      _i52.SubscriptionInvoice => 'SubscriptionInvoice',
+      _i53.TierFeature => 'TierFeature',
+      _i54.ToolUsageLimit => 'ToolUsageLimit',
+      _i55.UsageAlert => 'UsageAlert',
+      _i56.UsageClass => 'UsageClass',
+      _i57.UsageRecord => 'UsageRecord',
+      _i58.Address => 'Address',
+      _i59.AuthSession => 'AuthSession',
+      _i60.CustomerAIPolicy => 'CustomerAIPolicy',
+      _i61.CustomerProfile => 'CustomerProfile',
+      _i62.SubscriptionTier => 'SubscriptionTier',
+      _i63.User => 'User',
+      _i64.UserStatus => 'UserStatus',
+      _i65.UserType => 'UserType',
+      _i66.VendorProfile => 'VendorProfile',
+      _i67.VendorWallet => 'VendorWallet',
+      _i68.WalletTransaction => 'WalletTransaction',
+      _i69.WithdrawalRequest => 'WithdrawalRequest',
+      _i70.WebhookEvent => 'WebhookEvent',
       _ => null,
     };
   }
@@ -741,80 +839,98 @@ class Protocol extends _i1.SerializationManager {
         return 'CartItem';
       case _i24.Order():
         return 'Order';
-      case _i25.OrderItem():
+      case _i25.OrderEscrow():
+        return 'OrderEscrow';
+      case _i26.OrderItem():
         return 'OrderItem';
-      case _i26.OrderStatus():
+      case _i27.OrderStatus():
         return 'OrderStatus';
-      case _i27.PaymentMethod():
+      case _i28.PaymentMethod():
         return 'PaymentMethod';
-      case _i28.PaymentStatus():
+      case _i29.PaymentStatus():
         return 'PaymentStatus';
-      case _i29.PaymentTransaction():
+      case _i30.PaymentTransaction():
         return 'PaymentTransaction';
-      case _i30.Refund():
+      case _i31.Refund():
         return 'Refund';
-      case _i31.Category():
+      case _i32.EscrowStatus():
+        return 'EscrowStatus';
+      case _i33.TransactionStatus():
+        return 'TransactionStatus';
+      case _i34.WalletTransactionType():
+        return 'WalletTransactionType';
+      case _i35.WithdrawalStatus():
+        return 'WithdrawalStatus';
+      case _i36.Category():
         return 'Category';
-      case _i32.CategoryMapping():
+      case _i37.CategoryMapping():
         return 'CategoryMapping';
-      case _i33.Product():
+      case _i38.Product():
         return 'Product';
-      case _i34.ProductCategory():
+      case _i39.ProductCategory():
         return 'ProductCategory';
-      case _i35.ProductCondition():
+      case _i40.ProductCondition():
         return 'ProductCondition';
-      case _i36.ProductReview():
+      case _i41.ProductReview():
         return 'ProductReview';
-      case _i37.ProductStatus():
+      case _i42.ProductStatus():
         return 'ProductStatus';
-      case _i38.ProductVariant():
+      case _i43.ProductVariant():
         return 'ProductVariant';
-      case _i39.Wishlist():
+      case _i44.Wishlist():
         return 'Wishlist';
-      case _i40.WishlistItem():
+      case _i45.WishlistItem():
         return 'WishlistItem';
-      case _i41.AlertType():
+      case _i46.AlertType():
         return 'AlertType';
-      case _i42.BillingCycleSummary():
+      case _i47.BillingCycleSummary():
         return 'BillingCycleSummary';
-      case _i43.DailyUsageTracker():
+      case _i48.DailyUsageTracker():
         return 'DailyUsageTracker';
-      case _i44.LimitType():
+      case _i49.LimitType():
         return 'LimitType';
-      case _i45.Subscription():
+      case _i50.Subscription():
         return 'Subscription';
-      case _i46.SubscriptionEvent():
+      case _i51.SubscriptionEvent():
         return 'SubscriptionEvent';
-      case _i47.SubscriptionInvoice():
+      case _i52.SubscriptionInvoice():
         return 'SubscriptionInvoice';
-      case _i48.TierFeature():
+      case _i53.TierFeature():
         return 'TierFeature';
-      case _i49.ToolUsageLimit():
+      case _i54.ToolUsageLimit():
         return 'ToolUsageLimit';
-      case _i50.UsageAlert():
+      case _i55.UsageAlert():
         return 'UsageAlert';
-      case _i51.UsageClass():
+      case _i56.UsageClass():
         return 'UsageClass';
-      case _i52.UsageRecord():
+      case _i57.UsageRecord():
         return 'UsageRecord';
-      case _i53.Address():
+      case _i58.Address():
         return 'Address';
-      case _i54.AuthSession():
+      case _i59.AuthSession():
         return 'AuthSession';
-      case _i55.CustomerAIPolicy():
+      case _i60.CustomerAIPolicy():
         return 'CustomerAIPolicy';
-      case _i56.CustomerProfile():
+      case _i61.CustomerProfile():
         return 'CustomerProfile';
-      case _i57.SubscriptionTier():
+      case _i62.SubscriptionTier():
         return 'SubscriptionTier';
-      case _i58.User():
+      case _i63.User():
         return 'User';
-      case _i59.UserStatus():
+      case _i64.UserStatus():
         return 'UserStatus';
-      case _i60.UserType():
+      case _i65.UserType():
         return 'UserType';
-      case _i61.VendorProfile():
+      case _i66.VendorProfile():
         return 'VendorProfile';
+      case _i67.VendorWallet():
+        return 'VendorWallet';
+      case _i68.WalletTransaction():
+        return 'WalletTransaction';
+      case _i69.WithdrawalRequest():
+        return 'WithdrawalRequest';
+      case _i70.WebhookEvent():
+        return 'WebhookEvent';
     }
     return null;
   }
@@ -894,116 +1010,143 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'Order') {
       return deserialize<_i24.Order>(data['data']);
     }
+    if (dataClassName == 'OrderEscrow') {
+      return deserialize<_i25.OrderEscrow>(data['data']);
+    }
     if (dataClassName == 'OrderItem') {
-      return deserialize<_i25.OrderItem>(data['data']);
+      return deserialize<_i26.OrderItem>(data['data']);
     }
     if (dataClassName == 'OrderStatus') {
-      return deserialize<_i26.OrderStatus>(data['data']);
+      return deserialize<_i27.OrderStatus>(data['data']);
     }
     if (dataClassName == 'PaymentMethod') {
-      return deserialize<_i27.PaymentMethod>(data['data']);
+      return deserialize<_i28.PaymentMethod>(data['data']);
     }
     if (dataClassName == 'PaymentStatus') {
-      return deserialize<_i28.PaymentStatus>(data['data']);
+      return deserialize<_i29.PaymentStatus>(data['data']);
     }
     if (dataClassName == 'PaymentTransaction') {
-      return deserialize<_i29.PaymentTransaction>(data['data']);
+      return deserialize<_i30.PaymentTransaction>(data['data']);
     }
     if (dataClassName == 'Refund') {
-      return deserialize<_i30.Refund>(data['data']);
+      return deserialize<_i31.Refund>(data['data']);
+    }
+    if (dataClassName == 'EscrowStatus') {
+      return deserialize<_i32.EscrowStatus>(data['data']);
+    }
+    if (dataClassName == 'TransactionStatus') {
+      return deserialize<_i33.TransactionStatus>(data['data']);
+    }
+    if (dataClassName == 'WalletTransactionType') {
+      return deserialize<_i34.WalletTransactionType>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalStatus') {
+      return deserialize<_i35.WithdrawalStatus>(data['data']);
     }
     if (dataClassName == 'Category') {
-      return deserialize<_i31.Category>(data['data']);
+      return deserialize<_i36.Category>(data['data']);
     }
     if (dataClassName == 'CategoryMapping') {
-      return deserialize<_i32.CategoryMapping>(data['data']);
+      return deserialize<_i37.CategoryMapping>(data['data']);
     }
     if (dataClassName == 'Product') {
-      return deserialize<_i33.Product>(data['data']);
+      return deserialize<_i38.Product>(data['data']);
     }
     if (dataClassName == 'ProductCategory') {
-      return deserialize<_i34.ProductCategory>(data['data']);
+      return deserialize<_i39.ProductCategory>(data['data']);
     }
     if (dataClassName == 'ProductCondition') {
-      return deserialize<_i35.ProductCondition>(data['data']);
+      return deserialize<_i40.ProductCondition>(data['data']);
     }
     if (dataClassName == 'ProductReview') {
-      return deserialize<_i36.ProductReview>(data['data']);
+      return deserialize<_i41.ProductReview>(data['data']);
     }
     if (dataClassName == 'ProductStatus') {
-      return deserialize<_i37.ProductStatus>(data['data']);
+      return deserialize<_i42.ProductStatus>(data['data']);
     }
     if (dataClassName == 'ProductVariant') {
-      return deserialize<_i38.ProductVariant>(data['data']);
+      return deserialize<_i43.ProductVariant>(data['data']);
     }
     if (dataClassName == 'Wishlist') {
-      return deserialize<_i39.Wishlist>(data['data']);
+      return deserialize<_i44.Wishlist>(data['data']);
     }
     if (dataClassName == 'WishlistItem') {
-      return deserialize<_i40.WishlistItem>(data['data']);
+      return deserialize<_i45.WishlistItem>(data['data']);
     }
     if (dataClassName == 'AlertType') {
-      return deserialize<_i41.AlertType>(data['data']);
+      return deserialize<_i46.AlertType>(data['data']);
     }
     if (dataClassName == 'BillingCycleSummary') {
-      return deserialize<_i42.BillingCycleSummary>(data['data']);
+      return deserialize<_i47.BillingCycleSummary>(data['data']);
     }
     if (dataClassName == 'DailyUsageTracker') {
-      return deserialize<_i43.DailyUsageTracker>(data['data']);
+      return deserialize<_i48.DailyUsageTracker>(data['data']);
     }
     if (dataClassName == 'LimitType') {
-      return deserialize<_i44.LimitType>(data['data']);
+      return deserialize<_i49.LimitType>(data['data']);
     }
     if (dataClassName == 'Subscription') {
-      return deserialize<_i45.Subscription>(data['data']);
+      return deserialize<_i50.Subscription>(data['data']);
     }
     if (dataClassName == 'SubscriptionEvent') {
-      return deserialize<_i46.SubscriptionEvent>(data['data']);
+      return deserialize<_i51.SubscriptionEvent>(data['data']);
     }
     if (dataClassName == 'SubscriptionInvoice') {
-      return deserialize<_i47.SubscriptionInvoice>(data['data']);
+      return deserialize<_i52.SubscriptionInvoice>(data['data']);
     }
     if (dataClassName == 'TierFeature') {
-      return deserialize<_i48.TierFeature>(data['data']);
+      return deserialize<_i53.TierFeature>(data['data']);
     }
     if (dataClassName == 'ToolUsageLimit') {
-      return deserialize<_i49.ToolUsageLimit>(data['data']);
+      return deserialize<_i54.ToolUsageLimit>(data['data']);
     }
     if (dataClassName == 'UsageAlert') {
-      return deserialize<_i50.UsageAlert>(data['data']);
+      return deserialize<_i55.UsageAlert>(data['data']);
     }
     if (dataClassName == 'UsageClass') {
-      return deserialize<_i51.UsageClass>(data['data']);
+      return deserialize<_i56.UsageClass>(data['data']);
     }
     if (dataClassName == 'UsageRecord') {
-      return deserialize<_i52.UsageRecord>(data['data']);
+      return deserialize<_i57.UsageRecord>(data['data']);
     }
     if (dataClassName == 'Address') {
-      return deserialize<_i53.Address>(data['data']);
+      return deserialize<_i58.Address>(data['data']);
     }
     if (dataClassName == 'AuthSession') {
-      return deserialize<_i54.AuthSession>(data['data']);
+      return deserialize<_i59.AuthSession>(data['data']);
     }
     if (dataClassName == 'CustomerAIPolicy') {
-      return deserialize<_i55.CustomerAIPolicy>(data['data']);
+      return deserialize<_i60.CustomerAIPolicy>(data['data']);
     }
     if (dataClassName == 'CustomerProfile') {
-      return deserialize<_i56.CustomerProfile>(data['data']);
+      return deserialize<_i61.CustomerProfile>(data['data']);
     }
     if (dataClassName == 'SubscriptionTier') {
-      return deserialize<_i57.SubscriptionTier>(data['data']);
+      return deserialize<_i62.SubscriptionTier>(data['data']);
     }
     if (dataClassName == 'User') {
-      return deserialize<_i58.User>(data['data']);
+      return deserialize<_i63.User>(data['data']);
     }
     if (dataClassName == 'UserStatus') {
-      return deserialize<_i59.UserStatus>(data['data']);
+      return deserialize<_i64.UserStatus>(data['data']);
     }
     if (dataClassName == 'UserType') {
-      return deserialize<_i60.UserType>(data['data']);
+      return deserialize<_i65.UserType>(data['data']);
     }
     if (dataClassName == 'VendorProfile') {
-      return deserialize<_i61.VendorProfile>(data['data']);
+      return deserialize<_i66.VendorProfile>(data['data']);
+    }
+    if (dataClassName == 'VendorWallet') {
+      return deserialize<_i67.VendorWallet>(data['data']);
+    }
+    if (dataClassName == 'WalletTransaction') {
+      return deserialize<_i68.WalletTransaction>(data['data']);
+    }
+    if (dataClassName == 'WithdrawalRequest') {
+      return deserialize<_i69.WithdrawalRequest>(data['data']);
+    }
+    if (dataClassName == 'WebhookEvent') {
+      return deserialize<_i70.WebhookEvent>(data['data']);
     }
     return super.deserializeByClassName(data);
   }

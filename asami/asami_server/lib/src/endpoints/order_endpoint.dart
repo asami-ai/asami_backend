@@ -3,6 +3,7 @@
 
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../generated/protocol.dart';
+import '../services/wallet/escrow_automation_service.dart';
 
 class OrderEndpoint extends Endpoint {
   /// Create order from cart
@@ -367,5 +368,250 @@ class OrderEndpoint extends Endpoint {
     }
 
     return createdOrder;
+  }
+
+  /// Mark order as delivered (vendor action)
+  Future<Map<String, dynamic>> markOrderAsDelivered(
+    Session session, {
+    required String orderNumber,
+    required String vendorId,
+  }) async {
+    try {
+      final order = await Order.db.findFirstRow(
+        session,
+        where: (t) => t.orderNumber.equals(orderNumber),
+      );
+      
+      if (order == null) {
+        return {'success': false, 'error': 'Order not found'};
+      }
+      
+      if (order.vendorId.uuid != vendorId) {
+        return {'success': false, 'error': 'Unauthorized'};
+      }
+      
+      if (order.status != OrderStatus.shipped && order.status != OrderStatus.out_for_delivery) {
+        return {'success': false, 'error': 'Order must be shipped first'};
+      }
+      
+      // Update order
+      order.status = OrderStatus.delivered;
+      order.deliveredAt = DateTime.now();
+      order.actualDeliveryDate = DateTime.now();
+      order.updatedAt = DateTime.now();
+      
+      await Order.db.updateRow(session, order);
+      
+      // Start return window in escrow
+      final marked = await EscrowAutomationService.markDelivered(
+        session,
+        orderId: order.id.uuid,
+        deliveredAt: order.deliveredAt!,
+      );
+      
+      if (!marked) {
+        session.log('⚠️ Failed to update escrow for delivered order');
+      }
+      
+      session.log('✅ Order marked as delivered: $orderNumber');
+      
+      return {
+        'success': true,
+        'message': 'Order marked as delivered. Return window started (2 days).',
+        'order': order,
+      };
+    } catch (e, stackTrace) {
+      session.log('Mark delivered error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+  
+  /// Customer acknowledges delivery
+  Future<Map<String, dynamic>> acknowledgeDelivery(
+    Session session, {
+    required String orderNumber,
+    required String customerId,
+  }) async {
+    try {
+      final order = await Order.db.findFirstRow(
+        session,
+        where: (t) => t.orderNumber.equals(orderNumber),
+      );
+      
+      if (order == null) {
+        return {'success': false, 'error': 'Order not found'};
+      }
+      
+      if (order.customerId.uuid != customerId) {
+        return {'success': false, 'error': 'Unauthorized'};
+      }
+      
+      if (order.status != OrderStatus.delivered) {
+        return {'success': false, 'error': 'Order not yet delivered'};
+      }
+      
+      // Acknowledge in escrow
+      final acknowledged = await EscrowAutomationService.acknowledgeDelivery(
+        session,
+        orderId: order.id.uuid,
+      );
+      
+      if (!acknowledged) {
+        return {'success': false, 'error': 'Failed to acknowledge delivery'};
+      }
+      
+      session.log('✅ Delivery acknowledged: $orderNumber');
+      
+      return {
+        'success': true,
+        'message': 'Delivery acknowledged. Funds will be released after return window.',
+      };
+    } catch (e, stackTrace) {
+      session.log('Acknowledge delivery error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+  
+  /// Request return
+  Future<Map<String, dynamic>> requestReturn(
+    Session session, {
+    required String orderNumber,
+    required String customerId,
+    required String reason,
+  }) async {
+    try {
+      final order = await Order.db.findFirstRow(
+        session,
+        where: (t) => t.orderNumber.equals(orderNumber),
+      );
+      
+      if (order == null) {
+        return {'success': false, 'error': 'Order not found'};
+      }
+      
+      if (order.customerId.uuid != customerId) {
+        return {'success': false, 'error': 'Unauthorized'};
+      }
+      
+      if (order.status != OrderStatus.delivered) {
+        return {'success': false, 'error': 'Can only return delivered orders'};
+      }
+      
+      // Process return in escrow
+      final processed = await EscrowAutomationService.processReturnRequest(
+        session,
+        orderId: order.id.uuid,
+        reason: reason,
+      );
+      
+      if (!processed) {
+        return {
+          'success': false,
+          'error': 'Return window expired or return already requested',
+        };
+      }
+      
+      // Create refund record
+      final refund = Refund(
+        id: Uuid().v4obj(),
+        orderId: order.id,
+        amount: order.totalAmount,
+        currency: order.currency,
+        reason: reason,
+        status: 'requested',
+        refundMethod: order.paymentMethod,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      
+      await Refund.db.insertRow(session, refund);
+      
+      session.log('🔄 Return requested: $orderNumber');
+      
+      return {
+        'success': true,
+        'message': 'Return request submitted. Awaiting vendor approval.',
+        'refund_id': refund.id.uuid,
+      };
+    } catch (e, stackTrace) {
+      session.log('Request return error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
+  }
+  
+  /// Approve return (vendor action)
+  Future<Map<String, dynamic>> approveReturn(
+    Session session, {
+    required String orderNumber,
+    required String vendorId,
+  }) async {
+    try {
+      final order = await Order.db.findFirstRow(
+        session,
+        where: (t) => t.orderNumber.equals(orderNumber),
+      );
+      
+      if (order == null) {
+        return {'success': false, 'error': 'Order not found'};
+      }
+      
+      if (order.vendorId.uuid != vendorId) {
+        return {'success': false, 'error': 'Unauthorized'};
+      }
+      
+      // Approve return in escrow (this processes refund)
+      final approved = await EscrowAutomationService.approveReturn(
+        session,
+        orderId: order.id.uuid,
+      );
+      
+      if (!approved) {
+        return {'success': false, 'error': 'Failed to approve return'};
+      }
+      
+      // Update order status
+      order.status = OrderStatus.refunded;
+      order.updatedAt = DateTime.now();
+      await Order.db.updateRow(session, order);
+      
+      // Update refund record
+      final refund = await Refund.db.findFirstRow(
+        session,
+        where: (t) => t.orderId.equals(order.id),
+      );
+      
+      if (refund != null) {
+        refund.status = 'approved';
+        refund.isApproved = true;
+        refund.approvedBy = vendorId;
+        refund.approvedAt = DateTime.now();
+        refund.processedAt = DateTime.now();
+        refund.updatedAt = DateTime.now();
+        
+        await Refund.db.updateRow(session, refund);
+      }
+      
+      session.log('✅ Return approved: $orderNumber');
+      
+      return {
+        'success': true,
+        'message': 'Return approved. Refund processed.',
+      };
+    } catch (e, stackTrace) {
+      session.log('Approve return error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': e.toString(),
+      };
+    }
   }
 }

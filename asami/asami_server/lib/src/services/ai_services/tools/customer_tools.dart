@@ -2,11 +2,14 @@
 // FILE: server/lib/src/ai/tools/customer_tools.dart
 // ============================================================================
 
+import 'package:asami_server/src/endpoints/user_endpoint.dart';
+import 'package:asami_server/utils/logger/asami_logger.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../../endpoints/cart_endpoint.dart';
 import '../../../endpoints/order_endpoint.dart';
 import '../../../endpoints/product_endpoint.dart';
 import '../../../generated/protocol.dart';
+import '../../messaging/product_template_sender.dart';
 import '../../search/product_search_services.dart';
 import 'tool_definition.dart';
 import 'tool_registry.dart';
@@ -397,7 +400,13 @@ class CustomerTools {
         'status': ToolParameter(
           type: 'string',
           description: 'Filter by status',
-          enumValues: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+          enumValues: [
+            'pending',
+            'confirmed',
+            'shipped',
+            'delivered',
+            'cancelled'
+          ],
         ),
       },
     );
@@ -479,25 +488,47 @@ class CustomerTools {
         };
       }
 
+      final user = await UserEndpoint().getProfile(session, UuidValue.fromString(context.userId),);
+
+      Log.info(context.platform);
+
+      // Send products as templates
+      for (var product in products.take(5)) {
+        await ProductTemplateSender.sendProductTemplate(
+          session,
+          product: product,
+          platformUserId: user?.whatsappId ?? '',
+          platform:
+              PlatformType.values.firstWhere((p) => p.name == context.platform),
+          conversationId: context.conversationId,
+          userId: context.userId,
+        );
+      }
+
       return {
         'success': true,
-        'products': products
-            .map((p) => {
-                  'id': p.id.uuid,
-                  'name': p.name,
-                  'description':
-                      p.shortDescription ?? p.description.substring(0, 100),
-                  'price': p.basePrice,
-                  'currency': p.currency,
-                  'category': p.category,
-                  'image': p.thumbnailUrl ?? p.images.firstOrNull,
-                  'quantity': p.quantity,
-                  'vendor_name': p.vendor?.businessName,
-                })
-            .toList(),
-        'count': products.length,
-        'query': query,
+        'message': 'Showing ${products.length} products',
+        'products_sent': products.length,
       };
+      // return {
+      //   'success': true,
+      //   'products': products
+      //       .map((p) => {
+      //             'id': p.id.uuid,
+      //             'name': p.name,
+      //             'description':
+      //                 p.shortDescription ?? p.description.substring(0, 100),
+      //             'price': p.basePrice,
+      //             'currency': p.currency,
+      //             'category': p.category,
+      //             'image': p.thumbnailUrl ?? p.images.firstOrNull,
+      //             'quantity': p.quantity,
+      //             'vendor_name': p.vendor?.businessName,
+      //           })
+      //       .toList(),
+      //   'count': products.length,
+      //   'query': query,
+      // };
     } catch (e) {
       return {
         'success': false,
@@ -836,6 +867,12 @@ class CustomerTools {
         };
       }
 
+      // Get escrow info
+      final escrow = await OrderEscrow.db.findFirstRow(
+        session,
+        where: (t) => t.orderId.equals(order.id),
+      );
+
       return {
         'success': true,
         'order': {
@@ -850,6 +887,11 @@ class CustomerTools {
           'tracking_number': order.trackingNumber,
           'estimated_delivery': order.estimatedDeliveryDate?.toIso8601String(),
           'shipping_provider': order.shippingProvider,
+          'daysLeft': escrow != null
+              ? escrow.isReturnWindowActive
+                  ? escrow.returnWindowEnd!.difference(DateTime.now()).inDays
+                  : 'Awaiting delivery confirmation'
+              : ''
         },
       };
     } catch (e) {
@@ -1039,14 +1081,16 @@ class CustomerTools {
 
     return {
       'success': true,
-      'orders': orders.map((o) => {
-        'order_number': o.orderNumber,
-        'status': o.status.name,
-        'total': o.totalAmount,
-        'currency': o.currency,
-        'date': o.createdAt.toIso8601String(),
-        'items_count': 1, // You might want to query this
-      }).toList(),
+      'orders': orders
+          .map((o) => {
+                'order_number': o.orderNumber,
+                'status': o.status.name,
+                'total': o.totalAmount,
+                'currency': o.currency,
+                'date': o.createdAt.toIso8601String(),
+                'items_count': 1, // You might want to query this
+              })
+          .toList(),
       'count': orders.length,
     };
   }
@@ -1072,7 +1116,7 @@ class CustomerTools {
     }
 
     // Check if cancellable
-    if (order.status == OrderStatus.shipped || 
+    if (order.status == OrderStatus.shipped ||
         order.status == OrderStatus.delivered) {
       return {
         'success': false,
@@ -1126,7 +1170,7 @@ class CustomerTools {
     // Calculate statistics
     double totalSavings = 0;
     int uniqueVendors = 0;
-    
+
     return {
       'success': true,
       'statistics': {
@@ -1136,11 +1180,13 @@ class CustomerTools {
         'unique_vendors': uniqueVendors,
         'average_item_price': cart.subtotal / cart.itemCount,
       },
-      'items': items.map((i) => {
-        'quantity': i.quantity,
-        'unit_price': i.unitPrice,
-        'subtotal': i.subtotal,
-      }).toList(),
+      'items': items
+          .map((i) => {
+                'quantity': i.quantity,
+                'unit_price': i.unitPrice,
+                'subtotal': i.subtotal,
+              })
+          .toList(),
     };
   }
 
@@ -1185,24 +1231,29 @@ class CustomerTools {
 
     return {
       'success': true,
-      'comparison': products.map((p) => {
-        'id': p.id.uuid,
-        'name': p.name,
-        'price': p.basePrice,
-        'discount_price': p.discountPrice,
-        'rating': p.averageRating,
-        'reviews': p.totalReviews,
-        'in_stock': p.quantity > 0,
-        'free_shipping': p.freeShipping,
-        'estimated_delivery_days': p.estimatedDeliveryDays,
-      }).toList(),
+      'comparison': products
+          .map((p) => {
+                'id': p.id.uuid,
+                'name': p.name,
+                'price': p.basePrice,
+                'discount_price': p.discountPrice,
+                'rating': p.averageRating,
+                'reviews': p.totalReviews,
+                'in_stock': p.quantity > 0,
+                'free_shipping': p.freeShipping,
+                'estimated_delivery_days': p.estimatedDeliveryDays,
+              })
+          .toList(),
       'recommendations': {
-        'best_price': products.reduce((a, b) => 
-          (a.discountPrice ?? a.basePrice) < (b.discountPrice ?? b.basePrice) ? a : b
-        ).name,
-        'best_rated': products.reduce((a, b) => 
-          a.averageRating > b.averageRating ? a : b
-        ).name,
+        'best_price': products
+            .reduce((a, b) => (a.discountPrice ?? a.basePrice) <
+                    (b.discountPrice ?? b.basePrice)
+                ? a
+                : b)
+            .name,
+        'best_rated': products
+            .reduce((a, b) => a.averageRating > b.averageRating ? a : b)
+            .name,
       },
     };
   }

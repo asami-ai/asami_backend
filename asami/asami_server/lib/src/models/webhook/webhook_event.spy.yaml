@@ -1,0 +1,54 @@
+class: WebhookEvent
+table: webhook_events
+fields:
+  id: UuidValue, defaultModel=random
+  
+  # Event Details
+  eventType: String                    # charge.success, transfer.success, etc.
+  eventId: String?                     # Paystack event ID
+  
+  # Related Transaction
+  paymentTransactionId: UuidValue?
+  paymentTransaction: PaymentTransaction?, relation(field=paymentTransactionId)
+
+  # ✅ FIX: This is the actual Paystack reference string
+  transactionReference: String?
+  
+  # Payload
+  rawPayload: String                   # Full JSON payload
+  processedPayload: String?            # Extracted important data
+  
+  # Status
+  status: String, default='received'   # received, processing, processed, failed
+  processedAt: DateTime?
+  
+  # Processing
+  retryCount: int, default=0
+  lastRetryAt: DateTime?
+  errorMessage: String?
+  
+  # Verification
+  isVerified: bool, default=false      # Signature verified
+  verifiedAt: DateTime?
+  
+  # Source
+  source: String, default='paystack'   # paystack, flutterwave, etc.
+  ipAddress: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+
+indexes:
+  webhook_event_type_idx:
+    fields: eventType
+  webhook_transaction_id_idx:
+    fields: paymentTransactionId
+  webhook_transaction_ref_idx:
+    fields: transactionReference
+  webhook_status_idx:
+    fields: status
+  webhook_created_idx:
+    fields: createdAt
+  webhook_event_id_idx:
+    fields: eventId

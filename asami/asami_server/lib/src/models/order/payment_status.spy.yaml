@@ -1,10 +1,9 @@
 enum: PaymentStatus
 values:
-  - pending
-  - processing
-  - completed
-  - failed
-  - refunded
-  - partially_refunded
-  - in_escrow
-  - released
+  - pending           # Payment initiated but not yet paid
+  - processing        # Payment is being processed
+  - completed         # Payment successful
+  - failed            # Payment failed
+  - refunded          # Payment refunded
+  - cancelled         # Payment cancelled by user
+  - expired           # Payment link expired

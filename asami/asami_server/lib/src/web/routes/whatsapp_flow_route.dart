@@ -31,7 +31,7 @@ class WhatsAppFlowRoute extends Route {
 
       // Parse JSON payload
       final payload = jsonDecode(body) as Map<String, dynamic>;
-      Log.payload('WhatsApp Flow payload received', payload.keys.toList(), session: session);
+      Log.success('WhatsApp Flow payload received',data:  payload.keys.toList(), session: session);
 
       // Process flow webhook
       final result = await flowHandler.processFlowWebhook(session, payload);

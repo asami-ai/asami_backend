@@ -1,0 +1,10 @@
+# WalletTransactionType
+enum: WalletTransactionType
+values:
+  - earning              # Money earned from sale
+  - withdrawal           # Money withdrawn by vendor
+  - refund               # Money refunded to customer
+  - platform_fee         # Platform commission deduction
+  - adjustment           # Manual adjustment by admin
+  - reversal             # Transaction reversal
+  - penalty              # Penalty or fine

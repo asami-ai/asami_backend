@@ -2,20 +2,24 @@ class: PaymentTransaction
 table: payment_transactions
 fields:
   id: UuidValue, defaultModel=random
-  orderId: UuidValue
-  order: Order?, relation(field=orderId)
   
   # Transaction Details
-  amount: double
-  currency: String, default='USD'
-  paymentMethod: PaymentMethod
-  paymentStatus: PaymentStatus
+  reference: String                    # Unique transaction reference (Paystack)
+  transactionId: String?               # Paystack transaction ID
   
-  # Payment Gateway
-  gatewayName: String
-  gatewayTransactionId: String?
-  gatewayResponse: String?
+  # User & Order
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  orderId: UuidValue?
+  order: Order?, relation(field=orderId)
   
+  # Payment Details
+  amount: double                       # Amount in kobo (Paystack uses kobo)
+  currency: String, default='NGN'
+  paymentMethod: PaymentMethod?        # card, bank_transfer, ussd, etc.
+  channel: String?                     # Paystack channel used
+
+
   # Crypto Specific
   cryptoType: String?
   cryptoAmount: double?
@@ -23,32 +27,77 @@ fields:
   transactionHash: String?
   blockchainNetwork: String?
   conversionRate: double?
-  
-  # Fees
-  platformFee: double, default=0.0
-  gatewayFee: double, default=0.0
+
+  # Payment Gateway
+  gateway: String, default='paystack'
+  gatewayReference: String?            # Gateway's internal reference
+  authorizationCode: String?           # For recurring payments
   
   # Status Tracking
-  isPending: bool, default=true
-  isCompleted: bool, default=false
-  isFailed: bool, default=false
+  status: PaymentStatus, default=pending
+  paidAt: DateTime?
+  
+  # Customer Info (for Paystack)
+  customerEmail: String
+  customerPhone: String?
+  customerName: String?
+  
+  # Payment Links
+  authorizationUrl: String?            # Paystack checkout URL
+  accessCode: String?                  # Paystack access code
   
   # Metadata
-  metadata: String?
+  metadata: String?                    # JSON metadata
+  platformType: PlatformType           # whatsapp/telegram
+  conversationId: UuidValue?
+  
+  # Expiry
+  expiresAt: DateTime                  # Payment link expiry
+  isExpired: bool, default=false
+  
+  # Webhook Events
+  webhookEvents: String?               # JSON array of webhook events
+  lastWebhookAt: DateTime?
+  
+  # Fees & Settlement
+  paystackFee: double, default=0.0
+  platformFee: double, default=0.0
+  netAmount: double?                   # Amount after fees
+  
+  # Refund Info
+  isRefunded: bool, default=false
+  refundedAt: DateTime?
+  refundAmount: double?
+  refundReason: String?
+  
+  # Verification
+  verifiedAt: DateTime?
+  verificationAttempts: int, default=0
+  
+  # IP & Device Info
+  ipAddress: String?
+  userAgent: String?
+  
+  # Failure Info
   failureReason: String?
+  gatewayResponse: String?             # Full gateway response
   
   # Timestamps
   createdAt: DateTime, default=now
   updatedAt: DateTime, default=now
-  completedAt: DateTime?
-  failedAt: DateTime?
 
 indexes:
+  reference_idx:
+    fields: reference
+  user_status_idx:
+    fields: userId, status
   the_order_idx:
     fields: orderId
-  gateway_transaction_idx:
-    fields: gatewayTransactionId
-  transaction_hash_idx:
-    fields: transactionHash
   payment_status_idx:
-    fields: paymentStatus
+    fields: status
+  expired_idx:
+    fields: isExpired, expiresAt
+  createdat_idx:
+    fields: createdAt
+  paystack_ref_idx:
+    fields: gatewayReference

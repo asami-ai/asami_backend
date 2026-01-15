@@ -8,7 +8,7 @@ import '../../services/messaging/telegram/telegram_webhook_handler.dart';
 
 /// Combined route for Telegram webhook (handles both GET and POST)
 class TelegramWebhookRoute extends Route {
-  TelegramWebhookRoute():super(methods: {Method.get, Method.post});
+  TelegramWebhookRoute() : super(methods: {Method.get, Method.post});
   @override
   Future<Result> handleCall(Session session, Request request) async {
     Log.webhook('Telegram', request.method.value, request.url.path,
@@ -34,7 +34,7 @@ class TelegramWebhookRoute extends Route {
     // Handle POST - webhook updates
     if (request.method == Method.post) {
       try {
-        Log.request('Received Telegram webhook POST request', session: session);
+        Log.webhook('Telegram', 'POST', request.url.path, session: session);
 
         // Read request body
         final body = await request.readAsString();
@@ -48,8 +48,8 @@ class TelegramWebhookRoute extends Route {
         }
         // Parse JSON
         final payload = jsonDecode(body) as Map<String, dynamic>;
-        Log.payload('Payload received', payload.keys.toList(),
-            session: session);
+        Log.success('Payload received',
+            data: payload.keys.toList(), session: session);
 
         // Validate it's a Telegram update
         if (!payload.containsKey('update_id')) {
@@ -62,7 +62,7 @@ class TelegramWebhookRoute extends Route {
         }
 
         // Parse as Telegram Update
-        Log.payload('Telegram payload', payload);
+        Log.success('Telegram payload', data: payload, session: session);
         final update = Update.fromJson(payload);
         Log.success('Update parsed',
             data: {'update_id': update.updateId}, session: session);

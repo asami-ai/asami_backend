@@ -1,0 +1,10 @@
+# WithdrawalStatus  
+enum: WithdrawalStatus
+values:
+  - pending              # Awaiting processing
+  - approved             # Approved by admin/system
+  - processing           # Being transferred via Paystack
+  - completed            # Successfully transferred
+  - failed               # Transfer failed
+  - cancelled            # Cancelled by vendor or admin
+  - reversed             # Reversed after completion

@@ -12,10 +12,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import 'dart:async' as _i2;
-import '../services/jobs/daily_usage_calls.dart' as _i3;
-import '../services/jobs/monthly_usage.dart' as _i4;
-import '../services/jobs/usage_pattern_analysis_call.dart' as _i5;
-import '../services/jobs/weekly_reports_call.dart' as _i6;
+import '../services/future_calls/daily_usage_calls.dart' as _i3;
+import '../services/future_calls/monthly_usage.dart' as _i4;
+import '../services/future_calls/usage_pattern_analysis_call.dart' as _i5;
+import '../services/future_calls/weekly_reports_call.dart' as _i6;
 
 /// Invokes a future call.
 typedef _InvokeFutureCall =

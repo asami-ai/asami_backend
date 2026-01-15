@@ -1,0 +1,10 @@
+
+# TransactionStatus (for wallet transactions)
+enum: TransactionStatus
+values:
+  - pending
+  - processing
+  - completed
+  - failed
+  - cancelled
+  - reversed
