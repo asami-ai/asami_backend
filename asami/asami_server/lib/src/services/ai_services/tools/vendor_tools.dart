@@ -318,7 +318,16 @@ Call this immediately when user wants to add/create/upload a product.
         'status': ToolParameter(
           type: 'string',
           description: 'Filter by order status',
-          enumValues: ['pending', 'confirmed', 'shipped', 'delivered'],
+          enumValues: [
+            'pending',
+            'confirmed',
+            'processing',
+            'packed',
+            'shipped',
+            'delivered',
+            'out_for_delivery',
+            'cancelled'
+          ],
         ),
         'limit': ToolParameter(
           type: 'number',
@@ -342,23 +351,26 @@ Call this immediately when user wants to add/create/upload a product.
           type: 'string',
           description: 'New order status',
           enumValues: [
+            'pending',
             'confirmed',
             'processing',
             'packed',
             'shipped',
-            'delivered'
+            'delivered',
+            'out_for_delivery',
+            'cancelled'
           ],
         ),
         'tracking_number': ToolParameter(
           type: 'string',
-          description: 'Tracking number (for shipped status)',
+          description: 'Tracking number (for shipped status) e.g ORDER-1768407987087',
         ),
         'notes': ToolParameter(
           type: 'string',
           description: 'Vendor notes about the order',
         ),
       },
-      requiredParameters: ['order_id', 'status'],
+      requiredParameters: ['tracking_number', 'status'],
     );
   }
 
@@ -424,7 +436,8 @@ Call this immediately when user wants to add/create/upload a product.
   static ToolDefinition _getInventoryAlertsTool() {
     return ToolDefinition(
       name: 'get_inventory_alerts',
-      description: 'Get products that need inventory attention (low stock, out of stock)',
+      description:
+          'Get products that need inventory attention (low stock, out of stock)',
       parameters: {
         'alert_type': ToolParameter(
           type: 'string',
@@ -439,11 +452,12 @@ Call this immediately when user wants to add/create/upload a product.
   static ToolDefinition _getFullOrderDetailsTool() {
     return ToolDefinition(
       name: 'get_full_order_details',
-      description: 'Get complete order details including items and customer info',
+      description:
+          'Get complete order details including items and customer info',
       parameters: {
         'order_number': ToolParameter(
           type: 'string',
-          description: 'Order number',
+          description: 'Order number e.g ORDER-1768407987087',
         ),
       },
       requiredParameters: ['order_number'],
@@ -840,16 +854,25 @@ Call this immediately when user wants to add/create/upload a product.
   ) async {
     try {
       final session = context.session!;
-      final orderId = arguments['order_id'] as String;
+      // final orderId = arguments['order_id'] as String?;
       final statusStr = arguments['status'] as String;
-      final trackingNumber = arguments['tracking_number'] as String?;
+      final trackingNumber = arguments['tracking_number'] as String;
       final notes = arguments['notes'] as String?;
+
+       final order = await Order.db.findFirstRow(
+      session,
+      where: (t) => t.orderNumber.equals(trackingNumber),
+    );
+
+     if (order == null) {
+      return {'success': false, 'response': '❌ Order not found'};
+    }
 
       final status = _parseOrderStatus(statusStr);
 
       final success = await OrderEndpoint().updateOrderStatus(
         session,
-        orderId: UuidValue.fromString(orderId),
+        orderId: UuidValue.fromString(order.id.uuid),
         status: status,
         trackingNumber: trackingNumber,
         vendorNotes: notes,
@@ -1108,9 +1131,9 @@ Call this immediately when user wants to add/create/upload a product.
       limit: 100,
     );
 
-    final lowStock = products.where((p) => 
-      p.quantity > 0 && p.quantity <= p.lowStockThreshold
-    ).toList();
+    final lowStock = products
+        .where((p) => p.quantity > 0 && p.quantity <= p.lowStockThreshold)
+        .toList();
 
     final outOfStock = products.where((p) => p.quantity == 0).toList();
 
@@ -1121,23 +1144,27 @@ Call this immediately when user wants to add/create/upload a product.
     if (alertType == 'low_stock' || alertType == 'all') {
       result['low_stock'] = {
         'count': lowStock.length,
-        'products': lowStock.map((p) => {
-          'id': p.id.uuid,
-          'name': p.name,
-          'current_stock': p.quantity,
-          'threshold': p.lowStockThreshold,
-        }).toList(),
+        'products': lowStock
+            .map((p) => {
+                  'id': p.id.uuid,
+                  'name': p.name,
+                  'current_stock': p.quantity,
+                  'threshold': p.lowStockThreshold,
+                })
+            .toList(),
       };
     }
 
     if (alertType == 'out_of_stock' || alertType == 'all') {
       result['out_of_stock'] = {
         'count': outOfStock.length,
-        'products': outOfStock.map((p) => {
-          'id': p.id.uuid,
-          'name': p.name,
-          'orders_count': p.orderCount,
-        }).toList(),
+        'products': outOfStock
+            .map((p) => {
+                  'id': p.id.uuid,
+                  'name': p.name,
+                  'orders_count': p.orderCount,
+                })
+            .toList(),
       };
     }
 
@@ -1199,12 +1226,14 @@ Call this immediately when user wants to add/create/upload a product.
           'total': order.totalAmount,
           'currency': order.currency,
         },
-        'items': items.map((item) => {
-          'product_name': item.productName,
-          'quantity': item.quantity,
-          'unit_price': item.unitPrice,
-          'total': item.totalAmount,
-        }).toList(),
+        'items': items
+            .map((item) => {
+                  'product_name': item.productName,
+                  'quantity': item.quantity,
+                  'unit_price': item.unitPrice,
+                  'total': item.totalAmount,
+                })
+            .toList(),
         'delivery': {
           'tracking_number': order.trackingNumber,
           'estimated_date': order.estimatedDeliveryDate?.toIso8601String(),
@@ -1352,7 +1381,8 @@ Call this immediately when user wants to add/create/upload a product.
         case 'views':
           return b.viewCount.compareTo(a.viewCount);
         case 'revenue':
-          return (b.basePrice * b.orderCount).compareTo(a.basePrice * a.orderCount);
+          return (b.basePrice * b.orderCount)
+              .compareTo(a.basePrice * a.orderCount);
         case 'rating':
           return b.averageRating.compareTo(a.averageRating);
         default:
@@ -1362,17 +1392,20 @@ Call this immediately when user wants to add/create/upload a product.
 
     return {
       'success': true,
-      'products': products.take(limit).map((p) => {
-        'id': p.id.uuid,
-        'name': p.name,
-        'metrics': {
-          'views': p.viewCount,
-          'orders': p.orderCount,
-          'rating': p.averageRating,
-          'conversion_rate': p.conversionRate,
-        },
-        'revenue': p.basePrice * p.orderCount,
-      }).toList(),
+      'products': products
+          .take(limit)
+          .map((p) => {
+                'id': p.id.uuid,
+                'name': p.name,
+                'metrics': {
+                  'views': p.viewCount,
+                  'orders': p.orderCount,
+                  'rating': p.averageRating,
+                  'conversion_rate': p.conversionRate,
+                },
+                'revenue': p.basePrice * p.orderCount,
+              })
+          .toList(),
     };
   }
 

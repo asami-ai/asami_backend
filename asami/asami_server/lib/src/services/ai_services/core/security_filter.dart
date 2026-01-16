@@ -457,7 +457,7 @@ Message: ${message.length > 100 ? '${message.substring(0, 100)}...' : message}
 
   /// Complete tool permissions mapping
   /// Vendors can access both vendor AND customer tools
-  static final Map<String, List<String>> _toolPermissions = {
+ static final Map<String, List<String>> _toolPermissions = {
     // ========================================================================
     // CUSTOMER TOOLS (Vendors can also use these)
     // ========================================================================
@@ -465,6 +465,7 @@ Message: ${message.length > 100 ? '${message.substring(0, 100)}...' : message}
     // Product Search & Discovery
     'search_products': ['customer', 'vendor'],
     'get_product_details': ['customer', 'vendor'],
+    'compare_products': ['customer', 'vendor'],
     
     // Shopping Cart Management
     'add_to_cart': ['customer', 'vendor'],
@@ -472,12 +473,18 @@ Message: ${message.length > 100 ? '${message.substring(0, 100)}...' : message}
     'view_cart': ['customer', 'vendor'],
     'update_cart_quantity': ['customer', 'vendor'],
     'clear_cart': ['customer', 'vendor'],
+    'get_cart_statistics': ['customer', 'vendor'],
     
     // Order Management (Customer Side)
     'checkout': ['customer', 'vendor'],
     'track_order': ['customer', 'vendor'],
     'view_order_history': ['customer', 'vendor'],
     'cancel_order': ['customer', 'vendor'],
+    'track_order_by_number': ['customer', 'vendor'],
+    'get_recent_orders': ['customer', 'vendor'],
+    'request_order_cancellation': ['customer', 'vendor'],
+    'check_order_escrow': ['customer', 'vendor'],
+    'confirm_delivery': ['customer', 'vendor'],
     
     // Vendor Information
     'get_vendor_info': ['customer', 'vendor'],
@@ -493,11 +500,17 @@ Message: ${message.length > 100 ? '${message.substring(0, 100)}...' : message}
     'list_vendor_products': ['vendor'],
     'update_inventory': ['vendor'],
     'get_top_selling_products': ['vendor'],
+    'bulk_update_inventory': ['vendor'],
+    'get_inventory_alerts': ['vendor'],
+    'get_product_performance': ['vendor'],
     
     // Order Management (Vendor Side)
     'view_vendor_orders': ['vendor'],
     'update_order_status': ['vendor'],
     'get_order_details': ['vendor'],
+    'get_full_order_details': ['vendor'],
+    'batch_update_order_status': ['vendor'],
+    'mark_delivered': ['vendor'],
     
     // Analytics & Business Intelligence
     'get_vendor_analytics': ['vendor'],
@@ -505,6 +518,10 @@ Message: ${message.length > 100 ? '${message.substring(0, 100)}...' : message}
     // Subscription Management
     'get_subscription_info': ['vendor'],
     'check_tier_limits': ['vendor'],
+    
+    // Wallet Management
+    'check_wallet_balance': ['vendor'],
+    'request_withdrawal': ['vendor'],
     
     // ========================================================================
     // ADMIN TOOLS (Future Implementation)

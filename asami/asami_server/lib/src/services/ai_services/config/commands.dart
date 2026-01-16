@@ -513,7 +513,6 @@ Start shopping with /products
     };
   });
 
-
   // Wishlist (placeholder for future)
   processor.registerCommand('wishlist', (args, context) async {
     return {
@@ -621,6 +620,86 @@ You still have 2 days to request a return if there's any issue.
 Type /return $orderNumber to start a return.
 ''',
         'command': 'received',
+      };
+    }
+
+    return {
+      'success': false,
+      'response': result['error'],
+    };
+  });
+
+  // Mark order as delivered (vendor action)
+  processor.registerCommand('markdelivered', (args, context) async {
+    if (args.isEmpty) {
+      return {
+        'success': false,
+        'response': 'Usage: `/delivered ORDER-12345`',
+      };
+    }
+
+    final session = context.session!;
+    final orderNumber = args.join(' ');
+
+    final result = await OrderEndpoint().markOrderAsDelivered(
+      session,
+      orderNumber: orderNumber,
+      vendorId: context.userId,
+    );
+
+    if (result['success']) {
+      return {
+        'success': true,
+        'response': '''
+✅ **Marked as Delivered**
+
+Order: $orderNumber
+
+Return window started (2 days). Customer will be notified to confirm delivery.
+
+If customer confirms, funds will be released faster.
+''',
+        'command': 'delivered',
+      };
+    }
+
+    return {
+      'success': false,
+      'response': result['error'],
+    };
+  });
+
+  // Approve return (vendor action)
+  processor.registerCommand('approvereturn', (args, context) async {
+    if (args.isEmpty) {
+      return {
+        'success': false,
+        'response': 'Usage: `/approve_return ORDER-12345`',
+      };
+    }
+
+    final session = context.session!;
+    final orderNumber = args.join(' ');
+
+    final result = await OrderEndpoint().approveReturn(
+      session,
+      orderNumber: orderNumber,
+      vendorId: context.userId,
+    );
+
+    if (result['success']) {
+      return {
+        'success': true,
+        'response': '''
+✅ **Return Approved**
+
+Order: $orderNumber
+
+Refund has been processed. Funds returned to customer.
+
+Thank you for handling this promptly!
+''',
+        'command': 'approve_return',
       };
     }
 
@@ -745,24 +824,14 @@ void _registerVendorCommands(CommandProcessor processor) {
       };
     }
 
-    final session = context.session!;
     final orderNumber = args.join(' ');
-
-    final order = await Order.db.findFirstRow(
-      session,
-      where: (t) => t.orderNumber.equals(orderNumber),
-    );
-
-    if (order == null) {
-      return {'success': false, 'response': '❌ Order not found'};
-    }
 
     // ✅ USE ACTUAL TOOL LOGIC
     final toolRegistry = getIt<ToolRegistry>();
     final result = await toolRegistry.execute(
       'update_order_status',
       {
-        'order_id': order.id.uuid,
+        'tracking_number': orderNumber,
         'status': 'confirmed',
       },
       context,
@@ -771,7 +840,7 @@ void _registerVendorCommands(CommandProcessor processor) {
     if (result['success']) {
       return {
         'success': true,
-        'response': '✅ Order #${order.orderNumber} confirmed!',
+        'response': '✅ Order #$orderNumber confirmed!',
         'command': 'confirmorder',
       };
     }
@@ -2113,13 +2182,13 @@ String _getCapabilitiesText(String userType) {
     return '''
 🎯 **What I Can Do**
 
-**Shopping:**
+*Shopping:*
 ✅ Search products across all vendors
 ✅ Filter by price, color, size
 ✅ Add to cart & checkout
 ✅ Track deliveries
 
-**Support:**
+*Support:*
 ✅ Answer product questions
 ✅ Help with orders
 ✅ Connect with vendors
@@ -2130,18 +2199,18 @@ Just ask me anything!
     return '''
 🎯 **Business Features**
 
-**Product Management:**
+*Product Management:*
 ✅ AI product descriptions
 ✅ Bulk updates
 ✅ Image cataloging
 ✅ Inventory tracking
 
-**Analytics:**
+*Analytics:*
 ✅ Real-time sales
 ✅ Revenue reports
 ✅ Customer insights
 
-**Orders:**
+*Orders:*
 ✅ Process orders
 ✅ Update statuses
 ✅ Handle refunds
@@ -2153,12 +2222,12 @@ Let me help grow your business!
 
 Future<String> _formatAccountInfo(Session session, User user) async {
   final buffer = StringBuffer();
-  buffer.writeln('👤 **Your Account**\n');
-  buffer.writeln('**Name:** ${user.firstName ?? ''} ${user.lastName ?? ''}');
-  buffer.writeln('**Email:** ${user.email ?? 'Not set'}');
-  buffer.writeln('**Phone:** ${user.phoneNumber}');
-  buffer.writeln('**Type:** ${user.userType.name.toUpperCase()}');
-  buffer.writeln('**Status:** ${user.status.name}');
+  buffer.writeln('👤 *Your Account*\n');
+  buffer.writeln('*Name:* ${user.firstName ?? ''} ${user.lastName ?? ''}');
+  buffer.writeln('*Email:* ${user.email ?? 'Not set'}');
+  buffer.writeln('*Phone:* ${user.phoneNumber}');
+  buffer.writeln('*Type:* ${user.userType.name.toUpperCase()}');
+  buffer.writeln('*Status:* ${user.status.name}');
 
   if (user.userType == UserType.vendor) {
     final vendor = await VendorProfile.db.findFirstRow(
@@ -2167,7 +2236,7 @@ Future<String> _formatAccountInfo(Session session, User user) async {
     );
 
     if (vendor != null) {
-      buffer.writeln('\n**Business:**');
+      buffer.writeln('\n*Business:*');
       buffer.writeln('Name: ${vendor.businessName}');
       buffer.writeln('Tier: ${vendor.subscriptionTier.name.toUpperCase()}');
       buffer.writeln(

@@ -148,7 +148,9 @@ class CommandProcessor {
     'setupbank': ['vendor'],
     'received' : ['vendor', 'customer'],
     'return' : ['vendor,customer'],
-    
+    'markdelivered':['vendor'],
+    'approvereturn':  ['vendor']
+
   };
 
   /// Check if a command exists
