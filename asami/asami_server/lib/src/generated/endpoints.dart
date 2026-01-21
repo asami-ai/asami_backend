@@ -1107,11 +1107,6 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<String>(),
               nullable: false,
             ),
-            'refund': _i1.ParameterDescription(
-              name: 'refund',
-              type: _i1.getType<bool>(),
-              nullable: false,
-            ),
           },
           call:
               (
@@ -1121,7 +1116,6 @@ class Endpoints extends _i1.EndpointDispatch {
                 session,
                 orderId: params['orderId'],
                 cancellationReason: params['cancellationReason'],
-                refund: params['refund'],
               ),
         ),
         'markOrderAsDelivered': _i1.MethodConnector(

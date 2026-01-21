@@ -34,6 +34,8 @@ import 'messaging/whatsapp/whatsapp_service.dart';
 import 'messaging/whatsapp/whatsapp_service_adapter.dart';
 import 'messaging/telegram/telegram_service.dart';
 import 'messaging/telegram/telegram_service_adapter.dart';
+import 'notifications/email_notification_service.dart';
+import 'notifications/notification_dispatcher.dart';
 import 'payment/paystack_service.dart';
 import 'payment/paystack_webhook_handler.dart';
 
@@ -91,6 +93,9 @@ Future<void> setupDependencyInjection({
   await _setupProductCreationHandler();
 
   await _setupPaystackService();
+
+  getIt.registerFactory<NotificationDispatcher>(() => NotificationDispatcher());
+  getIt.registerFactory<EmailNotificationService>(() => EmailNotificationService());
 
   Log.info('\n✅ Dependency injection setup complete!\n');
 }

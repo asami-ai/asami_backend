@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../../generated/protocol.dart';
+import '../dependency_injection.dart';
+import '../notifications/notification_dispatcher.dart';
 
 class WalletService {
   
@@ -130,6 +132,8 @@ class WalletService {
       escrow.updatedAt = DateTime.now();
       
       await OrderEscrow.db.updateRow(session, escrow);
+
+      await  _notifyPaymentReleased(session, order: escrow.order, amount: transaction.amount);
       
       session.log('✅ Escrow released: ₦${transaction.amount.toStringAsFixed(2)} for order ${escrow.orderId.uuid}');
       
@@ -278,5 +282,30 @@ class WalletService {
       'pending_escrows': pendingEscrows,
       'pending_count': pendingEscrows.length,
     };
+  }
+
+  
+  /// When payment is released from escrow
+  static Future<void> _notifyPaymentReleased(
+    Session session, {
+    required Order? order,
+    required double amount,
+  }) async {
+    if (order == null) return;
+    
+    final vendor = await User.db.findById(session, order.vendorId);
+    if (vendor == null) return;
+
+    // ✅ SEND NOTIFICATIONS
+    final dispatcher = getIt<NotificationDispatcher>();
+    await dispatcher.dispatchNotification(
+      session: session,
+      user: vendor,
+      type: NotificationType.paymentReleased,
+      data: {
+        'order': order,
+        'amount': amount,
+      },
+    );
   }
 }

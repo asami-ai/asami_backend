@@ -525,14 +525,12 @@ class EndpointOrder extends _i1.EndpointRef {
   _i2.Future<bool> cancelOrder({
     required _i1.UuidValue orderId,
     required String cancellationReason,
-    required bool refund,
   }) => caller.callServerEndpoint<bool>(
     'order',
     'cancelOrder',
     {
       'orderId': orderId,
       'cancellationReason': cancellationReason,
-      'refund': refund,
     },
   );
 

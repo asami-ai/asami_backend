@@ -1,8 +1,11 @@
-
 // File: server/lib/src/endpoints/order_endpoint.dart
 
+import 'dart:async';
+
+import 'package:asami_server/src/services/notifications/notification_dispatcher.dart';
 import 'package:serverpod/serverpod.dart' hide Order;
 import '../generated/protocol.dart';
+import '../services/dependency_injection.dart';
 import '../services/wallet/escrow_automation_service.dart';
 
 class OrderEndpoint extends Endpoint {
@@ -130,10 +133,11 @@ class OrderEndpoint extends Endpoint {
     int offset = 0,
   }) async {
     WhereExpressionBuilder<OrderTable>? whereClause;
-     whereClause = (t) => t.customerId.equals(customerId);
+    whereClause = (t) => t.customerId.equals(customerId);
 
     if (status != null) {
-      whereClause = (t) => t.customerId.equals(customerId) & t.status.equals(status);
+      whereClause =
+          (t) => t.customerId.equals(customerId) & t.status.equals(status);
     }
 
     return await Order.db.find(
@@ -155,10 +159,11 @@ class OrderEndpoint extends Endpoint {
     int offset = 0,
   }) async {
     WhereExpressionBuilder<OrderTable>? whereClause;
-     whereClause = (t) => t.vendorId.equals(vendorId);
+    whereClause = (t) => t.vendorId.equals(vendorId);
 
     if (status != null) {
-      whereClause = (t) => t.vendorId.equals(vendorId) & t.status.equals(status);
+      whereClause =
+          (t) => t.vendorId.equals(vendorId) & t.status.equals(status);
     }
 
     return await Order.db.find(
@@ -185,21 +190,29 @@ class OrderEndpoint extends Endpoint {
     order.status = status;
     if (trackingNumber != null) order.trackingNumber = trackingNumber;
     if (vendorNotes != null) order.vendorNotes = vendorNotes;
+    var notifStatus = NotificationType.paymentReceived;
 
     // Update timestamps based on status
     switch (status) {
       case OrderStatus.confirmed:
         order.confirmedAt = DateTime.now();
+        notifStatus = NotificationType.orderConfirmed;
         break;
       case OrderStatus.shipped:
         order.shippedAt = DateTime.now();
+        notifStatus = NotificationType.orderShipped;
         break;
       case OrderStatus.delivered:
         order.deliveredAt = DateTime.now();
         order.actualDeliveryDate = DateTime.now();
+        notifStatus = NotificationType.orderDelivered;
         break;
       case OrderStatus.cancelled:
         order.cancelledAt = DateTime.now();
+        notifStatus = NotificationType.orderCancelled;
+        break;
+      case OrderStatus.refunded:
+        notifStatus = NotificationType.refundProcessed;
         break;
       default:
         break;
@@ -208,7 +221,16 @@ class OrderEndpoint extends Endpoint {
     order.updatedAt = DateTime.now();
     await Order.db.updateRow(session, order);
 
-    // TODO: Send notification to customer
+    final customer = await User.db.findById(session, order.customerId);
+    if (customer != null) {
+      final dispatcher = getIt<NotificationDispatcher>();
+      await dispatcher.dispatchNotification(
+        session: session,
+        user: customer,
+        type: notifStatus,
+        data: {'order': order},
+      );
+    }
 
     return true;
   }
@@ -218,7 +240,7 @@ class OrderEndpoint extends Endpoint {
     Session session, {
     required UuidValue orderId,
     required String cancellationReason,
-    bool refund = false,
+    // bool refund = false,
   }) async {
     final order = await getOrder(session, orderId);
     if (order == null) return false;
@@ -253,10 +275,24 @@ class OrderEndpoint extends Endpoint {
         await Product.db.updateRow(session, product);
       }
     }
+    // ✅ NOTIFY CUSTOMER
+    final customer = await User.db.findById(session, order.customerId);
+    if (customer != null) {
+      final dispatcher = getIt<NotificationDispatcher>();
+      await dispatcher.dispatchNotification(
+        session: session,
+        user: customer,
+        type: NotificationType.returnApproved,
+        data: {
+          'order': order,
+        },
+      );
+    }
 
     // Process refund if needed
-    if (refund && order.paymentStatus == PaymentStatus.completed) {
-      // TODO: Implement refund logic
+    if (order.paymentStatus == PaymentStatus.completed) {
+      await EscrowAutomationService.approveReturn(session,
+          orderId: order.id.uuid);
     }
 
     return true;
@@ -381,40 +417,60 @@ class OrderEndpoint extends Endpoint {
         session,
         where: (t) => t.orderNumber.equals(orderNumber),
       );
-      
+
       if (order == null) {
         return {'success': false, 'error': 'Order not found'};
       }
-      
+
       if (order.vendorId.uuid != vendorId) {
         return {'success': false, 'error': 'Unauthorized'};
       }
-      
-      if (order.status != OrderStatus.shipped && order.status != OrderStatus.out_for_delivery) {
+
+      if (order.status != OrderStatus.shipped &&
+          order.status != OrderStatus.out_for_delivery) {
         return {'success': false, 'error': 'Order must be shipped first'};
       }
-      
+
       // Update order
       order.status = OrderStatus.delivered;
       order.deliveredAt = DateTime.now();
       order.actualDeliveryDate = DateTime.now();
       order.updatedAt = DateTime.now();
-      
+
       await Order.db.updateRow(session, order);
-      
+
       // Start return window in escrow
       final marked = await EscrowAutomationService.markDelivered(
         session,
         orderId: order.id.uuid,
         deliveredAt: order.deliveredAt!,
       );
-      
+
       if (!marked) {
         session.log('⚠️ Failed to update escrow for delivered order');
       }
-      
+
+      // ✅ SEND NOTIFICATIONS
+      final customer = await User.db.findById(session, order.customerId);
+      final escrow = await OrderEscrow.db.findFirstRow(
+        session,
+        where: (t) => t.orderId.equals(order.id),
+      );
+
+      if (customer != null && escrow != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: customer,
+          type: NotificationType.orderDelivered,
+          data: {
+            'order': order,
+            'escrow': escrow,
+          },
+        );
+      }
       session.log('✅ Order marked as delivered: $orderNumber');
-      
+
       return {
         'success': true,
         'message': 'Order marked as delivered. Return window started (2 days).',
@@ -428,7 +484,7 @@ class OrderEndpoint extends Endpoint {
       };
     }
   }
-  
+
   /// Customer acknowledges delivery
   Future<Map<String, dynamic>> acknowledgeDelivery(
     Session session, {
@@ -440,34 +496,49 @@ class OrderEndpoint extends Endpoint {
         session,
         where: (t) => t.orderNumber.equals(orderNumber),
       );
-      
+
       if (order == null) {
         return {'success': false, 'error': 'Order not found'};
       }
-      
+
       if (order.customerId.uuid != customerId) {
         return {'success': false, 'error': 'Unauthorized'};
       }
-      
+
       if (order.status != OrderStatus.delivered) {
         return {'success': false, 'error': 'Order not yet delivered'};
       }
-      
+
       // Acknowledge in escrow
       final acknowledged = await EscrowAutomationService.acknowledgeDelivery(
         session,
         orderId: order.id.uuid,
       );
-      
+
       if (!acknowledged) {
         return {'success': false, 'error': 'Failed to acknowledge delivery'};
       }
-      
+
+      // ✅ NOTIFY VENDOR
+      final vendor = await User.db.findById(session, order.vendorId);
+      if (vendor != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: vendor,
+          type: NotificationType.deliveryAcknowledged,
+          data: {
+            'order': order,
+          },
+        );
+      }
+
       session.log('✅ Delivery acknowledged: $orderNumber');
-      
+
       return {
         'success': true,
-        'message': 'Delivery acknowledged. Funds will be released after return window.',
+        'message':
+            'Delivery acknowledged. Funds will be released after return window.',
       };
     } catch (e, stackTrace) {
       session.log('Acknowledge delivery error: $e', stackTrace: stackTrace);
@@ -477,7 +548,7 @@ class OrderEndpoint extends Endpoint {
       };
     }
   }
-  
+
   /// Request return
   Future<Map<String, dynamic>> requestReturn(
     Session session, {
@@ -490,33 +561,33 @@ class OrderEndpoint extends Endpoint {
         session,
         where: (t) => t.orderNumber.equals(orderNumber),
       );
-      
+
       if (order == null) {
         return {'success': false, 'error': 'Order not found'};
       }
-      
+
       if (order.customerId.uuid != customerId) {
         return {'success': false, 'error': 'Unauthorized'};
       }
-      
+
       if (order.status != OrderStatus.delivered) {
         return {'success': false, 'error': 'Can only return delivered orders'};
       }
-      
+
       // Process return in escrow
       final processed = await EscrowAutomationService.processReturnRequest(
         session,
         orderId: order.id.uuid,
         reason: reason,
       );
-      
+
       if (!processed) {
         return {
           'success': false,
           'error': 'Return window expired or return already requested',
         };
       }
-      
+
       // Create refund record
       final refund = Refund(
         id: Uuid().v4obj(),
@@ -529,11 +600,26 @@ class OrderEndpoint extends Endpoint {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
+
       await Refund.db.insertRow(session, refund);
-      
+
+      // ✅ NOTIFY VENDOR
+      final vendor = await User.db.findById(session, order.vendorId);
+      if (vendor != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: vendor,
+          type: NotificationType.returnRequested,
+          data: {
+            'order': order,
+            'reason': reason,
+          },
+        );
+      }
+
       session.log('🔄 Return requested: $orderNumber');
-      
+
       return {
         'success': true,
         'message': 'Return request submitted. Awaiting vendor approval.',
@@ -547,7 +633,7 @@ class OrderEndpoint extends Endpoint {
       };
     }
   }
-  
+
   /// Approve return (vendor action)
   Future<Map<String, dynamic>> approveReturn(
     Session session, {
@@ -559,36 +645,50 @@ class OrderEndpoint extends Endpoint {
         session,
         where: (t) => t.orderNumber.equals(orderNumber),
       );
-      
+
       if (order == null) {
         return {'success': false, 'error': 'Order not found'};
       }
-      
+
       if (order.vendorId.uuid != vendorId) {
         return {'success': false, 'error': 'Unauthorized'};
       }
-      
+
+      // ✅ NOTIFY CUSTOMER
+      final customer = await User.db.findById(session, order.customerId);
+      if (customer != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: customer,
+          type: NotificationType.returnApproved,
+          data: {
+            'order': order,
+          },
+        );
+      }
+
       // Approve return in escrow (this processes refund)
       final approved = await EscrowAutomationService.approveReturn(
         session,
         orderId: order.id.uuid,
       );
-      
+
       if (!approved) {
         return {'success': false, 'error': 'Failed to approve return'};
       }
-      
+
       // Update order status
       order.status = OrderStatus.refunded;
       order.updatedAt = DateTime.now();
       await Order.db.updateRow(session, order);
-      
+
       // Update refund record
       final refund = await Refund.db.findFirstRow(
         session,
         where: (t) => t.orderId.equals(order.id),
       );
-      
+
       if (refund != null) {
         refund.status = 'approved';
         refund.isApproved = true;
@@ -596,12 +696,13 @@ class OrderEndpoint extends Endpoint {
         refund.approvedAt = DateTime.now();
         refund.processedAt = DateTime.now();
         refund.updatedAt = DateTime.now();
-        
+
         await Refund.db.updateRow(session, refund);
       }
-      
+
       session.log('✅ Return approved: $orderNumber');
       
+
       return {
         'success': true,
         'message': 'Return approved. Refund processed.',

@@ -1,10 +1,11 @@
-// File: server/lib/src/services/messaging/whatsapp/product_template_sender.dart
+// File: server/lib/src/services/messaging/product_template_sender.dart
 
 import 'package:serverpod/serverpod.dart';
 import '../../endpoints/cart_endpoint.dart';
 import '../../endpoints/payment_endpoint.dart';
 import '../../generated/protocol.dart';
 import '../dependency_injection.dart';
+import '../validation/user_data_validator.dart';
 import 'whatsapp/whatsapp_service.dart';
 
 class ProductTemplateSender {
@@ -61,7 +62,6 @@ class ProductTemplateSender {
       final price = product.discountPrice ?? product.basePrice;
       final currency = product.currency;
 
-      // ✅ FIX: Handle null short description
       final description = product.shortDescription ??
           (product.description.length > 200
               ? '${product.description.substring(0, 197)}...'
@@ -120,12 +120,10 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
         }
       };
 
-      // Remove header if no image
       if (imageUrl == null) {
         (messagePayload['interactive'] as Map).remove('header');
       }
 
-      // Send interactive message
       final result = await whatsappService.sendInteractiveReplyButton(
           phoneNumber: platformUserId,
           headerInteractive: (messagePayload['interactive'] as Map)['header']
@@ -158,8 +156,6 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
   }) async {
     try {
       // TODO: Implement Telegram product message with inline keyboard
-      // Similar to WhatsApp but using Telegram's sendPhoto with inline keyboard
-
       session.log('⚠️ Telegram product template not yet implemented');
       return false;
     } catch (e, stackTrace) {
@@ -169,7 +165,7 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
     }
   }
 
-  /// Handle "Buy Now" button click
+  /// Handle "Buy Now" button click with user data validation checkpoint
   static Future<Map<String, dynamic>> handleBuyNowClick(
     Session session, {
     required String productId,
@@ -179,11 +175,77 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
     required String platformUserId,
   }) async {
     try {
-      // Initialize payment
+      final user = await User.db.findById(session, UuidValue.fromString(userId));
+      if (user == null) {
+        return {'success': false, 'error': 'User not found'};
+      }
+
+      final conversation = await Conversation.db.findById(
+        session,
+        UuidValue.fromString(conversationId),
+      );
+      if (conversation == null) {
+        return {'success': false, 'error': 'Conversation not found'};
+      }
+
+      // ✅ CHECKPOINT: Validate user data before purchase
+      final validator = UserDataValidator(session);
+      final validation = await validator.validateForPurchase(
+        user: user,
+        conversation: conversation,
+      );
+
+      if (!validation['valid']) {
+        // Missing data - initiate checkpoint
+        final missingFields = validation['missing_fields'] as List<String>;
+        
+        await validator.initiateCheckpoint(
+          user: user,
+          conversation: conversation,
+          missingFields: missingFields,
+          platform: platform,
+        );
+
+        return {
+          'success': true,
+          'checkpoint_required': true,
+          'missing_fields': missingFields,
+          'message': 'Please provide missing information to continue',
+        };
+      }
+
+      // ✅ All data present - proceed with payment
+      return await _initializePayment(
+        session,
+        user: user,
+        productId: productId,
+        conversationId: conversationId,
+        platform: platform,
+        platformUserId: platformUserId,
+      );
+    } catch (e, stackTrace) {
+      session.log('Buy now handler error: $e', stackTrace: stackTrace);
+      return {
+        'success': false,
+        'error': 'Failed to process purchase: ${e.toString()}',
+      };
+    }
+  }
+
+  /// Initialize payment after validation passes
+  static Future<Map<String, dynamic>> _initializePayment(
+    Session session, {
+    required User user,
+    required String productId,
+    required String conversationId,
+    required PlatformType platform,
+    required String platformUserId,
+  }) async {
+    try {
       final paymentEndpoint = PaymentEndpoint();
       final paymentResult = await paymentEndpoint.initializeProductPayment(
         session,
-        userId: userId,
+        userId: user.id.uuid,
         productId: productId,
         conversationId: conversationId,
         platform: platform,
@@ -197,7 +259,6 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
         };
       }
 
-      // Send payment link to user
       final authUrl = paymentResult['authorization_url'] as String;
       final amount = paymentResult['amount'] as double;
       final expiresInMinutes = paymentResult['expires_in_minutes'] as int;
@@ -209,6 +270,8 @@ ${product.freeShipping ? '🚚 Free Shipping' : ''}
         text: """
 💳 *Payment Initialized*
 
+Hi ${user.firstName} ${user.lastName}!
+
 Click the link below to complete your payment:
 
 $authUrl
@@ -217,6 +280,8 @@ $authUrl
 ⏰ Expires in: $expiresInMinutes minutes
 
 Once payment is confirmed, your order will be created automatically! 🎉
+
+📧 You'll receive a receipt via email and order updates here.
 """,
       );
 
@@ -228,10 +293,10 @@ Once payment is confirmed, your order will be created automatically! 🎉
         'message': 'Payment link sent',
       };
     } catch (e, stackTrace) {
-      session.log('Buy now handler error: $e', stackTrace: stackTrace);
+      session.log('Payment initialization error: $e', stackTrace: stackTrace);
       return {
         'success': false,
-        'error': 'Failed to process purchase: ${e.toString()}',
+        'error': 'Failed to initialize payment: ${e.toString()}',
       };
     }
   }
@@ -243,9 +308,6 @@ Once payment is confirmed, your order will be created automatically! 🎉
     required String userId,
   }) async {
     try {
-      // TODO: Implement wishlist functionality
-      // For now, just return success
-
       session.log('❤️ Product $productId added to wishlist for user $userId');
 
       return {
@@ -285,7 +347,7 @@ Once payment is confirmed, your order will be created automatically! 🎉
       final detailsText = """
 📦 *${product.name}*
 
-📝 *Description:*
+📄 *Description:*
 ${product.description}
 
 💰 *Price:* ${product.currency} ${product.basePrice.toStringAsFixed(2)}
@@ -393,7 +455,7 @@ What next?
 
     return {
       'success': true,
-      'message': 'Details sent',
+      'message': 'Added to cart',
     };
   }
 

@@ -1464,7 +1464,6 @@ class _OrderEndpoint {
     _i1.TestSessionBuilder sessionBuilder, {
     required _i2.UuidValue orderId,
     required String cancellationReason,
-    required bool refund,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1480,7 +1479,6 @@ class _OrderEndpoint {
           parameters: _i1.testObjectToJson({
             'orderId': orderId,
             'cancellationReason': cancellationReason,
-            'refund': refund,
           }),
           serializationManager: _serializationManager,
         );

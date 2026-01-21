@@ -10,6 +10,7 @@ import '../services/ai_services/core/agent_system.dart';
 import '../services/dependency_injection.dart';
 import '../services/messaging/messaging_service_factory.dart';
 import '../services/messaging/whatsapp/whatsapp_message_formatter.dart';
+import '../services/validation/user_data_validator.dart';
 import 'auth_endpoint.dart';
 
 class BotEndpoint extends Endpoint {
@@ -100,6 +101,49 @@ class BotEndpoint extends Endpoint {
         platform,
         platformUserId,
       );
+
+      // ✅ NEW: Check if user is in data collection checkpoint
+      final validator = UserDataValidator(session);
+      final isInCheckpoint = await validator.isInCheckpoint(conversation);
+
+      if (isInCheckpoint) {
+        // Process checkpoint input instead of normal message
+        final checkpointResult = await validator.processCheckpointInput(
+          user: user,
+          conversation: conversation,
+          input: messageContent,
+          platform: platform,
+        );
+
+        if (!checkpointResult['success']) {
+          // Validation failed - show error and reprompt
+          return {
+            'success': true,
+            'response': checkpointResult['error'],
+            'in_checkpoint': true,
+          };
+        }
+
+        if (checkpointResult['checkpoint_active'] == true) {
+          // More data needed - show next prompt
+          return {
+            'success': true,
+            'response': checkpointResult['prompt'],
+            'in_checkpoint': true,
+          };
+        }
+
+        if (checkpointResult['checkpoint_complete'] == true) {
+          // Checkpoint complete - now initialize payment
+          // The payment link will be sent automatically
+          return {
+            'success': true,
+            'response': checkpointResult['message'],
+            'checkpoint_complete': true,
+            'intent': 'user_data_collected',
+          };
+        }
+      }
 
       // ========== STEP 3: SAVE INCOMING MESSAGE ==========
       final message = await _saveMessage(
@@ -816,11 +860,11 @@ What would you like to do today?
     if (platform == PlatformType.whatsapp) {
       // WhatsApp: Send template with buttons
       await getIt<AuthStateManager>()
-          .showWhatsappMenu(platformUserId, session, dBCheck:  false);
+          .showWhatsappMenu(platformUserId, session, dBCheck: false);
     } else if (platform == PlatformType.telegram) {
       // Telegram: Send message with inline keyboard
       await getIt<AuthStateManager>()
-          .showTelegramMenu(platformUserId, session,dBCheck:  false);
+          .showTelegramMenu(platformUserId, session, dBCheck: false);
     }
 
     return {
@@ -837,7 +881,6 @@ What would you like to do today?
     String platformUserId,
     String? userEmail,
   ) async {
-
     final message = '''
 👋 Welcome back!
 
@@ -848,10 +891,12 @@ To Login, please verify your email address.
 
     if (platform == PlatformType.whatsapp) {
       // WhatsApp: Send template with buttons
-      await getIt<AuthStateManager>().showWhatsappMenu(platformUserId, session, dBCheck: false, isLogin: true, defaultMessage: message);
+      await getIt<AuthStateManager>().showWhatsappMenu(platformUserId, session,
+          dBCheck: false, isLogin: true, defaultMessage: message);
     } else if (platform == PlatformType.telegram) {
       // Telegram: Send message with inline keyboard
-      await getIt<AuthStateManager>().showTelegramMenu(platformUserId, session, dBCheck: false, isLogin: true, defaultMessage: message);
+      await getIt<AuthStateManager>().showTelegramMenu(platformUserId, session,
+          dBCheck: false, isLogin: true, defaultMessage: message);
     }
     return {
       'success': true,

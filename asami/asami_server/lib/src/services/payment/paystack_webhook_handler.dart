@@ -9,6 +9,7 @@ import '../../endpoints/cart_endpoint.dart';
 import '../dependency_injection.dart';
 import '../messaging/whatsapp/whatsapp_service.dart';
 import '../messaging/telegram/telegram_service.dart';
+import '../notifications/notification_dispatcher.dart';
 import '../wallet/escrow_automation_service.dart';
 import '../wallet/withdrawal_service.dart';
 import 'paystack_service.dart';
@@ -201,6 +202,7 @@ class PaystackWebhookHandler {
         session,
         transaction: transaction,
         order: orderResult['order'] as Order,
+        orderItems: orderResult['items'] as List<OrderItem>,
       );
 
       return {
@@ -534,6 +536,24 @@ class PaystackWebhookHandler {
             '✅ Escrow created: ₦${escrow.vendorEarnings.toStringAsFixed(2)}');
       }
 
+      // ✅ NOTIFY VENDOR
+      final vendor = await User.db.findById(session, order.vendorId);
+      if (vendor != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: vendor,
+          type: NotificationType.newOrderVendor,
+          data: {
+            'order': order,
+            'vendor_earnings': escrow?.vendorEarnings,
+            'amount': transaction.amount,
+            'time': transaction.paidAt?.toString() ?? 'Now',
+            'items': [orderItem]
+          },
+        );
+      }
+
       session.log('✅ Order created: ${savedOrder.orderNumber}');
 
       Log.info('✅ Order created from product: ${product.name}');
@@ -541,6 +561,7 @@ class PaystackWebhookHandler {
       return {
         'success': true,
         'order': order, // Placeholder
+        'orderItem': [orderItem],
         'message': 'Order created',
       };
     } catch (e, stackTrace) {
@@ -583,9 +604,46 @@ class PaystackWebhookHandler {
 
       Log.info('✅ Order created from cart: ${order.orderNumber}');
 
+      // ✅ CREATE ESCROW - This holds the money
+      final escrow = await EscrowAutomationService.createEscrow(
+        session,
+        order: order,
+        totalAmount: transaction.amount,
+        platformFee: transaction.platformFee,
+        paystackFee: transaction.paystackFee,
+      );
+
+      if (escrow != null) {
+        session.log(
+            '✅ Escrow created: ₦${escrow.vendorEarnings.toStringAsFixed(2)}');
+      }
+
+      final orderItems =
+          OrderItem.db.find(session, where: (o) => o.orderId.equals(order.id));
+
+      // ✅ NOTIFY VENDOR
+      final vendor = await User.db.findById(session, order.vendorId);
+      if (vendor != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: vendor,
+          type: NotificationType.newOrderVendor,
+          data: {
+            'order': order,
+            'vendor_earnings': escrow?.vendorEarnings,
+            'amount': transaction.amount,
+            'time': transaction.paidAt?.toString() ?? 'Now',
+            'items': orderItems
+          },
+        );
+      }
+
       return {
         'success': true,
         'order': order,
+        'orderItems': orderItems,
+        'message': 'Order created',
       };
     } catch (e, stackTrace) {
       Log.info('❌ Cart order creation error: $e');
@@ -602,35 +660,54 @@ class PaystackWebhookHandler {
     Session session, {
     required PaymentTransaction transaction,
     required Order order,
+    required List<OrderItem> orderItems,
   }) async {
     try {
-      final message = """
-✅ *Payment Successful!*
+//       final message = """
+// ✅ *Payment Successful!*
 
-Thank you for your payment of ₦${transaction.amount.toStringAsFixed(2)}
+// Thank you for your payment of ₦${transaction.amount.toStringAsFixed(2)}
 
-📦 *Order Number:* ${order.orderNumber}
-💳 *Reference:* ${transaction.reference}
-⏰ *Time:* ${transaction.paidAt?.toString() ?? 'Now'}
+// 📦 *Order Number:* ${order.orderNumber}
+// 💳 *Reference:* ${transaction.reference}
+// ⏰ *Time:* ${transaction.paidAt?.toString() ?? 'Now'}
 
-Your order has been confirmed and is being processed! 🎉
+// Your order has been confirmed and is being processed! 🎉
 
-You'll receive updates as your order progresses.
-""";
+// You'll receive updates as your order progresses.
+// """;
 
-      if (transaction.platformType == PlatformType.whatsapp) {
-        final whatsappService = getIt<WhatsAppService>();
-        final conversation = await Conversation.db.findById(
-          session,
-          transaction.conversationId!,
+//       if (transaction.platformType == PlatformType.whatsapp) {
+//         final whatsappService = getIt<WhatsAppService>();
+//         final conversation = await Conversation.db.findById(
+//           session,
+//           transaction.conversationId!,
+//         );
+
+//         if (conversation != null) {
+//           await whatsappService.sendMessage(
+//             phoneNumber: conversation.platformUserId,
+//             text: message,
+//           );
+//         }
+//       }
+
+      // ✅ NOTIFY CUSTOMER
+      final customer = await User.db.findById(session, order.customerId);
+      if (customer != null) {
+        final dispatcher = getIt<NotificationDispatcher>();
+        await dispatcher.dispatchNotification(
+          session: session,
+          user: customer,
+          type: NotificationType.paymentReceived,
+          data: {
+            'order': order,
+            'reference': transaction.reference,
+            'amount': transaction.amount,
+            'time': transaction.paidAt?.toString() ?? 'Now',
+            'items': orderItems
+          },
         );
-
-        if (conversation != null) {
-          await whatsappService.sendMessage(
-            phoneNumber: conversation.platformUserId,
-            text: message,
-          );
-        }
       }
 
       Log.info('📧 Payment success notification sent');
