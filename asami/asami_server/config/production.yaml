@@ -21,7 +21,7 @@ insightsServer:
 # Configuration for the web server.
 webServer:
   port: 8082
-  publicHost: app.examplepod.com
+  publicHost: asami-backend-b087.globeapp.dev
   publicPort: 443
   publicScheme: https
 
