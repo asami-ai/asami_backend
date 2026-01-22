@@ -2334,9 +2334,9 @@ ALTER TABLE ONLY "serverpod_query_log"
 -- MIGRATION VERSION FOR asami
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('asami', '20260114153119933', now())
+    VALUES ('asami', '20260122113455887', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260114153119933', "timestamp" = now();
+    DO UPDATE SET "version" = '20260122113455887', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

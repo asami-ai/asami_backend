@@ -11821,10 +11821,17 @@
         },
         {
           "__className__": "serverpod.ColumnDefinition",
-          "name": "transactionReference",
+          "name": "paymentTransactionId",
           "columnType": 7,
           "isNullable": true,
           "dartType": "UuidValue?"
+        },
+        {
+          "__className__": "serverpod.ColumnDefinition",
+          "name": "transactionReference",
+          "columnType": 0,
+          "isNullable": true,
+          "dartType": "String?"
         },
         {
           "__className__": "serverpod.ColumnDefinition",
@@ -11929,7 +11936,7 @@
           "__className__": "serverpod.ForeignKeyDefinition",
           "constraintName": "webhook_events_fk_0",
           "columns": [
-            "transactionReference"
+            "paymentTransactionId"
           ],
           "referenceTable": "payment_transactions",
           "referenceTableSchema": "public",
@@ -11963,6 +11970,20 @@
               "__className__": "serverpod.IndexElementDefinition",
               "type": 0,
               "definition": "eventType"
+            }
+          ],
+          "type": "btree",
+          "isUnique": false,
+          "isPrimary": false
+        },
+        {
+          "__className__": "serverpod.IndexDefinition",
+          "indexName": "webhook_transaction_id_idx",
+          "elements": [
+            {
+              "__className__": "serverpod.IndexElementDefinition",
+              "type": 0,
+              "definition": "paymentTransactionId"
             }
           ],
           "type": "btree",
@@ -13972,7 +13993,7 @@
     {
       "__className__": "serverpod.DatabaseMigrationVersion",
       "module": "asami",
-      "version": "20260112165123858"
+      "version": "20260122113455887"
     },
     {
       "__className__": "serverpod.DatabaseMigrationVersion",

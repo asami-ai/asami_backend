@@ -1,7 +1,7 @@
 BEGIN;
 
 --
--- Class Address as table addresses
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "addresses" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -29,7 +29,7 @@ CREATE UNIQUE INDEX "user_default_idx" ON "addresses" USING btree ("userId", "is
 CREATE INDEX "user_active_idx" ON "addresses" USING btree ("userId", "isActive");
 
 --
--- Class AIConversationUsage as table ai_conversation_usage
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "ai_conversation_usage" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -55,7 +55,7 @@ CREATE INDEX "conversation_ai_idx" ON "ai_conversation_usage" USING btree ("conv
 CREATE INDEX "date_ai_idx" ON "ai_conversation_usage" USING btree ("date");
 
 --
--- Class AuthSession as table auth_sessions
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "auth_sessions" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -79,7 +79,7 @@ CREATE INDEX "platform_user_idxx" ON "auth_sessions" USING btree ("platform", "p
 CREATE INDEX "active_sessions_idx" ON "auth_sessions" USING btree ("isActive", "lastActivityAt");
 
 --
--- Class BillingCycleSummary as table billing_cycle_summaries
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "billing_cycle_summaries" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -120,7 +120,7 @@ CREATE INDEX "status_billing_idx" ON "billing_cycle_summaries" USING btree ("sta
 CREATE INDEX "invoice_billing_idx" ON "billing_cycle_summaries" USING btree ("invoiceId");
 
 --
--- Class BotInteraction as table bot_interactions
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "bot_interactions" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -155,7 +155,7 @@ CREATE INDEX "user_idx" ON "bot_interactions" USING btree ("userId");
 CREATE INDEX "created_idx" ON "bot_interactions" USING btree ("createdAt");
 
 --
--- Class CartItem as table cart_items
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "cart_items" (
     "id" bigserial PRIMARY KEY,
@@ -175,7 +175,7 @@ CREATE INDEX "cart_product_idx" ON "cart_items" USING btree ("cartId", "productI
 CREATE INDEX "cart_idx" ON "cart_items" USING btree ("cartId");
 
 --
--- Class Cart as table carts
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "carts" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -195,7 +195,7 @@ CREATE INDEX "customer_active_idx" ON "carts" USING btree ("customerId", "isActi
 CREATE INDEX "session_idx" ON "carts" USING btree ("sessionId");
 
 --
--- Class Category as table categories
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "categories" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -218,7 +218,7 @@ CREATE INDEX "parent_idx" ON "categories" USING btree ("parentCategoryId");
 CREATE INDEX "active_order_idx" ON "categories" USING btree ("isActive", "displayOrder");
 
 --
--- Class CategoryMapping as table category_mappings
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "category_mappings" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -240,7 +240,7 @@ CREATE INDEX "simple_category_idx" ON "category_mappings" USING btree ("simpleCa
 CREATE INDEX "facebook_cat_idx" ON "category_mappings" USING btree ("facebookCategoryId");
 
 --
--- Class Conversation as table conversations
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "conversations" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -280,7 +280,7 @@ CREATE INDEX "conversation_status_idx" ON "conversations" USING btree ("status")
 CREATE INDEX "escalated_idx" ON "conversations" USING btree ("isEscalated");
 
 --
--- Class CustomerAIPolicy as table customer_ai_policies
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "customer_ai_policies" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -307,7 +307,7 @@ CREATE INDEX "policy_name_idx" ON "customer_ai_policies" USING btree ("policyNam
 CREATE INDEX "active_idx" ON "customer_ai_policies" USING btree ("isActive");
 
 --
--- Class CustomerProfile as table customer_profiles
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "customer_profiles" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -330,7 +330,7 @@ CREATE TABLE "customer_profiles" (
 );
 
 --
--- Class CustomerUsagePattern as table customer_usage_patterns
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "customer_usage_patterns" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -360,7 +360,7 @@ CREATE INDEX "usage_class_idx" ON "customer_usage_patterns" USING btree ("usageC
 CREATE INDEX "abuse_idx" ON "customer_usage_patterns" USING btree ("isAbuser");
 
 --
--- Class DailyUsageTracker as table daily_usage_trackers
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "daily_usage_trackers" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -394,7 +394,7 @@ CREATE INDEX "date_daily_idx" ON "daily_usage_trackers" USING btree ("date");
 CREATE INDEX "reset_idx" ON "daily_usage_trackers" USING btree ("resetAt");
 
 --
--- Class LimitBreachLog as table limit_breach_logs
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "limit_breach_logs" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -418,7 +418,7 @@ CREATE INDEX "limit_type_idx" ON "limit_breach_logs" USING btree ("limitType");
 CREATE INDEX "severity_idx" ON "limit_breach_logs" USING btree ("severity");
 
 --
--- Class Message as table messages
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "messages" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -459,7 +459,7 @@ CREATE INDEX "platform_message_idx" ON "messages" USING btree ("platform", "plat
 CREATE INDEX "ai_processed_idx" ON "messages" USING btree ("isProcessedByAi");
 
 --
--- Class Notification as table notifications
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "notifications" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -489,7 +489,7 @@ CREATE INDEX "type_idx" ON "notifications" USING btree ("type");
 CREATE INDEX "scheduled_idx" ON "notifications" USING btree ("scheduledFor", "isSent");
 
 --
--- Class OrderEscrow as table order_escrows
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "order_escrows" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -532,7 +532,7 @@ CREATE INDEX "return_window_idx" ON "order_escrows" USING btree ("isReturnWindow
 CREATE INDEX "delivery_deadline_idx" ON "order_escrows" USING btree ("deliveryDeadline");
 
 --
--- Class OrderItem as table order_items
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "order_items" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -566,7 +566,7 @@ CREATE INDEX "order_idx" ON "order_items" USING btree ("orderId");
 CREATE INDEX "product_idx" ON "order_items" USING btree ("productId");
 
 --
--- Class Order as table orders
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "orders" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -617,7 +617,7 @@ CREATE INDEX "payments_status_idx" ON "orders" USING btree ("paymentStatus");
 CREATE INDEX "created_at_idx" ON "orders" USING btree ("createdAt");
 
 --
--- Class PaymentTransaction as table payment_transactions
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "payment_transactions" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -679,7 +679,7 @@ CREATE INDEX "createdat_idx" ON "payment_transactions" USING btree ("createdAt")
 CREATE INDEX "paystack_ref_idx" ON "payment_transactions" USING btree ("gatewayReference");
 
 --
--- Class PlatformAnalytics as table platform_analytics
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "platform_analytics" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -721,7 +721,7 @@ CREATE TABLE "platform_analytics" (
 CREATE INDEX "date_period_idx" ON "platform_analytics" USING btree ("date", "period");
 
 --
--- Class ProductAnalytics as table product_analytics
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "product_analytics" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -756,7 +756,7 @@ CREATE INDEX "vendors_date_idx" ON "product_analytics" USING btree ("vendorId", 
 CREATE INDEX "date_periodic_idx" ON "product_analytics" USING btree ("date", "period");
 
 --
--- Class ProductCategory as table product_categories
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "product_categories" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -788,7 +788,7 @@ CREATE INDEX "google_idx" ON "product_categories" USING btree ("googleTaxonomyId
 CREATE INDEX "active_cat_order_idx" ON "product_categories" USING btree ("isActive", "displayOrder");
 
 --
--- Class ProductReview as table product_reviews
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "product_reviews" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -818,7 +818,7 @@ CREATE INDEX "customer_idx" ON "product_reviews" USING btree ("customerId");
 CREATE INDEX "rating_idx" ON "product_reviews" USING btree ("rating");
 
 --
--- Class ProductVariant as table product_variants
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "product_variants" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -847,7 +847,7 @@ CREATE INDEX "product_active_idx" ON "product_variants" USING btree ("productId"
 CREATE INDEX "sku_idx" ON "product_variants" USING btree ("sku");
 
 --
--- Class ProductView as table product_views
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "product_views" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -867,7 +867,7 @@ CREATE INDEX "product_date_idxx" ON "product_views" USING btree ("productId", "c
 CREATE INDEX "user_recent_idx" ON "product_views" USING btree ("userId", "createdAt");
 
 --
--- Class Product as table products
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "products" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -956,7 +956,7 @@ CREATE INDEX "meta_retailer_idx" ON "products" USING btree ("metaRetailerId");
 CREATE INDEX "quantity_idx" ON "products" USING btree ("quantity");
 
 --
--- Class QuickReply as table quick_replies
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "quick_replies" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -978,7 +978,7 @@ CREATE INDEX "intent_type_idx" ON "quick_replies" USING btree ("intent", "userTy
 CREATE INDEX "platform_active_idx" ON "quick_replies" USING btree ("platform", "isActive");
 
 --
--- Class Refund as table refunds
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "refunds" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1006,7 +1006,7 @@ CREATE INDEX "orders_idx" ON "refunds" USING btree ("orderId");
 CREATE INDEX "status_idx" ON "refunds" USING btree ("status");
 
 --
--- Class SubscriptionEvent as table subscription_events
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "subscription_events" (
     "id" bigserial PRIMARY KEY,
@@ -1021,7 +1021,7 @@ CREATE TABLE "subscription_events" (
 );
 
 --
--- Class SubscriptionInvoice as table subscription_invoices
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "subscription_invoices" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1053,7 +1053,7 @@ CREATE INDEX "invoice_number_idx" ON "subscription_invoices" USING btree ("invoi
 CREATE INDEX "due_date_idx" ON "subscription_invoices" USING btree ("dueDate");
 
 --
--- Class Subscription as table subscriptions
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "subscriptions" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1085,7 +1085,7 @@ CREATE INDEX "tier_idx" ON "subscriptions" USING btree ("tier");
 CREATE INDEX "period_end_idx" ON "subscriptions" USING btree ("currentPeriodEnd");
 
 --
--- Class TemplateMessage as table template_messages
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "template_messages" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1113,7 +1113,7 @@ CREATE INDEX "temp_category_idx" ON "template_messages" USING btree ("category")
 CREATE INDEX "approved_active_idx" ON "template_messages" USING btree ("isApproved", "isActive");
 
 --
--- Class TierFeature as table tier_features
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "tier_features" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1147,7 +1147,7 @@ CREATE UNIQUE INDEX "tier_sub_idx" ON "tier_features" USING btree ("tier");
 CREATE INDEX "active_tier_idx" ON "tier_features" USING btree ("isActive");
 
 --
--- Class ToolUsageLimit as table tool_usage_limits
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "tool_usage_limits" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1169,7 +1169,7 @@ CREATE TABLE "tool_usage_limits" (
 CREATE INDEX "tier_type_idx" ON "tool_usage_limits" USING btree ("tier", "limitType");
 
 --
--- Class ToolUsageLog as table tool_usage_logs
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "tool_usage_logs" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1203,7 +1203,7 @@ CREATE INDEX "billing_period_idx" ON "tool_usage_logs" USING btree ("userId", "b
 CREATE INDEX "success_idx" ON "tool_usage_logs" USING btree ("success");
 
 --
--- Class UsageAlert as table usage_alerts
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "usage_alerts" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1231,7 +1231,7 @@ CREATE INDEX "read_idx" ON "usage_alerts" USING btree ("isRead");
 CREATE INDEX "usage_created_idx" ON "usage_alerts" USING btree ("createdAt");
 
 --
--- Class UsageRecord as table usage_records
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "usage_records" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1259,7 +1259,7 @@ CREATE INDEX "invoice_idx" ON "usage_records" USING btree ("invoiceId");
 CREATE INDEX "billed_idx" ON "usage_records" USING btree ("isBilled");
 
 --
--- Class UserActivity as table user_activity
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "user_activity" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1290,7 +1290,7 @@ CREATE INDEX "product_activity_idx" ON "user_activity" USING btree ("productId",
 CREATE INDEX "activity_type_date_idx" ON "user_activity" USING btree ("activityType", "createdAt");
 
 --
--- Class User as table users
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "users" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1337,7 +1337,7 @@ CREATE INDEX "whatsapp_auth_idx" ON "users" USING btree ("whatsappId", "whatsapp
 CREATE INDEX "telegram_auth_idx" ON "users" USING btree ("telegramId", "telegramAuthenticated");
 
 --
--- Class VendorAnalytics as table vendor_analytics
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "vendor_analytics" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1378,7 +1378,7 @@ CREATE INDEX "vendor_period_idx" ON "vendor_analytics" USING btree ("vendorId", 
 CREATE INDEX "date_idx" ON "vendor_analytics" USING btree ("date");
 
 --
--- Class VendorProfile as table vendor_profiles
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "vendor_profiles" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1424,7 +1424,7 @@ CREATE INDEX "subscription_tier_idx" ON "vendor_profiles" USING btree ("subscrip
 CREATE INDEX "verified_idx" ON "vendor_profiles" USING btree ("isVerified");
 
 --
--- Class VendorWallet as table vendor_wallets
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "vendor_wallets" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1462,7 +1462,7 @@ CREATE INDEX "wallet_vendor_idx" ON "vendor_wallets" USING btree ("vendorId");
 CREATE INDEX "wallet_active_idx" ON "vendor_wallets" USING btree ("isActive", "isSuspended");
 
 --
--- Class WalletTransaction as table wallet_transactions
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "wallet_transactions" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1503,13 +1503,14 @@ CREATE INDEX "wallet_reference_idx" ON "wallet_transactions" USING btree ("refer
 CREATE INDEX "wallet_created_idx" ON "wallet_transactions" USING btree ("createdAt");
 
 --
--- Class WebhookEvent as table webhook_events
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "webhook_events" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "eventType" text NOT NULL,
     "eventId" text,
-    "transactionReference" uuid,
+    "paymentTransactionId" uuid,
+    "transactionReference" text,
     "rawPayload" text NOT NULL,
     "processedPayload" text,
     "status" text NOT NULL DEFAULT 'received'::text,
@@ -1527,13 +1528,14 @@ CREATE TABLE "webhook_events" (
 
 -- Indexes
 CREATE INDEX "webhook_event_type_idx" ON "webhook_events" USING btree ("eventType");
+CREATE INDEX "webhook_transaction_id_idx" ON "webhook_events" USING btree ("paymentTransactionId");
 CREATE INDEX "webhook_transaction_ref_idx" ON "webhook_events" USING btree ("transactionReference");
 CREATE INDEX "webhook_status_idx" ON "webhook_events" USING btree ("status");
 CREATE INDEX "webhook_created_idx" ON "webhook_events" USING btree ("createdAt");
 CREATE INDEX "webhook_event_id_idx" ON "webhook_events" USING btree ("eventId");
 
 --
--- Class WishlistItem as table wishlist_items
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "wishlist_items" (
     "id" bigserial PRIMARY KEY,
@@ -1554,7 +1556,7 @@ CREATE INDEX "wishlist_product_idx" ON "wishlist_items" USING btree ("wishlistId
 CREATE INDEX "customer_product_idx" ON "wishlist_items" USING btree ("customerId", "productId");
 
 --
--- Class Wishlist as table wishlists
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "wishlists" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1567,7 +1569,7 @@ CREATE TABLE "wishlists" (
 );
 
 --
--- Class WithdrawalRequest as table withdrawal_requests
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "withdrawal_requests" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -1611,7 +1613,7 @@ CREATE INDEX "request_number_idx" ON "withdrawal_requests" USING btree ("request
 CREATE INDEX "withdrawal_created_idx" ON "withdrawal_requests" USING btree ("createdAt");
 
 --
--- Class CloudStorageEntry as table serverpod_cloud_storage
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_cloud_storage" (
     "id" bigserial PRIMARY KEY,
@@ -1628,7 +1630,7 @@ CREATE UNIQUE INDEX "serverpod_cloud_storage_path_idx" ON "serverpod_cloud_stora
 CREATE INDEX "serverpod_cloud_storage_expiration" ON "serverpod_cloud_storage" USING btree ("expiration");
 
 --
--- Class CloudStorageDirectUploadEntry as table serverpod_cloud_storage_direct_upload
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_cloud_storage_direct_upload" (
     "id" bigserial PRIMARY KEY,
@@ -1642,7 +1644,7 @@ CREATE TABLE "serverpod_cloud_storage_direct_upload" (
 CREATE UNIQUE INDEX "serverpod_cloud_storage_direct_upload_storage_path" ON "serverpod_cloud_storage_direct_upload" USING btree ("storageId", "path");
 
 --
--- Class FutureCallEntry as table serverpod_future_call
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_future_call" (
     "id" bigserial PRIMARY KEY,
@@ -1659,7 +1661,7 @@ CREATE INDEX "serverpod_future_call_serverId_idx" ON "serverpod_future_call" USI
 CREATE INDEX "serverpod_future_call_identifier_idx" ON "serverpod_future_call" USING btree ("identifier");
 
 --
--- Class ServerHealthConnectionInfo as table serverpod_health_connection_info
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_health_connection_info" (
     "id" bigserial PRIMARY KEY,
@@ -1675,7 +1677,7 @@ CREATE TABLE "serverpod_health_connection_info" (
 CREATE UNIQUE INDEX "serverpod_health_connection_info_timestamp_idx" ON "serverpod_health_connection_info" USING btree ("timestamp", "serverId", "granularity");
 
 --
--- Class ServerHealthMetric as table serverpod_health_metric
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_health_metric" (
     "id" bigserial PRIMARY KEY,
@@ -1691,7 +1693,7 @@ CREATE TABLE "serverpod_health_metric" (
 CREATE UNIQUE INDEX "serverpod_health_metric_timestamp_idx" ON "serverpod_health_metric" USING btree ("timestamp", "serverId", "name", "granularity");
 
 --
--- Class LogEntry as table serverpod_log
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_log" (
     "id" bigserial PRIMARY KEY,
@@ -1711,7 +1713,7 @@ CREATE TABLE "serverpod_log" (
 CREATE INDEX "serverpod_log_sessionLogId_idx" ON "serverpod_log" USING btree ("sessionLogId");
 
 --
--- Class MessageLogEntry as table serverpod_message_log
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_message_log" (
     "id" bigserial PRIMARY KEY,
@@ -1728,7 +1730,7 @@ CREATE TABLE "serverpod_message_log" (
 );
 
 --
--- Class MethodInfo as table serverpod_method
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_method" (
     "id" bigserial PRIMARY KEY,
@@ -1740,7 +1742,7 @@ CREATE TABLE "serverpod_method" (
 CREATE UNIQUE INDEX "serverpod_method_endpoint_method_idx" ON "serverpod_method" USING btree ("endpoint", "method");
 
 --
--- Class DatabaseMigrationVersion as table serverpod_migrations
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_migrations" (
     "id" bigserial PRIMARY KEY,
@@ -1753,7 +1755,7 @@ CREATE TABLE "serverpod_migrations" (
 CREATE UNIQUE INDEX "serverpod_migrations_ids" ON "serverpod_migrations" USING btree ("module");
 
 --
--- Class QueryLogEntry as table serverpod_query_log
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_query_log" (
     "id" bigserial PRIMARY KEY,
@@ -1773,7 +1775,7 @@ CREATE TABLE "serverpod_query_log" (
 CREATE INDEX "serverpod_query_log_sessionLogId_idx" ON "serverpod_query_log" USING btree ("sessionLogId");
 
 --
--- Class ReadWriteTestEntry as table serverpod_readwrite_test
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_readwrite_test" (
     "id" bigserial PRIMARY KEY,
@@ -1781,7 +1783,7 @@ CREATE TABLE "serverpod_readwrite_test" (
 );
 
 --
--- Class RuntimeSettings as table serverpod_runtime_settings
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_runtime_settings" (
     "id" bigserial PRIMARY KEY,
@@ -1792,7 +1794,7 @@ CREATE TABLE "serverpod_runtime_settings" (
 );
 
 --
--- Class SessionLogEntry as table serverpod_session_log
+-- ACTION CREATE TABLE
 --
 CREATE TABLE "serverpod_session_log" (
     "id" bigserial PRIMARY KEY,
@@ -1818,7 +1820,7 @@ CREATE INDEX "serverpod_session_log_touched_idx" ON "serverpod_session_log" USIN
 CREATE INDEX "serverpod_session_log_isopen_idx" ON "serverpod_session_log" USING btree ("isOpen");
 
 --
--- Foreign relations for "addresses" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "addresses"
     ADD CONSTRAINT "addresses_fk_0"
@@ -1828,7 +1830,7 @@ ALTER TABLE ONLY "addresses"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "auth_sessions" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "auth_sessions"
     ADD CONSTRAINT "auth_sessions_fk_0"
@@ -1838,7 +1840,7 @@ ALTER TABLE ONLY "auth_sessions"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "billing_cycle_summaries" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "billing_cycle_summaries"
     ADD CONSTRAINT "billing_cycle_summaries_fk_0"
@@ -1854,7 +1856,7 @@ ALTER TABLE ONLY "billing_cycle_summaries"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "bot_interactions" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "bot_interactions"
     ADD CONSTRAINT "bot_interactions_fk_0"
@@ -1870,7 +1872,7 @@ ALTER TABLE ONLY "bot_interactions"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "cart_items" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "cart_items"
     ADD CONSTRAINT "cart_items_fk_0"
@@ -1892,7 +1894,7 @@ ALTER TABLE ONLY "cart_items"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "carts" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "carts"
     ADD CONSTRAINT "carts_fk_0"
@@ -1902,7 +1904,7 @@ ALTER TABLE ONLY "carts"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "categories" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "categories"
     ADD CONSTRAINT "categories_fk_0"
@@ -1912,7 +1914,7 @@ ALTER TABLE ONLY "categories"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "category_mappings" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "category_mappings"
     ADD CONSTRAINT "category_mappings_fk_0"
@@ -1922,7 +1924,7 @@ ALTER TABLE ONLY "category_mappings"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "conversations" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "conversations"
     ADD CONSTRAINT "conversations_fk_0"
@@ -1932,7 +1934,7 @@ ALTER TABLE ONLY "conversations"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "customer_profiles" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "customer_profiles"
     ADD CONSTRAINT "customer_profiles_fk_0"
@@ -1942,7 +1944,7 @@ ALTER TABLE ONLY "customer_profiles"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "messages" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "messages"
     ADD CONSTRAINT "messages_fk_0"
@@ -1958,7 +1960,7 @@ ALTER TABLE ONLY "messages"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "notifications" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "notifications"
     ADD CONSTRAINT "notifications_fk_0"
@@ -1968,7 +1970,7 @@ ALTER TABLE ONLY "notifications"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "order_escrows" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "order_escrows"
     ADD CONSTRAINT "order_escrows_fk_0"
@@ -1978,7 +1980,7 @@ ALTER TABLE ONLY "order_escrows"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "order_items" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "order_items"
     ADD CONSTRAINT "order_items_fk_0"
@@ -2000,7 +2002,7 @@ ALTER TABLE ONLY "order_items"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "orders" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "orders"
     ADD CONSTRAINT "orders_fk_0"
@@ -2022,7 +2024,7 @@ ALTER TABLE ONLY "orders"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "payment_transactions" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "payment_transactions"
     ADD CONSTRAINT "payment_transactions_fk_0"
@@ -2038,7 +2040,7 @@ ALTER TABLE ONLY "payment_transactions"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "product_analytics" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "product_analytics"
     ADD CONSTRAINT "product_analytics_fk_0"
@@ -2048,7 +2050,7 @@ ALTER TABLE ONLY "product_analytics"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "product_categories" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "product_categories"
     ADD CONSTRAINT "product_categories_fk_0"
@@ -2058,7 +2060,7 @@ ALTER TABLE ONLY "product_categories"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "product_reviews" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "product_reviews"
     ADD CONSTRAINT "product_reviews_fk_0"
@@ -2074,7 +2076,7 @@ ALTER TABLE ONLY "product_reviews"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "product_variants" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "product_variants"
     ADD CONSTRAINT "product_variants_fk_0"
@@ -2084,7 +2086,7 @@ ALTER TABLE ONLY "product_variants"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "product_views" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "product_views"
     ADD CONSTRAINT "product_views_fk_0"
@@ -2100,7 +2102,7 @@ ALTER TABLE ONLY "product_views"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "products" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "products"
     ADD CONSTRAINT "products_fk_0"
@@ -2110,7 +2112,7 @@ ALTER TABLE ONLY "products"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "refunds" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "refunds"
     ADD CONSTRAINT "refunds_fk_0"
@@ -2126,7 +2128,7 @@ ALTER TABLE ONLY "refunds"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "subscription_events" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "subscription_events"
     ADD CONSTRAINT "subscription_events_fk_0"
@@ -2136,7 +2138,7 @@ ALTER TABLE ONLY "subscription_events"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "subscription_invoices" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "subscription_invoices"
     ADD CONSTRAINT "subscription_invoices_fk_0"
@@ -2146,7 +2148,7 @@ ALTER TABLE ONLY "subscription_invoices"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "subscriptions" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "subscriptions"
     ADD CONSTRAINT "subscriptions_fk_0"
@@ -2156,7 +2158,7 @@ ALTER TABLE ONLY "subscriptions"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "usage_records" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "usage_records"
     ADD CONSTRAINT "usage_records_fk_0"
@@ -2172,7 +2174,7 @@ ALTER TABLE ONLY "usage_records"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "user_activity" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "user_activity"
     ADD CONSTRAINT "user_activity_fk_0"
@@ -2200,7 +2202,7 @@ ALTER TABLE ONLY "user_activity"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "vendor_analytics" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "vendor_analytics"
     ADD CONSTRAINT "vendor_analytics_fk_0"
@@ -2210,7 +2212,7 @@ ALTER TABLE ONLY "vendor_analytics"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "vendor_profiles" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "vendor_profiles"
     ADD CONSTRAINT "vendor_profiles_fk_0"
@@ -2220,7 +2222,7 @@ ALTER TABLE ONLY "vendor_profiles"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "vendor_wallets" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "vendor_wallets"
     ADD CONSTRAINT "vendor_wallets_fk_0"
@@ -2230,7 +2232,7 @@ ALTER TABLE ONLY "vendor_wallets"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "wallet_transactions" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "wallet_transactions"
     ADD CONSTRAINT "wallet_transactions_fk_0"
@@ -2246,17 +2248,17 @@ ALTER TABLE ONLY "wallet_transactions"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "webhook_events" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "webhook_events"
     ADD CONSTRAINT "webhook_events_fk_0"
-    FOREIGN KEY("transactionReference")
+    FOREIGN KEY("paymentTransactionId")
     REFERENCES "payment_transactions"("id")
     ON DELETE NO ACTION
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "wishlist_items" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "wishlist_items"
     ADD CONSTRAINT "wishlist_items_fk_0"
@@ -2272,7 +2274,7 @@ ALTER TABLE ONLY "wishlist_items"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "wishlists" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "wishlists"
     ADD CONSTRAINT "wishlists_fk_0"
@@ -2282,7 +2284,7 @@ ALTER TABLE ONLY "wishlists"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "withdrawal_requests" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "withdrawal_requests"
     ADD CONSTRAINT "withdrawal_requests_fk_0"
@@ -2298,7 +2300,7 @@ ALTER TABLE ONLY "withdrawal_requests"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "serverpod_log" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "serverpod_log"
     ADD CONSTRAINT "serverpod_log_fk_0"
@@ -2308,7 +2310,7 @@ ALTER TABLE ONLY "serverpod_log"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "serverpod_message_log" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "serverpod_message_log"
     ADD CONSTRAINT "serverpod_message_log_fk_0"
@@ -2318,7 +2320,7 @@ ALTER TABLE ONLY "serverpod_message_log"
     ON UPDATE NO ACTION;
 
 --
--- Foreign relations for "serverpod_query_log" table
+-- ACTION CREATE FOREIGN KEY
 --
 ALTER TABLE ONLY "serverpod_query_log"
     ADD CONSTRAINT "serverpod_query_log_fk_0"
@@ -2332,9 +2334,9 @@ ALTER TABLE ONLY "serverpod_query_log"
 -- MIGRATION VERSION FOR asami
 --
 INSERT INTO "serverpod_migrations" ("module", "version", "timestamp")
-    VALUES ('asami', '20260112165123858', now())
+    VALUES ('asami', '20260122113455887', now())
     ON CONFLICT ("module")
-    DO UPDATE SET "version" = '20260112165123858', "timestamp" = now();
+    DO UPDATE SET "version" = '20260122113455887', "timestamp" = now();
 
 --
 -- MIGRATION VERSION FOR serverpod

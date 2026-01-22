@@ -18,7 +18,7 @@ import 'src/services/dependency_injection.dart';
 import 'src/services/future_calls/register_usage.dart';
 
 void run(List<String> args) async {
-  final pod = Serverpod(args, Protocol(), Endpoints());
+  final pod = Serverpod(args, Protocol(), Endpoints(), );
 
   _logServerConfiguration(pod);
 
@@ -234,7 +234,10 @@ void _configureRoutes(Serverpod pod) {
 Future<void> _startServer(
     Serverpod pod, _WebhookUrls webhookUrls, int webPort) async {
   try {
-    await pod.start().then((p) async {
+    await pod.start(
+      // runInGuardedZone: false,
+      
+    ).then((p) async {
       await initializeTierFeatures();
     });
     await registerUsageFutureCalls(pod);
