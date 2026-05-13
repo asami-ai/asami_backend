@@ -1,0 +1,7 @@
+enum: MessageProcessingStatus
+values:
+  - pending
+  - processing
+  - completed
+  - failed
+  - streaming

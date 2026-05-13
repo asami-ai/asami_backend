@@ -1,0 +1,37 @@
+
+enum: UIComponentType
+values:
+  # Lists
+  - product_list
+  - product_grid
+  - order_list
+  - transaction_list
+  
+  # Cards
+  - product_card
+  - order_card
+  - analytics_card
+  - summary_card
+  
+  # Charts
+  - line_chart
+  - bar_chart
+  - pie_chart
+  - area_chart
+  
+  # Forms
+  - product_form
+  - filter_form
+  - search_bar
+  
+  # Actions
+  - action_buttons
+  - quick_actions
+  - menu_list
+  
+  # Media
+  - image_gallery
+  - video_player
+  
+  # Custom
+  - custom_widget

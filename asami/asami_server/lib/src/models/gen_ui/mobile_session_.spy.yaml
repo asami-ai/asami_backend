@@ -1,0 +1,40 @@
+
+# Mobile session for token-based auth
+class: MobileSession
+table: mobile_sessions
+fields:
+  id: UuidValue, defaultModel=random
+  userId: UuidValue
+  user: User?, relation(field=userId)
+  
+  # Device info
+  deviceId: String
+  deviceName: String?
+  deviceOS: String?
+  appVersion: String?
+  
+  # Token
+  accessToken: String
+  refreshToken: String
+  tokenExpiresAt: DateTime
+  
+  # Status
+  isActive: bool, default=true
+  isRevoked: bool, default=false
+  
+  # Security
+  lastUsedAt: DateTime?
+  lastIpAddress: String?
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  revokedAt: DateTime?
+
+indexes:
+  user_device_idx:
+    fields: userId, deviceId
+  access_token_idx:
+    fields: accessToken
+  active_sessions_idx:
+    fields: userId, isActive

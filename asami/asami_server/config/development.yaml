@@ -18,21 +18,16 @@ insightsServer:
 # Configuration for the web server (where webhooks are handled)
 webServer:
   port: 8082
-  publicHost: fa07e6f9b686.ngrok-free.app
+  publicHost: localhost
   publicPort: 443
-  publicScheme: https
+  publicScheme: http
 
 # This is the database setup for your server.
 database:
-  host: ep-little-moon-a49fodmx.us-east-1.aws.neon.tech
-  port: 5432
-  name: neondb
-  user: neondb_owner
-  requireSsl: true # defaults to false
-  # poolMode: session
-  maxConnectionCount: 800
-  # connectionTimeout: 60000
-  #isUnixSocket: true # defaults to false
+  host: localhost
+  port: 8090
+  name: asami
+  user: postgres
 
 # This is the setup for Redis.
 redis:
@@ -60,3 +55,12 @@ sessionLogs:
 #   port: 8090
 #   name: asami
 #   user: postgres
+
+
+# database:
+#   host: ep-little-moon-a49fodmx-pooler.us-east-1.aws.neon.tech
+#   port: 5432
+#   name: neondb
+#   user: neondb_owner
+#   requireSsl: true # defaults to false
+#   maxConnectionCount: -1

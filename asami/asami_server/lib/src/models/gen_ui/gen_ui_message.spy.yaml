@@ -1,0 +1,51 @@
+
+class: GenUIMessage
+table: gen_ui_messages
+fields:
+  id: UuidValue, defaultModel=random
+  conversationId: UuidValue
+  conversation: Conversation?, relation(field=conversationId)
+  
+  # Message origin
+  isFromUser: bool, default=false
+  isFromBot: bool, default=false
+  
+  # Content types
+  messageType: GenUIMessageType
+  
+  # Text content
+  textContent: String?
+  markdownContent: String?
+  
+  # UI Components (JSON array of widget definitions)
+  uiComponents: String?  # JSON array of UIComponentData
+  
+  # Streaming support
+  isStreaming: bool, default=false
+  streamComplete: bool, default=false
+  streamChunks: List<String>?
+  
+  # AI metadata
+  aiIntent: String?
+  toolsCalled: List<String>?
+  
+  # Processing status
+  processingStatus: MessageProcessingStatus, default=pending
+  errorMessage: String?
+  
+  # Platform info
+  sourcePlatform: PlatformType
+  
+  # Timestamps
+  createdAt: DateTime, default=now
+  updatedAt: DateTime, default=now
+  streamStartedAt: DateTime?
+  streamCompletedAt: DateTime?
+
+indexes:
+  gen_conversation_idx:
+    fields: conversationId
+  gen_created_idx:
+    fields: createdAt
+  processing_status_idx:
+    fields: processingStatus

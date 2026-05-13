@@ -1,0 +1,33 @@
+
+# Mobile verification code (WhatsApp-based)
+class: MobileVerification
+table: mobile_verifications
+fields:
+  id: UuidValue, defaultModel=random
+  
+  phoneNumber: String
+  countryCode: String
+  
+  # Verification
+  verificationCode: String
+  codeExpiresAt: DateTime
+  
+  # User info
+  userId: UuidValue?
+  isNewUser: bool, default=true
+  
+  # Status
+  isVerified: bool, default=false
+  verifiedAt: DateTime?
+  attempts: int, default=0
+  
+  # Device
+  deviceId: String
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  phone_idx:
+    fields: phoneNumber
+  device_idx:
+    fields: deviceId

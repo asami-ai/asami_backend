@@ -1,0 +1,26 @@
+
+# UI Component definition for GenUI
+class: UIComponentData
+table: ui_component_data
+fields:
+  id: UuidValue, defaultModel=random
+  messageId: UuidValue
+  message: GenUIMessage?, relation(field=messageId)
+  
+  # Component type
+  componentType: UIComponentType
+  
+  # Component data (JSON)
+  data: String  # Serialized component-specific data
+  
+  # Display order
+  displayOrder: int, default=0
+  
+  # Metadata
+  metadata: String?
+  
+  createdAt: DateTime, default=now
+
+indexes:
+  message_order_idx:
+    fields: messageId, displayOrder

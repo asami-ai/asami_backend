@@ -1,0 +1,10 @@
+enum: GenUIMessageType
+values:
+  - text_only # Pure text response
+  - markdown_only # Formatted markdown
+  - text_with_ui # Text + UI components
+  - ui_only # Only UI components
+  - streaming_text # Streaming text
+  - streaming_ui # Streaming with UI components
+  - error # Error message
+

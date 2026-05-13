@@ -1464,7 +1464,7 @@ Type /products to start shopping or /help for more options.
           '💰 ${product.currency} ${product.basePrice.toStringAsFixed(2)}');
       if (product.quantity > 0) {
         buffer.writeln('📦 In Stock');
-      }
+      } 
       buffer.writeln('');
     }
 
