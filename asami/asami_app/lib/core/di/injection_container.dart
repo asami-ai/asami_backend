@@ -14,7 +14,7 @@ final getIt = GetIt.instance;
 Future<void> initDependencies() async {
   _initClient();
   await _initUtilities();
-  await getIt.init();
+  // await getIt.init();
 }
 
 void _initClient() {
